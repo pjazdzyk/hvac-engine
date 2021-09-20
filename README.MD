@@ -23,7 +23,7 @@ All references are listed at the end of this document. Currently, the air physic
 * humidity ratio and maximum humidity ratio,
 * kinematic and dynamic viscosity,
 * thermal conductivity,
-* specific enthalpy of air as well as water mist and ice mist components,
+* specific enthalpy of humid air with water mist and ice mist components,
 * specific heat,
 * density,
 * thermal diffusivity,
@@ -36,7 +36,7 @@ The water physics module is limited only to the properties required for typical 
 * specific enthalpy.
 
 Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There is also a number of method allowing for calculations of some properties if others are available.
-All methods are written using the SI units. However, please read method java-doc to make sure that you are aware what unit it outputs. Some properties for an example specific enthalpy,
+All methods accept arguments and outputs results in SI units. However, please read method java-doc to make sure that you are aware what unit it outputs. Some properties for an example specific enthalpy,
 outputs in kJ/kgK not in J/kgK.
 
 If you would like to participate and help in the development process, feel free to contact me. Together we can do more!
@@ -75,7 +75,7 @@ Approach presented above, which probably may cause a serious headache to any pro
 structure, where corresponding methods are sorting themselves while writing a code using this library.
 
 ### UPCOMING FUNCTIONALITIES:
-1. Module for volumetric or mass flow handling of any liquid (80%)
+1. Module for fluid volumetric or mass flow (80%)
 2. Module for humid air heating and cooling with a condensate discharge (70%)
 3. Module for humid air mixing with multiple streams of air (50%)
 4. Module for water spray humidification
@@ -83,18 +83,18 @@ structure, where corresponding methods are sorting themselves while writing a co
 
 ### IMPROVEMENT REQUEST:
 1. Code review and improvement suggestions,
-2. Any clever idea how to handle the problem of determining humidity ration if Ps is greater than Pat (for high air temperatures above 90 oC)
+2. Any clever idea how to handle the problem of determining humidity ratio if Ps is greater than Pat (for high air temperatures above 90 oC)
 3. Any clever idea how to determine humidity ratio if the humid air enthalpy, air temperature and Pat is available (seems easy, but the problem is that for the temperatures close to 0oC, 
 for which two different air states can result in the same specific enthalpy).
 4. Information on any papers or scientific journals which may contain better accuracy temperature and pressure dependent property formulation.
 
 ### USER GUIDE:
-At the moment it is very simple. Just create an instance of MoistAir using any of the available constructors:
+Create an instance of MoistAir using any of the available constructors:
 ```
 MoistAir air = new MoistAir("air1",20,40, Defaults.DEF_PAT,MoistAir.REL_HUMID);
 System.out.println(air);
 ```
-If you change any for the key properties ny use of setters all other dependent properties will be automatically updated.
+Use setters to change any of the core properties. Core property change will automatically recalculate all dependent properties.
 
 ### REFERENCE SOURCE:
 AIR AND WATER VAPOUR PROPERTIES:
