@@ -1,7 +1,7 @@
 package ModelTests;
 
-import Model.MoistAir;
-import Model.VapStatus;
+import Model.Properties.MoistAir;
+import Model.Properties.VapStatus;
 import Physics.Defaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

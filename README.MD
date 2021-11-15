@@ -13,6 +13,8 @@
 The purpose of this project is to develop a software analysis platform for any kind of psychrometrics analytical calculations dedicated to HVAC and process engineering without using an i-x chart.
 At the present development state, only the humid air physics module is complete. 
 It allows for determining the temperature and pressure-dependent thermophysical properties of air. To improve code efficiency instead of the "table search interpolation" approach - most of the properties are introduced as an expression (for ie: polynomial fitting) based on available data and scientific papers.  In many cases, available approximations are used as a starting point for more exact results by the use of an improved version of the numerical Brent-Decker solver developed especially for the needs of this application.
+Library includes MoistAir model class and additionally grants access to set of static methods allowing for calculation of desired property without creating object instance.
+This is useful for any intermediate psychometric calculations before moist air core parameters are updated.
 
 All references are listed at the end of this document. Currently, the air physics' module is capable of calculating the following properties:
 * atmospheric pressure based on height above sea level,
@@ -27,7 +29,7 @@ All references are listed at the end of this document. Currently, the air physic
 * specific heat,
 * density,
 * thermal diffusivity,
-* prandtl number.
+* Prandtl number.
 
 All the properties are independently calculated for dry air, water vapor, water mist, ice mist. Based on these partial properties the final humid air property is determined.
 The water physics module is limited only to the properties required for typical psychrometrics calculation:
@@ -35,8 +37,8 @@ The water physics module is limited only to the properties required for typical 
 * density,
 * specific enthalpy.
 
-Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There is also a number of method allowing for calculations of some properties if others are available.
-All methods accept arguments and outputs results in SI units. However, please read method java-doc to make sure that you are aware what unit it outputs. Some properties for an example specific enthalpy,
+Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There are also a several methods allowing for calculations of some properties if others are available.
+All methods accept arguments and outputs results in SI units. However, please read method java-doc to make sure that you are aware of what unit output value is represented. Some properties for example specific enthalpy,
 outputs in kJ/kgK not in J/kgK.
 
 If you would like to participate and help in the development process, feel free to contact me. Together we can do more!
@@ -51,9 +53,9 @@ properly include the source and author in your references or documentation. For 
 3. Brent-Decker equation solver with automatic counterpart point evaluation algorithm,
 
 ### JAVA NAMING CONVENTION DEVIATIONS:
-This code is dedicated for read and development to programmers with a strong academic mechanical engineering background. 
-To improve code readability for this group of engineers I have decided to deviate from some elements of Java naming convention.
-For an example, code for determining humidity ratio is written as below:
+This code is dedicated to reading and development by programmers with a strong academic mechanical engineering background. 
+To improve code readability for this group of engineers I have decided to deviate from some elements of the Java naming convention.
+For example, code for determining humidity ratio is written as below:
 ```
 return x * Pat / ((WG_RATIO * RH / 100.0) + x * RH / 100.0);
 ```
@@ -61,8 +63,8 @@ instead of:
 ```
 return humidityRatio * atmosphericPressure / ((WG_RATIO * relativeHumidity / 100.0) + humidityRatio * relativeHumidity / 100.0);
 ```
-For any MEP engineer the first one is much easier to read, as it is very close to the equation notation in handbooks and guidelines.
-Method naming convention is key is as following:
+For any MEP engineer, the first one is much easier to read, as it is very close to the equation notation in handbooks and guidelines.
+Method naming convention is key is as follows:
 ```
 calc_Ma_Ta_TdpRH(){}
 ```
@@ -71,7 +73,7 @@ calc_Ma_Ta_TdpRH(){}
 - third fragment - is a name of variable returned by this function, Ta means that this function outputs air temperature as the result,
 - fourth part - are the variables needed as an input. 
 
-Approach presented above, which probably may cause a serious headache to any professional programmer, helps me organize all methods into a clear
+The approach presented above, which probably may cause a serious headache to any professional programmer, helps me organize all methods into a clear
 structure, where corresponding methods are sorting themselves while writing a code using this library.
 
 ### UPCOMING FUNCTIONALITIES:
@@ -86,12 +88,12 @@ structure, where corresponding methods are sorting themselves while writing a co
 2. Any clever idea how to handle the problem of determining humidity ratio if Ps is greater than Pat (for high air temperatures above 90 oC)
 3. Any clever idea how to determine humidity ratio if the humid air enthalpy, air temperature and Pat is available (seems easy, but the problem is that for the temperatures close to 0oC, 
 for which two different air states can result in the same specific enthalpy).
-4. Information on any papers or scientific journals which may contain better accuracy temperature and pressure dependent property formulation.
+4. Information on any papers or scientific journals which may contain better accuracy temperature and pressure-dependent property formulation.
 
 ### USER GUIDE:
 Create an instance of MoistAir using any of the available constructors:
 ```
-MoistAir air = new MoistAir("air1",20,40, Defaults.DEF_PAT,MoistAir.REL_HUMID);
+MoistAir air = new MoistAir("air1", 20, 40, 101_325, MoistAir.REL_HUMID);
 System.out.println(air);
 ```
 Use setters to change any of the core properties. Core property change will automatically recalculate all dependent properties.

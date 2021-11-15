@@ -29,7 +29,7 @@ import java.util.function.DoubleFunction;
  *
  */
 
-public abstract class PhysicsAir {
+public abstract class PhysicsOfAir {
 
     private static final BrentSolver T_SOLVER = new BrentSolver("T_SOLVER",2,5);
     private static final BrentSolver P_SOLVER = new BrentSolver("P_SOLVER",2,0);
@@ -266,7 +266,7 @@ public abstract class PhysicsAir {
             if(temp<=0)
                 hw1 = calc_Ice_I(temp);
             else
-                hw1 = PhysicsWater.calc_Ix(temp);
+                hw1 = PhysicsOfWater.calc_Ix(temp);
 
             return h + (x1 - x) * hw1 - h1;
 
@@ -306,7 +306,7 @@ public abstract class PhysicsAir {
         if(x==0.0)
             return 0.0;
 
-        double Ps = PhysicsAir.calc_Ma_Ps(ta);
+        double Ps = PhysicsOfAir.calc_Ma_Ps(ta);
         double RH = x * Pat / (WG_RATIO * Ps + x * Ps);
 
         return RH > 1 ? 100 : RH*100;
@@ -563,7 +563,7 @@ public abstract class PhysicsAir {
             return i_Da;
 
         //Case2: x <= xMax, unsaturated air
-        double Ps = PhysicsAir.calc_Ma_Ps(ta);
+        double Ps = PhysicsOfAir.calc_Ma_Ps(ta);
         double xMax = calc_Ma_XMax(Ps, Pat);
         double i_Wv = calc_Wv_I(ta) * x;
 
@@ -859,7 +859,7 @@ public abstract class PhysicsAir {
     public static double calc_Ma_Ta_IX(double ix, double x, double Pat) {
 
         T_SOLVER.resetCounterPartPoints();
-        return T_SOLVER.calcForFunction(tx -> ix - PhysicsAir.calc_Ma_Ix(tx, x, Pat));
+        return T_SOLVER.calcForFunction(tx -> ix - PhysicsOfAir.calc_Ma_Ix(tx, x, Pat));
 
     }
 

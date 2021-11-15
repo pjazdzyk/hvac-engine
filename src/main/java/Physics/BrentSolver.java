@@ -3,22 +3,21 @@ package Physics;
 import IO.MessagePrinter;
 import Physics.Exceptions.BrentSolverConditionException;
 import Physics.Exceptions.BrentSolverResultException;
-
 import java.util.function.DoubleFunction;
 
-public class BrentSolver {
+/**
+ * BRENT-DECKER ITERATIVE SOLVER - MODIFIED ALGORITHM PROPOSED BY Zhengqiu Zhang / International Journal of Experimental
+ * Algorithms (IJEA), Volume (2) : Issue (1) : 2011
+ * CODE AUTHOR: PIOTR JAŻDŻYK
+ * COMPANY: SYNERSET, EMAIL: info@synerset.com / LINKEDIN: https://www.linkedin.com/in/pjazdzyk/
+ * VERSION: 1.1
+ *
+ * CHANGE LOG:
+ * 1.1 added automatic counterpart point condition evaluation using linear extrapolation
+ * 1.2 corrected and simplified AB points evaluation procedure
+ */
 
-    /**
-     * BRENT-DECKER ITERATIVE SOLVER - MODIFIED ALGORITHM PROPOSED BY Zhengqiu Zhang / International Journal of Experimental
-     * Algorithms (IJEA), Volume (2) : Issue (1) : 2011
-     * CODE AUTHOR: PIOTR JAŻDŻYK
-     * COMPANY: SYNERSET, EMAIL: info@synerset.com / LINKEDIN: https://www.linkedin.com/in/pjazdzyk/
-     * VERSION: 1.1
-     *
-     * CHANGE LOG:
-     * 1.1 added automatic counterpart point condition evaluation using linear extrapolation
-     * 1.2 corrected and simplified AB points evaluation procedure
-     */
+public class BrentSolver {
 
     // IDENTITY DATA
     private final String name;                                  // Solver instance name

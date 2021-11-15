@@ -61,6 +61,9 @@ public class Defaults {
     public final static double MIN_PAT = 80_000.0;              // [Pa]                 - Minimum allowable atmospheric pressure
     public final static double MIN_T = -260.0;                  // [oC]                 - Minimum allowable air temperature
 
+    //Flow rate
+    public static final double DEF_MASS_FLOW = 0.1;             //kg/s                  - default massflow
+
 }
 
 
