@@ -19,7 +19,7 @@ import Physics.Exceptions.WaterPhysicsArgumentException;
  *
  */
 
-public abstract class PhysicsWater {
+public abstract class PhysicsOfWater {
 
     /**
      * Returns water enthalpy at provided temperature in kJ/kg<br>
@@ -28,7 +28,7 @@ public abstract class PhysicsWater {
      * @param tx water temperature, oC
      * @return water enthalpy at provided temperature, kJ/kg
      */
-    public static final double calc_Ix(double tx) {
+    public static double calc_Ix(double tx) {
         double cp = calc_Cp(tx);
         return tx * cp;
     }
@@ -40,7 +40,7 @@ public abstract class PhysicsWater {
      * @param tx water temperature, oC
      * @return water density at temperature tx and atmospheric pressure, kg/m3
      */
-    public static final double calc_rho(double tx) {
+    public static double calc_rho(double tx) {
         if (tx <= 0) {
             throw new WaterPhysicsArgumentException("[calcWtRho] ERROR: Temperature equals or lower than 0 oC");
        } else if (tx > 150) {
@@ -61,7 +61,7 @@ public abstract class PhysicsWater {
      * @param tx water temperature, oC
      * @return water isobaric specific heat
      */
-    public static final double calc_Cp(double tx) {
+    public static double calc_Cp(double tx) {
 
         if (tx > 0 && tx <= 100)
             return 3.93240161 * Math.pow(10, -13) * Math.pow(tx, 6)

@@ -1,4 +1,4 @@
-package Model;
+package Model.Properties;
 
 public enum VapStatus {
 

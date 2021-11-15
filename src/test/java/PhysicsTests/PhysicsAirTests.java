@@ -1,7 +1,6 @@
 package PhysicsTests;
 
-import Physics.PhysicsAir;
-import jdk.swing.interop.SwingInterOpUtils;
+import Physics.PhysicsOfAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,7 +38,7 @@ public class PhysicsAirTests {
         var expected = 101.325*Math.pow((1-2.25577*Math.pow(10, -5)*altitude),5.2559)*1000;
 
         //Act
-        double actual = PhysicsAir.calc_PatAlt(altitude);
+        double actual = PhysicsOfAir.calc_PatAlt(altitude);
 
         //Assert
         Assertions.assertEquals(expected, actual, MATH_ACCURACY);
@@ -55,7 +54,7 @@ public class PhysicsAirTests {
         var expected = tempAtSea-0.0065*altitude;
 
         //Act
-        var actual = PhysicsAir.calc_TxAlt(tempAtSea, altitude);
+        var actual = PhysicsOfAir.calc_TxAlt(tempAtSea, altitude);
 
         // Assert
         Assertions.assertEquals(expected, actual, MATH_ACCURACY);
@@ -67,7 +66,7 @@ public class PhysicsAirTests {
     public void calc_Ma_PsTest(double ta, double expected){
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Ps(ta);
+        var actual = PhysicsOfAir.calc_Ma_Ps(ta);
         double accuracy;
 
         if(ta<0)
@@ -103,7 +102,7 @@ public class PhysicsAirTests {
     public void calc_Ma_TdpTests(double ta, double RH, double expected){
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Tdp(ta,RH,Pat);
+        var actual = PhysicsOfAir.calc_Ma_Tdp(ta,RH,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,TDP_ACCURACY);
@@ -127,7 +126,7 @@ public class PhysicsAirTests {
     public void calc_Ma_WbtTests(double ta, double RH, double expected){
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Wbt(ta,RH,Pat);
+        var actual = PhysicsOfAir.calc_Ma_Wbt(ta,RH,Pat);
 
         var accuracy = ta < 60 ? WBT_LOW_TEMP_ACCURACY : WBT_HIGH_TEMP_ACCURACY;
 
@@ -169,7 +168,7 @@ public class PhysicsAirTests {
         var x = 0.007359483455449959;
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Ps(x,RH,Pat);
+        var actual = PhysicsOfAir.calc_Ma_Ps(x,RH,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -181,7 +180,7 @@ public class PhysicsAirTests {
     public void calc_Ma_RHTdpTest(double ta, double tdp, double expected){
 
         //Act
-        var actual = PhysicsAir.calc_Ma_RH(tdp,ta);
+        var actual = PhysicsOfAir.calc_Ma_RH(tdp,ta);
 
         //Assert
         Assertions.assertEquals(expected,actual,TDP_ACCURACY);
@@ -209,7 +208,7 @@ public class PhysicsAirTests {
         var expected = 45.0;
 
         //Act
-        var actual = PhysicsAir.calc_Ma_RH(ta,x,Pat);
+        var actual = PhysicsOfAir.calc_Ma_RH(ta,x,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -225,7 +224,7 @@ public class PhysicsAirTests {
         var expected = 0.015143324009257978;
 
         //Act
-        var actual = PhysicsAir.calc_Ma_X(RH,Ps,Pat);
+        var actual = PhysicsOfAir.calc_Ma_X(RH,Ps,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -240,7 +239,7 @@ public class PhysicsAirTests {
         var expected = 0.020356309472910922;
 
         //Act
-        var actual = PhysicsAir.calc_Ma_XMax(Ps,Pat);
+        var actual = PhysicsOfAir.calc_Ma_XMax(Ps,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -252,7 +251,7 @@ public class PhysicsAirTests {
     public void calc_Da_dynVisTest(double ta, double expected){
 
         //Act
-        var actual = PhysicsAir.calc_Da_dynVis(ta);
+        var actual = PhysicsOfAir.calc_Da_dynVis(ta);
 
         //Assert
         Assertions.assertEquals(expected,actual,DYN_VIS_ACCURACY);
@@ -283,7 +282,7 @@ public class PhysicsAirTests {
         var expected = 9.731572271822231E-6;
 
         //Act
-        var actual = PhysicsAir.calc_Wv_dynVis(ta);
+        var actual = PhysicsOfAir.calc_Wv_dynVis(ta);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -299,7 +298,7 @@ public class PhysicsAirTests {
         var expected = 1.7971489177670825E-5;
 
         //Act
-        var actual = PhysicsAir.calc_Ma_dynVis(ta,x);
+        var actual = PhysicsOfAir.calc_Ma_dynVis(ta,x);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -312,8 +311,8 @@ public class PhysicsAirTests {
 
         //Act
         var Pat = 101325;
-        var actualDa = PhysicsAir.calc_Da_Rho(ta,Pat);
-        var actualMa = PhysicsAir.calc_Ma_Rho(ta,x,Pat);
+        var actualDa = PhysicsOfAir.calc_Da_Rho(ta,Pat);
+        var actualMa = PhysicsOfAir.calc_Ma_Rho(ta,x,Pat);
 
         //Arrange
         Assertions.assertEquals(expectedDa,actualDa,RHO_ACCURACY);
@@ -343,7 +342,7 @@ public class PhysicsAirTests {
         var expected = 0.8327494782009955;
 
         //Act
-        var actual = PhysicsAir.calc_Wv_Rho(ta,RH,Pat);
+        var actual = PhysicsOfAir.calc_Wv_Rho(ta,RH,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -355,11 +354,11 @@ public class PhysicsAirTests {
 
         //Arrange
         var ta = 20.0;
-        var rhoDa = PhysicsAir.calc_Da_Rho(ta,Pat);
+        var rhoDa = PhysicsOfAir.calc_Da_Rho(ta,Pat);
         var expected = 1.519954676200779E-5;
 
         //Act
-        var actual = PhysicsAir.calc_Da_kinVis(ta,rhoDa);
+        var actual = PhysicsOfAir.calc_Da_kinVis(ta,rhoDa);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -371,11 +370,11 @@ public class PhysicsAirTests {
         //Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var rhoWv = PhysicsAir.calc_Wv_Rho(ta,RH,Pat);
+        var rhoWv = PhysicsOfAir.calc_Wv_Rho(ta,RH,Pat);
         var expected = 1.168607429553187E-5;
 
         //Act
-        var actual = PhysicsAir.calc_Wv_kinVis(ta,rhoWv);
+        var actual = PhysicsOfAir.calc_Wv_kinVis(ta,rhoWv);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -388,13 +387,13 @@ public class PhysicsAirTests {
         //Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var Ps = PhysicsAir.calc_Ma_Ps(ta);
-        var x = PhysicsAir.calc_Ma_X(RH,Ps,Pat);
-        var rhoMa = PhysicsAir.calc_Ma_Rho(ta,x,Pat);
+        var Ps = PhysicsOfAir.calc_Ma_Ps(ta);
+        var x = PhysicsOfAir.calc_Ma_X(RH,Ps,Pat);
+        var rhoMa = PhysicsOfAir.calc_Ma_Rho(ta,x,Pat);
         var expected = 1.529406259567132E-5;
 
         //Act
-        var actual = PhysicsAir.calc_Ma_kinVis(ta,x,rhoMa);
+        var actual = PhysicsOfAir.calc_Ma_kinVis(ta,x,rhoMa);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -406,7 +405,7 @@ public class PhysicsAirTests {
     public void calc_Da_kTest(double ta, double expected){
 
         //Act
-        var actual = PhysicsAir.calc_Da_k(ta);
+        var actual = PhysicsOfAir.calc_Da_k(ta);
         var accuracy = K_LOW_TEMP_ACCURACY;
 
         if(ta>200)
@@ -445,7 +444,7 @@ public class PhysicsAirTests {
     public void calc_Da_CpTest(double ta, double expected)
     {
         //Act
-        var actual = PhysicsAir.calc_Da_Cp(ta);
+        var actual = PhysicsOfAir.calc_Da_Cp(ta);
 
         //Assert
         Assertions.assertEquals(expected, actual, CPDA_ACCURACY);
@@ -478,7 +477,7 @@ public class PhysicsAirTests {
     public void calc_Wv_CpTest(double ta, double expected)
     {
         //Act
-        var actual = PhysicsAir.calc_Wv_Cp(ta);
+        var actual = PhysicsOfAir.calc_Wv_Cp(ta);
 
         //Assert
         Assertions.assertEquals(expected, actual, CPWV_ACCURACY);
@@ -520,7 +519,7 @@ public class PhysicsAirTests {
         var expected = 1.0181616347871336;
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Cp(ta,x);
+        var actual = PhysicsOfAir.calc_Ma_Cp(ta,x);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -535,7 +534,7 @@ public class PhysicsAirTests {
         var expected = 20.093833530674114;
 
         //Act
-        var actual = PhysicsAir.calc_Da_I(ta);
+        var actual = PhysicsOfAir.calc_Da_I(ta);
 
         //Assert
         Assertions.assertEquals(actual,expected,MATH_ACCURACY);
@@ -550,7 +549,7 @@ public class PhysicsAirTests {
         var expected = 2537.997710797728;
 
         //Act
-        var actual = PhysicsAir.calc_Wv_I(ta);
+        var actual = PhysicsOfAir.calc_Wv_I(ta);
 
         //Assert
         Assertions.assertEquals(actual,expected,MATH_ACCURACY);
@@ -566,8 +565,8 @@ public class PhysicsAirTests {
         var expected_negative = 0.0;
 
         //Act
-        var actual_positive = PhysicsAir.calc_Wt_I(ta);
-        var actual_negative = PhysicsAir.calc_Wt_I(-ta);
+        var actual_positive = PhysicsOfAir.calc_Wt_I(ta);
+        var actual_negative = PhysicsOfAir.calc_Wt_I(-ta);
 
         //Assert
         Assertions.assertEquals(actual_positive,expected_positive,MATH_ACCURACY);
@@ -585,8 +584,8 @@ public class PhysicsAirTests {
         var expected_negative = -375.90000000000003;
 
         //Act
-        var actual_positive = PhysicsAir.calc_Ice_I(ta);
-        var actual_negative = PhysicsAir.calc_Ice_I(-ta);
+        var actual_positive = PhysicsOfAir.calc_Ice_I(ta);
+        var actual_negative = PhysicsOfAir.calc_Ice_I(-ta);
 
         //Assert
         Assertions.assertEquals(actual_positive,expected_positive,MATH_ACCURACY);
@@ -610,10 +609,10 @@ public class PhysicsAirTests {
         var expectedNegUnsat = -19.682530744707513;
 
         //Act
-        var actualPosUnsat = PhysicsAir.calc_Ma_Ix(ta1,x1,Pat);
-        var actualWaterMist = PhysicsAir.calc_Ma_Ix(ta1,x2,Pat);
-        var actualIceMist = PhysicsAir.calc_Ma_Ix(ta2,x2,Pat);
-        var actualNegUnsat = PhysicsAir.calc_Ma_Ix(ta2,x3,Pat);
+        var actualPosUnsat = PhysicsOfAir.calc_Ma_Ix(ta1,x1,Pat);
+        var actualWaterMist = PhysicsOfAir.calc_Ma_Ix(ta1,x2,Pat);
+        var actualIceMist = PhysicsOfAir.calc_Ma_Ix(ta2,x2,Pat);
+        var actualNegUnsat = PhysicsOfAir.calc_Ma_Ix(ta2,x3,Pat);
 
         //Assert
         Assertions.assertEquals(actualPosUnsat,expectedPosUnsat,MATH_ACCURACY);
@@ -629,13 +628,13 @@ public class PhysicsAirTests {
         //Arrange
         var Pat = 101_300;
         var ta = 26.85;
-        var rhoDa = PhysicsAir.calc_Da_Rho(ta,Pat);
-        var kDa = PhysicsAir.calc_Da_k(ta);
-        var cpDa = PhysicsAir.calc_Da_Cp(ta);
+        var rhoDa = PhysicsOfAir.calc_Da_Rho(ta,Pat);
+        var kDa = PhysicsOfAir.calc_Da_k(ta);
+        var cpDa = PhysicsOfAir.calc_Da_Cp(ta);
         var expected = 2.218E-5;
 
         //Act
-        var actual =PhysicsAir.calc_ThDiff(rhoDa,kDa,cpDa);
+        var actual = PhysicsOfAir.calc_ThDiff(rhoDa,kDa,cpDa);
 
         //Assert
         Assertions.assertEquals(actual,expected,THDIFF_ACCURACY);
@@ -648,13 +647,13 @@ public class PhysicsAirTests {
         //Arrange
         var Pat = 101_300;
         var ta = 26.85;
-        var dynVis = PhysicsAir.calc_Da_dynVis(ta);
-        var kDa = PhysicsAir.calc_Da_k(ta);
-        var cpDa = PhysicsAir.calc_Da_Cp(ta);
+        var dynVis = PhysicsOfAir.calc_Da_dynVis(ta);
+        var kDa = PhysicsOfAir.calc_Da_k(ta);
+        var cpDa = PhysicsOfAir.calc_Da_Cp(ta);
         var expected = 0.707;
 
         //Act
-        var actual = PhysicsAir.calc_Prandtl(dynVis,kDa,cpDa);
+        var actual = PhysicsOfAir.calc_Prandtl(dynVis,kDa,cpDa);
 
         //Assert
         Assertions.assertEquals(actual,expected,PRANDTL_ACCURACY);
@@ -666,10 +665,10 @@ public class PhysicsAirTests {
     public void calc_Ma_Ta_TdpRHTest(double ta, double RH){
 
         //Arrange
-        var tdp = PhysicsAir.calc_Ma_Tdp(ta,RH,Pat);
+        var tdp = PhysicsOfAir.calc_Ma_Tdp(ta,RH,Pat);
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Ta_TdpRH(tdp,RH,Pat);
+        var actual = PhysicsOfAir.calc_Ma_Ta_TdpRH(tdp,RH,Pat);
 
         //Assert
         Assertions.assertEquals(ta,actual,MATH_ACCURACY);
@@ -700,11 +699,11 @@ public class PhysicsAirTests {
     public void calc_Ma_Ta_RHXTest(double ta, double RH){
 
         //Arrange
-        var Ps = PhysicsAir.calc_Ma_Ps(ta);
-        var x = PhysicsAir.calc_Ma_X(RH,Ps,Pat);
+        var Ps = PhysicsOfAir.calc_Ma_Ps(ta);
+        var x = PhysicsOfAir.calc_Ma_X(RH,Ps,Pat);
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Ta_RHX(x,RH,Pat);
+        var actual = PhysicsOfAir.calc_Ma_Ta_RHX(x,RH,Pat);
 
         //Assert
         Assertions.assertEquals(actual,ta,MATH_ACCURACY);
@@ -738,10 +737,10 @@ public class PhysicsAirTests {
     public void calc_Ma_Ta_IXTest(double ta, double x){
 
         //Arrange
-        var ix = PhysicsAir.calc_Ma_Ix(ta,x,Pat);
+        var ix = PhysicsOfAir.calc_Ma_Ix(ta,x,Pat);
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Ta_IX(ix,x,Pat);
+        var actual = PhysicsOfAir.calc_Ma_Ta_IX(ix,x,Pat);
 
         //Assert
         Assertions.assertEquals(ta,actual,MATH_ACCURACY);
@@ -775,8 +774,8 @@ public class PhysicsAirTests {
     public void calc_Ma_TMax_PatTest(double Pat){
 
         //Act
-        var actual = PhysicsAir.calc_Ma_TMax_Pat(Pat);
-        var Ps = PhysicsAir.calc_Ma_Ps(actual);
+        var actual = PhysicsOfAir.calc_Ma_TMax_Pat(Pat);
+        var Ps = PhysicsOfAir.calc_Ma_Ps(actual);
 
         //Assert
         Assertions.assertEquals(Ps,Pat,LIMITED_MATH_ACCURACY);
@@ -798,10 +797,10 @@ public class PhysicsAirTests {
     public void calc_Ma_Wbt_TaTest(double ta, double RH) {
 
         //Arrange
-        var wbt = PhysicsAir.calc_Ma_Wbt(ta,RH,Pat);
+        var wbt = PhysicsOfAir.calc_Ma_Wbt(ta,RH,Pat);
 
         //Act
-        var actual = PhysicsAir.calc_Ma_Wbt_Ta(wbt,RH,Pat);
+        var actual = PhysicsOfAir.calc_Ma_Wbt_Ta(wbt,RH,Pat);
 
         //Assert
         Assertions.assertEquals(ta,actual,LIMITED_MATH_ACCURACY);

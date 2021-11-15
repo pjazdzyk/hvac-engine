@@ -1,17 +1,18 @@
 package App;
 
-import Model.MoistAir;
-import Physics.Defaults;
+import Model.Properties.LiquidWater;
+import Model.Properties.MoistAir;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        //USE EXAMPLE
+        var water = new LiquidWater("water",15);
+        var air = new MoistAir("air",20,50);
 
-        MoistAir air = new MoistAir("air1",20,40, Defaults.DEF_PAT,MoistAir.REL_HUMID);
-        System.out.println(air);
-
+        System.out.println(water.getRho());
+        System.out.println(air.getX());
+        System.out.println(air.getRho_Da());
     }
 
    }
