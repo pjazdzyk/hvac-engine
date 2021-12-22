@@ -2,14 +2,12 @@ package Model.Flows;
 
 import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
-import Model.Properties.Fluid;
-import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
 import Physics.PhysicsOfFlow;
 
 import java.io.Serializable;
 
-public class FlowOfAir implements Serializable, Flow {
+public class FlowOfMoistAir implements Serializable {
 
     private String name;
     private MoistAir moistAir;
@@ -17,15 +15,15 @@ public class FlowOfAir implements Serializable, Flow {
     private double volFlowMa;
     private double massFlowDa;
     private double volFlowDa;
-    private FlowTypeAir lockedFlowType;
+    private AirFlowType lockedFlowType;
 
     /**
      * Constructor. Creates FlowOfFluid instance with default Fluid as liquid water, massFlow as a flow type
      * and user input flow rate.
      * @param flowRate fluid mass flow in kg/h
      */
-    public FlowOfAir(double flowRate) {
-        this("FlowOfFluid", flowRate, FlowTypeAir.MA_MASS_FLOW, new MoistAir());
+    public FlowOfMoistAir(double flowRate) {
+        this("FlowOfFluid", flowRate, AirFlowType.MA_MASS_FLOW, new MoistAir());
     }
 
     /**
@@ -33,14 +31,14 @@ public class FlowOfAir implements Serializable, Flow {
      * @param name flow name or tag,
      * @param flowRate flow rate of specified type of flow in kg/s or m3/s
      * @param moistAir type of Fluid (moist air)
-     * @param lockedFlowType - type of Flow (selected from FlowType enum).
+     * @param lockedFlowType - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfAir(String name, double flowRate, FlowTypeAir lockedFlowType, MoistAir moistAir){
+    public FlowOfMoistAir(String name, double flowRate, AirFlowType lockedFlowType, MoistAir moistAir){
 
         if(moistAir == null)
             throw new FlowNullPointerException("Error. MoistAir instance does not exist.");
         if(lockedFlowType == null)
-            throw new FlowNullPointerException("FlowType has not been specified");
+            throw new FlowNullPointerException("FluidFlowType has not been specified");
 
         this.name = name;
         this.moistAir = moistAir;
@@ -53,84 +51,80 @@ public class FlowOfAir implements Serializable, Flow {
         }
     }
 
-    @Override
     public void updateFlows() {
 
         if(lockedFlowType == null)
-            throw new FlowNullPointerException("FlowType has not been specified");
+            throw new FlowNullPointerException("FluidFlowType has not been specified");
 
         switch (lockedFlowType) {
             case MA_MASS_FLOW -> {
                 volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
                 massFlowDa = PhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
-                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlow(moistAir,massFlowDa);
+                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
             }
             case MA_VOL_FLOW -> {
                 massFlowMa = PhysicsOfFlow.calcMassFlowFromVolFlow(moistAir,volFlowMa);
                 massFlowDa = PhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
-                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlow(moistAir,massFlowDa);
+                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
             }
             case DA_MASS_FLOW -> {
                 massFlowMa = PhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
                 volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
-                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlow(moistAir,massFlowDa);
+                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
             }
             case DA_VOL_FLOW -> {
-                massFlowDa = PhysicsOfFlow.calc_Da_MassFlowFromVolFlow(moistAir,volFlowDa);
+                massFlowDa = PhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(moistAir,volFlowDa);
                 massFlowMa = PhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
                 volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
             }
         }
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public Fluid getMoistAir() {
+    public MoistAir getMoistAir() {
         return moistAir;
     }
 
-    @Override
-    public void setMoistAir(Fluid moistAir) {
+    public void setMoistAir(MoistAir moistAir) {
 
         if(moistAir==null)
             throw new FlowNullPointerException("Error. MoistAir instance does not exist.");
 
-        this.moistAir = (MoistAir) moistAir;
+        this.moistAir = moistAir;
         updateFlows();
     }
 
-    @Override
     public double getMassFlow() {
         return massFlowMa;
     }
 
-    @Override
     public void setMassFlow(double massFlowMa) {
 
         if(massFlowMa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = FlowTypeAir.MA_MASS_FLOW;
+        lockedFlowType = AirFlowType.MA_MASS_FLOW;
         this.massFlowMa = massFlowMa;
         updateFlows();
     }
 
-    @Override
     public double getVolFlow() {
         return volFlowMa;
     }
 
-    @Override
+    public void setName(String inName){
+        this.name = inName;
+    }
+
     public void setVolFlow(double volFlowMa) {
 
         if(volFlowMa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = FlowTypeAir.MA_VOL_FLOW;
+        lockedFlowType = AirFlowType.MA_VOL_FLOW;
         this.volFlowMa = volFlowMa;
         updateFlows();
     }
@@ -144,7 +138,7 @@ public class FlowOfAir implements Serializable, Flow {
         if(massFlowDa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = FlowTypeAir.DA_MASS_FLOW;
+        lockedFlowType = AirFlowType.DA_MASS_FLOW;
         this.massFlowDa = massFlowDa;
         updateFlows();
     }
@@ -158,22 +152,32 @@ public class FlowOfAir implements Serializable, Flow {
         if(volFlowDa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = FlowTypeAir.DA_VOL_FLOW;
+        lockedFlowType = AirFlowType.DA_VOL_FLOW;
         this.volFlowDa = volFlowDa;
         updateFlows();
     }
 
-    public FlowTypeAir getLockedFlowType() {
+    public AirFlowType getLockedFlowType() {
         return lockedFlowType;
     }
 
-    public void setLockedFlowType(FlowTypeAir lockedFlowType) {
+    public void setLockedFlowType(AirFlowType lockedFlowType) {
 
         if(lockedFlowType == null)
-            throw new FlowNullPointerException("FlowType has not been specified");
+            throw new FlowNullPointerException("FluidFlowType has not been specified");
 
         this.lockedFlowType = lockedFlowType;
         updateFlows();
     }
 
+    public enum AirFlowType {
+
+        MA_MASS_FLOW,
+        MA_VOL_FLOW,
+        DA_MASS_FLOW,
+        DA_VOL_FLOW;
+
+    }
+
 }
+

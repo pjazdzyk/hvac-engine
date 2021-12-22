@@ -1,6 +1,6 @@
 package Model.Properties;
 
-import Physics.Defaults;
+import Physics.PhysicsDefaults;
 import Physics.Exceptions.WaterPhysicsArgumentException;
 import Physics.PhysicsOfWater;
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
      * DEFAULT CONSTRUCTOR: Creates new liquid water instance with default temperature of 10oC.
      */
     public LiquidWater(){
-        this(DEF_NAME, Defaults.DEF_WT_TW);
+        this(DEF_NAME, PhysicsDefaults.DEF_WT_TW);
     }
 
     /**
@@ -50,10 +50,11 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
 
         this.name = name;
         this.tx = tx;
-        initializeProperties();
+        updateProperties();
     }
 
-    private void initializeProperties(){
+    @Override
+    public void updateProperties(){
         cp = PhysicsOfWater.calc_Cp(tx);
         rho = PhysicsOfWater.calc_rho(tx);
         ix = PhysicsOfWater.calc_Ix(tx);
@@ -61,33 +62,35 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
 
     // GETTERS
     @Override
-    public double getRho() {
+    public final double getRho() {
         return rho;
     }
 
     @Override
-    public double getCp() {
+    public final double getCp() {
         return cp;
     }
 
     @Override
-    public double getIx() {
+    public final double getIx() {
         return ix;
     }
 
     @Override
-    public double getTx() {
+    public final double getTx() {
         return tx;
     }
 
     // SETTERS
+    @Override
     public final void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public final void setTx(double inTx) {
         this.tx = inTx;
-        initializeProperties();
+        updateProperties();
     }
 
     // TOOLS
@@ -106,7 +109,7 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
 
         StringBuilder strb = new StringBuilder();
 
-        strb.append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f %% | ix=%.3f kJ/kg \n", tx, cp, rho, ix));
+        strb.append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n", tx, cp, rho, ix));
 
         return strb.toString();
 

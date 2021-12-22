@@ -128,12 +128,10 @@ public class BrentSolver {
             f_c = func.apply(c);
 
             //Determining better interpolation: inverse quadratic or else - secant method
-            if ((f_a != f_c) && (f_b != f_c)) {
-                s = a * f_b * f_c / ((f_a - f_b) * (f_a - f_c))
-                        + b * f_a * f_c / ((f_b - f_a) * (f_b - f_c))
-                        + c * f_a * f_b / ((f_c - f_a) * (f_c - f_b));
-            } else
-                s = b - f_b * (b - a) / (f_b - f_a);
+            if ((f_a != f_c) && (f_b != f_c))
+                s = inverseQuadraticInterpolation(a,b,c,f_a,f_b,f_c);
+            else
+                s = secantMethod(a,b,f_a,f_b);
 
             diff = Math.abs(b - a);
 
@@ -430,9 +428,9 @@ public class BrentSolver {
         this.p3Coef = p3Coef;
     }
 
-    // Linear interpolation, tool methods
+    // Interpolation methods
     /**
-     * Returns a function value f_x for provided argument of x, based on provided two points P1(x1,f_x1), P2(x2,f_x2).
+     * Linear extrapolation. Returns a function value f_x for provided argument of x, based on provided two points P1(x1,f_x1), P2(x2,f_x2).
      * Can be used for interpolation or extrapolation for linear functions.
      * @return f_x as value of function for argument x.
      */
@@ -443,13 +441,37 @@ public class BrentSolver {
     }
 
     /**
-     * Returns a function argument x for provided argument value f_x, based on provided two points P1(x1,f_x1), P2(x2,f_x2).
+     * Linear extrapolation. Returns a function argument x for provided argument value f_x, based on provided two points P1(x1,f_x1), P2(x2,f_x2).
      * Can be used for interpolation or extrapolation for linear functions.
      * @return x as argument for f_x value.
      */
     public static double linearExtrapolationFromValue(double x1, double f_x1, double x2, double f_x2, double f_x){
 
         return ((x1-x2)/(f_x1-f_x2)) * (f_x-f_x1 + x1*(f_x1-f_x2)/(x1-x2));
+
+    }
+
+    /**
+     * Inverse quadratic interpolation. Returns a function argument x for f_x = 0.0, based on three provided points P2(x2,f_x2), P1(x1,f_x1), PN(xn,f_xn)
+     * It attempts to fit y-based parabola to intersect with axis X as potential function root. It is faster than secant method but more sensitive to initial guesses.
+     * It should be used for points very close to the root.
+     * @return estimated function root x as argument for f_x = 0.
+     */
+    public static double inverseQuadraticInterpolation(double x2, double x1, double xn, double f_x2, double f_x1, double f_xn){
+
+        return x2 * f_x1 * f_xn / ((f_x2 - f_x1) * (f_x2 - f_xn))
+               + x1 * f_x2 * f_xn / ((f_x1 - f_x2) * (f_x1 - f_xn))
+               + xn * f_x2 * f_x1 / ((f_xn - f_x2) * (f_xn - f_x1));
+
+    }
+
+    /**
+     * Secant method. Returns a function argument x for f_x = 0.0, based on two points P2(x2,f_x2), P1(x1,f_x1).
+     * @return estimated function root x as argument for f_x = 0.
+     */
+    public static double secantMethod(double x2, double x1, double f_x2, double f_x1){
+
+       return x1 - f_x1 * (x1 - x2) / (f_x1 - f_x2);
 
     }
 

@@ -83,7 +83,7 @@ public abstract class PhysicsOfFlow {
      * @param massFlowDa dry air mass flow ing kg/s
      * @return dry air volumetric flow in kg/s
      */
-    public static double calc_Da_VolFlowFromMassFlow(MoistAir moistAir, double massFlowDa) {
+    public static double calc_Da_VolFlowFromMassFlowDa(MoistAir moistAir, double massFlowDa) {
 
         if(moistAir==null)
             throw new FlowPhysicsNullPointerException("[calc_Ma_massFlow_X]: Null value passed in moistAir argument");
@@ -97,7 +97,7 @@ public abstract class PhysicsOfFlow {
      * @param volFlowDa dry air volumetric flow ing kg/s
      * @return dry air mass flow in kg/s
      */
-    public static double calc_Da_MassFlowFromVolFlow(MoistAir moistAir, double volFlowDa) {
+    public static double calc_Da_MassFlowFromVolFlowDa(MoistAir moistAir, double volFlowDa) {
 
         if(moistAir==null)
             throw new FlowPhysicsNullPointerException("[calc_Da_massFlow]: Null value passed in moistAir argument");
