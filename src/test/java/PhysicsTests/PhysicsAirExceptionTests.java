@@ -1,6 +1,6 @@
 package PhysicsTests;
 
-import Physics.Defaults;
+import Physics.PhysicsDefaults;
 import Physics.Exceptions.AirPhysicsArgumentException;
 import Physics.PhysicsOfAir;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +14,7 @@ public class PhysicsAirExceptionTests {
     public void calc_Ma_PsExceptionsTest(){
 
         //Assert
-        Assertions.assertThrows(AirPhysicsArgumentException.class, () -> PhysicsOfAir.calc_Ma_Ps(Defaults.MIN_T-1));
+        Assertions.assertThrows(AirPhysicsArgumentException.class, () -> PhysicsOfAir.calc_Ma_Ps(PhysicsDefaults.MIN_T-1));
 
     }
 

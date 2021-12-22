@@ -11,7 +11,7 @@ package Physics;
  * WT - water / WV - water vapour / DA - dry Air / MA - moist air / ST - steam
  */
 
-public class Defaults {
+public class PhysicsDefaults {
 
     //Physical constants
     public final static double CST_R = 8.3144598;              // [J/(mol * K)]        - Universal gas constant

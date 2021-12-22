@@ -16,13 +16,14 @@ import java.io.Serializable;
  * keep volumetric flow at defined rate in case of density changes. By default, it is set to keep constant mass flow.
  */
 
-public class FlowOfFluid implements Serializable, Flow {
+public class FlowOfFluid implements Serializable {
 
+    private static final String DEFAULT_NAME = "FlowOfFluid";
     private String name;
     private Fluid fluid;
     private double massFlow;
     private double volFlow;
-    private FlowType lockedFlowType;
+    private FluidFlowType lockedFluidFlowType;
 
     /**
      * Constructor. Creates FlowOfFluid instance with default Fluid as liquid water, massFlow as a flow type
@@ -30,7 +31,7 @@ public class FlowOfFluid implements Serializable, Flow {
      * @param flowRate fluid mass flow in kg/h
      */
     public FlowOfFluid(double flowRate) {
-       this("FlowOfFluid", flowRate, FlowType.MASS_FLOW, new LiquidWater());
+       this(DEFAULT_NAME, flowRate, FluidFlowType.MASS_FLOW, new LiquidWater());
     }
 
     /**
@@ -38,19 +39,19 @@ public class FlowOfFluid implements Serializable, Flow {
      * @param name flow name or tag,
      * @param flowRate flow rate of specified type of flow in kg/s or m3/s
      * @param fluid type of Fluid
-     * @param lockedFlowType - type of Flow (selected from FlowType enum).
+     * @param lockedFluidFlowType - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfFluid(String name, double flowRate, FlowType lockedFlowType, Fluid fluid){
+    public FlowOfFluid(String name, double flowRate, FluidFlowType lockedFluidFlowType, Fluid fluid){
 
         if(fluid==null)
             throw new FlowNullPointerException("Error. Fluid instance does not exist.");
-        if(lockedFlowType == null)
-            throw new FlowNullPointerException("FlowType has not been specified");
+        if(lockedFluidFlowType == null)
+            throw new FlowNullPointerException("FluidFlowType has not been specified");
 
         this.name = name;
         this.fluid = fluid;
 
-        switch(lockedFlowType){
+        switch(lockedFluidFlowType){
             case MASS_FLOW -> setMassFlow(flowRate);
             case VOL_FLOW -> setVolFlow(flowRate);
         }
@@ -62,75 +63,82 @@ public class FlowOfFluid implements Serializable, Flow {
      */
     public void updateFlows() {
 
-        if(lockedFlowType == null)
-            throw new FlowNullPointerException("FlowType has not been specified");
+        if(lockedFluidFlowType == null)
+            throw new FlowNullPointerException("FluidFlowType has not been specified");
 
-        switch (lockedFlowType) {
+        switch (lockedFluidFlowType) {
             case MASS_FLOW -> volFlow = PhysicsOfFlow.calcVolFlowFromMassFlow(fluid,massFlow);
             case VOL_FLOW -> massFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(fluid,volFlow);
         }
 
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public Fluid getMoistAir() {
+    public Fluid getFluid() {
         return fluid;
     }
 
-    @Override
     public double getMassFlow() {
         return massFlow;
     }
 
-    @Override
     public double getVolFlow() {
         return volFlow;
     }
 
-    @Override
+    public FluidFlowType getLockedFlowType(){
+        return this.lockedFluidFlowType;
+    }
+
+    public void setName(String inName){
+        this.name = inName;
+    }
+
     public void setMassFlow(double inMassFlow) {
 
         if(inMassFlow<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        this.lockedFlowType = FlowType.MASS_FLOW;
+        this.lockedFluidFlowType = FluidFlowType.MASS_FLOW;
         this.massFlow = inMassFlow;
         updateFlows();
     }
 
-    @Override
     public void setVolFlow(double inVolFlow) {
 
         if(inVolFlow<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        this.lockedFlowType = FlowType.VOL_FLOW;
+        this.lockedFluidFlowType = FluidFlowType.VOL_FLOW;
         this.volFlow = inVolFlow;
         updateFlows();
     }
 
-    @Override
-    public void setMoistAir(Fluid moistAir) {
+    public void setFluid(Fluid inFluid) {
 
-        if(moistAir==null)
-            throw new FlowNullPointerException("Error. MoistAir instance does not exist.");
+        if(inFluid==null)
+            throw new FlowNullPointerException("Error. Fluid instance does not exist.");
 
-        this.fluid = moistAir;
+        this.fluid = inFluid;
         updateFlows();
     }
 
-    public void setLockedFlowType(FlowType lockedFlowType) {
+    public void setLockedFlowType(FluidFlowType lockedFluidFlowType) {
 
-        if(lockedFlowType == null)
-            throw new FlowNullPointerException("FlowType has not been specified");
+        if(lockedFluidFlowType == null)
+            throw new FlowNullPointerException("FluidFlowType has not been specified");
 
-        this.lockedFlowType = lockedFlowType;
+        this.lockedFluidFlowType = lockedFluidFlowType;
         updateFlows();
+    }
+
+    public enum FluidFlowType {
+        MASS_FLOW,
+        VOL_FLOW;
     }
 
 }
+

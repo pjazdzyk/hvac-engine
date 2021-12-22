@@ -1,7 +1,7 @@
 package Model.Properties;
 
 import Model.Exceptions.MoistAirArgumentException;
-import Physics.Defaults;
+import Physics.PhysicsDefaults;
 import Physics.PhysicsOfAir;
 import java.io.Serializable;
 
@@ -82,7 +82,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
          */
         public MoistAir(String name, double ta, double RH){
 
-            this(name,ta,RH,Defaults.DEF_PAT,MoistAir.REL_HUMID);
+            this(name,ta,RH, PhysicsDefaults.DEF_PAT,MoistAir.REL_HUMID);
 
         }
 
@@ -105,12 +105,12 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
                 case REL_HUMID -> {
                     this.RH = xRH;
                     this.x = PhysicsOfAir.calc_Ma_X(RH, Ps, Pat);
-                    initializeProperties();
+                    updateProperties();
                 }
                 case HUM_RATIO -> {
                     this.x = xRH;
                     this.RH = PhysicsOfAir.calc_Ma_RH(ta, xRH, Pat);
-                    initializeProperties();
+                    updateProperties();
                 }
                 default -> throw new MoistAirArgumentException("Wrong humidity argument value. Instance was not created.");
             }
@@ -119,7 +119,8 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         /**
          * Calculates and sets all remaining physical properties. Invoked each time at instance creation or core parameters change.
          */
-        private void initializeProperties(){
+        @Override
+        public void updateProperties(){
 
             this.xMax = PhysicsOfAir.calc_Ma_XMax(Ps,pat);
             this.rho_Da = PhysicsOfAir.calc_Da_Rho(tx,pat);
@@ -364,14 +365,14 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         public final void setPat(double inPat) {
             this.pat = inPat;
             this.RH = PhysicsOfAir.calc_Ma_RH(tx,x,inPat);
-            initializeProperties();
+            updateProperties();
         }
 
         public final void setTx(double inTx) {
             this.tx = inTx;
             this.Ps= PhysicsOfAir.calc_Ma_Ps(inTx);
             this.RH= PhysicsOfAir.calc_Ma_RH(inTx,x,pat);
-            initializeProperties();
+            updateProperties();
         }
 
         public final void setX(double inX) {
@@ -381,14 +382,14 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             this.x = inX;
             this.RH = PhysicsOfAir.calc_Ma_RH(tx,inX,pat);
             this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
-            initializeProperties();
+            updateProperties();
         }
 
         public final void setRH(double inRH) {
             this.RH = inRH;
             this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
             this.x = PhysicsOfAir.calc_Ma_X(inRH,Ps,pat);
-            initializeProperties();
+            updateProperties();
         }
 
         public final void setTdp_RH(double tdp){
@@ -396,7 +397,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             this.tx = PhysicsOfAir.calc_Ma_Ta_TdpRH(tdp,RH,pat);
             this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
             this.x = PhysicsOfAir.calc_Ma_X(RH,Ps,pat);
-            initializeProperties();
+            updateProperties();
 
         }
 
@@ -405,10 +406,16 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             this.tx = PhysicsOfAir.calc_Ma_Wbt_Ta(wbt,RH,pat);
             this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
             this.x = PhysicsOfAir.calc_Ma_X(RH,Ps,pat);
-            initializeProperties();
+            updateProperties();
 
         }
 
+        public enum VapStatus {
+            UNSATURATED,
+            SATURATED,
+            WATER_FOG,
+            ICE_FOG
+        }
 
 }
 

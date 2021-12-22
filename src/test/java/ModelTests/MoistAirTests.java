@@ -1,8 +1,7 @@
 package ModelTests;
 
 import Model.Properties.MoistAir;
-import Model.Properties.VapStatus;
-import Physics.Defaults;
+import Physics.PhysicsDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -84,7 +83,7 @@ public class MoistAirTests {
        var expectedRH = 100.0;
        var expectedX = 0.023615590736740518;
        var expectedXmax = 0.010791195679099337;
-       var expectedStatus = VapStatus.WATER_FOG;
+       var expectedStatus = MoistAir.VapStatus.WATER_FOG;
        var actualTx = air.getTx();
        var actualRH = air.getRH();
        var actualX = air.getX();
@@ -101,7 +100,7 @@ public class MoistAirTests {
        expectedRH = 20.0;
        expectedX = 0.0021286922410543555;
        expectedXmax = 0.010791195679099337;
-       expectedStatus = VapStatus.UNSATURATED;
+       expectedStatus = MoistAir.VapStatus.UNSATURATED;
        actualTx = air.getTx();
        actualRH = air.getRH();
        actualX = air.getX();
@@ -120,7 +119,7 @@ public class MoistAirTests {
 
         //Arrange
         MoistAir air1 = new MoistAir("Zero RH AIR", 20,0.0);
-        MoistAir air2 = new MoistAir("Zero X AIR", 20,0.0, Defaults.DEF_PAT,MoistAir.HUM_RATIO);
+        MoistAir air2 = new MoistAir("Zero X AIR", 20,0.0, PhysicsDefaults.DEF_PAT,MoistAir.HUM_RATIO);
 
     }
 

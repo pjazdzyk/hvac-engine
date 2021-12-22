@@ -33,7 +33,7 @@ public abstract class PhysicsOfAir {
 
     private static final BrentSolver T_SOLVER = new BrentSolver("T_SOLVER",2,5);
     private static final BrentSolver P_SOLVER = new BrentSolver("P_SOLVER",2,0);
-    private static final double WG_RATIO = Defaults.CST_WV_MM / Defaults.CST_DA_MM;
+    private static final double WG_RATIO = PhysicsDefaults.CST_WV_MM / PhysicsDefaults.CST_DA_MM;
     private static final double SOLVER_A_COEF = 0.8;
     private static final double SOLVER_B_COEF = 1.01;
 
@@ -60,7 +60,7 @@ public abstract class PhysicsOfAir {
 
     private static double convertCelsiusToKelvin(double ta){
 
-        return ta + Defaults.CST_KLV;
+        return ta + PhysicsDefaults.CST_KLV;
 
     }
 
@@ -102,8 +102,8 @@ public abstract class PhysicsOfAir {
      */
     public static double calc_Ma_Ps(double ta) {
 
-        if (ta < Defaults.MIN_T)
-            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + Defaults.MIN_T);
+        if (ta < PhysicsDefaults.MIN_T)
+            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + PhysicsDefaults.MIN_T);
 
         if (ta < -130)
             return 0.0;
@@ -369,8 +369,8 @@ public abstract class PhysicsOfAir {
 
         double xm = x * 1.61;
         double dynVis_Wv = calc_Wv_dynVis(ta);
-        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(Defaults.CST_WV_MM / Defaults.CST_DA_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (Defaults.CST_DA_MM / Defaults.CST_WV_MM), 0.5));
-        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(Defaults.CST_DA_MM / Defaults.CST_WV_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (Defaults.CST_WV_MM / Defaults.CST_DA_MM), 0.5));
+        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(PhysicsDefaults.CST_WV_MM / PhysicsDefaults.CST_DA_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsDefaults.CST_DA_MM / PhysicsDefaults.CST_WV_MM), 0.5));
+        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(PhysicsDefaults.CST_DA_MM / PhysicsDefaults.CST_WV_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsDefaults.CST_WV_MM / PhysicsDefaults.CST_DA_MM), 0.5));
 
         return (dynVis_Da / (1 + fi_AV * xm)) + (dynVis_Wv / (1 + fi_VA / xm));
 
@@ -480,8 +480,8 @@ public abstract class PhysicsOfAir {
         if(x==0)
             return k_Da;
 
-        double sut_Da = Defaults.CST_DA_SUT;
-        double sut_Wv = Defaults.CST_WV_SUT;
+        double sut_Da = PhysicsDefaults.CST_DA_SUT;
+        double sut_Wv = PhysicsDefaults.CST_WV_SUT;
         double tk = convertCelsiusToKelvin(ta);
         double sutAv = 0.733 * Math.sqrt(sut_Da * sut_Wv);
         double k_Wv = calc_Wv_k(ta);
@@ -553,8 +553,8 @@ public abstract class PhysicsOfAir {
 
         if (x < 0.0)
             throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
-        if (Pat < Defaults.MIN_PAT)
-            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, Defaults.MIN_PAT));
+        if (Pat < PhysicsDefaults.MIN_PAT)
+            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, PhysicsDefaults.MIN_PAT));
 
         double i_Da = calc_Da_I(ta);
 
@@ -600,7 +600,7 @@ public abstract class PhysicsOfAir {
     public static double calc_Wv_I(double ta) {
 
         double cp_Wv = calc_Wv_Cp(ta);
-        return cp_Wv * ta + Defaults.CST_WT_R;
+        return cp_Wv * ta + PhysicsDefaults.CST_WT_R;
 
     }
 
@@ -612,7 +612,7 @@ public abstract class PhysicsOfAir {
      */
     public static double calc_Wt_I(double ta) {
 
-        return  ta < 0.0 ? 0.0 : (Defaults.DEF_WV_CP / 1000.0) * ta;
+        return  ta < 0.0 ? 0.0 : (PhysicsDefaults.DEF_WV_CP / 1000.0) * ta;
 
     }
 
@@ -624,7 +624,7 @@ public abstract class PhysicsOfAir {
      */
     public static double calc_Ice_I(double ta) {
 
-        return ta > 0.0 ? 0.0 : Defaults.DEF_ICE_CP * ta - Defaults.CST_ICE_R;
+        return ta > 0.0 ? 0.0 : PhysicsDefaults.DEF_ICE_CP * ta - PhysicsDefaults.CST_ICE_R;
 
     }
 
@@ -749,7 +749,7 @@ public abstract class PhysicsOfAir {
     public static double calc_Da_Rho(double ta, double Pat) {
 
         double tk = ta + 273.15;
-        return Pat / (Defaults.CST_DA_RG * tk);
+        return Pat / (PhysicsDefaults.CST_DA_RG * tk);
 
     }
 
@@ -765,7 +765,7 @@ public abstract class PhysicsOfAir {
         double tk = convertCelsiusToKelvin(ta);
         double P_Da = RH / 100 * calc_Ma_Ps(ta);
         double P_Wv = Pat - P_Da;
-        return P_Wv / (Defaults.CST_WV_RG * tk);
+        return P_Wv / (PhysicsDefaults.CST_WV_RG * tk);
 
     }
 

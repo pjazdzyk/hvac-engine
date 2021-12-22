@@ -27,9 +27,9 @@ public class PhysicsOfFlowTests {
         var actualWaterMassFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(water,actualWaterVolFlow);
 
         var acutalDaAirMassFlow = PhysicsOfFlow.calc_Da_MassFlowFromMa(air,massFlowMa);
-        var actualDaAirVolFlow = PhysicsOfFlow.calc_Da_VolFlowFromMassFlow(air,acutalDaAirMassFlow);
+        var actualDaAirVolFlow = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(air,acutalDaAirMassFlow);
         var actualMaAirMassFlow = PhysicsOfFlow.calc_Ma_MassFlowFromDa(air,acutalDaAirMassFlow);
-        var actualDaAirMassFlow = PhysicsOfFlow.calc_Da_MassFlowFromVolFlow(air,actualDaAirVolFlow);
+        var actualDaAirMassFlow = PhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(air,actualDaAirVolFlow);
 
         // Assert
         Assertions.assertEquals(expectedWaterVolFlow,actualWaterVolFlow,mathAccuracy);
