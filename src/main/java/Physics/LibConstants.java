@@ -11,7 +11,7 @@ package Physics;
  * WT - water / WV - water vapour / DA - dry Air / MA - moist air / ST - steam
  */
 
-public class PhysicsDefaults {
+public class LibConstants {
 
     //Physical constants
     public final static double CST_R = 8.3144598;              // [J/(mol * K)]        - Universal gas constant
@@ -53,16 +53,15 @@ public class PhysicsDefaults {
     public final static double DEF_BPS_OPEN_LIMIT = 1.0;       // [oC]                 - Safety margin over dew point temperature for calculation of the bypass open temperature
     public final static double MAX_HUM_REJECTION = 0.85;       // -                    - Physical factor to limit maximum possible humidity rejection and keep result physical
 
-    //Mixing class settings
-    public final static double DEF_MIXADJ_ACCURACY = 0.000001; // -                    - Default mixing adjust accuracy
+    //Math
+    public final static double DEF_MATH_ACCURACY = 0.000001;   // -                    - Default acceptable math accuracy
 
     //Minimum nad maximum values
     public final static double MIN_X = 1.0/Short.MAX_VALUE;     // [kg.wv/kg/da]        - Minimum allowable humidity ratio
     public final static double MIN_PAT = 80_000.0;              // [Pa]                 - Minimum allowable atmospheric pressure
     public final static double MIN_T = -260.0;                  // [oC]                 - Minimum allowable air temperature
 
-    //Flow rate
-    public static final double DEF_MASS_FLOW = 0.1;             //kg/s                  - default massflow
+
 
 }
 

@@ -9,7 +9,7 @@ import Physics.Exceptions.FlowPhysicsNullPointerException;
  * CODE AUTHOR: PIOTR JAŻDŻYK / jazdzyk@gmail.com / https://www.linkedin.com/in/pjazdzyk/
  * COMPANY: SYNERSET / https://www.synerset.com / info@synerset.com
  */
-public abstract class PhysicsOfFlow {
+public abstract class LibPhysicsOfFlow {
 
     // GENERAL FLOW RATE CONVERSION METHODS
 

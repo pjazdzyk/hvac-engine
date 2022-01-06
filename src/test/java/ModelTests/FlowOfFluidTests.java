@@ -2,9 +2,8 @@ package ModelTests;
 
 import Model.Flows.FlowOfFluid;
 import Model.Properties.LiquidWater;
-import Physics.PhysicsDefaults;
+import Physics.LibConstants;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class FlowOfFluidTests {
@@ -12,7 +11,7 @@ public class FlowOfFluidTests {
     @Test
     public void FlowOfFluidDefaultConstructorTests(){
         //Arrange
-        LiquidWater water = new LiquidWater(PhysicsDefaults.DEF_WT_TW);
+        LiquidWater water = new LiquidWater(LibConstants.DEF_WT_TW);
         double density = water.getRho();
         double expectedMassFlow = 0.124;
         double expectedVolFlow = expectedMassFlow/density;

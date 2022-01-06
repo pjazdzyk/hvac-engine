@@ -4,7 +4,7 @@ import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
 import Model.Properties.Fluid;
 import Model.Properties.LiquidWater;
-import Physics.PhysicsOfFlow;
+import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
 
@@ -67,8 +67,8 @@ public class FlowOfFluid implements Serializable {
             throw new FlowNullPointerException("FluidFlowType has not been specified");
 
         switch (lockedFluidFlowType) {
-            case MASS_FLOW -> volFlow = PhysicsOfFlow.calcVolFlowFromMassFlow(fluid,massFlow);
-            case VOL_FLOW -> massFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(fluid,volFlow);
+            case MASS_FLOW -> volFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(fluid,massFlow);
+            case VOL_FLOW -> massFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(fluid,volFlow);
         }
 
     }
@@ -135,10 +135,16 @@ public class FlowOfFluid implements Serializable {
         updateFlows();
     }
 
+    public void setTx(double inTx){
+        fluid.setTx(inTx);
+        updateFlows();
+    }
+
     public enum FluidFlowType {
         MASS_FLOW,
         VOL_FLOW;
     }
+
 
 }
 

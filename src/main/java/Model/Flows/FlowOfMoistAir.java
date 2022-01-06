@@ -3,11 +3,11 @@ package Model.Flows;
 import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
 import Model.Properties.MoistAir;
-import Physics.PhysicsOfFlow;
+import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
 
-public class FlowOfMoistAir implements Serializable {
+public class FlowOfMoistAir implements Serializable, Cloneable {
 
     private String name;
     private MoistAir moistAir;
@@ -24,6 +24,7 @@ public class FlowOfMoistAir implements Serializable {
      */
     public FlowOfMoistAir(double flowRate) {
         this("FlowOfFluid", flowRate, AirFlowType.MA_MASS_FLOW, new MoistAir());
+
     }
 
     /**
@@ -58,24 +59,24 @@ public class FlowOfMoistAir implements Serializable {
 
         switch (lockedFlowType) {
             case MA_MASS_FLOW -> {
-                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
-                massFlowDa = PhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
-                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
+                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
+                massFlowDa = LibPhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
+                volFlowDa = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
             }
             case MA_VOL_FLOW -> {
-                massFlowMa = PhysicsOfFlow.calcMassFlowFromVolFlow(moistAir,volFlowMa);
-                massFlowDa = PhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
-                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
+                massFlowMa = LibPhysicsOfFlow.calcMassFlowFromVolFlow(moistAir,volFlowMa);
+                massFlowDa = LibPhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
+                volFlowDa = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
             }
             case DA_MASS_FLOW -> {
-                massFlowMa = PhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
-                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
-                volFlowDa = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
+                massFlowMa = LibPhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
+                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
+                volFlowDa = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
             }
             case DA_VOL_FLOW -> {
-                massFlowDa = PhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(moistAir,volFlowDa);
-                massFlowMa = PhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
-                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
+                massFlowDa = LibPhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(moistAir,volFlowDa);
+                massFlowMa = LibPhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
+                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
             }
         }
     }
@@ -157,6 +158,15 @@ public class FlowOfMoistAir implements Serializable {
         updateFlows();
     }
 
+    public void setFlow(double flow, AirFlowType flowType){
+        switch(flowType){
+            case MA_MASS_FLOW -> massFlowMa = flow;
+            case MA_VOL_FLOW -> volFlowMa = flow;
+            case DA_MASS_FLOW -> massFlowDa = flow;
+            case DA_VOL_FLOW -> volFlowDa = flow;
+        }
+    }
+
     public AirFlowType getLockedFlowType() {
         return lockedFlowType;
     }
@@ -168,6 +178,38 @@ public class FlowOfMoistAir implements Serializable {
 
         this.lockedFlowType = lockedFlowType;
         updateFlows();
+    }
+
+    public void setTx(double inTx){
+        moistAir.setTx(inTx);
+        updateFlows();
+    }
+
+    public void setRH(double inRH){
+        moistAir.setRH(inRH);
+        updateFlows();
+    }
+
+    public void setX(double inX){
+        moistAir.setX(inX);
+        updateFlows();
+    }
+
+    public void setPat(double inPat){
+        moistAir.setPat(inPat);
+        updateFlows();
+    }
+
+    @Override
+    public FlowOfMoistAir clone() {
+        try {
+            FlowOfMoistAir clonedFlow = (FlowOfMoistAir) super.clone();
+            MoistAir clonedAir = moistAir.clone();
+            clonedFlow.setMoistAir(clonedAir);
+            return clonedFlow;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public enum AirFlowType {

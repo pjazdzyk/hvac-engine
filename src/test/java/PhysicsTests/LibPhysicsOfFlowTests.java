@@ -2,11 +2,11 @@ package PhysicsTests;
 
 import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
-import Physics.PhysicsOfFlow;
+import Physics.LibPhysicsOfFlow;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PhysicsOfFlowTests {
+public class LibPhysicsOfFlowTests {
 
     public static final double mathAccuracy = 10E-15;
 
@@ -23,13 +23,13 @@ public class PhysicsOfFlowTests {
         var expectedDaAirVolflow = 0.824510144149681;
 
         // ACT
-        var actualWaterVolFlow = PhysicsOfFlow.calcVolFlowFromMassFlow(water,massFlow);
-        var actualWaterMassFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(water,actualWaterVolFlow);
+        var actualWaterVolFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(water,massFlow);
+        var actualWaterMassFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(water,actualWaterVolFlow);
 
-        var acutalDaAirMassFlow = PhysicsOfFlow.calc_Da_MassFlowFromMa(air,massFlowMa);
-        var actualDaAirVolFlow = PhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(air,acutalDaAirMassFlow);
-        var actualMaAirMassFlow = PhysicsOfFlow.calc_Ma_MassFlowFromDa(air,acutalDaAirMassFlow);
-        var actualDaAirMassFlow = PhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(air,actualDaAirVolFlow);
+        var acutalDaAirMassFlow = LibPhysicsOfFlow.calc_Da_MassFlowFromMa(air,massFlowMa);
+        var actualDaAirVolFlow = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(air,acutalDaAirMassFlow);
+        var actualMaAirMassFlow = LibPhysicsOfFlow.calc_Ma_MassFlowFromDa(air,acutalDaAirMassFlow);
+        var actualDaAirMassFlow = LibPhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(air,actualDaAirVolFlow);
 
         // Assert
         Assertions.assertEquals(expectedWaterVolFlow,actualWaterVolFlow,mathAccuracy);

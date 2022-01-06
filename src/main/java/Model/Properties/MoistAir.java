@@ -1,8 +1,8 @@
 package Model.Properties;
 
 import Model.Exceptions.MoistAirArgumentException;
-import Physics.PhysicsDefaults;
-import Physics.PhysicsOfAir;
+import Physics.LibConstants;
+import Physics.LibPropertyOfAir;
 import java.io.Serializable;
 
 /**
@@ -82,7 +82,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
          */
         public MoistAir(String name, double ta, double RH){
 
-            this(name,ta,RH, PhysicsDefaults.DEF_PAT,MoistAir.REL_HUMID);
+            this(name,ta,RH, LibConstants.DEF_PAT,MoistAir.REL_HUMID);
 
         }
 
@@ -99,17 +99,17 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             this.name = name;
             this.pat = Pat;
             this.tx = ta;
-            this.Ps = PhysicsOfAir.calc_Ma_Ps(ta);
+            this.Ps = LibPropertyOfAir.calc_Ma_Ps(ta);
 
             switch (humidType) {
                 case REL_HUMID -> {
                     this.RH = xRH;
-                    this.x = PhysicsOfAir.calc_Ma_X(RH, Ps, Pat);
+                    this.x = LibPropertyOfAir.calc_Ma_X(RH, Ps, Pat);
                     updateProperties();
                 }
                 case HUM_RATIO -> {
                     this.x = xRH;
-                    this.RH = PhysicsOfAir.calc_Ma_RH(ta, xRH, Pat);
+                    this.RH = LibPropertyOfAir.calc_Ma_RH(ta, xRH, Pat);
                     updateProperties();
                 }
                 default -> throw new MoistAirArgumentException("Wrong humidity argument value. Instance was not created.");
@@ -122,43 +122,43 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         @Override
         public void updateProperties(){
 
-            this.xMax = PhysicsOfAir.calc_Ma_XMax(Ps,pat);
-            this.rho_Da = PhysicsOfAir.calc_Da_Rho(tx,pat);
-            this.rho_Wv = PhysicsOfAir.calc_Wv_Rho(tx,RH,pat);
-            this.rho = PhysicsOfAir.calc_Ma_Rho(tx,x,pat);
+            this.xMax = LibPropertyOfAir.calc_Ma_XMax(Ps,pat);
+            this.rho_Da = LibPropertyOfAir.calc_Da_Rho(tx,pat);
+            this.rho_Wv = LibPropertyOfAir.calc_Wv_Rho(tx,RH,pat);
+            this.rho = LibPropertyOfAir.calc_Ma_Rho(tx,x,pat);
 
-            this.cp_Da = PhysicsOfAir.calc_Da_Cp(tx);
-            this.cp_Wv = PhysicsOfAir.calc_Wv_Cp(tx);
-            this.cp = PhysicsOfAir.calc_Ma_Cp(tx,x);
+            this.cp_Da = LibPropertyOfAir.calc_Da_Cp(tx);
+            this.cp_Wv = LibPropertyOfAir.calc_Wv_Cp(tx);
+            this.cp = LibPropertyOfAir.calc_Ma_Cp(tx,x);
 
-            this.dynVis_Da = PhysicsOfAir.calc_Da_dynVis(tx);
-            this.dynVis_Wv = PhysicsOfAir.calc_Wv_dynVis(tx);
-            this.dynVis = PhysicsOfAir.calc_Ma_dynVis(tx,x);
+            this.dynVis_Da = LibPropertyOfAir.calc_Da_dynVis(tx);
+            this.dynVis_Wv = LibPropertyOfAir.calc_Wv_dynVis(tx);
+            this.dynVis = LibPropertyOfAir.calc_Ma_dynVis(tx,x);
 
-            this.kinVis_Da = PhysicsOfAir.calc_Da_kinVis(tx,rho_Da);
-            this.kinVis_Wv = PhysicsOfAir.calc_Wv_kinVis(tx,rho_Wv);
-            this.kinVis = PhysicsOfAir.calc_Ma_kinVis(tx,x,rho);
+            this.kinVis_Da = LibPropertyOfAir.calc_Da_kinVis(tx,rho_Da);
+            this.kinVis_Wv = LibPropertyOfAir.calc_Wv_kinVis(tx,rho_Wv);
+            this.kinVis = LibPropertyOfAir.calc_Ma_kinVis(tx,x,rho);
 
-            this.k_Da = PhysicsOfAir.calc_Da_k(tx);
-            this.k_Wv = PhysicsOfAir.calc_Wv_k(tx);
-            this.k = PhysicsOfAir.calc_Ma_k(tx,x,dynVis,dynVis_Wv);
+            this.k_Da = LibPropertyOfAir.calc_Da_k(tx);
+            this.k_Wv = LibPropertyOfAir.calc_Wv_k(tx);
+            this.k = LibPropertyOfAir.calc_Ma_k(tx,x,dynVis,dynVis_Wv);
 
-            this.thDiff_Da = PhysicsOfAir.calc_ThDiff(rho_Da,k_Da,cp_Da);
-            this.thDiff_Wv = PhysicsOfAir.calc_ThDiff(rho_Wv,k_Wv,cp_Wv);
-            this.thDiff = PhysicsOfAir.calc_ThDiff(rho,k,cp);
+            this.thDiff_Da = LibPropertyOfAir.calc_ThDiff(rho_Da,k_Da,cp_Da);
+            this.thDiff_Wv = LibPropertyOfAir.calc_ThDiff(rho_Wv,k_Wv,cp_Wv);
+            this.thDiff = LibPropertyOfAir.calc_ThDiff(rho,k,cp);
 
-            this.Pr_Da = PhysicsOfAir.calc_Prandtl(dynVis_Da,k_Da,cp_Da);
-            this.Pr_Wv = PhysicsOfAir.calc_Prandtl(dynVis_Wv,k_Wv,cp_Wv);
-            this.Pr = PhysicsOfAir.calc_Prandtl(dynVis,k,cp);
+            this.Pr_Da = LibPropertyOfAir.calc_Prandtl(dynVis_Da,k_Da,cp_Da);
+            this.Pr_Wv = LibPropertyOfAir.calc_Prandtl(dynVis_Wv,k_Wv,cp_Wv);
+            this.Pr = LibPropertyOfAir.calc_Prandtl(dynVis,k,cp);
 
-            this.ix = PhysicsOfAir.calc_Ma_Ix(tx,x,pat);
-            this.i_Da = PhysicsOfAir.calc_Da_I(tx);
-            this.i_Wv = PhysicsOfAir.calc_Wv_I(tx);
-            this.i_Wt = PhysicsOfAir.calc_Wt_I(tx);
-            this.i_Ice = PhysicsOfAir.calc_Ice_I(tx);
+            this.ix = LibPropertyOfAir.calc_Ma_Ix(tx,x,pat);
+            this.i_Da = LibPropertyOfAir.calc_Da_I(tx);
+            this.i_Wv = LibPropertyOfAir.calc_Wv_I(tx);
+            this.i_Wt = LibPropertyOfAir.calc_Wt_I(tx);
+            this.i_Ice = LibPropertyOfAir.calc_Ice_I(tx);
 
-            this.Wbt = PhysicsOfAir.calc_Ma_Wbt(tx,RH, pat);
-            this.Tdp = PhysicsOfAir.calc_Ma_Tdp (tx,RH, pat);
+            this.Wbt = LibPropertyOfAir.calc_Ma_Wbt(tx,RH, pat);
+            this.Tdp = LibPropertyOfAir.calc_Ma_Tdp (tx,RH, pat);
 
             checkStatus();
 
@@ -364,14 +364,14 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
         public final void setPat(double inPat) {
             this.pat = inPat;
-            this.RH = PhysicsOfAir.calc_Ma_RH(tx,x,inPat);
+            this.RH = LibPropertyOfAir.calc_Ma_RH(tx,x,inPat);
             updateProperties();
         }
 
         public final void setTx(double inTx) {
             this.tx = inTx;
-            this.Ps= PhysicsOfAir.calc_Ma_Ps(inTx);
-            this.RH= PhysicsOfAir.calc_Ma_RH(inTx,x,pat);
+            this.Ps= LibPropertyOfAir.calc_Ma_Ps(inTx);
+            this.RH= LibPropertyOfAir.calc_Ma_RH(inTx,x,pat);
             updateProperties();
         }
 
@@ -380,32 +380,32 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             if(inX<=0)
                 throw new MoistAirArgumentException(name  + " [setX] -> X cannot be 0 or negative value.");
             this.x = inX;
-            this.RH = PhysicsOfAir.calc_Ma_RH(tx,inX,pat);
-            this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
+            this.RH = LibPropertyOfAir.calc_Ma_RH(tx,inX,pat);
+            this.Ps = LibPropertyOfAir.calc_Ma_Ps(tx);
             updateProperties();
         }
 
         public final void setRH(double inRH) {
             this.RH = inRH;
-            this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
-            this.x = PhysicsOfAir.calc_Ma_X(inRH,Ps,pat);
+            this.Ps = LibPropertyOfAir.calc_Ma_Ps(tx);
+            this.x = LibPropertyOfAir.calc_Ma_X(inRH,Ps,pat);
             updateProperties();
         }
 
         public final void setTdp_RH(double tdp){
 
-            this.tx = PhysicsOfAir.calc_Ma_Ta_TdpRH(tdp,RH,pat);
-            this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
-            this.x = PhysicsOfAir.calc_Ma_X(RH,Ps,pat);
+            this.tx = LibPropertyOfAir.calc_Ma_Ta_TdpRH(tdp,RH,pat);
+            this.Ps = LibPropertyOfAir.calc_Ma_Ps(tx);
+            this.x = LibPropertyOfAir.calc_Ma_X(RH,Ps,pat);
             updateProperties();
 
         }
 
         public final void setWbt_RH(double wbt){
 
-            this.tx = PhysicsOfAir.calc_Ma_Wbt_Ta(wbt,RH,pat);
-            this.Ps = PhysicsOfAir.calc_Ma_Ps(tx);
-            this.x = PhysicsOfAir.calc_Ma_X(RH,Ps,pat);
+            this.tx = LibPropertyOfAir.calc_Ma_Wbt_Ta(wbt,RH,pat);
+            this.Ps = LibPropertyOfAir.calc_Ma_Ps(tx);
+            this.x = LibPropertyOfAir.calc_Ma_X(RH,Ps,pat);
             updateProperties();
 
         }
