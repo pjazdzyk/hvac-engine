@@ -1,8 +1,8 @@
 package Model.Properties;
 
-import Physics.PhysicsDefaults;
+import Physics.LibConstants;
 import Physics.Exceptions.WaterPhysicsArgumentException;
-import Physics.PhysicsOfWater;
+import Physics.LibPropertyOfWater;
 import java.io.Serializable;
 
 /**
@@ -26,7 +26,7 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
      * DEFAULT CONSTRUCTOR: Creates new liquid water instance with default temperature of 10oC.
      */
     public LiquidWater(){
-        this(DEF_NAME, PhysicsDefaults.DEF_WT_TW);
+        this(DEF_NAME, LibConstants.DEF_WT_TW);
     }
 
     /**
@@ -55,9 +55,9 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
 
     @Override
     public void updateProperties(){
-        cp = PhysicsOfWater.calc_Cp(tx);
-        rho = PhysicsOfWater.calc_rho(tx);
-        ix = PhysicsOfWater.calc_Ix(tx);
+        cp = LibPropertyOfWater.calc_Cp(tx);
+        rho = LibPropertyOfWater.calc_rho(tx);
+        ix = LibPropertyOfWater.calc_Ix(tx);
     }
 
     // GETTERS

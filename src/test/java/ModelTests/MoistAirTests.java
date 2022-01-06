@@ -1,7 +1,7 @@
 package ModelTests;
 
 import Model.Properties.MoistAir;
-import Physics.PhysicsDefaults;
+import Physics.LibConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -119,7 +119,7 @@ public class MoistAirTests {
 
         //Arrange
         MoistAir air1 = new MoistAir("Zero RH AIR", 20,0.0);
-        MoistAir air2 = new MoistAir("Zero X AIR", 20,0.0, PhysicsDefaults.DEF_PAT,MoistAir.HUM_RATIO);
+        MoistAir air2 = new MoistAir("Zero X AIR", 20,0.0, LibConstants.DEF_PAT,MoistAir.HUM_RATIO);
 
     }
 

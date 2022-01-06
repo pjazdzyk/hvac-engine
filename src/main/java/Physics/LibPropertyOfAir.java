@@ -13,7 +13,7 @@ import java.util.function.DoubleFunction;
  * LIBRARY LAST REVISION DATE: 2021.03
  *
  * SOURCE PUBLICATIONS:
- * [1] - ASHRAE FUNDAMENTALS 2002, CHAPTER 6 "Psychrometrics"
+ * [1] - ASHRAE FUNDAMENTALS 2002, CHAPTER 6 "LibPsychro"
  * [2] - Buck, Arden L. "New Equations for Computing Vapour Pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981).
  * [3] - Buck Research Instruments L.L.C. "MODEL CR-1A HYGROMETER WITH AUTO FILL OPERATING MANUAL" (May 2012).
  * [4] - Morvay Z.K, Gvozdenac D.D. "Fundamentals for analysis and calculation of energy and environmental performance". Applied Industrial Energy And Environmental Management.
@@ -29,11 +29,11 @@ import java.util.function.DoubleFunction;
  *
  */
 
-public abstract class PhysicsOfAir {
+public abstract class LibPropertyOfAir {
 
     private static final BrentSolver T_SOLVER = new BrentSolver("T_SOLVER",2,5);
     private static final BrentSolver P_SOLVER = new BrentSolver("P_SOLVER",2,0);
-    private static final double WG_RATIO = PhysicsDefaults.CST_WV_MM / PhysicsDefaults.CST_DA_MM;
+    private static final double WG_RATIO = LibConstants.CST_WV_MM / LibConstants.CST_DA_MM;
     private static final double SOLVER_A_COEF = 0.8;
     private static final double SOLVER_B_COEF = 1.01;
 
@@ -60,7 +60,7 @@ public abstract class PhysicsOfAir {
 
     private static double convertCelsiusToKelvin(double ta){
 
-        return ta + PhysicsDefaults.CST_KLV;
+        return ta + LibConstants.CST_KLV;
 
     }
 
@@ -102,8 +102,8 @@ public abstract class PhysicsOfAir {
      */
     public static double calc_Ma_Ps(double ta) {
 
-        if (ta < PhysicsDefaults.MIN_T)
-            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + PhysicsDefaults.MIN_T);
+        if (ta < LibConstants.MIN_T)
+            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + LibConstants.MIN_T);
 
         if (ta < -130)
             return 0.0;
@@ -266,7 +266,7 @@ public abstract class PhysicsOfAir {
             if(temp<=0)
                 hw1 = calc_Ice_I(temp);
             else
-                hw1 = PhysicsOfWater.calc_Ix(temp);
+                hw1 = LibPropertyOfWater.calc_Ix(temp);
 
             return h + (x1 - x) * hw1 - h1;
 
@@ -306,7 +306,7 @@ public abstract class PhysicsOfAir {
         if(x==0.0)
             return 0.0;
 
-        double Ps = PhysicsOfAir.calc_Ma_Ps(ta);
+        double Ps = LibPropertyOfAir.calc_Ma_Ps(ta);
         double RH = x * Pat / (WG_RATIO * Ps + x * Ps);
 
         return RH > 1 ? 100 : RH*100;
@@ -369,8 +369,8 @@ public abstract class PhysicsOfAir {
 
         double xm = x * 1.61;
         double dynVis_Wv = calc_Wv_dynVis(ta);
-        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(PhysicsDefaults.CST_WV_MM / PhysicsDefaults.CST_DA_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsDefaults.CST_DA_MM / PhysicsDefaults.CST_WV_MM), 0.5));
-        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(PhysicsDefaults.CST_DA_MM / PhysicsDefaults.CST_WV_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsDefaults.CST_WV_MM / PhysicsDefaults.CST_DA_MM), 0.5));
+        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(LibConstants.CST_WV_MM / LibConstants.CST_DA_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (LibConstants.CST_DA_MM / LibConstants.CST_WV_MM), 0.5));
+        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(LibConstants.CST_DA_MM / LibConstants.CST_WV_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (LibConstants.CST_WV_MM / LibConstants.CST_DA_MM), 0.5));
 
         return (dynVis_Da / (1 + fi_AV * xm)) + (dynVis_Wv / (1 + fi_VA / xm));
 
@@ -480,8 +480,8 @@ public abstract class PhysicsOfAir {
         if(x==0)
             return k_Da;
 
-        double sut_Da = PhysicsDefaults.CST_DA_SUT;
-        double sut_Wv = PhysicsDefaults.CST_WV_SUT;
+        double sut_Da = LibConstants.CST_DA_SUT;
+        double sut_Wv = LibConstants.CST_WV_SUT;
         double tk = convertCelsiusToKelvin(ta);
         double sutAv = 0.733 * Math.sqrt(sut_Da * sut_Wv);
         double k_Wv = calc_Wv_k(ta);
@@ -553,8 +553,8 @@ public abstract class PhysicsOfAir {
 
         if (x < 0.0)
             throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
-        if (Pat < PhysicsDefaults.MIN_PAT)
-            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, PhysicsDefaults.MIN_PAT));
+        if (Pat < LibConstants.MIN_PAT)
+            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, LibConstants.MIN_PAT));
 
         double i_Da = calc_Da_I(ta);
 
@@ -563,7 +563,7 @@ public abstract class PhysicsOfAir {
             return i_Da;
 
         //Case2: x <= xMax, unsaturated air
-        double Ps = PhysicsOfAir.calc_Ma_Ps(ta);
+        double Ps = LibPropertyOfAir.calc_Ma_Ps(ta);
         double xMax = calc_Ma_XMax(Ps, Pat);
         double i_Wv = calc_Wv_I(ta) * x;
 
@@ -600,7 +600,7 @@ public abstract class PhysicsOfAir {
     public static double calc_Wv_I(double ta) {
 
         double cp_Wv = calc_Wv_Cp(ta);
-        return cp_Wv * ta + PhysicsDefaults.CST_WT_R;
+        return cp_Wv * ta + LibConstants.CST_WT_R;
 
     }
 
@@ -612,7 +612,7 @@ public abstract class PhysicsOfAir {
      */
     public static double calc_Wt_I(double ta) {
 
-        return  ta < 0.0 ? 0.0 : (PhysicsDefaults.DEF_WV_CP / 1000.0) * ta;
+        return  ta < 0.0 ? 0.0 : (LibConstants.DEF_WV_CP / 1000.0) * ta;
 
     }
 
@@ -624,7 +624,7 @@ public abstract class PhysicsOfAir {
      */
     public static double calc_Ice_I(double ta) {
 
-        return ta > 0.0 ? 0.0 : PhysicsDefaults.DEF_ICE_CP * ta - PhysicsDefaults.CST_ICE_R;
+        return ta > 0.0 ? 0.0 : LibConstants.DEF_ICE_CP * ta - LibConstants.CST_ICE_R;
 
     }
 
@@ -749,7 +749,7 @@ public abstract class PhysicsOfAir {
     public static double calc_Da_Rho(double ta, double Pat) {
 
         double tk = ta + 273.15;
-        return Pat / (PhysicsDefaults.CST_DA_RG * tk);
+        return Pat / (LibConstants.CST_DA_RG * tk);
 
     }
 
@@ -765,7 +765,7 @@ public abstract class PhysicsOfAir {
         double tk = convertCelsiusToKelvin(ta);
         double P_Da = RH / 100 * calc_Ma_Ps(ta);
         double P_Wv = Pat - P_Da;
-        return P_Wv / (PhysicsDefaults.CST_WV_RG * tk);
+        return P_Wv / (LibConstants.CST_WV_RG * tk);
 
     }
 
@@ -859,7 +859,7 @@ public abstract class PhysicsOfAir {
     public static double calc_Ma_Ta_IX(double ix, double x, double Pat) {
 
         T_SOLVER.resetCounterPartPoints();
-        return T_SOLVER.calcForFunction(tx -> ix - PhysicsOfAir.calc_Ma_Ix(tx, x, Pat));
+        return T_SOLVER.calcForFunction(tx -> ix - LibPropertyOfAir.calc_Ma_Ix(tx, x, Pat));
 
     }
 
