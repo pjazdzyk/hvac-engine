@@ -145,6 +145,17 @@ public class FlowOfFluid implements Serializable {
         VOL_FLOW;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder bld = new StringBuilder();
+        bld.append("Flow name: \t\t").append(name).append("\n");
+        bld.append("Locked flow: \t").append(lockedFluidFlowType).append("\n");
+        bld.append("m_Con = ").append(String.format("%.3f",massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
+                .append("v_Con = ").append(String.format("%.6f",volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
+                .append("v_Con = ").append(String.format("%.3f",volFlow*3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
+        return bld.toString();
+    }
+
 
 }
 

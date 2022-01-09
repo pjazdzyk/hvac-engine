@@ -46,7 +46,7 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
     public LiquidWater(String name, double tx){
 
         if(tx>=100)
-            throw new WaterPhysicsArgumentException("Cannot create an instance. Temperature is greater or equal 100oC");
+           // throw new WaterPhysicsArgumentException("Cannot create an instance. Temperature is greater or equal 100oC");
 
         this.name = name;
         this.tx = tx;

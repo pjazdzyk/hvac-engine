@@ -2,31 +2,28 @@ package App;
 
 import Model.Flows.FlowOfMoistAir;
 import Model.Process.ProcAirHeatCool;
+import Model.Properties.Fluid;
+import Model.Properties.LiquidWater;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        FlowOfMoistAir flow1 = new FlowOfMoistAir(1.0);
-        flow1.setTx(35);
-        flow1.setRH(50);
+        FlowOfMoistAir air1 = new FlowOfMoistAir(0.1);
+        air1.setFlow(1200d/3600d, FlowOfMoistAir.AirFlowType.MA_VOL_FLOW);
+        air1.setTx(30);
+        air1.setRH(55);
 
-        ProcAirHeatCool heatPump = new ProcAirHeatCool(flow1);
-        heatPump.applyCoolingInQFromOutTx(20);
-/*
-        String result1 = heatPump.getInletFlow().getMoistAir().toString();
-        String result2 = heatPump.getOutletFlow().getMoistAir().toString();
+        ProcAirHeatCool coil = new ProcAirHeatCool(air1);
 
-        System.out.println(result1);
-        System.out.println(result2);
-        System.out.println(heatPump.getHeatQ());
-        System.out.println(heatPump.getCondensateFlow().getMassFlow());
-        System.out.println(heatPump.getInletFlow().getMassFlow()*3600);
-        System.out.println(heatPump.getOutletFlow().getMassFlow()*3600);
-*/
-        heatPump.applyHeatingInQOutTxFromOutRH(40);
+        coil.applyCoolingInQFromOutTx(16);
 
-        System.out.println(heatPump.getOutletFlow().getMoistAir().toString());
+        System.out.println(coil.getInletFlow().getMoistAir().toString());
+        System.out.println(coil.getOutletFlow().getMoistAir().toString());
+        System.out.println(coil.getCondensateFlow().getMassFlow());
+
+        System.out.println("\n");
+        System.out.println(coil.toString());
 
     }
 
