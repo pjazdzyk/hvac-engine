@@ -2,6 +2,7 @@ package Model.Flows;
 
 import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
+import Model.ModelDefaults;
 import Model.Properties.MoistAir;
 import Physics.LibPhysicsOfFlow;
 
@@ -18,7 +19,14 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
     private AirFlowType lockedFlowType;
 
     /**
-     * Constructor. Creates FlowOfFluid instance with default Fluid as liquid water, massFlow as a flow type
+     * Default constructor. Create FlowOfFluid instance with default FlowOfMoistAir instance and default mass flow as 0.1kg/s
+     */
+    public FlowOfMoistAir(){
+        this(ModelDefaults.DEF_AIR_MASS_FLOW);
+    }
+
+    /**
+     * Constructor. Creates FlowOfFluid instance with default FlowOfMoistAir instance. Provided flow is considered as mass flow of moist air in kg/s.
      * and user input flow rate.
      * @param flowRate fluid mass flow in kg/h
      */
@@ -28,7 +36,7 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
     }
 
     /**
-     * Primary constructor.
+     * Primary constructor. Creates FlowOfFluid instance for provided Moist Air, flow and flow type.
      * @param name flow name or tag,
      * @param flowRate flow rate of specified type of flow in kg/s or m3/s
      * @param moistAir type of Fluid (moist air)
@@ -160,10 +168,10 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
 
     public void setFlow(double flow, AirFlowType flowType){
         switch(flowType){
-            case MA_MASS_FLOW -> massFlowMa = flow;
-            case MA_VOL_FLOW -> volFlowMa = flow;
-            case DA_MASS_FLOW -> massFlowDa = flow;
-            case DA_VOL_FLOW -> volFlowDa = flow;
+            case MA_MASS_FLOW -> setMassFlow(flow);
+            case MA_VOL_FLOW -> setVolFlow(flow);
+            case DA_MASS_FLOW -> setMassFlowDa(flow);
+            case DA_VOL_FLOW -> setVolFlowDa(flow);
         }
     }
 
@@ -221,5 +229,18 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
 
     }
 
+    @Override
+    public String toString() {
+       StringBuilder bld = new StringBuilder();
+       bld.append("Flow name: \t\t").append(name).append("\n");
+       bld.append("Locked flow: \t").append(lockedFlowType).append("\n");
+       bld.append("m_Ma = ").append(String.format("%.3f",massFlowMa)).append(" kg/s ").append("\t").append("moist air mass flow\t | ")
+          .append("v_Ma = ").append(String.format("%.3f",volFlowMa)).append(" m3/s ").append("\t").append("moist air vol flow\t |  ")
+          .append("v_Ma = ").append(String.format("%.1f",volFlowMa*3600)).append(" m3/h ").append("\t").append("moist air vol flow\n");
+       bld.append("m_Da = ").append(String.format("%.3f",massFlowDa)).append(" kg/s ").append("\t").append("dry air mass flow\t | ")
+           .append("v_Da = ").append(String.format("%.3f",volFlowDa)).append(" m3/s ").append("\t").append("dry air vol flow\t |  ")
+           .append("v_Da = ").append(String.format("%.1f",volFlowDa*3600)).append(" m3/h ").append("\t").append("dry air vol flow\n");
+       return bld.toString();
+    }
 }
 
