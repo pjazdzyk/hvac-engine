@@ -1,4 +1,4 @@
-package ModelTests;
+package Model;
 
 import Model.Properties.MoistAir;
 import Physics.LibConstants;

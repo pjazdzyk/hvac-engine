@@ -1,4 +1,4 @@
-package ModelTests;
+package Model;
 
 import Model.Flows.FlowOfFluid;
 import Model.Properties.LiquidWater;
