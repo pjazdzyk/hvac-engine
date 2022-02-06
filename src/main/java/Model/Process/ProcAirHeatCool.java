@@ -13,9 +13,9 @@ import Physics.*;
 
 public class ProcAirHeatCool {
 
-    private final BrentSolver HC_SOLVER = new BrentSolver("HC_SOLVER");
-    private final MessagePrinter printer = new MessagePrinter();
+    private final MessagePrinter PRINTER = new MessagePrinter();
 
+    private String ID;
     private FlowOfMoistAir inletFlow;
     private MoistAir inletAirProp;
     private FlowOfMoistAir outletFlow;
@@ -24,20 +24,21 @@ public class ProcAirHeatCool {
     private Fluid condensate;
 
     private double heatQ;
-    private double BF;
     private double ts_Hydr;
     private double tr_Hydr;
     private double tm_Wall;
+    private double BF;
 
     public ProcAirHeatCool(){
         this(new FlowOfMoistAir());
     }
 
     public ProcAirHeatCool(FlowOfMoistAir inletFlow) {
-        this(inletFlow, inletFlow.clone(), new FlowOfFluid(ModelDefaults.DEF_CON_MASS_FLOW), ModelDefaults.DEF_CHW_SUPPLY_TEMP, ModelDefaults.DEF_CHW_RETURN_TEMP);
+        this(ModelDefaults.DEF_PROCESS_NAME, inletFlow, inletFlow.clone(), new FlowOfFluid(ModelDefaults.DEF_CON_MASS_FLOW), ModelDefaults.DEF_CHW_SUPPLY_TEMP, ModelDefaults.DEF_CHW_RETURN_TEMP);
     }
 
-    public ProcAirHeatCool(FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
+    public ProcAirHeatCool(String ID, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
+        this.ID = ID;
         this.inletFlow = inletFlow;
         this.outletFlow = outletFlow;
         this.condensateFlow = condensateFlow;
@@ -46,7 +47,7 @@ public class ProcAirHeatCool {
         this.condensate = condensateFlow.getFluid();
         this.ts_Hydr = coolingSupplyTemp;
         this.tr_Hydr = coolingReturnTemp;
-        this.tm_Wall = LibPsychro.calcAverageWallTemp(ts_Hydr,tr_Hydr);
+        this.tm_Wall = LibPsychroProcess.calcAverageWallTemp(ts_Hydr,tr_Hydr);
         resetProcess();
     }
 
@@ -60,9 +61,8 @@ public class ProcAirHeatCool {
      */
     public void applyHeatingOutTxFromInQ(double inQ){
         resetProcess();
-        double outTx = LibPsychro.calcHeatingOutTxFromInQ(inletFlow,inQ);
-        //Committing values to outlet
-        outletFlow.setTx(outTx);
+        double[] result = LibPsychroProcess.calcHeatingOutTxFromInQ(inletFlow,inQ);
+        commitResultsToOutlet(result);
     }
 
     /**
@@ -73,9 +73,8 @@ public class ProcAirHeatCool {
      */
     public void applyHeatingInQFromOutTx(double outTx){
         resetProcess();
-        heatQ = LibPsychro.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,outTx);
-        //Committing values to outlet
-        outletFlow.setTx(outTx);
+        double[] result = LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,outTx);
+        commitResultsToOutlet(result);
     }
 
     /**
@@ -85,12 +84,9 @@ public class ProcAirHeatCool {
      */
     public void applyHeatingInQOutTxFromOutRH(double outRH){
         resetProcess();
-        double[] result = LibPsychro.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
-        //Committing values to outlet
-        heatQ = result[0];
-        outletFlow.setTx(result[1]);
-        BF = LibPsychro.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
-        //Additional convergence test
+        double[] result = LibPsychroProcess.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
+        commitResultsToOutlet(result);
+        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
         convergenceCheckForRH(outRH);
     }
 
@@ -100,10 +96,9 @@ public class ProcAirHeatCool {
      */
     public void applyCoolingInQFromOutTx(double outTx){
         resetProcess();
-        double[] result = LibPsychro.calcCoolingInQFromOutTx(inletFlow,ts_Hydr,tr_Hydr,outTx);
-        //Committing values to outlet
-        commitCoolingResultsToProperties(result);
-        BF = LibPsychro.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outTx);
+        double[] result = LibPsychroProcess.calcCoolingInQFromOutTx(inletFlow,tm_Wall,outTx);
+        commitResultsToOutlet(result);
+        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outTx);
     }
 
     /**
@@ -112,11 +107,9 @@ public class ProcAirHeatCool {
      */
     public void applyCoolingInQFromOutRH(double outRH) {
         resetProcess();
-        double[] result = LibPsychro.calcCoolingInQFromOutRH(inletFlow,ts_Hydr,tr_Hydr,outRH);
-        //Committing values to outlet
-        commitCoolingResultsToProperties(result);
-        BF = LibPsychro.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
-        //Additional convergence test
+        double[] result = LibPsychroProcess.calcCoolingInQFromOutRH(inletFlow,tm_Wall,outRH);
+        commitResultsToOutlet(result);
+        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
         convergenceCheckForRH(outRH);
     }
 
@@ -128,7 +121,7 @@ public class ProcAirHeatCool {
         condensateFlow.setTx(outletFlow.getMoistAir().getTx());
         condensateFlow.setMassFlow(0.0);
         heatQ = 0.0;
-        tm_Wall = LibPsychro.calcAverageWallTemp(ts_Hydr,tr_Hydr);
+        tm_Wall = LibPsychroProcess.calcAverageWallTemp(ts_Hydr,tr_Hydr);
     }
 
     private void convergenceCheckForRH(double outRH){
@@ -137,7 +130,7 @@ public class ProcAirHeatCool {
             throw new SolutionNotConvergedException("Solution convergence error. Expected outlet RH= " + outRH + " actual outlet RH= " + resultingRH2);
     }
 
-    private void commitCoolingResultsToProperties(double[] result){
+    private void commitResultsToOutlet(double[] result){
         if(result.length!=5)
             throw new ProcessArgumentException("Invalid result. Array length is different than 5");
         heatQ = result[0];
@@ -181,7 +174,7 @@ public class ProcAirHeatCool {
 
     public void setTs_Hydr(double ts_Hydr) {
         this.ts_Hydr = ts_Hydr;
-        tm_Wall = LibPsychro.calcAverageWallTemp(ts_Hydr,tr_Hydr);
+        tm_Wall = LibPsychroProcess.calcAverageWallTemp(ts_Hydr,tr_Hydr);
         //TO DO: Implement last method used
     }
 
@@ -191,7 +184,7 @@ public class ProcAirHeatCool {
 
     public void setTr_Hydr(double tr_Hydr) {
         this.tr_Hydr = tr_Hydr;
-        tm_Wall = LibPsychro.calcAverageWallTemp(ts_Hydr,tr_Hydr);
+        tm_Wall = LibPsychroProcess.calcAverageWallTemp(ts_Hydr,tr_Hydr);
         //TO DO: Implement last method used
     }
 
@@ -212,23 +205,27 @@ public class ProcAirHeatCool {
         bld.append(String.format("tx_In = %.2f" + " oC " + "\tinlet air temperature\n",inletAirProp.getTx()));
         bld.append(String.format("RH_In = %.2f" + " %% " + "\tinlet air relative humidity\n",inletAirProp.getRH()));
         bld.append(String.format("x_In = %.5f" + " kgWv/kgDa " + "\tinlet air humidity ratio\n",inletAirProp.getX()));
+
         bld.append("\n>>OUTLET FLOW:\n");
         bld.append(outletFlow.toString());
         bld.append(String.format("tx_Out = %.2f" + " oC " + "\tinlet air temperature\n",outletAirProp.getTx()));
         bld.append(String.format("RH_Out = %.2f" + " %% " + "\tinlet air relative humidity\n",outletAirProp.getRH()));
         bld.append(String.format("x_Out = %.5f" + " kgWv/kgDa " + "\tinlet air humidity ratio\n",outletAirProp.getX()));
+
         bld.append("\n>>CONDENSATE FLOW:\n");
         bld.append(condensateFlow.toString());
         bld.append(String.format("tx_Con = %.2f" + " oC " + "\tcondensate temperature\n",condensate.getTx()));
+
         bld.append("\n>>HEAT OF PROCESS:\n");
         bld.append(String.format("Q = %.2f" + " W " + "\t heating / cooling power\n",heatQ));
+
         bld.append("\n>>COIL PROPERTIES:\n");
         bld.append(String.format("ts_hydr = %.2f" + " oC " + "\t coolant supply temperature\n",ts_Hydr));
         bld.append(String.format("tr_hydr = %.2f" + " oC " + "\t coolant return temperature\n",tr_Hydr));
         bld.append(String.format("tm_wall = %.2f" + " oC " + "\t average linear wall temperature\n",tm_Wall));
         bld.append(String.format("BF = %.3f" + " - " + "\t\t coil bypass factor\n",BF));
-
         bld.append("-----------------------------------------END OF RESULTS-----------------------------------------\n");
+
         return bld.toString();
     }
 }

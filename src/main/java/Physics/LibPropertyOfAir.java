@@ -13,7 +13,7 @@ import java.util.function.DoubleFunction;
  * LIBRARY LAST REVISION DATE: 2021.03
  *
  * SOURCE PUBLICATIONS:
- * [1] - ASHRAE FUNDAMENTALS 2002, CHAPTER 6 "LibPsychro"
+ * [1] - ASHRAE FUNDAMENTALS 2002, CHAPTER 6 "LibPsychroProcess"
  * [2] - Buck, Arden L. "New Equations for Computing Vapour Pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981).
  * [3] - Buck Research Instruments L.L.C. "MODEL CR-1A HYGROMETER WITH AUTO FILL OPERATING MANUAL" (May 2012).
  * [4] - Morvay Z.K, Gvozdenac D.D. "Fundamentals for analysis and calculation of energy and environmental performance". Applied Industrial Energy And Environmental Management.

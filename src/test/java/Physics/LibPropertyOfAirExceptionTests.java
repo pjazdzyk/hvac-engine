@@ -1,12 +1,10 @@
-package PhysicsTests;
+package Physics;
 
-import Physics.LibConstants;
 import Physics.Exceptions.AirPhysicsArgumentException;
-import Physics.LibPropertyOfAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PhysicsAirExceptionTests {
+public class LibPropertyOfAirExceptionTests {
 
     static final double Pat = 100_000.0;
 
@@ -24,7 +22,5 @@ public class PhysicsAirExceptionTests {
         Assertions.assertThrows(AirPhysicsArgumentException.class,()-> LibPropertyOfAir.calc_Ma_Tdp(20,-20,Pat));
 
     }
-
-
 
 }

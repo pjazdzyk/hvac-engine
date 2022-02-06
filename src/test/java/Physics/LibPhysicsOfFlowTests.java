@@ -1,8 +1,7 @@
-package PhysicsTests;
+package Physics;
 
 import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
-import Physics.LibPhysicsOfFlow;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

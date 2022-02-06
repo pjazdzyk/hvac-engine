@@ -1,6 +1,5 @@
-package PhysicsTests;
+package Physics;
 
-import Physics.LibPropertyOfAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,7 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-public class PhysicsAirTests {
+public class LibPropertyOfAirTests {
 
     static final double Pat = 100_000.0;
     static final double MATH_ACCURACY = 1.0E-11;
