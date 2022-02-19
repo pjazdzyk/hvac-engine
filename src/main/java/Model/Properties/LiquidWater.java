@@ -1,7 +1,6 @@
 package Model.Properties;
 
-import Physics.LibConstants;
-import Physics.Exceptions.WaterPhysicsArgumentException;
+import Physics.LibDefaults;
 import Physics.LibPropertyOfWater;
 import java.io.Serializable;
 
@@ -26,7 +25,13 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
      * DEFAULT CONSTRUCTOR: Creates new liquid water instance with default temperature of 10oC.
      */
     public LiquidWater(){
-        this(DEF_NAME, LibConstants.DEF_WT_TW);
+        this(DEF_NAME, LibDefaults.DEF_WT_TW);
+    }
+
+    private LiquidWater(Builder builder){
+
+        this(builder.name, builder.tx);
+
     }
 
     /**
@@ -112,6 +117,35 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
         strb.append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n", tx, cp, rho, ix));
 
         return strb.toString();
+
+    }
+
+    //QUICK INSTANCE
+    public static LiquidWater waterOf(double tx){
+        LiquidWater water = new LiquidWater();
+        water.setTx(tx);
+        return water;
+    }
+
+    //BUILDER PATTERN
+    public static class Builder{
+
+        private String name = LibDefaults.DEF_NAME;
+        private double tx = LibDefaults.DEF_AIR_TEMP;
+
+        public Builder withName(final String name){
+            this.name = name;
+            return this;
+        }
+
+        public Builder withTa(final double tx){
+            this.tx = tx;
+            return this;
+        }
+
+        public LiquidWater build(){
+            return new LiquidWater(this);
+        }
 
     }
 

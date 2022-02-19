@@ -7,8 +7,6 @@ import Model.Flows.FlowOfMoistAir;
 import Model.MathUtils;
 import Model.Properties.MoistAir;
 
-import java.util.concurrent.Flow;
-
 /**
  * PSYCHROMETRICS PROCESS EQUATIONS LIBRARY
  * CODE AUTHOR: PIOTR JAŻDŻYK / jazdzyk@gmail.com / https://www.linkedin.com/in/pjazdzyk/
@@ -58,7 +56,7 @@ public abstract class LibPsychroProcess {
         double x2 = x1; // no humidity change for heating
         double i2 = (m1 * i1 + inQ/1000) / m1;
         double t2 = LibPropertyOfAir.calc_Ma_Ta_IX(i2,x2,Pat);
-        return new double[]{inQ,t2,x2,LibConstants.DEF_WT_TW,0.0};
+        return new double[]{inQ,t2,x2, LibDefaults.DEF_WT_TW,0.0};
     }
 
     /**
@@ -110,7 +108,7 @@ public abstract class LibPsychroProcess {
         if(outRH==RH1)
             return new double[]{0.0,t1,x1,t1,0.0};
         if (outRH == RH1)
-            return new double[]{0.0,t1,x1,LibConstants.DEF_WT_TW,0.0};
+            return new double[]{0.0,t1,x1, LibDefaults.DEF_WT_TW,0.0};
         if (outRH > RH1)
             throw new ProcessArgumentException("Expected RH must be smaller than initial value. If this was intended - use methods dedicated for cooling.");
         double Pat = inletAirProp.getPat();
@@ -190,7 +188,7 @@ public abstract class LibPsychroProcess {
         if(outRH < inletAirProp.getRH())
             throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
         if(outRH == inletAirProp.getRH())
-            return new double[]{0.0,inletAirProp.getTx(),inletAirProp.getX(),LibConstants.DEF_WT_TW,0.0};
+            return new double[]{0.0,inletAirProp.getTx(),inletAirProp.getX(), LibDefaults.DEF_WT_TW,0.0};
         if(outRH > 99.0){
             PRINTER.printLine("Non-physical process. The area of the exchanger would have to be infinite.");
             return calcCoolingInQFromOutTx(inletFlow,tm_Wall,tm_Wall);

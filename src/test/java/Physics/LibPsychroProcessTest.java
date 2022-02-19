@@ -26,7 +26,7 @@ public class LibPsychroProcessTest {
         var expectedQ = 56400d;
         var expectedTemp = 30d;
         var expectedX = AIRFLOW.getMoistAir().getX();
-        var expectedCondTemp = LibConstants.DEF_WT_TW;
+        var expectedCondTemp = LibDefaults.DEF_WT_TW;
         var expectedCondFlow = 0.0;
 
         //Act

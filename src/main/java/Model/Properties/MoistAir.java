@@ -1,7 +1,7 @@
 package Model.Properties;
 
 import Model.Exceptions.MoistAirArgumentException;
-import Physics.LibConstants;
+import Physics.LibDefaults;
 import Physics.LibPropertyOfAir;
 import java.io.Serializable;
 
@@ -61,7 +61,6 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         private double i_Wt;                     // [kJ/kg]          - water mist enthalpy
         private double i_Ice;                    // [kJ/kg]          - ice mist enthalpy
 
-        private static final String DEFAULT_NAME = "New Air";     // - default instance name
         public static final byte REL_HUMID = 0;                   // - moisture type: relative humidity
         public static final byte HUM_RATIO = 1;                   // - moisture type: humidity ratio
 
@@ -70,7 +69,13 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
          */
         public MoistAir(){
 
-            this(DEFAULT_NAME,20,50);
+            this(LibDefaults.DEF_NAME, LibDefaults.DEF_AIR_TEMP, LibDefaults.DEF_AIR_RH);
+
+        }
+
+        private MoistAir(Builder builder){
+
+            this(builder.name, builder.ta, builder.xRH, builder.Pat, builder.humidType);
 
         }
 
@@ -82,7 +87,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
          */
         public MoistAir(String name, double ta, double RH){
 
-            this(name,ta,RH, LibConstants.DEF_PAT,MoistAir.REL_HUMID);
+            this(name, ta, RH, LibDefaults.DEF_PAT, MoistAir.REL_HUMID);
 
         }
 
@@ -198,7 +203,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         public final String toString(){
 
             StringBuilder strb = new StringBuilder();
-
+            strb.append("Instance name \t : " + name + "\n");
             strb.append(String.format("Core parameters  : Pat=%.0f Pa | ta=%.3f degC | RH_Ma= %.3f %% | Wbt_Ma=%.3f degC | Tdp_Ma=%.3f degC | Ps= %.2f Pa | x_Ma= %.6f kg/kg | xMax= %.6f kg/kg \n", pat,tx,RH, Wbt,Tdp,Ps,x,xMax));
             strb.append(String.format("Dry air          : rho_Da= %.3f kg/m3 | cp_Da= %.4f kJ/kgK | k_Da= %.4f W/(m*K) | thDiff_Da= %.8f m2/s | dynVis_Da = %.8f kg/(m*s) | kinVis_Da=%.7f m2/s | Pr_Da=%.2f | i_Da= %.2f kJ/kg.da \n",rho_Da,cp_Da,k_Da,thDiff_Da,dynVis_Da,kinVis_Da,Pr_Da,i_Da));
             strb.append(String.format("Water vapour     : rho_Wv= %.3f kg/m3 | cp_Wv= %.4f kJ/kgK | k_Wv= %.4f W/(m*K) | thDiff_Wv= %.8f m2/s | dynVis_Wv = %.8f kg/(m*s) | kinVis_Mv=%.7f m2/s | Pr_Wv=%.2f | i_Wv= %.2f kJ/kg.da | i_Wt= %.2f kJ/kg.da | i_Ice= %.2f kJ/kg.da \n",rho_Wv,cp_Wv,k_Wv,thDiff_Wv,dynVis_Wv,kinVis_Wv,Pr_Wv,i_Wv, i_Wt, i_Ice));
@@ -416,6 +421,56 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             WATER_FOG,
             ICE_FOG
         }
+
+        //QUICK INSTANCE
+        public static MoistAir airOf(double tx, double RH){
+            MoistAir air = new MoistAir();
+            air.setTx(tx);
+            air.setRH(RH);
+            return air;
+        }
+
+        //BUILDER PATTERN
+        public static class Builder{
+
+            private String name = LibDefaults.DEF_NAME;
+            private double ta = LibDefaults.DEF_AIR_TEMP;
+            private double xRH = LibDefaults.DEF_AIR_RH;
+            private double Pat = LibDefaults.DEF_PAT;
+            private byte humidType = MoistAir.REL_HUMID;
+
+            public Builder withName(final String name){
+                this.name = name;
+                return this;
+            }
+
+            public Builder withTa(final double ta){
+                this.ta = ta;
+                return this;
+            }
+
+            public Builder withRH(final double RH){
+                this.xRH = RH;
+                this.humidType = MoistAir.REL_HUMID;
+                return this;
+            }
+
+            public Builder withX(final double x){
+                this.xRH = x;
+                this.humidType = MoistAir.HUM_RATIO;
+                return this;
+            }
+
+            public Builder withPat(final double Pat){
+                this.Pat = Pat;
+                return this;
+            }
+
+            public MoistAir build(){
+                return new MoistAir(this);
+            }
+
+    }
 
 }
 
