@@ -126,7 +126,7 @@ public class ProcAirHeatCool {
 
     private void convergenceCheckForRH(double outRH){
         double resultingRH2 = outletAirProp.getRH();
-        if (!MathUtils.compareDoubleWithTolerance(outRH, resultingRH2, LibConstants.DEF_MATH_ACCURACY))
+        if (!MathUtils.compareDoubleWithTolerance(outRH, resultingRH2, LibDefaults.DEF_MATH_ACCURACY))
             throw new SolutionNotConvergedException("Solution convergence error. Expected outlet RH= " + outRH + " actual outlet RH= " + resultingRH2);
     }
 

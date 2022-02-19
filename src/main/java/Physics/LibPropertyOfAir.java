@@ -612,7 +612,7 @@ public abstract class LibPropertyOfAir {
      */
     public static double calc_Wt_I(double ta) {
 
-        return  ta < 0.0 ? 0.0 : (LibConstants.DEF_WV_CP / 1000.0) * ta;
+        return  ta < 0.0 ? 0.0 : (LibDefaults.DEF_WV_CP / 1000.0) * ta;
 
     }
 
@@ -624,7 +624,7 @@ public abstract class LibPropertyOfAir {
      */
     public static double calc_Ice_I(double ta) {
 
-        return ta > 0.0 ? 0.0 : LibConstants.DEF_ICE_CP * ta - LibConstants.CST_ICE_R;
+        return ta > 0.0 ? 0.0 : LibDefaults.DEF_ICE_CP * ta - LibConstants.CST_ICE_R;
 
     }
 

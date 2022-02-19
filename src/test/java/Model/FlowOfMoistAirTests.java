@@ -2,7 +2,7 @@ package Model;
 
 import Model.Flows.FlowOfMoistAir;
 import Model.Properties.MoistAir;
-import Physics.LibConstants;
+import Physics.LibDefaults;
 import Physics.LibPhysicsOfFlow;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -68,7 +68,7 @@ public class FlowOfMoistAirTests {
 
         // Arrange
         double initFlow = 2.0;
-        MoistAir air = new MoistAir("newAir",45.0, 60.1, LibConstants.DEF_PAT, MoistAir.REL_HUMID);
+        MoistAir air = new MoistAir("newAir",45.0, 60.1, LibDefaults.DEF_PAT, MoistAir.REL_HUMID);
         String expectedName = "Aążźć@#$12324 54 - 0";
 
         // Before change
@@ -170,7 +170,7 @@ public class FlowOfMoistAirTests {
 
         // Arrange
         double initFlow = 2.0;
-        MoistAir air = new MoistAir("newAir",45.0, 60.1, LibConstants.DEF_PAT, MoistAir.REL_HUMID);
+        MoistAir air = new MoistAir("newAir",45.0, 60.1, LibDefaults.DEF_PAT, MoistAir.REL_HUMID);
         String expectedName = "Aążźć@#$12324 54 - 0";
         FlowOfMoistAir flowAir = new FlowOfMoistAir(expectedName, initFlow, FlowOfMoistAir.AirFlowType.MA_MASS_FLOW, air);
 
@@ -206,7 +206,7 @@ public class FlowOfMoistAirTests {
 
         // Arrange
         double initFlow = 2.0;
-        MoistAir air = new MoistAir("newAir",45.0, 60.1, LibConstants.DEF_PAT, MoistAir.REL_HUMID);
+        MoistAir air = new MoistAir("newAir",45.0, 60.1, LibDefaults.DEF_PAT, MoistAir.REL_HUMID);
         String expectedName = "Aążźć@#$12324 54 - 0";
         FlowOfMoistAir flowAir = new FlowOfMoistAir(expectedName, initFlow, FlowOfMoistAir.AirFlowType.MA_MASS_FLOW, air);
 
