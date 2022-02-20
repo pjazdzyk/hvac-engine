@@ -1,6 +1,7 @@
 package Model.Properties;
 
 import Model.Exceptions.MoistAirArgumentException;
+import Physics.LibConstants;
 import Physics.LibDefaults;
 import Physics.LibPropertyOfAir;
 import java.io.Serializable;
@@ -69,7 +70,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
          */
         public MoistAir(){
 
-            this(LibDefaults.DEF_NAME, LibDefaults.DEF_AIR_TEMP, LibDefaults.DEF_AIR_RH);
+            this(LibDefaults.DEF_AIR_NAME, LibDefaults.DEF_AIR_TEMP, LibDefaults.DEF_AIR_RH);
 
         }
 
@@ -87,7 +88,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
          */
         public MoistAir(String name, double ta, double RH){
 
-            this(name, ta, RH, LibDefaults.DEF_PAT, MoistAir.REL_HUMID);
+            this(name, ta, RH, LibDefaults.DEF_PAT, HumidityType.REL_HUMID);
 
         }
 
@@ -99,7 +100,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
          * @param Pat - atmospheric pressure in Pa,
          * @param humidType - provide REL_HUMID if RH is provided or HUM_RATIO if humidity ratio is provided.
          */
-        public MoistAir(String name, double ta, double xRH, double Pat, byte humidType){
+        public MoistAir(String name, double ta, double xRH, double Pat, HumidityType humidType){
 
             this.name = name;
             this.pat = Pat;
@@ -373,6 +374,12 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             updateProperties();
         }
 
+        public final void setPatKeepRH(double inPat){
+            this.pat = inPat;
+            this.x = LibPropertyOfAir.calc_Ma_X(RH,Ps,pat);
+            updateProperties();
+        }
+
         public final void setTx(double inTx) {
             this.tx = inTx;
             this.Ps= LibPropertyOfAir.calc_Ma_Ps(inTx);
@@ -422,22 +429,32 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             ICE_FOG
         }
 
+        public enum HumidityType {
+            REL_HUMID,
+            HUM_RATIO;
+        }
+
         //QUICK INSTANCE
-        public static MoistAir airOf(double tx, double RH){
-            MoistAir air = new MoistAir();
-            air.setTx(tx);
-            air.setRH(RH);
-            return air;
+        public static MoistAir ofAir(double tx, double RH){
+            return new MoistAir(LibDefaults.DEF_AIR_NAME, tx, RH, LibDefaults.DEF_PAT, HumidityType.REL_HUMID);
+        }
+
+        public static MoistAir ofAir(double tx, double RH, double Pat){
+            return new MoistAir(LibDefaults.DEF_AIR_NAME, tx, RH, Pat, HumidityType.REL_HUMID);
+        }
+
+        public static MoistAir ofAir(String ID, double tx, double RH, double Pat){
+            return new MoistAir(ID, tx, RH, Pat, HumidityType.REL_HUMID);
         }
 
         //BUILDER PATTERN
         public static class Builder{
 
-            private String name = LibDefaults.DEF_NAME;
+            private String name = LibDefaults.DEF_AIR_NAME;
             private double ta = LibDefaults.DEF_AIR_TEMP;
             private double xRH = LibDefaults.DEF_AIR_RH;
             private double Pat = LibDefaults.DEF_PAT;
-            private byte humidType = MoistAir.REL_HUMID;
+            private HumidityType humidType = HumidityType.REL_HUMID;
 
             public Builder withName(final String name){
                 this.name = name;
@@ -451,13 +468,13 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
             public Builder withRH(final double RH){
                 this.xRH = RH;
-                this.humidType = MoistAir.REL_HUMID;
+                this.humidType = HumidityType.REL_HUMID;
                 return this;
             }
 
             public Builder withX(final double x){
                 this.xRH = x;
-                this.humidType = MoistAir.HUM_RATIO;
+                this.humidType = HumidityType.HUM_RATIO;
                 return this;
             }
 

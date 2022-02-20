@@ -12,7 +12,7 @@ public class LibPropertyOfAirExceptionTests {
     public void calc_Ma_PsExceptionsTest(){
 
         //Assert
-        Assertions.assertThrows(AirPhysicsArgumentException.class, () -> LibPropertyOfAir.calc_Ma_Ps(LibConstants.MIN_T-1));
+        Assertions.assertThrows(AirPhysicsArgumentException.class, () -> LibPropertyOfAir.calc_Ma_Ps(LibLimiters.MIN_T-1));
 
     }
 

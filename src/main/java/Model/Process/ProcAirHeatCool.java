@@ -5,7 +5,6 @@ import Model.Exceptions.ProcessArgumentException;
 import Model.Exceptions.SolutionNotConvergedException;
 import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
-import Model.ModelDefaults;
 import Model.Properties.Fluid;
 import Model.Properties.MoistAir;
 import Model.MathUtils;
@@ -34,7 +33,7 @@ public class ProcAirHeatCool {
     }
 
     public ProcAirHeatCool(FlowOfMoistAir inletFlow) {
-        this(ModelDefaults.DEF_PROCESS_NAME, inletFlow, inletFlow.clone(), new FlowOfFluid(ModelDefaults.DEF_CON_MASS_FLOW), ModelDefaults.DEF_CHW_SUPPLY_TEMP, ModelDefaults.DEF_CHW_RETURN_TEMP);
+        this(LibDefaults.DEF_PROCESS_NAME, inletFlow, inletFlow.clone(), new FlowOfFluid(LibDefaults.DEF_FLUID_FLOW), LibDefaults.DEF_CHW_SUPPLY_TEMP, LibDefaults.DEF_CHW_RETURN_TEMP);
     }
 
     public ProcAirHeatCool(String ID, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {

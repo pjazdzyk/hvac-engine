@@ -13,7 +13,7 @@ public class MoistAirTests {
         //Arrange
         MoistAir air1 = new MoistAir();
         MoistAir air2 = new MoistAir("1234!@#$ąęźć1",-20,85);
-        MoistAir air3 = new MoistAir("1234!@#$ąęźć2",35,65,100000,MoistAir.REL_HUMID);
+        MoistAir air3 = new MoistAir("1234!@#$ąęźć2",35,65,100000, MoistAir.HumidityType.REL_HUMID);
 
         var expectedName1 = "New Air";
         var expectedName2 = "1234!@#$ąęźć1";
@@ -71,7 +71,7 @@ public class MoistAirTests {
     @Test
     public void MoistAirSettersTest(){
 
-       MoistAir air = new MoistAir("1234!@#$ąęźć2",35,65,100000, MoistAir.REL_HUMID);
+       MoistAir air = new MoistAir("1234!@#$ąęźć2",35,65,100000, MoistAir.HumidityType.REL_HUMID);
 
        air.setName("Name Changed");
        var expectedName = "Name Changed";
@@ -119,7 +119,7 @@ public class MoistAirTests {
 
         //Arrange
         MoistAir air1 = new MoistAir("Zero RH AIR", 20,0.0);
-        MoistAir air2 = new MoistAir("Zero X AIR", 20,0.0, LibDefaults.DEF_PAT,MoistAir.HUM_RATIO);
+        MoistAir air2 = new MoistAir("Zero X AIR", 20,0.0, LibDefaults.DEF_PAT, MoistAir.HumidityType.HUM_RATIO);
 
     }
 
