@@ -2,13 +2,13 @@ package Model.Flows;
 
 import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
-import Model.ModelDefaults;
 import Model.Properties.MoistAir;
+import Physics.LibDefaults;
 import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
 
-public class FlowOfMoistAir implements Serializable, Cloneable {
+public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
     private String name;
     private MoistAir moistAir;
@@ -22,7 +22,7 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
      * Default constructor. Create FlowOfFluid instance with default FlowOfMoistAir instance and default mass flow as 0.1kg/s
      */
     public FlowOfMoistAir(){
-        this(ModelDefaults.DEF_AIR_MASS_FLOW);
+        this(LibDefaults.DEF_AIR_FLOW);
     }
 
     /**
@@ -31,7 +31,7 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
      * @param flowRate fluid mass flow in kg/h
      */
     public FlowOfMoistAir(double flowRate) {
-        this("FlowOfFluid", flowRate, AirFlowType.MA_MASS_FLOW, new MoistAir());
+        this(LibDefaults.DEF_FLOW_NAME, flowRate, AirFlowType.MA_MASS_FLOW, new MoistAir());
 
     }
 
@@ -40,19 +40,19 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
      * @param name flow name or tag,
      * @param flowRate flow rate of specified type of flow in kg/s or m3/s
      * @param moistAir type of Fluid (moist air)
-     * @param lockedFlowType - type of Flow (selected from FluidFlowType enum).
+     * @param flowType - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfMoistAir(String name, double flowRate, AirFlowType lockedFlowType, MoistAir moistAir){
+    public FlowOfMoistAir(String name, double flowRate, AirFlowType flowType, MoistAir moistAir){
 
         if(moistAir == null)
             throw new FlowNullPointerException("Error. MoistAir instance does not exist.");
-        if(lockedFlowType == null)
+        if(flowType == null)
             throw new FlowNullPointerException("FluidFlowType has not been specified");
 
         this.name = name;
         this.moistAir = moistAir;
 
-        switch(lockedFlowType){
+        switch(flowType){
             case MA_MASS_FLOW -> setMassFlow(flowRate);
             case MA_VOL_FLOW -> setVolFlow(flowRate);
             case DA_MASS_FLOW -> setMassFlowDa(flowRate);
@@ -242,5 +242,161 @@ public class FlowOfMoistAir implements Serializable, Cloneable {
            .append("v_Da = ").append(String.format("%.1f",volFlowDa*3600)).append(" m3/h ").append("\t").append("dry air vol flow\n");
        return bld.toString();
     }
-}
 
+    //QUICK INSTANCE
+    /**
+     * Returns FlowOfMoistAir instance based on volumetric flow of moist air provided in m3/h and air temperature and relative humidity, with default ID and pressure<>br</>
+     * To be used for quick and easy flow instance creation for a most common cases in HVAC.
+     * @param volFlowMaM3h moist air volumetric flow in m3/h
+     * @param tx moist air temperature in oC
+     * @param RH moist air relative humidity in %
+     * @return FlowOfMoistAir instance with default ID and pressure
+     */
+    public static FlowOfMoistAir ofM3hVolFlow(double volFlowMaM3h, double tx, double RH){
+        return FlowOfMoistAir.ofM3hVolFlow(LibDefaults.DEF_FLOW_NAME, volFlowMaM3h, tx, RH, LibDefaults.DEF_PAT);
+    }
+
+    /**
+     * Returns FlowOfMoistAir instance based on volumetric flow of moist air provided in m3/h and air temperature and relative humidity and fluid pressure, with default ID<>br</>
+     * To be used for quick and easy flow instance creation for a most common cases in HVAC.
+     * @param volFlowMaM3h moist air volumetric flow in m3/h
+     * @param tx moist air temperature in oC
+     * @param RH moist air relative humidity in %
+     * @param Pat moist air pressure in Pa
+     * @return FlowOfMoistAir instance with default ID
+     */
+    public static FlowOfMoistAir ofM3hVolFlow(double volFlowMaM3h, double tx, double RH, double Pat){
+        return FlowOfMoistAir.ofM3hVolFlow(LibDefaults.DEF_FLOW_NAME, volFlowMaM3h, tx, RH, Pat);
+    }
+
+    /**
+     * Returns FlowOfMoistAir instance based on specified ID, volumetric flow of moist air provided in m3/h and air temperature and relative humidity and fluid pressure<>br</>
+     * To be used for quick and easy flow instance creation for a most common cases in HVAC.
+     * @param ID flow identification / name. Air ID will be constructed by adding "Air of " to provided flow ID.
+     * @param volFlowMaM3h moist air volumetric flow in m3/h
+     * @param tx moist air temperature in oC
+     * @param RH moist air relative humidity in %
+     * @param Pat moist air pressure in Pa
+     * @return FlowOfMoistAir instance
+     */
+    public static FlowOfMoistAir ofM3hVolFlow(String ID, double volFlowMaM3h, double tx, double RH, double Pat){
+       MoistAir air = MoistAir.ofAir("Air of " + ID, tx, RH, Pat);
+       return new FlowOfMoistAir(ID, volFlowMaM3h/3600d, AirFlowType.MA_VOL_FLOW, air);
+    }
+
+    //BUILDER PATTERN
+    /**
+     * This class provides simple API for creating FlowOfMoistAir object with properties provided by user.
+     * The order of using configuration methods is not relevant. Please mind of following behaviour:<>br</>
+     * a) If apart from the key air parameters, also the MoistAir instance is provided, then the parameters of this instance will be replaced with those provided by the user.<>br</>
+     * b) If RH is provided by use of withRH() method, and afterwards X with use of withX() method, the last specified humidity type will be passed to build final FlowOFMoistAir object. In this case X.<>br</>
+     * c) If nothing is provided, build() method will create FlowOfMoistAir instance based on default values specified in LibDefaults class.
+     */
+    public static class Builder{
+        private String flowName = LibDefaults.DEF_FLOW_NAME;
+        private String airName = "Air of: " + flowName;
+        private double Pat = LibDefaults.DEF_PAT;
+        private double tx = LibDefaults.DEF_AIR_TEMP;
+        private double xRH = LibDefaults.DEF_AIR_RH;
+        private double flowRate = LibDefaults.DEF_AIR_FLOW;
+        private MoistAir.HumidityType humidType = MoistAir.HumidityType.REL_HUMID;
+        private AirFlowType lockedFlowType = AirFlowType.MA_VOL_FLOW;
+        private AirFlowType userDefinedLockedFlowType;
+        private MoistAir moistAir;
+
+        public Builder withFlowName(String name){
+            this.flowName = name;
+            return this;
+        }
+
+        public Builder withAirName(String name){
+            this.airName = name;
+            return this;
+        }
+
+        public Builder withPat(double inPat){
+            this.Pat = inPat;
+            return this;
+        }
+
+        public Builder withTx(double inTx){
+            this.tx = inTx;
+            return this;
+        }
+
+        public Builder withRH(double inRH){
+            this.xRH = inRH;
+            this.humidType = MoistAir.HumidityType.REL_HUMID;
+            return this;
+        }
+
+        public Builder withX(double inX){
+            this.xRH = inX;
+            this.humidType = MoistAir.HumidityType.HUM_RATIO;
+            return this;
+        }
+
+        public Builder withVolFlowMa(double volFlowMa){
+            this.flowRate = volFlowMa;
+            this.lockedFlowType = AirFlowType.MA_VOL_FLOW;
+            return this;
+        }
+
+        public Builder withMassFlowMa(double massFlowMa){
+            this.flowRate = massFlowMa;
+            this.lockedFlowType = AirFlowType.MA_MASS_FLOW;
+            return this;
+        }
+
+        public Builder withVolFlowDa(double volFlowDa){
+            this.flowRate = volFlowDa;
+            this.lockedFlowType = AirFlowType.DA_VOL_FLOW;
+            return this;
+        }
+
+        public Builder withMassFlowDa(double massFlowDa){
+            this.flowRate = massFlowDa;
+            this.lockedFlowType = AirFlowType.DA_MASS_FLOW;
+            return this;
+        }
+
+        public Builder withMoistAirInstance(MoistAir moistAir){
+            this.moistAir = moistAir;
+            return this;
+        }
+
+        public Builder withLockedFlow(AirFlowType lockedFlowType){
+            this.userDefinedLockedFlowType = lockedFlowType;
+            return this;
+        }
+
+        public FlowOfMoistAir build(){
+            if(moistAir==null)
+                moistAir = new MoistAir(airName,tx, xRH, Pat, humidType);
+            else
+                adjustMoistAirInstance();
+
+            FlowOfMoistAir flowOfMoistAir = new FlowOfMoistAir(flowName, flowRate, lockedFlowType, moistAir);
+
+            if(userDefinedLockedFlowType!=null)
+                flowOfMoistAir.setLockedFlowType(userDefinedLockedFlowType);
+
+            return flowOfMoistAir;
+
+        }
+
+        private void adjustMoistAirInstance(){
+            moistAir.setName(airName);
+            if(moistAir.getPat() != Pat)
+                moistAir.setPat(Pat);
+            if(moistAir.getTx() != tx)
+                moistAir.setTx(tx);
+            if((humidType == MoistAir.HumidityType.REL_HUMID) && (moistAir.getRH() != xRH))
+                moistAir.setRH(xRH);
+            if((humidType == MoistAir.HumidityType.HUM_RATIO) && (moistAir.getX() != xRH))
+                moistAir.setX(xRH);
+        }
+
+    }
+
+}

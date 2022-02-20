@@ -4,9 +4,12 @@ import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
 import Model.Properties.Fluid;
 import Model.Properties.LiquidWater;
+import Physics.LibDefaults;
 import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.function.Supplier;
 
 /**
  * The FlowOfFluid class represents continuous, single phase flow of any single-phase <code>Fluid</code>.
@@ -16,7 +19,7 @@ import java.io.Serializable;
  * keep volumetric flow at defined rate in case of density changes. By default, it is set to keep constant mass flow.
  */
 
-public class FlowOfFluid implements Serializable {
+public class FlowOfFluid implements Flow, Serializable {
 
     private static final String DEFAULT_NAME = "FlowOfFluid";
     private String name;
@@ -145,6 +148,94 @@ public class FlowOfFluid implements Serializable {
         VOL_FLOW;
     }
 
+    //QUICK INSTANCE
+    public static FlowOfFluid ofM3hWaterVolFlow(double volFlowMaM3h, double tx){
+        return FlowOfFluid.ofM3hWaterVolFlow(LibDefaults.DEF_FLOW_NAME, volFlowMaM3h, tx);
+    }
+
+    public static FlowOfFluid ofM3hWaterVolFlow(String ID, double volFlowMaM3h, double tx){
+        LiquidWater water = new LiquidWater("Water of: " + ID, tx);
+        return new FlowOfFluid(ID,volFlowMaM3h/3600d, FluidFlowType.VOL_FLOW, water);
+    }
+
+    //BUILDER PATTERN
+    public static class Builder<K extends Fluid>{
+        private String flowName = LibDefaults.DEF_FLOW_NAME;
+        private String fluidName = "Fluid of: " + flowName;
+        private double tx = LibDefaults.DEF_WT_TW;
+        private double flowRate = LibDefaults.DEF_FLUID_FLOW;
+        private FluidFlowType lockedFlowType = FluidFlowType.VOL_FLOW;
+        private FluidFlowType overrideLockedFlowType;
+        private K fluid;
+        private final Supplier<K> fluidCreator;
+
+        public Builder(Supplier<K> fluidCreator){
+            this.fluidCreator = fluidCreator;
+        }
+
+        public Builder<K> withFlowName(String name){
+            this.flowName = name;
+            return this;
+        }
+
+        public Builder<K> withFluidName(String name){
+            this.fluidName = name;
+            return this;
+        }
+
+        public Builder<K> withMassFlow(double massFlow){
+            this.flowRate = massFlow;
+            this.lockedFlowType = FluidFlowType.MASS_FLOW;
+            return this;
+        }
+
+        public Builder<K> withVolFlow(double volFlow){
+            this.flowRate = volFlow;
+            this.lockedFlowType = FluidFlowType.VOL_FLOW;
+            return this;
+        }
+
+        public Builder<K> withTx(double inTx){
+            this.tx = inTx;
+            return this;
+        }
+
+        public Builder<K> withFluidInstance(K fluid){
+            this.fluid = fluid;
+            return this;
+        }
+
+        public Builder<K> withLockedFlow(FluidFlowType lockedFlowType){
+            this.overrideLockedFlowType = lockedFlowType;
+            return this;
+        }
+
+        public FlowOfFluid build() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+            if(fluid==null) {
+                fluid = fluidCreator.get();
+                fluid.setName(fluidName);
+                fluid.setTx(tx);
+            }
+            else
+                adjustFluid();
+
+            FlowOfFluid flowOfFluid = new FlowOfFluid(flowName, flowRate, lockedFlowType, fluid);
+
+            if(overrideLockedFlowType!=null)
+                flowOfFluid.setLockedFlowType(overrideLockedFlowType);
+
+            return flowOfFluid;
+
+        }
+
+        private void adjustFluid(){
+            fluid.setName(fluidName);
+            if(fluid.getTx() != tx)
+                fluid.setTx(tx);
+        }
+
+    }
+
     @Override
     public String toString() {
         StringBuilder bld = new StringBuilder();
@@ -156,6 +247,4 @@ public class FlowOfFluid implements Serializable {
         return bld.toString();
     }
 
-
 }
-

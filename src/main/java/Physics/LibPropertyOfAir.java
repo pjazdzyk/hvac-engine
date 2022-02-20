@@ -102,8 +102,8 @@ public abstract class LibPropertyOfAir {
      */
     public static double calc_Ma_Ps(double ta) {
 
-        if (ta < LibConstants.MIN_T)
-            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + LibConstants.MIN_T);
+        if (ta < LibLimiters.MIN_T)
+            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + LibLimiters.MIN_T);
 
         if (ta < -130)
             return 0.0;
@@ -553,8 +553,8 @@ public abstract class LibPropertyOfAir {
 
         if (x < 0.0)
             throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
-        if (Pat < LibConstants.MIN_PAT)
-            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, LibConstants.MIN_PAT));
+        if (Pat < LibLimiters.MIN_PAT)
+            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, LibLimiters.MIN_PAT));
 
         double i_Da = calc_Da_I(ta);
 

@@ -113,7 +113,7 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
     public final String toString(){
 
         StringBuilder strb = new StringBuilder();
-
+        strb.append("Fluid name: " + name + "\n");
         strb.append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n", tx, cp, rho, ix));
 
         return strb.toString();
@@ -121,17 +121,19 @@ public class LiquidWater implements Serializable, Cloneable, Fluid {
     }
 
     //QUICK INSTANCE
-    public static LiquidWater waterOf(double tx){
-        LiquidWater water = new LiquidWater();
-        water.setTx(tx);
-        return water;
+    public static LiquidWater ofWater(double tx){
+        return new LiquidWater(LibDefaults.DEF_WT_NAME, tx);
+    }
+
+    public static LiquidWater ofWater(String name, double tx){
+        return new LiquidWater(name,tx);
     }
 
     //BUILDER PATTERN
     public static class Builder{
 
-        private String name = LibDefaults.DEF_NAME;
-        private double tx = LibDefaults.DEF_AIR_TEMP;
+        private String name = LibDefaults.DEF_WT_NAME;
+        private double tx = LibDefaults.DEF_WT_TW;
 
         public Builder withName(final String name){
             this.name = name;
