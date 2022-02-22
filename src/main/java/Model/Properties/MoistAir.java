@@ -21,6 +21,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         private VapStatus status;                // -                - vapor status: unsaturated, saturated, water fog, ice fog
 
         //Moist air parameters
+        private double zElev;                    // [m]              - elevation above sea level
         private double pat;                      // [Pa]             - moist air barometric pressure (ambient)
         private double tx;                       // [oC]             - moist air dry bulb temperature
         private double RH;                       // [%]              - moist air relative humidity (in ta, moist air)
@@ -62,9 +63,6 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         private double i_Wt;                     // [kJ/kg]          - water mist enthalpy
         private double i_Ice;                    // [kJ/kg]          - ice mist enthalpy
 
-        public static final byte REL_HUMID = 0;                   // - moisture type: relative humidity
-        public static final byte HUM_RATIO = 1;                   // - moisture type: humidity ratio
-
         /**
          * Constructor [DEFAULT], sets default air parameters as: ta=20oC, RH=50%, Pat=101325Pa.
          */
@@ -77,6 +75,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         private MoistAir(Builder builder){
 
             this(builder.name, builder.ta, builder.xRH, builder.Pat, builder.humidType);
+            setElevationASL(builder.zElev);
 
         }
 
@@ -422,6 +421,12 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
         }
 
+        public final void setElevationASL(double zElev){
+            this.zElev = zElev;
+            this.pat = LibPropertyOfAir.calc_PatAlt(zElev);
+            updateProperties();
+        }
+
         public enum VapStatus {
             UNSATURATED,
             SATURATED,
@@ -454,6 +459,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
             private double ta = LibDefaults.DEF_AIR_TEMP;
             private double xRH = LibDefaults.DEF_AIR_RH;
             private double Pat = LibDefaults.DEF_PAT;
+            private double zElev = LibDefaults.DEF_ASL_ELEV;
             private HumidityType humidType = HumidityType.REL_HUMID;
 
             public Builder withName(final String name){
@@ -480,6 +486,11 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
             public Builder withPat(final double Pat){
                 this.Pat = Pat;
+                return this;
+            }
+
+            public Builder withZElev(final double zElev){
+                this.zElev = zElev;
                 return this;
             }
 

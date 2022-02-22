@@ -12,7 +12,7 @@ import java.io.Serializable;
  * LINKEDIN: https://www.linkedin.com/in/pjazdzyk/
  */
 
-public class LiquidWater implements Serializable, Cloneable, Fluid {
+public class LiquidWater implements Fluid, Serializable, Cloneable {
 
     private static final String DEF_NAME = "Liquid Water";      //                  - liquid water default instance name
     private String name;                                        // -                - liquid water instance name

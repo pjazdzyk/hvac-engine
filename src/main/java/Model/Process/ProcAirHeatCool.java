@@ -146,6 +146,7 @@ public class ProcAirHeatCool {
 
     public void setInletFlow(FlowOfMoistAir inletFlow) {
         this.inletFlow = inletFlow;
+        this.inletAirProp = inletFlow.getMoistAir();
         resetProcess();
     }
 
@@ -155,6 +156,7 @@ public class ProcAirHeatCool {
 
     public void setOutletFlow(FlowOfMoistAir outletFlow) {
         this.outletFlow = outletFlow;
+        this.outletAirProp = outletFlow.getMoistAir();
         resetProcess();
     }
 
@@ -164,6 +166,7 @@ public class ProcAirHeatCool {
 
     public void setCondensateFlow(FlowOfFluid condensateFlow) {
         this.condensateFlow = condensateFlow;
+        this.condensate = condensateFlow.getFluid();
         resetProcess();
     }
 
@@ -193,6 +196,14 @@ public class ProcAirHeatCool {
 
     public double getBypassFactor() {
         return BF;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     @Override

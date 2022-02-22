@@ -14,7 +14,7 @@ public class LibLimiters {
 
     // Air limiters
     public final static double MIN_X = 1.0/Short.MAX_VALUE;     // [kg.wv/kg/da]       - Minimum allowable humidity ratio
-    public final static double MIN_PAT = 80_000.0;              // [Pa]                - Minimum allowable atmospheric pressure
+    public final static double MIN_PAT = 50_000.0;              // [Pa]                - Minimum allowable atmospheric pressure
     public final static double MIN_T = -260.0;                  // [oC]                - Minimum allowable air temperature
 
     // Water limiters
