@@ -5,18 +5,23 @@
 > AUTHOR: <b>Piotr Jażdżyk</b> <br>
 > VERSION: 1.0.0 <br>
 > DATE: 2021.09.17<br>
-> EMAIL: jazdzyk@gmail.com <br>
+> EMAIL: jazdzyk@gmail.com<br>
 > LINKEDIN: https://www.linkedin.com/in/pjazdzyk/ <br>
-> COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com
+> COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com <br>
 
-### SHORT DESCRIPTION:
-The purpose of this project is to develop a software analysis platform for any kind of psychrometrics analytical calculations dedicated to HVAC and process engineering without using an i-x chart.
-At the present development state, only the humid air physics module is complete. 
-It allows for determining the temperature and pressure-dependent thermophysical properties of air. To improve code efficiency instead of the "table search interpolation" approach - most of the properties are introduced as an expression (for ie: polynomial fitting) based on available data and scientific papers.  In many cases, available approximations are used as a starting point for more exact results by the use of an improved version of the numerical Brent-Decker solver developed especially for the needs of this application.
-Library includes MoistAir model class and additionally grants access to set of static methods allowing for calculation of desired property without creating object instance.
-This is useful for any intermediate psychometric calculations before moist air core parameters are updated.
 
-All references are listed at the end of this document. Currently, the air physics' module is capable of calculating the following properties:
+### [FUNCTIONALITY](#FUNCTIONALITY:) | [LEGAL DISCLAIMER](#LEGAL-DISCLAIMER:) | [UPCOMING](#UPCOMING-FUNCTIONALITY:) | [AUTHORS COMMENTS](#AUTHORS-COMMENTS:) | [RESOURCES](#REFERENCE-SOURCE:)
+
+The purpose of this project is to develop an API for any kind of psychrometrics analytical calculations required in HVAC or process engineering without using an i-x Molier/Carrier chart.
+At the present state of development following modules are ready for use:
+1. Moist Air thermophysical properties (MoistAir) including simplified liquid water properties for condensate handling (LiquidWater)
+2. Flow of moist air and liquid water (FlowOfMoistAir)
+3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
+
+LAST UPDATE: 22.02.2022 / Added physics of flow, air heating and cooling.
+
+### FUNCTIONALITY:
+#### Moist air available thermophysical properties:
 * atmospheric pressure based on height above sea level,
 * temperature change based on height above sea level,
 * saturation vapor pressure,
@@ -31,31 +36,36 @@ All references are listed at the end of this document. Currently, the air physic
 * thermal diffusivity,
 * Prandtl number.
 
-All the properties are independently calculated for dry air, water vapor, water mist, ice mist. Based on these partial properties the final humid air property is determined.
-The water physics module is limited only to the properties required for typical psychrometrics calculation:
+#### Liquid water available properties:
 * specific heat,
 * density,
 * specific enthalpy.
 
-Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There are also a several methods allowing for calculations of some properties if others are available.
-All methods accept arguments and outputs results in SI units. However, please read method java-doc to make sure that you are aware of what unit output value is represented. Some properties for example specific enthalpy,
+Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There are also several methods allowing for calculations of some properties if others are available.
+All methods accept arguments and output results in SI units. However, please read method java-doc to make sure that you are aware of what unit output value is represented. Some properties for example specific enthalpy,
 outputs in kJ/kgK not in J/kgK.
+
+#### Physics of flow:
+* each FlowOfMoistAir instance stores moist air volumetric flow, moist air mass flow, dry air volumetric flow, and dry air mass flow.
+* each flow type depends on aggregated MoistAir instance and flows are adjusted if temperature or humidity changes,
+* option to lock one selected flow type
+
+#### Heating and cooling with condensate discharge
+* moist air heating or theoretical dry cooling,
+* moist air cooling based on real cooling coil average wall temperature,
+* condensate discharge is determined for the cooling process,
+* different methods for most typical cases: determining resulting air state based on expected outlet temperature, outlet RH or available heat of the process.
 
 If you would like to participate and help in the development process, feel free to contact me. Together we can do more!
 
 ### LEGAL DISCLAIMER:
 This code is my intellectual property. Please have respect for this. You can use it freely in any academic or non-commercial use if you
-properly include the source and author in your references or documentation. For commercial use, please contact me first.
+properly include the source and author in your references or documentation. For commercial use, please contact me first to discuss license fee.
 
-### CURRENT FUNCTIONALITY:
-1. Thermophysical properties of moist air based on ASHRAE HandBook and scientific papers as listed in "References",
-2. Limited thermophysical properties of liquid water,
-3. Brent-Decker equation solver with automatic counterpart point evaluation algorithm,
-
-### JAVA NAMING CONVENTION DEVIATIONS:
-This code is dedicated to reading and development by programmers with a strong academic mechanical engineering background. 
+### AUTHORS COMMENTS:
+This code is dedicated to reading and development by programmers with a strong academic mechanical engineering background.
 To improve code readability for this group of engineers I have decided to deviate from some elements of the Java naming convention.
-For example, code for determining humidity ratio is written as below:
+For example, the code for determining humidity ratio is written as below:
 ```
 return x * Pat / ((WG_RATIO * RH / 100.0) + x * RH / 100.0);
 ```
@@ -68,35 +78,26 @@ Method naming convention is key is as follows:
 ```
 calc_Ma_Ta_TdpRH(){}
 ```
-- first fragment - "calc": stands for calculation type method of a given property. "Set" is for setters, "get" for getters. 
-- second fragment - next part is a type of fluid: Ma - moist air, Da - dry air, Wv - water vapour, Wt - water
-- third fragment - is a name of variable returned by this function, Ta means that this function outputs air temperature as the result,
-- fourth part - are the variables needed as an input. 
+- a first fragment - "calc": stands for calculation type method of a given property. "Set" is for setters, "get" for getters.
+- a second fragment - next part is a type of fluid: Ma - moist air, Da - dry air, Wv - water vapour, Wt - water
+- a third fragment - is a name of variable returned by this function, Ta means that this function outputs air temperature as the result,
+- a fourth part - are the variables needed as an input.
 
 The approach presented above, which probably may cause a serious headache to any professional programmer, helps me organize all methods into a clear
 structure, where corresponding methods are sorting themselves while writing a code using this library.
 
-### UPCOMING FUNCTIONALITIES:
-1. Module for fluid volumetric or mass flow (80%)
-2. Module for humid air heating and cooling with a condensate discharge (70%)
-3. Module for humid air mixing with multiple streams of air (50%)
-4. Module for water spray humidification
-5. Module for superheated steam humidification
-
-### IMPROVEMENT REQUEST:
+IMPROVEMENT REQUEST:
 1. Code review and improvement suggestions,
 2. Any clever idea how to handle the problem of determining humidity ratio if Ps is greater than Pat (for high air temperatures above 90 oC)
-3. Any clever idea how to determine humidity ratio if the humid air enthalpy, air temperature and Pat is available (seems easy, but the problem is that for the temperatures close to 0oC, 
-for which two different air states can result in the same specific enthalpy).
+3. Any clever idea how to determine humidity ratio if the humid air enthalpy, air temperature, and Pat is available (seems easy, but the problem is that for the temperatures close to 0oC,
+   for which two different air states can result in the same specific enthalpy).
 4. Information on any papers or scientific journals which may contain better accuracy temperature and pressure-dependent property formulation.
 
-### USER GUIDE:
-Create an instance of MoistAir using any of the available constructors:
-```
-MoistAir air = new MoistAir("air1", 20, 40, 101_325, MoistAir.REL_HUMID);
-System.out.println(air);
-```
-Use setters to change any of the core properties. Core property change will automatically recalculate all dependent properties.
+### UPCOMING FUNCTIONALITY:
+1. Module for humid air mixing with multiple streams of air (50%)
+2. Module for water spray air humidification
+3. Module for superheated steam air humidification
+4. Module for simplified heat and humid recovery exchanger
 
 ### REFERENCE SOURCE:
 AIR AND WATER VAPOUR PROPERTIES:
@@ -112,5 +113,7 @@ AIR AND WATER VAPOUR PROPERTIES:
 * [10] - M. Wanielista, R. Kersten,  R. Eaglin. "Hydrology Water Quantity and Quality Control. 2nd ed." (1997).
 
 LIQUID WATER PROPERTIES:
-* [1] - F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards calibration. Journal of Research of the National Institute of Standards and Technology (1992)
+* [1] - F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards' calibration. Journal of Research of the National Institute of Standards and Technology (1992)
 * [2] - Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html
+
+> <b>///EARTH MUST COME FIRST///</b>

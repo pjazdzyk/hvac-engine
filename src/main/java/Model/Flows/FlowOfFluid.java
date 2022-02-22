@@ -62,7 +62,7 @@ public class FlowOfFluid implements Flow, Serializable {
     }
 
     /**
-     * Update flows if Fluid property has changed. It does not invoke automatically.
+     * Update flows if Fluid property has changed. It is invoked automatically.
      */
     public void updateFlows() {
 
@@ -149,16 +149,42 @@ public class FlowOfFluid implements Flow, Serializable {
     }
 
     //QUICK INSTANCE
+
+    /**
+     * Returns FlowOfFluid instance based on volumetric flow of moist air provided in m3/h and fluid temperature with default ID<>br</>
+     * To be used for quick and easy flow instance creation for a most common cases in HVAC.
+     * @param volFlowMaM3h volumetric flow of fluid in m3/h
+     * @param tx fluid temperature in oC
+     * @return FlowOfFluid instance with default ID
+     */
     public static FlowOfFluid ofM3hWaterVolFlow(double volFlowMaM3h, double tx){
         return FlowOfFluid.ofM3hWaterVolFlow(LibDefaults.DEF_FLOW_NAME, volFlowMaM3h, tx);
     }
 
+    /**
+     * Returns FlowOfFluid instance based on volumetric flow of moist air provided in m3/h and fluid temperature with provided ID ID<>br</>
+     * To be used for quick and easy flow instance creation for a most common cases in HVAC.
+     * @param ID fluid ID or name
+     * @param volFlowMaM3h volumetric flow of fluid in m3/h
+     * @param tx fluid temperature in oC
+     * @return FlowOfFluid instance
+     */
     public static FlowOfFluid ofM3hWaterVolFlow(String ID, double volFlowMaM3h, double tx){
         LiquidWater water = new LiquidWater("Water of: " + ID, tx);
         return new FlowOfFluid(ID,volFlowMaM3h/3600d, FluidFlowType.VOL_FLOW, water);
     }
 
     //BUILDER PATTERN
+
+    /**
+     /**
+     * This class provides simple API for creating FlowOfFluid object with properties provided by user.
+     * The order of using configuration methods is not relevant. Please mind of following behaviour:<>br</>
+     * a) If apart from the key fluid parameters, also the Fluid instance is provided, then the parameters of this instance will be replaced with those provided by the user.<>br</>
+     * b) If nothing is provided, build() method will create FlowOfFluid instance based on default values specified in LibDefaults class.
+     *
+     * @param <K> type of Fluid
+     */
     public static class Builder<K extends Fluid>{
         private String flowName = LibDefaults.DEF_FLOW_NAME;
         private String fluidName = "Fluid of: " + flowName;
@@ -169,6 +195,10 @@ public class FlowOfFluid implements Flow, Serializable {
         private K fluid;
         private final Supplier<K> fluidCreator;
 
+        /**
+         * Constructor. Creates generic Builder instance. Requires a supplier as a reference to constructor of a given Fluid class type.
+         * @param fluidCreator supplier, reference to Fluid class constructor is required.
+         */
         public Builder(Supplier<K> fluidCreator){
             this.fluidCreator = fluidCreator;
         }
@@ -210,7 +240,7 @@ public class FlowOfFluid implements Flow, Serializable {
             return this;
         }
 
-        public FlowOfFluid build() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        public FlowOfFluid build() {
             if(fluid==null) {
                 fluid = fluidCreator.get();
                 fluid.setName(fluidName);

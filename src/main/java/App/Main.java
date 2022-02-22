@@ -1,30 +1,30 @@
 package App;
 
-import Model.Flows.Flow;
-import Model.Flows.FlowOfFluid;
-import Model.Flows.FlowOfMoistAir;
-import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class Main {
 
-    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) {
 
-        FlowOfFluid flow = new FlowOfFluid.Builder<>(LiquidWater::new)
-                .withFlowName("Zajac")
-                .withFluidName("bubu")
-                .withTx(50)
-                .withMassFlow(20)
-                .withLockedFlow(FlowOfFluid.FluidFlowType.VOL_FLOW)
-                .withVolFlow(20)
-                .build();
+        // Creating and using MoistAir class
+        var summerAir1 = new MoistAir("summer1", 30, 45);
+        var summerAir2 = new MoistAir("summer2", 30, 45, 90000, MoistAir.HumidityType.REL_HUMID);
 
-        System.out.println(flow.toString());
-        System.out.println(flow.getFluid().toString());
+        // Pressure dependent of provided elevation above the sea level
+        System.out.println(summerAir2.getPat()); //Outputs: 90000.0 Pa
+        summerAir2.setElevationASL(2000);
+        System.out.println(summerAir2.getPat()); //Outputs: 79495.12 Pa
 
+        //Moist Air Builder pattern example:
+
+        var summerAir3 = new MoistAir.Builder().withName("Summer3")
+                                     .withTa(30).withRH(45)
+                                     .withZElev(2000)
+                                     .build();
+
+        var summerAir4 = MoistAir.ofAir(30,45);
+
+        System.out.println(summerAir3.toString());
 
     }
-
-   }
+}
