@@ -1,19 +1,28 @@
-## DEW|POINT - Psychrometrics Analysis Tool
+## DEW|POINT - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
 
-### Thermodynamics of humid air for MEP engineers.
+---
 
 > AUTHOR: <b>Piotr Jażdżyk</b> <br>
 > VERSION: 1.0.0 <br>
 > DATE: 2021.09.17<br>
+> LAST UPDATE: 2022.02.23<br>
 > EMAIL: jazdzyk@gmail.com<br>
 > LINKEDIN: https://www.linkedin.com/in/pjazdzyk/ <br>
 > COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com <br>
 
+---
+<span style="font-weight:700;font-size:15px">
 
-### [FUNCTIONALITY](#FUNCTIONALITY:) | [LEGAL DISCLAIMER](#LEGAL-DISCLAIMER:) | [UPCOMING](#UPCOMING-FUNCTIONALITY:) | [AUTHORS COMMENTS](#AUTHORS-COMMENTS:) | [RESOURCES](#REFERENCE-SOURCE:)
+[FUNCTIONALITY](#FUNCTIONALITY:) | [USER GUIDE](README_GUIDE.MD) | [LEGAL DISCLAIMER](#LEGAL-DISCLAIMER:) | [UPCOMING](#UPCOMING-FUNCTIONALITY:) | [AUTHORS COMMENTS](#AUTHORS-COMMENTS:) | [RESOURCES](#REFERENCE-SOURCE:)
 
-The purpose of this project is to develop an API for any kind of psychrometrics analytical calculations required in HVAC or process engineering without using an i-x Molier/Carrier chart.
-At the present state of development following modules are ready for use:
+</span>
+
+
+---
+The purpose of this project is to develop an API for any kind of psychrometrics analytical calculations required in HVAC or process engineering without using an i-x Molier/Carrier chart.<br>
+The core idea is to have as little compromises as possible. Most values are temperature-dependent, some are also pressure dependent. 
+
+At the present state of development following modules are finalized ready for use:
 1. Moist Air thermophysical properties (MoistAir) including simplified liquid water properties for condensate handling (LiquidWater)
 2. Flow of moist air and liquid water (FlowOfMoistAir)
 3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
@@ -21,7 +30,7 @@ At the present state of development following modules are ready for use:
 LAST UPDATE: 22.02.2022 / Added physics of flow, air heating and cooling.
 
 ### FUNCTIONALITY:
-#### Moist air available thermophysical properties:
+#### Moist air thermophysical properties:
 * atmospheric pressure based on height above sea level,
 * temperature change based on height above sea level,
 * saturation vapor pressure,
@@ -36,7 +45,7 @@ LAST UPDATE: 22.02.2022 / Added physics of flow, air heating and cooling.
 * thermal diffusivity,
 * Prandtl number.
 
-#### Liquid water available properties:
+#### Liquid water properties:
 * specific heat,
 * density,
 * specific enthalpy.
@@ -49,6 +58,7 @@ outputs in kJ/kgK not in J/kgK.
 * each FlowOfMoistAir instance stores moist air volumetric flow, moist air mass flow, dry air volumetric flow, and dry air mass flow.
 * each flow type depends on aggregated MoistAir instance and flows are adjusted if temperature or humidity changes,
 * option to lock one selected flow type
+* setting value one type of flow will automatically recalculate others, based on provided input value and current properties of the moist air
 
 #### Heating and cooling with condensate discharge
 * moist air heating or theoretical dry cooling,
@@ -116,4 +126,4 @@ LIQUID WATER PROPERTIES:
 * [1] - F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards' calibration. Journal of Research of the National Institute of Standards and Technology (1992)
 * [2] - Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html
 
-> <b>///EARTH MUST COME FIRST///</b>
+> <b>*"EARTH MUST COME FIRST"*</b>

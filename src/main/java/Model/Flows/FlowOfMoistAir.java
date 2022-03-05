@@ -26,6 +26,17 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     }
 
     /**
+     * Constructor. Creates FlowOfFluid instance using Builder pattern.
+     * @param builder builder instance of Builder interior nested class
+     */
+    public FlowOfMoistAir(Builder builder){
+        this(builder.flowName, builder.flowRate, builder.lockedFlowType, builder.moistAir);
+
+        if(builder.userDefinedLockedFlowType != null)
+            this.setLockedFlowType(builder.userDefinedLockedFlowType);
+    }
+
+    /**
      * Constructor. Creates FlowOfFluid instance with default FlowOfMoistAir instance. Provided flow is considered as mass flow of moist air in kg/s.
      * and user input flow rate.
      * @param flowRate fluid mass flow in kg/h
@@ -288,7 +299,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     /**
      * This class provides simple API for creating FlowOfMoistAir object with properties provided by user.
      * The order of using configuration methods is not relevant. Please mind of following behaviour:<>br</>
-     * a) If apart from the key air parameters, also the MoistAir instance is provided, then the parameters of this instance will be replaced with those provided by the user.<>br</>
+     * a) If apart from the key air parameters, also the MoistAir instance is provided, then the parameters of this instance will be replaced with those provided by the user to build this flow.<>br</>
      * b) If RH is provided by use of withRH() method, and afterwards X with use of withX() method, the last specified humidity type will be passed to build final FlowOFMoistAir object. In this case X.<>br</>
      * c) If nothing is provided, build() method will create FlowOfMoistAir instance based on default values specified in LibDefaults class.
      */

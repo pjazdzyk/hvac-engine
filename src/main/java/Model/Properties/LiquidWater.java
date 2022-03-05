@@ -14,7 +14,6 @@ import java.io.Serializable;
 
 public class LiquidWater implements Fluid, Serializable, Cloneable {
 
-    private static final String DEF_NAME = "Liquid Water";      //                  - liquid water default instance name
     private String name;                                        // -                - liquid water instance name
     private double tx;                                          // [oC]             - liquid water temperature
     private double cp;                                          // [kJ/kg*K]        - liquid water isobaric specific heat
@@ -25,9 +24,13 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
      * DEFAULT CONSTRUCTOR: Creates new liquid water instance with default temperature of 10oC.
      */
     public LiquidWater(){
-        this(DEF_NAME, LibDefaults.DEF_WT_TW);
+        this(LibDefaults.DEF_WT_NAME, LibDefaults.DEF_WT_TW);
     }
 
+    /**
+     * CONSTRUCTOR. Creates new LiquidWater instance based on Builder instance.
+     * @param builder
+     */
     private LiquidWater(Builder builder){
 
         this(builder.name, builder.tx);
@@ -40,7 +43,7 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
      */
     public LiquidWater(double tx)
     {
-        this(DEF_NAME, tx);
+        this(LibDefaults.DEF_WT_NAME, tx);
     }
 
     /**
@@ -50,14 +53,14 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
      */
     public LiquidWater(String name, double tx){
 
-        if(tx>=100)
-           // throw new WaterPhysicsArgumentException("Cannot create an instance. Temperature is greater or equal 100oC");
-
         this.name = name;
         this.tx = tx;
         updateProperties();
     }
 
+    /**
+     * Updates all properties.
+     */
     @Override
     public void updateProperties(){
         cp = LibPropertyOfWater.calc_Cp(tx);
