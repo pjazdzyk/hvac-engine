@@ -8,7 +8,11 @@
 > LINKEDIN: https://www.linkedin.com/in/pjazdzyk/ <br>
 > COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com <br>
 
-[USER GUIDE](README_GUIDE.MD)
+---
+
+[FUNCTIONALITY](#functionality) | [USER GUIDE](README_GUIDE.MD) | [LEGAL DISCLAIMER](#legal-disclaimer) | [UPCOMING](#upcoming-functionality) | [AUTHORS COMMENTS](#authors-comments) | [RESOURCES](#reference-source)
+
+---
 
 DEW|POINT is analytical psychrometrics tool allowing for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
 used as an engine for any type of HVAC software development.
@@ -20,7 +24,7 @@ At the present state of development following modules are finalized ready for us
 
 LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 
-### FUNCTIONALITY:
+## FUNCTIONALITY
 #### Moist air thermophysical properties:
 * atmospheric pressure based on height above sea level,
 * temperature change based on height above sea level,
@@ -47,17 +51,17 @@ LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 * option to lock one selected flow type
 * setting value one type of flow will automatically recalculate others, based on provided input value and current properties of the moist air
 
-#### Heating and cooling with condensate discharge
+#### Heating and cooling with condensate discharge:
 * moist air heating or dry cooling,
 * moist air cooling based on real cooling coil average wall temperature,
 * condensate discharge is determined for the cooling process,
 * different methods for most typical cases: determining resulting air state based on expected outlet temperature, outlet RH or available heat of the process.
 
-### LEGAL DISCLAIMER:
+## LEGAL DISCLAIMER
 This code is my intellectual property. Please have respect for this. You can use it freely in any academic or non-commercial use if you
 properly include the source and author in your references or documentation. For commercial use, please contact me first to discuss the license fee.
 
-### AUTHORS COMMENTS:
+## AUTHORS COMMENTS
 This code is dedicated to reading and development by programmers with a strong academic mechanical engineering background.
 To improve code readability for this group of engineers I have decided to deviate from some elements of the Java naming convention.
 For example, the code for determining humidity ratio is written as below:
@@ -88,13 +92,13 @@ IMPROVEMENT REQUEST:
    for which two different air states can result in the same specific enthalpy).
 4. Information on any papers or scientific journals which may contain better accuracy temperature and pressure-dependent property formulation.
 
-### UPCOMING FUNCTIONALITY:
+## UPCOMING FUNCTIONALITY
 1. Module for humid air mixing with multiple streams of air (50%)
 2. Module for water spray air humidification
 3. Module for superheated steam air humidification
 4. Module for simplified heat and humid recovery exchanger
 
-### REFERENCE SOURCE:
+## REFERENCE SOURCE
 
 Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There are also several methods allowing for calculations of some properties if others are available.
 All methods accept arguments and output results in SI units. However, please read method java-doc to make sure that you are aware of what unit output value is represented. Some properties for example specific enthalpy,
