@@ -1,7 +1,5 @@
 ## DEW|POINT - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
 
----
-
 > AUTHOR: <b>Piotr Jażdżyk</b> <br>
 > VERSION: 1.0.0 <br>
 > DATE: 2021.09.17<br>
@@ -10,7 +8,7 @@
 > LINKEDIN: https://www.linkedin.com/in/pjazdzyk/ <br>
 > COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com <br>
 
-[FUNCTIONALITY](#FUNCTIONALITY:) | [USER GUIDE](README_GUIDE.MD) | [LEGAL DISCLAIMER](#LEGAL-DISCLAIMER:) | [UPCOMING](#UPCOMING-FUNCTIONALITY:) | [AUTHORS COMMENTS](#AUTHORS-COMMENTS:) | [RESOURCES](#REFERENCE-SOURCE:)
+[USER GUIDE](README_GUIDE.MD)
 
 DEW|POINT is analytical psychrometrics tool allowing for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
 used as an engine for any type of HVAC software development.
