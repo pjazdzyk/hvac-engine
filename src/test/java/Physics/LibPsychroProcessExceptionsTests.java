@@ -6,8 +6,6 @@ import Model.Flows.FlowOfMoistAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Time;
-
 public class LibPsychroProcessExceptionsTests {
 
     public FlowOfMoistAir AIRFLOW = new Model.Flows.FlowOfMoistAir(); //ta=20oc, RH=50%
@@ -15,8 +13,7 @@ public class LibPsychroProcessExceptionsTests {
 
     @Test
     void calcHeatingOutTxFromInQ() {
-        Assertions.assertThrows(ProcessNullPointerException.class,()->LibPsychroProcess.calcHeatingOutTxFromInQ(null,1000));
-        Assertions.assertThrows(ProcessArgumentException.class, ()->LibPsychroProcess.calcHeatingOutTxFromInQ(AIRFLOW,Double.MIN_VALUE*-1));
+        Assertions.assertThrows(ProcessNullPointerException.class,()->LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(null,1000));
     }
 
     @Test
