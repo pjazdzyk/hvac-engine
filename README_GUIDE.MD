@@ -1,11 +1,6 @@
 ## DEW|POINT - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers <br> USER GUIDE
 
----
-
 [HOME](README.MD) | [MOIST AIR](#MOIST AIR THERMOPHYSICAL PROPERTIES:) | [LIQUID WATER](#LIQUID WATER THERMOPHYSICAL PROPERTIES:) | [FLOW HANDLING](#FLOW OF MOIST AIR:) | [HEATING & COOLING](#HEATING AND COOLING WITH CONDENSATE DISCHARGE:)
-
-
----
 
 Please find below simple user guide for most relevant current functionalities. Please consider following naming convention:<br>
 * "Ma" - moist air
