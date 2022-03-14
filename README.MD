@@ -10,10 +10,8 @@
 > LINKEDIN: https://www.linkedin.com/in/pjazdzyk/ <br>
 > COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com <br>
 
----
 [FUNCTIONALITY](#FUNCTIONALITY:) | [USER GUIDE](README_GUIDE.MD) | [LEGAL DISCLAIMER](#LEGAL-DISCLAIMER:) | [UPCOMING](#UPCOMING-FUNCTIONALITY:) | [AUTHORS COMMENTS](#AUTHORS-COMMENTS:) | [RESOURCES](#REFERENCE-SOURCE:)
 
----
 DEW|POINT is analytical psychrometrics tool allowing for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
 used as an engine for any type of HVAC software development.
 
