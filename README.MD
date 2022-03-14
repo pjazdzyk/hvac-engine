@@ -11,22 +11,18 @@
 > COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com <br>
 
 ---
-<span style="font-weight:700;font-size:15px">
-
 [FUNCTIONALITY](#FUNCTIONALITY:) | [USER GUIDE](README_GUIDE.MD) | [LEGAL DISCLAIMER](#LEGAL-DISCLAIMER:) | [UPCOMING](#UPCOMING-FUNCTIONALITY:) | [AUTHORS COMMENTS](#AUTHORS-COMMENTS:) | [RESOURCES](#REFERENCE-SOURCE:)
 
-</span>
-
 ---
-The purpose of this project is to develop an API for any kind of psychrometrics analytical calculations required in HVAC or process engineering without using an i-x Molier/Carrier chart.<br>
-The core idea is to have as few compromises as possible. Most values are temperature-dependent, some are also pressure-dependent.
+DEW|POINT is analytical psychrometrics tool allowing for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
+used as an engine for any type of HVAC software development.
 
 At the present state of development following modules are finalized ready for use:
 1. Moist Air thermophysical properties (MoistAir) including simplified liquid water properties for condensate handling (LiquidWater)
 2. Flow of moist air and liquid water (FlowOfMoistAir)
 3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
 
-LAST UPDATE: 22.02.2022 / Added physics of flow, air heating, and cooling.
+LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 
 ### FUNCTIONALITY:
 #### Moist air thermophysical properties:
