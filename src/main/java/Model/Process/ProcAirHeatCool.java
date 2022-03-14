@@ -60,7 +60,7 @@ public class ProcAirHeatCool {
      */
     public void applyHeatingOutTxFromInQ(double inQ){
         resetProcess();
-        double[] result = LibPsychroProcess.calcHeatingOutTxFromInQ(inletFlow,inQ);
+        double[] result = LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow,inQ);
         commitResultsToOutlet(result);
     }
 
@@ -112,12 +112,24 @@ public class ProcAirHeatCool {
         convergenceCheckForRH(outRH);
     }
 
+    /**
+     * Calculates cooling result for an available cooling power
+     * @param inQ cooling power in W,
+     */
+    public void applyCoolingOutTxFromInQ(double inQ){
+        resetProcess();
+        double[] result = LibPsychroProcess.calcCoolingOutTxFromInQ(inletFlow,tm_Wall,inQ);
+        commitResultsToOutlet(result);
+        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
+    }
+
+
     //TOOL METHODS
     public void resetProcess(){
         outletFlow.setTx(inletFlow.getMoistAir().getTx());
         outletFlow.setX(inletFlow.getMoistAir().getX());
         outletFlow.setMassFlowDa(inletFlow.getMassFlowDa());
-        condensateFlow.setTx(outletFlow.getMoistAir().getTx());
+        condensateFlow.setTx(LibDefaults.DEF_WT_TW);
         condensateFlow.setMassFlow(0.0);
         heatQ = 0.0;
         tm_Wall = LibPsychroProcess.calcAverageWallTemp(ts_Hydr,tr_Hydr);

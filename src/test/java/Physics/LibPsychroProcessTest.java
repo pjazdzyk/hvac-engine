@@ -30,7 +30,7 @@ public class LibPsychroProcessTest {
         var expectedCondFlow = 0.0;
 
         //Act
-        var result = LibPsychroProcess.calcHeatingOutTxFromInQ(AIRFLOW,expectedQ);
+        var result = LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(AIRFLOW,expectedQ);
         var actualQ = result[0];
         var actualTemp = result[1];
         var actualX = result[2];

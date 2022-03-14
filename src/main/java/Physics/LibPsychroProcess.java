@@ -44,15 +44,16 @@ public abstract class LibPsychroProcess {
      * @param inQ input heat in W,
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static double[] calcHeatingOutTxFromInQ(FlowOfMoistAir inletFlow, double inQ){
-       validateInletFlow(inletFlow);
-        if(inQ<0)
-            throw new ProcessArgumentException("Heat Q must be positive value. Only heating is allowed. If intended use methods for cooling");
+    public static double[] calcHeatingOrDryCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double inQ){
+        validateInletFlow(inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
+        double t1 = inletAirProp.getTx();
+        double x1 = inletAirProp.getX();
+        if(inQ==0.0)
+            return new double[]{inQ,t1,x1,LibDefaults.DEF_WT_TW,0.0};
         double Pat = inletAirProp.getPat();
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getIx();
-        double x1 = inletAirProp.getX();
         double x2 = x1; // no humidity change for heating
         double i2 = (m1 * i1 + inQ/1000) / m1;
         double t2 = LibPropertyOfAir.calc_Ma_Ta_IX(i2,x2,Pat);
@@ -77,7 +78,7 @@ public abstract class LibPsychroProcess {
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
         if(outTx == t1)
-            return new double[]{0.0,t1,x1,t1,0.0};;
+            return new double[]{0.0,t1,x1,t1,0.0};
         double tdp = inletAirProp.getTdp();
         if(outTx < tdp)
             throw new ProcessNullPointerException("Expected temperature must be higher than dew point. Not applicable for dry cooling process.");
@@ -121,6 +122,7 @@ public abstract class LibPsychroProcess {
         return new double[]{heatQ,t2,x2,t2,0.0};
     }
 
+    // REAL COOLING COIL
     /**
      * Returns real cooling coil process result as double array, to achieve expected outlet temperature. Results in the array are organized as following:<>br</>
      * result: [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]<>br</>
@@ -198,7 +200,7 @@ public abstract class LibPsychroProcess {
         SOLVER.setCounterpartPoints(inletAirProp.getTx(),inletAirProp.getTdp());
         SOLVER.calcForFunction(testOutTx -> {
             double[] tempResult = calcCoolingInQFromOutTx(inletFlow, tm_Wall, testOutTx);
-            System.arraycopy(tempResult, 0, result, 0, tempResult.length);
+            copyResults(tempResult,result);
             double outTx = tempResult[1];
             double outX = tempResult[2];
             double actualRH = LibPropertyOfAir.calc_Ma_RH(outTx, outX, Pat);
@@ -206,6 +208,37 @@ public abstract class LibPsychroProcess {
         });
         SOLVER.resetSolverRunFlags();
         return result;
+    }
+
+    /**
+     * Returns real cooling coil process result as double array, for provided cooling power. Results in the array are organized as following:<>br</>
+     * result: [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]<>br</>
+     * REFERENCE SOURCE: [1] [Q, W] (-) [37]<br>
+     * @param inletFlow initial flow of moist air before the process [FLowOfMoistAir],
+     * @param tm_Wall average coil wall temperature in oC,
+     * @param inQ cooling power in W (must be negative),
+     * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
+     */
+    public static double[] calcCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double tm_Wall, double inQ){
+       validateInletFlow(inletFlow);
+       MoistAir inletAirProp = inletFlow.getMoistAir();
+       double t1 = inletAirProp.getTx();
+       double x1 = inletAirProp.getX();
+        if(inQ==0.0)
+            return new double[]{inQ,t1,x1,LibDefaults.DEF_WT_TW,0.0};
+       double[] result = new double[5];
+       double tMin = inletAirProp.getTx();
+       //For the provided inQ, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
+       double tMax = calcHeatingOrDryCoolingOutTxFromInQ(inletFlow,inQ)[1];
+       SOLVER.setCounterpartPoints(tMin,tMax);
+       SOLVER.calcForFunction(outTemp -> {
+            double[] tempResult = calcCoolingInQFromOutTx(inletFlow,tm_Wall,outTemp);
+            copyResults(tempResult,result);
+            double calculatedQ = tempResult[0];
+            return calculatedQ - inQ;
+       });
+       SOLVER.resetSolverRunFlags();
+       return result;
     }
 
     //TOOL METHODS
@@ -249,6 +282,11 @@ public abstract class LibPsychroProcess {
         if (inletFlow==null)
             throw new ProcessNullPointerException("InletFlow passed as null.");
     }
+
+    private static void copyResults(double[] source, double[] target){
+        System.arraycopy(source, 0, target, 0, source.length);
+    }
+
 
 }
 

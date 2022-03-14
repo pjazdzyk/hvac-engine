@@ -17,17 +17,16 @@
 
 </span>
 
-
 ---
 The purpose of this project is to develop an API for any kind of psychrometrics analytical calculations required in HVAC or process engineering without using an i-x Molier/Carrier chart.<br>
-The core idea is to have as little compromises as possible. Most values are temperature-dependent, some are also pressure dependent. 
+The core idea is to have as few compromises as possible. Most values are temperature-dependent, some are also pressure-dependent.
 
 At the present state of development following modules are finalized ready for use:
 1. Moist Air thermophysical properties (MoistAir) including simplified liquid water properties for condensate handling (LiquidWater)
 2. Flow of moist air and liquid water (FlowOfMoistAir)
 3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
 
-LAST UPDATE: 22.02.2022 / Added physics of flow, air heating and cooling.
+LAST UPDATE: 22.02.2022 / Added physics of flow, air heating, and cooling.
 
 ### FUNCTIONALITY:
 #### Moist air thermophysical properties:
@@ -50,27 +49,21 @@ LAST UPDATE: 22.02.2022 / Added physics of flow, air heating and cooling.
 * density,
 * specific enthalpy.
 
-Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There are also several methods allowing for calculations of some properties if others are available.
-All methods accept arguments and output results in SI units. However, please read method java-doc to make sure that you are aware of what unit output value is represented. Some properties for example specific enthalpy,
-outputs in kJ/kgK not in J/kgK.
-
 #### Physics of flow:
 * each FlowOfMoistAir instance stores moist air volumetric flow, moist air mass flow, dry air volumetric flow, and dry air mass flow.
-* each flow type depends on aggregated MoistAir instance and flows are adjusted if temperature or humidity changes,
+* each flow type depends on aggregated MoistAir instance and flows are adjusted if the temperature or humidity changes,
 * option to lock one selected flow type
 * setting value one type of flow will automatically recalculate others, based on provided input value and current properties of the moist air
 
 #### Heating and cooling with condensate discharge
-* moist air heating or theoretical dry cooling,
+* moist air heating or dry cooling,
 * moist air cooling based on real cooling coil average wall temperature,
 * condensate discharge is determined for the cooling process,
 * different methods for most typical cases: determining resulting air state based on expected outlet temperature, outlet RH or available heat of the process.
 
-If you would like to participate and help in the development process, feel free to contact me. Together we can do more!
-
 ### LEGAL DISCLAIMER:
 This code is my intellectual property. Please have respect for this. You can use it freely in any academic or non-commercial use if you
-properly include the source and author in your references or documentation. For commercial use, please contact me first to discuss license fee.
+properly include the source and author in your references or documentation. For commercial use, please contact me first to discuss the license fee.
 
 ### AUTHORS COMMENTS:
 This code is dedicated to reading and development by programmers with a strong academic mechanical engineering background.
@@ -110,6 +103,11 @@ IMPROVEMENT REQUEST:
 4. Module for simplified heat and humid recovery exchanger
 
 ### REFERENCE SOURCE:
+
+Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There are also several methods allowing for calculations of some properties if others are available.
+All methods accept arguments and output results in SI units. However, please read method java-doc to make sure that you are aware of what unit output value is represented. Some properties for example specific enthalpy,
+outputs in kJ/kgK not in J/kgK.
+
 AIR AND WATER VAPOUR PROPERTIES:
 * [1] - ASHRAE FUNDAMENTALS 2002, CHAPTER 6 "Psychrometrics"
 * [2] - Buck, Arden L. "New Equations for Computing Vapour Pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981).

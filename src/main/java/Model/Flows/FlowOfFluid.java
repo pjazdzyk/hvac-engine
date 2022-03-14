@@ -8,7 +8,6 @@ import Physics.LibDefaults;
 import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
 /**
@@ -35,6 +34,18 @@ public class FlowOfFluid implements Flow, Serializable {
      */
     public FlowOfFluid(double flowRate) {
        this(DEFAULT_NAME, flowRate, FluidFlowType.MASS_FLOW, new LiquidWater());
+    }
+
+    /**
+     * Constructor. Creates FlowOfFluid instance using Builder pattern.
+     * @param builder instance of Builder interior nested class
+     */
+    public FlowOfFluid(Builder<Fluid> builder){
+
+        this(builder.fluidName, builder.flowRate, builder.lockedFlowType, builder.fluid);
+        if(builder.overrideLockedFlowType!=null)
+            this.lockedFluidFlowType = builder.overrideLockedFlowType;
+
     }
 
     /**
@@ -177,8 +188,7 @@ public class FlowOfFluid implements Flow, Serializable {
     //BUILDER PATTERN
 
     /**
-     /**
-     * This class provides simple API for creating FlowOfFluid object with properties provided by user.
+     * This class provides simple implementation of Builder Pattern for creating FlowOfFluid object with properties provided by user.
      * The order of using configuration methods is not relevant. Please mind of following behaviour:<>br</>
      * a) If apart from the key fluid parameters, also the Fluid instance is provided, then the parameters of this instance will be replaced with those provided by the user.<>br</>
      * b) If nothing is provided, build() method will create FlowOfFluid instance based on default values specified in LibDefaults class.
@@ -193,14 +203,14 @@ public class FlowOfFluid implements Flow, Serializable {
         private FluidFlowType lockedFlowType = FluidFlowType.VOL_FLOW;
         private FluidFlowType overrideLockedFlowType;
         private K fluid;
-        private final Supplier<K> fluidCreator;
+        private final Supplier<K> fluidSupplier;
 
         /**
          * Constructor. Creates generic Builder instance. Requires a supplier as a reference to constructor of a given Fluid class type.
          * @param fluidCreator supplier, reference to Fluid class constructor is required.
          */
         public Builder(Supplier<K> fluidCreator){
-            this.fluidCreator = fluidCreator;
+            this.fluidSupplier = fluidCreator;
         }
 
         public Builder<K> withFlowName(String name){
@@ -242,7 +252,7 @@ public class FlowOfFluid implements Flow, Serializable {
 
         public FlowOfFluid build() {
             if(fluid==null) {
-                fluid = fluidCreator.get();
+                fluid = fluidSupplier.get();
                 fluid.setName(fluidName);
                 fluid.setTx(tx);
             }
@@ -272,8 +282,8 @@ public class FlowOfFluid implements Flow, Serializable {
         bld.append("Flow name: \t\t").append(name).append("\n");
         bld.append("Locked flow: \t").append(lockedFluidFlowType).append("\n");
         bld.append("m_Con = ").append(String.format("%.3f",massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
-                .append("v_Con = ").append(String.format("%.6f",volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
-                .append("v_Con = ").append(String.format("%.3f",volFlow*3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
+           .append("v_Con = ").append(String.format("%.6f",volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
+           .append("v_Con = ").append(String.format("%.3f",volFlow*3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
         return bld.toString();
     }
 

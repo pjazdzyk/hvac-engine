@@ -38,7 +38,7 @@ public class BrentSolver {
     private double maxIter = 100;                               // max iteration limit
     private double accuracy = 0.00001;                          // required calculation accuracy level
 
-    //AB CONDITION EVALUATION PROCEDURE
+    // AB CONDITION EVALUATION PROCEDURE
     private int evalCycles = 2;                                 // number of evaluation cycles
     private int p2Coef = 2;                                     // second point division coefficient
     private int p3Coef = 2;                                     // third point division coefficient
@@ -263,7 +263,7 @@ public class BrentSolver {
 
     }
 
-     /**
+    /**
      * Sets custom initial counterpart points for Brent-Decker method condition.
      * @param pointA - first initial counterpart point
      * @param pointB - second initial counterpart point

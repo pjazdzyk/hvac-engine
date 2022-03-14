@@ -2,6 +2,7 @@ package Model.Flows;
 
 import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
+import Model.Properties.Fluid;
 import Model.Properties.MoistAir;
 import Physics.LibDefaults;
 import Physics.LibPhysicsOfFlow;
@@ -26,8 +27,8 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     }
 
     /**
-     * Constructor. Creates FlowOfFluid instance using Builder pattern.
-     * @param builder builder instance of Builder interior nested class
+     * Constructor. Creates FlowOfMoistAir instance using Builder pattern.
+     * @param builder instance of Builder interior nested class
      */
     public FlowOfMoistAir(Builder builder){
         this(builder.flowName, builder.flowRate, builder.lockedFlowType, builder.moistAir);
@@ -243,14 +244,19 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     @Override
     public String toString() {
        StringBuilder bld = new StringBuilder();
-       bld.append("Flow name: \t\t").append(name).append("\n");
-       bld.append("Locked flow: \t").append(lockedFlowType).append("\n");
+       bld.append("Flow name: \t\t\t").append(name).append("\n");
+       bld.append("Locked flow: \t\t").append(lockedFlowType).append("\n");
+       bld.append("Air properties: \t");
+       bld.append("ta = ").append(String.format("%.2f",moistAir.getTx())).append(" oC ").append("\t")
+          .append("RH = ").append(String.format("%.2f",moistAir.getRH())).append(" % ").append("\t")
+          .append("x = ").append(String.format("%.5f",moistAir.getX())).append(" kg.wv/kg.da ").append("\t")
+          .append("status = ").append(moistAir.getStatus()).append("\n");
        bld.append("m_Ma = ").append(String.format("%.3f",massFlowMa)).append(" kg/s ").append("\t").append("moist air mass flow\t | ")
           .append("v_Ma = ").append(String.format("%.3f",volFlowMa)).append(" m3/s ").append("\t").append("moist air vol flow\t |  ")
           .append("v_Ma = ").append(String.format("%.1f",volFlowMa*3600)).append(" m3/h ").append("\t").append("moist air vol flow\n");
        bld.append("m_Da = ").append(String.format("%.3f",massFlowDa)).append(" kg/s ").append("\t").append("dry air mass flow\t | ")
-           .append("v_Da = ").append(String.format("%.3f",volFlowDa)).append(" m3/s ").append("\t").append("dry air vol flow\t |  ")
-           .append("v_Da = ").append(String.format("%.1f",volFlowDa*3600)).append(" m3/h ").append("\t").append("dry air vol flow\n");
+          .append("v_Da = ").append(String.format("%.3f",volFlowDa)).append(" m3/s ").append("\t").append("dry air vol flow\t |  ")
+          .append("v_Da = ").append(String.format("%.1f",volFlowDa*3600)).append(" m3/h ").append("\t").append("dry air vol flow\n");
        return bld.toString();
     }
 
@@ -297,7 +303,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
     //BUILDER PATTERN
     /**
-     * This class provides simple API for creating FlowOfMoistAir object with properties provided by user.
+     * This class provides simple implementation of Builder Pattern for creating FlowOfMoistAir object with properties provided by user.
      * The order of using configuration methods is not relevant. Please mind of following behaviour:<>br</>
      * a) If apart from the key air parameters, also the MoistAir instance is provided, then the parameters of this instance will be replaced with those provided by the user to build this flow.<>br</>
      * b) If RH is provided by use of withRH() method, and afterwards X with use of withX() method, the last specified humidity type will be passed to build final FlowOFMoistAir object. In this case X.<>br</>
