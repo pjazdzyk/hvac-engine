@@ -10,7 +10,11 @@
 
 ---
 
+<span style="font-weight:700;font-size:15px">
+
 [FUNCTIONALITY](#functionality) | [USER GUIDE](README_GUIDE.MD) | [LEGAL DISCLAIMER](#legal-disclaimer) | [UPCOMING](#upcoming-functionality) | [AUTHORS COMMENTS](#authors-comments) | [RESOURCES](#reference-source)
+
+</span>
 
 ---
 

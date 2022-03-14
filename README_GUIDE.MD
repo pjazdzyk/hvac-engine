@@ -1,13 +1,21 @@
 ## DEW|POINT - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers <br> USER GUIDE
 
-[HOME](README.MD)
+---
+
+<span style="font-weight:700;font-size:15px">
+
+[HOME](README.MD) | [MOIST AIR](#moist-air-thermophysical-properties) | [LIQUID WATER](#liquid-water-thermophysical-properties) | [FLOW HANDLING](#flow-of-moist-air) | [HEATING & COOLING](#heating-and-cooling-with-condensate-discharge)
+
+</span>
+
+---
 
 Please find below simple user guide for most relevant current functionalities. Please consider following naming convention:<br>
 * "Ma" - moist air
 * "Da" - dry air
 * "Wv" - water vapour
 
-### MOIST AIR THERMOPHYSICAL PROPERTIES:
+## MOIST AIR THERMOPHYSICAL PROPERTIES
 MoistAir is a class representing a set of thermophysical properties ot air and water vapor mixture within typical pressures in the HVAC industry.
 Variables could be divided into core parameters which are: pressure, temperature, relative humidity or humidity ratio, and dependent parameters,
 which are already listed in the readme file or JavaDoc. All properties' calculation equations are gathered in separate classes with "Lib" prefix.
@@ -59,7 +67,7 @@ Water vapour     : rho_Wv= 0.629 kg/m3 | cp_Wv= 1.8568 kJ/kgK | k_Wv= 0.0196 W/(
 Moist air        : rho_Ma= 0.896 kg/m3 | cp_Ma= 1.0274 kJ/kgK | k_Ma= 0.0271 W/(m*K) | thDiff_Ma= 0.00002941 m2/s | dynVis_Ma = 0.00001837 kg/(m*s) | kinVis_Ma=0.0000205 m2/s | Pr_Ma=0.70 | i_Ma= 60.72 kJ/kg.d
 ```
 
-### LIQUID WATER THERMOPHYSICAL PROPERTIES:
+## LIQUID WATER THERMOPHYSICAL PROPERTIES
 LiquidWater class is far simpler, and it requires only the temperature to initialize properties. This class was created for modeling condensate purposes and will be further extended.
 To create a liquid water instance, just use any of the constructor or builder pattern:
 ```
@@ -79,7 +87,7 @@ Outputs:
 Fluid name: water
 Core parameters  : ta=10.000 oC | cp=4.196 kJ/kgK | rho= 999.546 kg/m3 | ix=41.955 kJ/kg 
 ```
-### FLOW OF MOIST AIR:
+## FLOW OF MOIST AIR
 FlowOfMoistAir instance calculates and stores mass flow and volumetric flow for moist air and its dry air component. All of these flows depend on each other. Setting one type of the flow will automatically
 calculate and set all others. Flow depends on moist air instance. It is important to emphasize that flows will not update automatically if a change emerges inside MoistAir aggregated instance caused by an external
 action (ie: in case MoistAir reference is shared across other classes). For such an event, updateFlows() method is provided. Let's try to create some flows and see how it works. Creating a flow of moist air
@@ -130,7 +138,7 @@ fan, which control system attempts to keep constant moist air volumetric flow, w
 On the other hand, if we consider heating/cooling coil, we want to keep dry air mass flow locked for psychrometrics calculations and allow other flows to change accordingly to the moist air state.
 This should be carefully considered in every case. By default, using a setter of any given type of flow automatically sets this flow type as locked.
 
-### FLOW OF FLUID:
+## FLOW OF FLUID
 FlowOfFluid is more simple compared to the above. It is designed to model a single-phase flow of any fluid class implementing the Fluid interface. At the moment LiquidWater is provided to implement condensate discharge. Examples how
 FlowOfFluid can be initiated as shown below:
 
@@ -150,7 +158,7 @@ var condensateFlow3 = FlowOfFluid.ofM3hWaterVolFlow(volFlow1, temp);
 ```
 Please note that Builder class in FlowOfFluid is generic, therefore an extractor must be provided as the argument (a reference to the constructor of the specific Fluid class).
 
-### HEATING AND COOLING WITH CONDENSATE DISCHARGE:
+## HEATING AND COOLING WITH CONDENSATE DISCHARGE
 The heating and cooling of the moist air are modeled by the ProcAirHeatCool class. This class is based on psychrometric equations stored in LibPsychroProcess. This class allows determining the outlet moist air properties including the condensate flow and its properties for typical HVAC cooling or heating applications. The following functionality has been
 developed so far:</br>
 * air heating or cooling if input heating power is known,</br>
