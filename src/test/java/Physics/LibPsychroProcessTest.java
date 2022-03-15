@@ -13,8 +13,9 @@ public class LibPsychroProcessTest {
     public static double MATH_ACCURACY = 1E-8;
     public static double RELHUM_ACCURACY = 1E-3;
 
+    // HEATING
     @Test
-    void calcHeatingOutTxFromInQ() {
+    void calcHeatingOutTxFromInQTest() {
 
         //Arrange
         var m = 10000d/3600d; //kg/s
@@ -38,7 +39,7 @@ public class LibPsychroProcessTest {
         var actualCondFlow = result[4];
 
         //Assert
-        Assertions.assertEquals(expectedTemp,actualTemp, TEMP_ACCURACY);
+        Assertions.assertEquals(expectedTemp,actualTemp,TEMP_ACCURACY);
         Assertions.assertEquals(expectedX,actualX);
         Assertions.assertEquals(expectedCondTemp,actualCondTemp);
         Assertions.assertEquals(expectedCondFlow,actualCondFlow);
@@ -46,7 +47,7 @@ public class LibPsychroProcessTest {
     }
 
     @Test
-    void calcHeatingOrDryCoolingInQFromOutTx() {
+    void calcHeatingOrDryCoolingInQFromOutTxTest() {
 
         //Arrange
         var m = 10000d/3600d; //kg/s
@@ -80,7 +81,7 @@ public class LibPsychroProcessTest {
     }
 
     @Test
-    void calcHeatingInQOutTxFromOutRH() {
+    void calcHeatingInQOutTxFromOutRHTest() {
 
         //Arrange
         var m = 10000d/3600d; //kg/s
@@ -114,8 +115,9 @@ public class LibPsychroProcessTest {
 
     }
 
+    // COOLING
     @Test
-    void calcCoolingInQFromOutTx() {
+    void calcCoolingInQFromOutTxTest() {
 
         //Arrange
         var t1 = 34.0;      //oC
@@ -159,7 +161,7 @@ public class LibPsychroProcessTest {
     }
 
     @Test
-    void calcCoolingInQFromOutRH() {
+    void calcCoolingInQFromOutRHTest() {
 
         //Arrange
         var t1 = 34.0;      //oC
@@ -207,7 +209,66 @@ public class LibPsychroProcessTest {
     }
 
     @Test
-    void calcAverageWallTemp() {
+    void applyCoolingOutTxFromInQTest(){
+        //Arrange
+        var t1 = 34.0;      //oC
+        var RH1 = 40.0;     //%
+        var mMa = 1.0;      //kg/s Ma
+        var tm = 11.5;      //oC
+        AIRFLOW.setPat(PAT);
+        AIRFLOW.setTx(t1);
+        AIRFLOW.setRH(RH1);
+        AIRFLOW.setMassFlow(mMa);
+        var expectedT2 = 17.0; //oC
+        var mDa = AIRFLOW.getMassFlowDa();
+        var expectedBF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm,t1,expectedT2);
+        var mDa_DirectContact = (1.0 - expectedBF) * mDa;
+        var x1 = AIRFLOW.getMoistAir().getX();
+        var PsTm = LibPropertyOfAir.calc_Ma_Ps(tm);
+        var xAtTm = LibPropertyOfAir.calc_Ma_X(100,PsTm,PAT);
+        var expectedX = 0.0099;
+        var expectedQ = -26600.447840124318;
+        var expectedCondTemp = tm;
+
+        //Act
+        var result = LibPsychroProcess.calcCoolingOutTxFromInQ(AIRFLOW,tm,expectedQ);
+        var actualQ = result[0];
+        var actualTemp = result[1];
+        var actualX = result[2];
+        var actualCondTemp = result[3];
+        var actualCondFlow = result[4];
+        var expectedCondFlow = LibPsychroProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
+        var iCond = LibPropertyOfWater.calc_Ix(actualCondTemp);
+
+        //Assert
+        Assertions.assertEquals(expectedQ,actualQ);
+        Assertions.assertEquals(expectedT2,actualTemp);
+        Assertions.assertEquals(expectedX,actualX, 0.000004);
+        Assertions.assertEquals(expectedCondTemp,actualCondTemp);
+        Assertions.assertEquals(expectedCondFlow,actualCondFlow);
+    }
+
+    // TYPICAL HVAC TESTS
+    @Test
+    void typicalWinterHeating(){
+        //Arrange
+        var ta = -20.0; //oC
+        var inletFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20,100);
+        var expectedOutTemp = 24.0;
+
+        //Act
+        var result = LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,expectedOutTemp);
+        var actualQHeat = result[0];
+        var actualOutTemp = result[1];
+
+        //Assert
+        Assertions.assertEquals(expectedOutTemp,actualOutTemp);
+
+    }
+
+    // TOOLS
+    @Test
+    void calcAverageWallTempTest() {
 
         //Arrange
         var tSupply = 6.0;
@@ -223,7 +284,7 @@ public class LibPsychroProcessTest {
     }
 
     @Test
-    void calcCoolingCoilBypassFactor() {
+    void calcCoolingCoilBypassFactorTest() {
         //Arrange
         var tmWall = 9.0;
         var inTx = 30.0;
@@ -239,7 +300,7 @@ public class LibPsychroProcessTest {
     }
 
     @Test
-    void calcCondensateDischarge(){
+    void calcCondensateDischargeTest(){
         //Arrange
         var mDa = 1.5; //kg/s
         var x1 = 0.03; //kg.wv/kg.da

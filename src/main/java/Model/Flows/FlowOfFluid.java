@@ -28,6 +28,13 @@ public class FlowOfFluid implements Flow, Serializable {
     private FluidFlowType lockedFluidFlowType;
 
     /**
+     * Default constructor. Creates FlowOfFluid instance with
+     */
+    public FlowOfFluid(){
+        this(LibDefaults.DEF_FLUID_FLOW);
+    }
+
+    /**
      * Constructor. Creates FlowOfFluid instance with default Fluid as liquid water, massFlow as a flow type
      * and user input flow rate.
      * @param flowRate fluid mass flow in kg/h

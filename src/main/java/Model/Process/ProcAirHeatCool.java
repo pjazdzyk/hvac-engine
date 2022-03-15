@@ -3,6 +3,7 @@ package Model.Process;
 import IO.MessagePrinter;
 import Model.Exceptions.ProcessArgumentException;
 import Model.Exceptions.SolutionNotConvergedException;
+import Model.Flows.Flow;
 import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
 import Model.Properties.Fluid;
@@ -30,6 +31,10 @@ public class ProcAirHeatCool {
 
     public ProcAirHeatCool(){
         this(new FlowOfMoistAir());
+    }
+
+    public ProcAirHeatCool(Builder builder){
+        this(builder.ID, builder.inletFlow, builder.outletFlow, builder.condensateFlow, builder.ts_Hydr, builder.tr_Hydr);
     }
 
     public ProcAirHeatCool(FlowOfMoistAir inletFlow) {
@@ -90,6 +95,17 @@ public class ProcAirHeatCool {
     }
 
     /**
+     * Calculates cooling result for an available cooling power
+     * @param inQ cooling power in W,
+     */
+    public void applyCoolingOutTxFromInQ(double inQ){
+        resetProcess();
+        double[] result = LibPsychroProcess.calcCoolingOutTxFromInQ(inletFlow,tm_Wall,inQ);
+        commitResultsToOutlet(result);
+        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
+    }
+
+    /**
      * Calculates input cooling power required to achieve expected outlet air temperature
      * @param outTx expected outlet air temperature,
      */
@@ -111,18 +127,6 @@ public class ProcAirHeatCool {
         BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
         convergenceCheckForRH(outRH);
     }
-
-    /**
-     * Calculates cooling result for an available cooling power
-     * @param inQ cooling power in W,
-     */
-    public void applyCoolingOutTxFromInQ(double inQ){
-        resetProcess();
-        double[] result = LibPsychroProcess.calcCoolingOutTxFromInQ(inletFlow,tm_Wall,inQ);
-        commitResultsToOutlet(result);
-        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm_Wall,inletAirProp.getTx(),outletAirProp.getTx());
-    }
-
 
     //TOOL METHODS
     public void resetProcess(){
@@ -218,6 +222,10 @@ public class ProcAirHeatCool {
         this.ID = ID;
     }
 
+    public double getAvrgWallTemp(){
+        return this.tm_Wall;
+    }
+
     @Override
     public String toString() {
         StringBuilder bld = new StringBuilder();
@@ -250,4 +258,72 @@ public class ProcAirHeatCool {
 
         return bld.toString();
     }
+
+    // BUILDER PATTERN
+    public static class Builder{
+        private String ID = LibDefaults.DEF_PROCESS_NAME;
+        private double ts_Hydr = LibDefaults.DEF_CHW_SUPPLY_TEMP;
+        private double tr_Hydr = LibDefaults.DEF_CHW_RETURN_TEMP;
+        private FlowOfMoistAir inletFlow;
+        private FlowOfMoistAir outletFlow;
+        private FlowOfFluid condensateFlow;
+
+        public Builder withName(String name){
+            this.ID = name;
+            return this;
+        }
+
+        public Builder withInletFlow(FlowOfMoistAir inletFlow){
+            this.inletFlow = inletFlow;
+            return this;
+        }
+
+        public Builder withOutletFlow(FlowOfMoistAir outletFlow){
+            this.outletFlow = outletFlow;
+            return this;
+        }
+
+        public Builder withCondensateFlow(FlowOfFluid condensateFlow){
+            this.condensateFlow = condensateFlow;
+            return this;
+        }
+
+        public Builder withCoolantTemps(double ts_Hydr, double tr_Hydr){
+            this.ts_Hydr = ts_Hydr;
+            this.tr_Hydr = tr_Hydr;
+            return this;
+        }
+
+        public ProcAirHeatCool build(){
+            if(inletFlow==null && outletFlow==null) {
+                inletFlow = createDefaultFlow("Inlet Flow", FlowOfMoistAir.AirFlowType.MA_VOL_FLOW);
+                outletFlow = createDefaultFlow("Outlet Flow", FlowOfMoistAir.AirFlowType.DA_MASS_FLOW);
+            }
+            if(inletFlow==null && outletFlow!=null){
+                inletFlow = outletFlow.clone();
+                inletFlow.setName("Inlet Flow");
+                inletFlow.setLockedFlowType(FlowOfMoistAir.AirFlowType.MA_MASS_FLOW);
+            }
+            if(outletFlow==null && inletFlow!=null){
+                outletFlow = inletFlow.clone();
+                outletFlow.setName("Outlet Flow");
+                outletFlow.setLockedFlowType(FlowOfMoistAir.AirFlowType.DA_MASS_FLOW);
+            }
+            if(condensateFlow==null){
+                condensateFlow = new FlowOfFluid();
+                condensateFlow.setName("Condensate");
+            }
+
+            return new ProcAirHeatCool(this);
+        }
+
+        private FlowOfMoistAir createDefaultFlow(String name, FlowOfMoistAir.AirFlowType lockedFlow){
+            FlowOfMoistAir flow = new FlowOfMoistAir.Builder().withFlowName(name).build();
+            flow.setLockedFlowType(lockedFlow);
+            return flow;
+        }
+
+    }
+
+
 }
