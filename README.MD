@@ -23,7 +23,7 @@ used as an engine for any type of HVAC software development.
 
 At the present state of development following modules are finalized ready for use:
 1. Moist Air thermophysical properties (MoistAir) including simplified liquid water properties for condensate handling (LiquidWater)
-2. Flow of moist air and liquid water (FlowOfMoistAir)
+2. Flow of moist air and liquid water (FlowOfMoistAir, FlowOfFluid)
 3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
 
 LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.

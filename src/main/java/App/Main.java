@@ -114,6 +114,15 @@ public class Main {
         coolingCoil.applyCoolingInQFromOutTx(expectedOutSupplyTemp);
         System.out.println(coolingCoil);
 
+        var newHeater = new ProcAirHeatCool.Builder()
+                                           .withName("zajac")
+                                           .withInletFlow(inputSummerFlow)
+                                           .withCoolantTemps(8.0, 14.0)
+                                           .build();
+
+        newHeater.applyCoolingInQFromOutTx(expectedOutSupplyTemp);
+        System.out.println(newHeater);
+
     }
 
 }
