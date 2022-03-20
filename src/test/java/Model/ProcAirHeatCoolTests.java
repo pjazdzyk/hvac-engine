@@ -28,7 +28,7 @@ public class ProcAirHeatCoolTests {
        //Act
        var process = new ProcAirHeatCool("TestProcess",expectedInletFlow,expectedOutletFlow,expectedCondensate,tsHydr,trHydr);
        var actualOutMaVolFlow = process.getOutletFlow().getVolFlow()*3600d;
-       var actualOutTemp = process.getOutletFlow().getMoistAir().getTx();
+       var actualOutTemp = process.getOutletFlow().getTx();
        var actualTm = process.getAvrgWallTemp();
 
        //Assert
@@ -54,8 +54,8 @@ public class ProcAirHeatCoolTests {
 
         // ACT
         heating.applyHeatingOutTxFromInQ(expectedQ);
-        var actualTout = heating.getOutletFlow().getMoistAir().getTx();
-        var actualX = heating.getOutletFlow().getMoistAir().getX();
+        var actualTout = heating.getOutletFlow().getTx();
+        var actualX = heating.getOutletFlow().getX();
         var actualMda = heating.getOutletFlow().getMassFlowDa();
         var actualQ = heating.getHeatQ();
 
@@ -79,8 +79,8 @@ public class ProcAirHeatCoolTests {
 
        // ACT
        heating.applyHeatingInQFromOutTx(expectedTout);
-       var actualTout = heating.getOutletFlow().getMoistAir().getTx();
-       var actualX = heating.getOutletFlow().getMoistAir().getX();
+       var actualTout = heating.getOutletFlow().getTx();
+       var actualX = heating.getOutletFlow().getX();
        var actualMda = heating.getOutletFlow().getMassFlowDa();
 
        // ASSERT
@@ -105,11 +105,11 @@ public class ProcAirHeatCoolTests {
 
         // ACT
         heating.applyHeatingInQOutTxFromOutRH(expectedRH);
-        var actualTout = heating.getOutletFlow().getMoistAir().getTx();
-        var actualX = heating.getOutletFlow().getMoistAir().getX();
+        var actualTout = heating.getOutletFlow().getTx();
+        var actualX = heating.getOutletFlow().getX();
         var actualMda = heating.getOutletFlow().getMassFlowDa();
         var actualQ = heating.getHeatQ();
-        var actualRH = heating.getOutletFlow().getMoistAir().getRH();
+        var actualRH = heating.getOutletFlow().getRH();
 
         // ASSERT
         Assertions.assertEquals(expectedTout,actualTout,MATH_ACCURACY);
@@ -133,13 +133,13 @@ public class ProcAirHeatCoolTests {
 
         // ACT
         cooling.applyCoolingInQFromOutTx(expectedTout);
-        var actualTout = cooling.getOutletFlow().getMoistAir().getTx();
-        var actualX = cooling.getOutletFlow().getMoistAir().getX();
+        var actualTout = cooling.getOutletFlow().getTx();
+        var actualX = cooling.getOutletFlow().getX();
         var actualMda = cooling.getOutletFlow().getMassFlowDa();
         var condMFlow = LibPsychroProcess.calcCondensateDischarge(actualMda,inletX,actualX);
         var expectedX = inletX - condMFlow/actualMda;
         var expectedRH = LibPropertyOfAir.calc_Ma_RH(actualTout,expectedX,LibDefaults.DEF_PAT);
-        var actualRH = cooling.getOutletFlow().getMoistAir().getRH();
+        var actualRH = cooling.getOutletFlow().getRH();
 
         // ASSERT
         Assertions.assertEquals(expectedTout,actualTout);
@@ -168,10 +168,10 @@ public class ProcAirHeatCoolTests {
        // ACT
        cooling.applyCoolingOutTxFromInQ(expectedHeatQ);
        var actualHeatQ = cooling.getHeatQ();
-       var actualOutT = cooling.getOutletFlow().getMoistAir().getTx();
-       var actualOutX = cooling.getOutletFlow().getMoistAir().getX();
-       var actualRH = cooling.getOutletFlow().getMoistAir().getRH();
-       var actualCOndTemp = cooling.getCondensateFlow().getFluid().getTx();
+       var actualOutT = cooling.getOutletFlow().getTx();
+       var actualOutX = cooling.getOutletFlow().getX();
+       var actualRH = cooling.getOutletFlow().getRH();
+       var actualCOndTemp = cooling.getCondensateFlow().getTx();
        var actualCondMFlow = cooling.getCondensateFlow().getMassFlow();
        var actualTm = cooling.getAvrgWallTemp();
        var actualMda = cooling.getOutletFlow().getMassFlowDa();
@@ -207,10 +207,10 @@ public class ProcAirHeatCoolTests {
        // ACT
        cooling.applyCoolingInQFromOutRH(expectedRH);
        var actualHeatQ = cooling.getHeatQ();
-       var actualOutT = cooling.getOutletFlow().getMoistAir().getTx();
-       var actualOutX = cooling.getOutletFlow().getMoistAir().getX();
-       var actualRH = cooling.getOutletFlow().getMoistAir().getRH();
-       var actualCOndTemp = cooling.getCondensateFlow().getFluid().getTx();
+       var actualOutT = cooling.getOutletFlow().getTx();
+       var actualOutX = cooling.getOutletFlow().getX();
+       var actualRH = cooling.getOutletFlow().getRH();
+       var actualCOndTemp = cooling.getCondensateFlow().getTx();
        var actualCondMFlow = cooling.getCondensateFlow().getMassFlow();
        var actualTm = cooling.getAvrgWallTemp();
        var actualMda = cooling.getOutletFlow().getMassFlowDa();

@@ -221,6 +221,28 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     }
 
     @Override
+    public double getTx(){
+        return moistAir.getTx();
+    }
+
+    @Override
+    public double getIx() {
+        return moistAir.getIx();
+    }
+
+    public double getRH(){
+        return moistAir.getRH();
+    }
+
+    public double getX(){
+        return moistAir.getX();
+    }
+
+    public double getPat(){
+        return moistAir.getPat();
+    }
+
+    @Override
     public FlowOfMoistAir clone() {
         try {
             FlowOfMoistAir clonedFlow = (FlowOfMoistAir) super.clone();
@@ -232,6 +254,25 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder bld = new StringBuilder();
+        bld.append("Flow name: \t\t\t").append(name).append("\n");
+        bld.append("Locked flow: \t\t").append(lockedFlowType).append("\n");
+        bld.append("Air properties: \t");
+        bld.append("ta = ").append(String.format("%.2f",moistAir.getTx())).append(" oC ").append("\t")
+                .append("RH = ").append(String.format("%.2f",moistAir.getRH())).append(" % ").append("\t")
+                .append("x = ").append(String.format("%.5f",moistAir.getX())).append(" kg.wv/kg.da ").append("\t")
+                .append("status = ").append(moistAir.getStatus()).append("\n");
+        bld.append("m_Ma = ").append(String.format("%.3f",massFlowMa)).append(" kg/s ").append("\t").append("moist air mass flow\t | ")
+                .append("v_Ma = ").append(String.format("%.3f",volFlowMa)).append(" m3/s ").append("\t").append("moist air vol flow\t |  ")
+                .append("v_Ma = ").append(String.format("%.1f",volFlowMa*3600)).append(" m3/h ").append("\t").append("moist air vol flow\n");
+        bld.append("m_Da = ").append(String.format("%.3f",massFlowDa)).append(" kg/s ").append("\t").append("dry air mass flow\t | ")
+                .append("v_Da = ").append(String.format("%.3f",volFlowDa)).append(" m3/s ").append("\t").append("dry air vol flow\t |  ")
+                .append("v_Da = ").append(String.format("%.1f",volFlowDa*3600)).append(" m3/h ").append("\t").append("dry air vol flow\n");
+        return bld.toString();
+    }
+
     public enum AirFlowType {
 
         MA_MASS_FLOW,
@@ -239,25 +280,6 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         DA_MASS_FLOW,
         DA_VOL_FLOW;
 
-    }
-
-    @Override
-    public String toString() {
-       StringBuilder bld = new StringBuilder();
-       bld.append("Flow name: \t\t\t").append(name).append("\n");
-       bld.append("Locked flow: \t\t").append(lockedFlowType).append("\n");
-       bld.append("Air properties: \t");
-       bld.append("ta = ").append(String.format("%.2f",moistAir.getTx())).append(" oC ").append("\t")
-          .append("RH = ").append(String.format("%.2f",moistAir.getRH())).append(" % ").append("\t")
-          .append("x = ").append(String.format("%.5f",moistAir.getX())).append(" kg.wv/kg.da ").append("\t")
-          .append("status = ").append(moistAir.getStatus()).append("\n");
-       bld.append("m_Ma = ").append(String.format("%.3f",massFlowMa)).append(" kg/s ").append("\t").append("moist air mass flow\t | ")
-          .append("v_Ma = ").append(String.format("%.3f",volFlowMa)).append(" m3/s ").append("\t").append("moist air vol flow\t |  ")
-          .append("v_Ma = ").append(String.format("%.1f",volFlowMa*3600)).append(" m3/h ").append("\t").append("moist air vol flow\n");
-       bld.append("m_Da = ").append(String.format("%.3f",massFlowDa)).append(" kg/s ").append("\t").append("dry air mass flow\t | ")
-          .append("v_Da = ").append(String.format("%.3f",volFlowDa)).append(" m3/s ").append("\t").append("dry air vol flow\t |  ")
-          .append("v_Da = ").append(String.format("%.1f",volFlowDa*3600)).append(" m3/h ").append("\t").append("dry air vol flow\n");
-       return bld.toString();
     }
 
     //QUICK INSTANCE
