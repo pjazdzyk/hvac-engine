@@ -10,7 +10,7 @@ import java.io.Serializable;
  * MOIST / HUMID AIR PROPERTIES MODEL
  * VERSION: 1.1
  * CODE AUTHOR: PIOTR JAŻDŻYK
- * COMPANY: SYNERSET / www.synerset.com / EMAIL: info@synerset.com
+ * COMPANY: SYNERSET / http://synerset.com/ / EMAIL: info@synerset.com
  * LINKEDIN: https://www.linkedin.com/in/pjazdzyk/
  */
 

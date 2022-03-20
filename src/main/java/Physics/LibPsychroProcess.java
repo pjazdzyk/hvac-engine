@@ -7,6 +7,9 @@ import Model.Flows.FlowOfMoistAir;
 import Model.MathUtils;
 import Model.Properties.MoistAir;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * PSYCHROMETRICS PROCESS EQUATIONS LIBRARY
  * CODE AUTHOR: PIOTR JAŻDŻYK / jazdzyk@gmail.com / https://www.linkedin.com/in/pjazdzyk/
@@ -45,7 +48,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcHeatingOrDryCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double inQ){
-        validateInletFlow(inletFlow);
+        validateFlow(inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
@@ -72,7 +75,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcHeatingOrDryCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double outTx){
-        validateInletFlow(inletFlow);
+        validateFlow(inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double Pat = inletAirProp.getPat();
         double t1 = inletAirProp.getTx();
@@ -99,7 +102,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcHeatingInQOutTxFromOutRH(FlowOfMoistAir inletFlow, double outRH) {
-        validateInletFlow(inletFlow);
+        validateFlow(inletFlow);
         if (outRH > 100.0 || outRH <= 0.0)
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         MoistAir inletAirProp = inletFlow.getMoistAir();
@@ -136,7 +139,7 @@ public abstract class LibPsychroProcess {
      */
     public static double[] calcCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double tm_Wall, double outTx){
         //Determining Bypass Factor and direct near-wall contact airflow and bypassing airflow
-        validateInletFlow(inletFlow);
+        validateFlow(inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double inTx = inletAirProp.getTx();
         double inX = inletAirProp.getX();
@@ -182,7 +185,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcCoolingInQFromOutRH(FlowOfMoistAir inletFlow, double tm_Wall, double outRH) {
-        validateInletFlow(inletFlow);
+        validateFlow(inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double Pat = inletAirProp.getPat();
         if(outRH > 100 || outRH < 0.0)
@@ -220,7 +223,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double tm_Wall, double inQ){
-       validateInletFlow(inletFlow);
+       validateFlow(inletFlow);
        MoistAir inletAirProp = inletFlow.getMoistAir();
        double t1 = inletAirProp.getTx();
        double x1 = inletAirProp.getX();
@@ -239,6 +242,64 @@ public abstract class LibPsychroProcess {
        });
        SOLVER.resetSolverRunFlags();
        return result;
+    }
+
+    // AIR MIXING
+    /**
+     * Returns result of two moist air flow mixing.
+     * @param firstFlow moist air inlet flow,
+     * @param secondFlow moist air seconf flow to be mixed with inlet flow
+     * @return [dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
+     */
+    public static double[] calcMixingOfTwoFlows(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow){
+        validateFlow(firstFlow);
+        validateFlow(secondFlow);
+        double mda1 = firstFlow.getMassFlowDa();
+        double mda2 = secondFlow.getMassFlowDa();
+        double mda3 = mda1 + mda2;
+        if(mda3==0.0)
+            return new double[]{mda3,firstFlow.getTx(),firstFlow.getX()};
+        double x1 = firstFlow.getX();
+        double x2 = secondFlow.getX();
+        double i1 = firstFlow.getMoistAir().getIx();
+        double i2 = secondFlow.getMoistAir().getIx();
+        double x3 = (mda1 * x1 + mda2 * x2) / mda3;
+        double i3 = (mda1 * i1 + mda2 * i2) / mda3;
+        double Pat = firstFlow.getPat();
+        double t3 = LibPropertyOfAir.calc_Ma_Ta_IX(i3,x3,Pat);
+        return new double[]{mda3,t3,x3};
+    }
+
+    /**
+     * Returns result of any number specified flows mixed together
+     * @param flows array of any number of moist air flows,
+     * @return [dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
+     */
+    public static double[] calcMixingOfMultipleFlows(FlowOfMoistAir ... flows){
+        double mda3 = 0.0;
+        double xMda = 0.0;
+        double iMda = 0.0;
+        double Pat = 0.0;
+
+        for(FlowOfMoistAir flow : flows){
+            mda3+=flow.getMassFlowDa();
+            xMda+=flow.getMassFlowDa() * flow.getX();
+            iMda+=flow.getMassFlowDa() * flow.getIx();
+            Pat = Double.max(Pat,flow.getPat());
+        }
+
+        if(mda3==0.0)
+            return new double[]{mda3,flows[0].getTx(),flows[0].getX()};
+
+        if(Pat==0.0)
+            Pat = LibDefaults.DEF_PAT;
+
+        double x3 = xMda/mda3;
+        double i3 = iMda/mda3;
+        double t3 = LibPropertyOfAir.calc_Ma_Ta_IX(i3,x3,Pat);
+
+        return new double[]{mda3,t3,x3};
+
     }
 
     //TOOL METHODS
@@ -278,9 +339,9 @@ public abstract class LibPsychroProcess {
         return massFlowDa * (x1 - x2);
     }
 
-    private static void validateInletFlow(FlowOfMoistAir inletFlow){
-        if (inletFlow==null)
-            throw new ProcessNullPointerException("InletFlow passed as null.");
+    private static void validateFlow(FlowOfMoistAir flow){
+        if (flow==null)
+            throw new ProcessNullPointerException("Flow instance passed as null.");
     }
 
     private static void copyResults(double[] source, double[] target){

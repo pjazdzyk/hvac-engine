@@ -6,12 +6,25 @@ import Model.Process.ProcAirHeatCool;
 import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
 import Physics.LibPropertyOfAir;
+import Physics.LibPsychroProcess;
 
 public class Main {
 
     public static void main(String[] args) {
 
-       runUserGuideMethods();
+      var fl1 = 0 * 3600;
+      var fl2 = 0 * 3600;
+
+      var flow1 = FlowOfMoistAir.ofM3hVolFlow(fl1,20,50);
+      var flow2 = FlowOfMoistAir.ofM3hVolFlow(fl2,-20,95);
+
+      var result = LibPsychroProcess.calcMixingOfMultipleFlows(flow1,flow2,flow2);
+
+        System.out.println(result[0]);
+        System.out.println(result[1]);
+        System.out.println(result[2]);
+
+     //  runUserGuideMethods();
 
     }
 
@@ -109,8 +122,8 @@ public class Main {
         var expectedOutSupplyTemp = 24.0; //oC
         var coolantSupTemp = 8.0;
         var coolantRetTemp = 14.0;
-        coolingCoil.setTs_Hydr(coolantSupTemp);
-        coolingCoil.setTr_Hydr(coolantRetTemp);
+        coolingCoil.setTsHydr(coolantSupTemp);
+        coolingCoil.setTrHydr(coolantRetTemp);
         coolingCoil.applyCoolingInQFromOutTx(expectedOutSupplyTemp);
         System.out.println(coolingCoil);
 

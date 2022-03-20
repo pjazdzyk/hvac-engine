@@ -40,7 +40,7 @@ public class FlowOfFluid implements Flow, Serializable {
      * @param flowRate fluid mass flow in kg/h
      */
     public FlowOfFluid(double flowRate) {
-       this(DEFAULT_NAME, flowRate, FluidFlowType.MASS_FLOW, new LiquidWater());
+        this(DEFAULT_NAME, flowRate, FluidFlowType.MASS_FLOW, new LiquidWater());
     }
 
     /**
@@ -159,6 +159,16 @@ public class FlowOfFluid implements Flow, Serializable {
     public void setTx(double inTx){
         fluid.setTx(inTx);
         updateFlows();
+    }
+
+    @Override
+    public double getTx(){
+        return fluid.getTx();
+    }
+
+    @Override
+    public double getIx() {
+        return fluid.getIx();
     }
 
     public enum FluidFlowType {
@@ -289,8 +299,8 @@ public class FlowOfFluid implements Flow, Serializable {
         bld.append("Flow name: \t\t").append(name).append("\n");
         bld.append("Locked flow: \t").append(lockedFluidFlowType).append("\n");
         bld.append("m_Con = ").append(String.format("%.3f",massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
-           .append("v_Con = ").append(String.format("%.6f",volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
-           .append("v_Con = ").append(String.format("%.3f",volFlow*3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
+                .append("v_Con = ").append(String.format("%.6f",volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
+                .append("v_Con = ").append(String.format("%.3f",volFlow*3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
         return bld.toString();
     }
 
