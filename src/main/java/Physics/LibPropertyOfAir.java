@@ -29,7 +29,7 @@ import java.util.function.DoubleFunction;
  *
  */
 
-public abstract class LibPropertyOfAir {
+public class LibPropertyOfAir {
 
     private static final BrentSolver T_SOLVER = new BrentSolver("T_SOLVER",2,5);
     private static final BrentSolver P_SOLVER = new BrentSolver("P_SOLVER",2,0);

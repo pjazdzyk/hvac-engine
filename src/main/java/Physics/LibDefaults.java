@@ -41,7 +41,7 @@ public class LibDefaults {
 
     // Flow
     public final static double DEF_AIR_FLOW = 0.0;                  // [kg/s] or [m3/s]     - default relative humidity in %
-    public static final double DEF_FLUID_FLOW = 0.0;             // [kg/s] or [m3/s]     - default condensate mass flow
+    public static final double DEF_FLUID_FLOW = 0.0;                // [kg/s] or [m3/s]     - default condensate mass flow
 
     // Heating & cooling
     public static final double DEF_CHW_SUPPLY_TEMP = 6.0;           //oC                    - default chilled water supply temperature

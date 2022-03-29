@@ -1,4 +1,4 @@
-package Model;
+package Physics;
 
 import java.util.Arrays;
 import java.util.OptionalDouble;
@@ -20,6 +20,16 @@ public class MathUtils {
 
         throw new NullPointerException("No values are provided.");
 
+    }
+
+    public static double maxDoubleMulti(double... values){
+        OptionalDouble optional = Arrays.stream(values).max();
+        return optional.orElseThrow();
+    }
+
+    public static double minDoubleMulti(double... values){
+        OptionalDouble optional = Arrays.stream(values).min();
+        return optional.orElseThrow();
     }
 
 }

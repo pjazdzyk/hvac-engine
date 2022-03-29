@@ -159,7 +159,7 @@ var condensateFlow3 = FlowOfFluid.ofM3hWaterVolFlow(volFlow1, temp);
 Please note that Builder class in FlowOfFluid is generic, therefore an extractor must be provided as the argument (a reference to the constructor of the specific Fluid class).
 
 ## HEATING AND COOLING WITH CONDENSATE DISCHARGE
-The heating and cooling of the moist air are modeled by the ProcAirHeatCool class. This class is based on psychrometric equations stored in LibPsychroProcess. This class allows determining the outlet moist air properties including the condensate flow and its properties for typical HVAC cooling or heating applications. The following functionality has been
+The heating and cooling of the moist air are modeled by the AirHeatingCooling class. This class is based on psychrometric equations stored in LibPsychroProcess. This class allows determining the outlet moist air properties including the condensate flow and its properties for typical HVAC cooling or heating applications. The following functionality has been
 developed so far:</br>
 * air heating or cooling if input heating power is known,</br>
 * air heating or cooling result if expected output temperature is known,</br>
@@ -171,7 +171,7 @@ To create the heating and cooling process class just use the constructor and pas
 output flow will be created automatically as an independent object cloned from the input flow. Here is some example: let's try to heat 5000m3/h of winter air of -20oC/RH=95% to the +18oC:
 ```
 var inputFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20,95);
-var heater = new ProcAirHeatCool(inputFlow);
+var heater = new AirHeatingCooling(inputFlow);
 var expectedOutTemp = 18.0; //oC
 heater.applyHeatingInQFromOutTx(expectedOutTemp);
 ````
@@ -225,7 +225,7 @@ return temperature, and resulting average wall temperature. This value must be p
 try to simulate cooling for a typical air conditioning scenario: ambient air 32oC/50%, expected supply temperature +24oC, volumetric flow = 5000m3/h. Coolant parameters: 8/14oC.
 ```
 var inputSummerFlow = FlowOfMoistAir.ofM3hVolFlow(5000,32,50);
-var coolingCoil = new ProcAirHeatCool(inputSummerFlow);
+var coolingCoil = new AirHeatingCooling(inputSummerFlow);
 var expectedOutSupplyTemp = 24.0; //oC
 var coolantSupTemp = 8.0; //oC
 var coolantRetTemp = 14.0; //oC

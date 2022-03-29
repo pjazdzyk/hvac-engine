@@ -7,7 +7,7 @@ import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
 import Model.Properties.Fluid;
 import Model.Properties.MoistAir;
-import Model.MathUtils;
+import Physics.MathUtils;
 import Physics.*;
 
 /**
@@ -18,7 +18,7 @@ import Physics.*;
  * LINKEDIN: https://www.linkedin.com/in/pjazdzyk/
  */
 
-public class ProcAirHeatCool {
+public class ProcessOfHeatingCooling implements Process {
 
     private final MessagePrinter PRINTER = new MessagePrinter();
 
@@ -39,7 +39,7 @@ public class ProcAirHeatCool {
     /**
      *Default Constructor. Creates Heating and Cooling Process instance with default flows.
      */
-    public ProcAirHeatCool(){
+    public ProcessOfHeatingCooling(){
         this(new FlowOfMoistAir());
     }
 
@@ -47,7 +47,7 @@ public class ProcAirHeatCool {
      * Constructor. Creates Heating and Cooling Process instance based on Builder instance.
      * @param builder - Builder instance
      */
-    public ProcAirHeatCool(Builder builder){
+    public ProcessOfHeatingCooling(Builder builder){
         this(builder.ID, builder.inletFlow, builder.outletFlow, builder.condensateFlow, builder.ts_Hydr, builder.tr_Hydr);
     }
 
@@ -55,7 +55,7 @@ public class ProcAirHeatCool {
      * Constructor. Creates Heating and Cooling Process instance based on InletFlow. OutletFlow will be created as an inlet clone.
      * @param inletFlow inlet flow of moist air
      */
-    public ProcAirHeatCool(FlowOfMoistAir inletFlow) {
+    public ProcessOfHeatingCooling(FlowOfMoistAir inletFlow) {
         this(LibDefaults.DEF_PROCESS_NAME, inletFlow, inletFlow.clone(), new FlowOfFluid(LibDefaults.DEF_FLUID_FLOW), LibDefaults.DEF_CHW_SUPPLY_TEMP, LibDefaults.DEF_CHW_RETURN_TEMP);
     }
 
@@ -68,7 +68,7 @@ public class ProcAirHeatCool {
      * @param coolingSupplyTemp coolant supply temperature
      * @param coolingReturnTemp coolant return temperature
      */
-    public ProcAirHeatCool(String ID, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
+    public ProcessOfHeatingCooling(String ID, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
         this.ID = ID;
         this.inletFlow = inletFlow;
         this.outletFlow = outletFlow;
@@ -156,6 +156,7 @@ public class ProcAirHeatCool {
     }
 
     //TOOL METHODS
+    @Override
     public void resetProcess(){
         outletFlow.setTx(inletFlow.getMoistAir().getTx());
         outletFlow.setX(inletFlow.getMoistAir().getX());
@@ -183,20 +184,24 @@ public class ProcAirHeatCool {
     }
 
     //GETTERS & SETTERS
+    @Override
     public FlowOfMoistAir getInletFlow() {
         return inletFlow;
     }
 
+    @Override
     public void setInletFlow(FlowOfMoistAir inletFlow) {
         this.inletFlow = inletFlow;
         this.inletAir = inletFlow.getMoistAir();
         resetProcess();
     }
 
+    @Override
     public FlowOfMoistAir getOutletFlow() {
         return outletFlow;
     }
 
+    @Override
     public void setOutletFlow(FlowOfMoistAir outletFlow) {
         this.outletFlow = outletFlow;
         this.outletAir = outletFlow.getMoistAir();
@@ -321,7 +326,7 @@ public class ProcAirHeatCool {
             return this;
         }
 
-        public ProcAirHeatCool build(){
+        public ProcessOfHeatingCooling build(){
             if(inletFlow==null && outletFlow==null) {
                 inletFlow = createDefaultFlow("Inlet Flow", FlowOfMoistAir.AirFlowType.MA_VOL_FLOW);
                 outletFlow = createDefaultFlow("Outlet Flow", FlowOfMoistAir.AirFlowType.DA_MASS_FLOW);
@@ -341,7 +346,7 @@ public class ProcAirHeatCool {
                 condensateFlow.setName("Condensate");
             }
 
-            return new ProcAirHeatCool(this);
+            return new ProcessOfHeatingCooling(this);
         }
 
         private FlowOfMoistAir createDefaultFlow(String name, FlowOfMoistAir.AirFlowType lockedFlow){

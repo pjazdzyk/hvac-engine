@@ -4,18 +4,16 @@ import IO.MessagePrinter;
 import Model.Exceptions.ProcessArgumentException;
 import Model.Exceptions.ProcessNullPointerException;
 import Model.Flows.FlowOfMoistAir;
-import Model.MathUtils;
 import Model.Properties.MoistAir;
-
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.*;
 
 /**
  * PSYCHROMETRICS PROCESS EQUATIONS LIBRARY
  * CODE AUTHOR: PIOTR JAŻDŻYK / jazdzyk@gmail.com / https://www.linkedin.com/in/pjazdzyk/
  * COMPANY: SYNERSET / https://www.synerset.com / info@synerset.com
  *
- * Method provided below outputs process result as an array with process heat, core output air parameters (temperature, humidity ratio) and condensate properties.
+ * Method provided below outputs process result as an array with process heat, core output air parameters (temperature, humidity ratio) and condensate properties.<>br</>
  * They do not create a separate instance of FlowOfMoistAir for performance reasons - each ot these methods may be used in iterative solvers, and we
  * do not want to lose memory or performance for unnecessary object creation.
  *
@@ -31,9 +29,8 @@ import java.util.Comparator;
  *
  */
 
-public abstract class LibPsychroProcess {
+public class LibPsychroProcess {
 
-    private static final BrentSolver SOLVER = new BrentSolver("PS_SOLVER");
     private static final MessagePrinter PRINTER = new MessagePrinter();
 
     // HEATING & COOLING PROCESS
@@ -48,7 +45,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcHeatingOrDryCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double inQ){
-        validateFlow(inletFlow);
+        Objects.requireNonNull(inletFlow, "InletFlow must not be null.");
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
@@ -75,7 +72,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcHeatingOrDryCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double outTx){
-        validateFlow(inletFlow);
+        Objects.requireNonNull(inletFlow, "InletFlow must not be null.");
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double Pat = inletAirProp.getPat();
         double t1 = inletAirProp.getTx();
@@ -102,15 +99,13 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcHeatingInQOutTxFromOutRH(FlowOfMoistAir inletFlow, double outRH) {
-        validateFlow(inletFlow);
+        Objects.requireNonNull(inletFlow, "InletFlow must not be null.");
         if (outRH > 100.0 || outRH <= 0.0)
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double RH1 = inletAirProp.getRH();
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
-        if(outRH==RH1)
-            return new double[]{0.0,t1,x1,t1,0.0};
         if (outRH == RH1)
             return new double[]{0.0,t1,x1, LibDefaults.DEF_WT_TW,0.0};
         if (outRH > RH1)
@@ -139,7 +134,7 @@ public abstract class LibPsychroProcess {
      */
     public static double[] calcCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double tm_Wall, double outTx){
         //Determining Bypass Factor and direct near-wall contact airflow and bypassing airflow
-        validateFlow(inletFlow);
+        Objects.requireNonNull(inletFlow, "InletFlow must not be null.");
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double inTx = inletAirProp.getTx();
         double inX = inletAirProp.getX();
@@ -185,7 +180,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcCoolingInQFromOutRH(FlowOfMoistAir inletFlow, double tm_Wall, double outRH) {
-        validateFlow(inletFlow);
+        Objects.requireNonNull(inletFlow, "InletFlow must not be null.");
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double Pat = inletAirProp.getPat();
         if(outRH > 100 || outRH < 0.0)
@@ -200,8 +195,9 @@ public abstract class LibPsychroProcess {
         }
         //Iterative loop to determine which outlet temperature will result in expected RH.
         double[] result = new double[5];
-        SOLVER.setCounterpartPoints(inletAirProp.getTx(),inletAirProp.getTdp());
-        SOLVER.calcForFunction(testOutTx -> {
+        BrentSolver solver = new BrentSolver("CoolingFromOutRH SOLVER");
+        solver.setCounterpartPoints(inletAirProp.getTx(),inletAirProp.getTdp());
+        solver.calcForFunction(testOutTx -> {
             double[] tempResult = calcCoolingInQFromOutTx(inletFlow, tm_Wall, testOutTx);
             copyResults(tempResult,result);
             double outTx = tempResult[1];
@@ -209,7 +205,7 @@ public abstract class LibPsychroProcess {
             double actualRH = LibPropertyOfAir.calc_Ma_RH(outTx, outX, Pat);
             return outRH - actualRH;
         });
-        SOLVER.resetSolverRunFlags();
+        solver.resetSolverRunFlags();
         return result;
     }
 
@@ -223,7 +219,7 @@ public abstract class LibPsychroProcess {
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
     public static double[] calcCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double tm_Wall, double inQ){
-       validateFlow(inletFlow);
+        Objects.requireNonNull(inletFlow, "InletFlow must not be null.");
        MoistAir inletAirProp = inletFlow.getMoistAir();
        double t1 = inletAirProp.getTx();
        double x1 = inletAirProp.getX();
@@ -233,14 +229,15 @@ public abstract class LibPsychroProcess {
        double tMin = inletAirProp.getTx();
        //For the provided inQ, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
        double tMax = calcHeatingOrDryCoolingOutTxFromInQ(inletFlow,inQ)[1];
-       SOLVER.setCounterpartPoints(tMin,tMax);
-       SOLVER.calcForFunction(outTemp -> {
+       BrentSolver solver = new BrentSolver("CoolingFromOutInQ SOLVER");
+       solver.setCounterpartPoints(tMin,tMax);
+       solver.calcForFunction(outTemp -> {
             double[] tempResult = calcCoolingInQFromOutTx(inletFlow,tm_Wall,outTemp);
             copyResults(tempResult,result);
             double calculatedQ = tempResult[0];
             return calculatedQ - inQ;
        });
-       SOLVER.resetSolverRunFlags();
+       solver.resetSolverRunFlags();
        return result;
     }
 
@@ -248,30 +245,46 @@ public abstract class LibPsychroProcess {
     /**
      * Returns result of two moist air flow mixing.
      * @param firstFlow moist air inlet flow,
-     * @param secondFlow moist air seconf flow to be mixed with inlet flow
-     * @return [dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
+     * @param secondFlow moist air second flow to be mixed with inlet flow
+     * @return [inlet dry air mass flow (kg/s), inlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static double[] calcMixingOfTwoFlows(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow){
-        validateFlow(firstFlow);
-        validateFlow(secondFlow);
-        double mda1 = firstFlow.getMassFlowDa();
-        double mda2 = secondFlow.getMassFlowDa();
-        double mda3 = mda1 + mda2;
-        if(mda3==0.0)
-            return new double[]{mda3,firstFlow.getTx(),firstFlow.getX()};
-        double x1 = firstFlow.getX();
-        double x2 = secondFlow.getX();
-        double i1 = firstFlow.getMoistAir().getIx();
-        double i2 = secondFlow.getMoistAir().getIx();
-        double x3 = (mda1 * x1 + mda2 * x2) / mda3;
-        double i3 = (mda1 * i1 + mda2 * i2) / mda3;
-        double Pat = firstFlow.getPat();
-        double t3 = LibPropertyOfAir.calc_Ma_Ta_IX(i3,x3,Pat);
-        return new double[]{mda3,t3,x3};
+    public static double[] calcMixing(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow){
+        Objects.requireNonNull(firstFlow, "InletFlow must not be null.");
+        Objects.requireNonNull(secondFlow, "Second flow must not be null");
+        return calcMixing(firstFlow.getMoistAir(),firstFlow.getMassFlowDa(),secondFlow.getMoistAir(), secondFlow.getMassFlowDa());
     }
 
     /**
-     * Returns result of any number specified flows mixed together
+     * Returns resul of two moist air flow mixing.
+     * @param inletAir first moist air instance
+     * @param inletDryAirFlow flow of dry air of inletAir in kg/s
+     * @param secondAir second moist air instance
+     * @param secondDryAirFlow flow of dry air of secondAir
+     * @return [inlet dry air mass flow (kg/s), inlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
+     */
+    public static double[] calcMixing(MoistAir inletAir, double inletDryAirFlow, MoistAir secondAir, double secondDryAirFlow){
+        Objects.requireNonNull(inletAir, "Inlet air instance must not be null.");
+        Objects.requireNonNull(secondAir, "Second air instance must not be null");
+        validateForPositiveValue(inletDryAirFlow, "Inlet dry air flow: negative value passed as an argument");
+        validateForPositiveValue(secondDryAirFlow, "Second dry air flow: negative value passed as an argument");
+        double outDryAirFlow = inletDryAirFlow + secondDryAirFlow;
+        double x1 = inletAir.getX();
+        double x2 = secondAir.getX();
+        if(inletDryAirFlow == 0.0)
+            return new double[]{inletDryAirFlow, secondDryAirFlow, outDryAirFlow, secondAir.getTx(), x2};
+        if(secondDryAirFlow == 0.0)
+            return new double[]{inletDryAirFlow, secondDryAirFlow, outDryAirFlow, inletAir.getTx(), x1};
+        double i1 = inletAir.getIx();
+        double i2 = secondAir.getIx();
+        double x3 = (inletDryAirFlow * x1 + secondDryAirFlow * x2) / outDryAirFlow;
+        double i3 = (inletDryAirFlow * i1 + secondDryAirFlow * i2) / outDryAirFlow;
+        double Pat = inletAir.getPat();
+        double t3 = LibPropertyOfAir.calc_Ma_Ta_IX(i3,x3,Pat);
+        return new double[]{inletDryAirFlow, secondDryAirFlow, outDryAirFlow, t3, x3};
+    }
+
+    /**
+     * Returns result of any number specified flows mixed together.
      * @param flows array of any number of moist air flows,
      * @return [dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
@@ -299,6 +312,68 @@ public abstract class LibPsychroProcess {
         double t3 = LibPropertyOfAir.calc_Ma_Ta_IX(i3,x3,Pat);
 
         return new double[]{mda3,t3,x3};
+
+    }
+
+    /**
+     * Returns mixing process result of two flows based on provided expected outlet dry air flow and its air temperature. This algorithm will attempt to adjust<>br</>
+     * Both inlet flows (firs and second) will be adjusted to match the specified output including expected outTemp as a second target. Both outlet flow and outlet temperature<>br</>
+     * are soft-type of criteria. If expected result cannot be achieved due to specified minimum flow limits or inlet temperatures, values classes to the expected will be returned as the result<>br</>
+     * To lock a minimum flow (for an example to model minimum 10% of fresh intake air in recirculation) you have to specify values for first and second minimum fixed dry air mass flows.
+     *
+     * @param firstFlow flow of moist air instance, first inlet flow to be mixed
+     * @param firstMinFixedDryMassFlow minimum fixed dry air mass flow for the first flow instance in kg/s
+     * @param secondFlow flow of moist air instance, second inlet flow to be mixed
+     * @param secondMinFixedDryMassFlow minimum fixed dry air mass flow for the second flow instance in kg/s
+     * @param outDryAirFlow expected outlet dry air mass flow in kg/s
+     * @param outTx expected outlet air temperature, as a target for air mixing ratio
+     * @return [inlet dry air mass flow (kg/s), inlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
+     */
+    public static double[] calcMixingInletFlowsFromOutTxOutMda(FlowOfMoistAir firstFlow, double firstMinFixedDryMassFlow, FlowOfMoistAir secondFlow, double secondMinFixedDryMassFlow, double outDryAirFlow, double outTx){
+
+        Objects.requireNonNull(firstFlow,"First dry air mass flow: null value passed as an argument");
+        Objects.requireNonNull(secondFlow,"Second dry air mass flow: null value passed as an argument");
+        validateForPositiveValue(firstMinFixedDryMassFlow,"First dry air minimal flow value must be positive");
+        validateForPositiveValue(secondMinFixedDryMassFlow,"Second dry air minimal flow value must be positive");
+        validateForPositiveValue(outDryAirFlow,"Second dry air minimal flow value must be positive");
+
+        double[] result = new double[5];
+        MoistAir air1 = firstFlow.getMoistAir();
+        MoistAir air2 = secondFlow.getMoistAir();
+
+        // In case specified outflow is lower than sum of minimal inlet fixed values
+        double minFlowSum = firstMinFixedDryMassFlow + secondMinFixedDryMassFlow;
+        if(minFlowSum > outDryAirFlow)
+            return calcMixing(air1,firstMinFixedDryMassFlow,air2,secondMinFixedDryMassFlow);
+
+        // Determining possible outcome to validate provided outlet temperature with respect to provided minimal flows
+        double firstMaxPossibleMda = outDryAirFlow - secondMinFixedDryMassFlow;
+        double secondMaxPossibleMda = outDryAirFlow - firstMinFixedDryMassFlow;
+        double[] maxFirstFlowMinSecondFlowMixing = calcMixing(air1, firstMaxPossibleMda, air2, secondMinFixedDryMassFlow);
+        double[] maxSecondFlowMinFirstFlowMixing = calcMixing(air1, firstMinFixedDryMassFlow, air2, secondMaxPossibleMda);
+        double outNearT1 = maxFirstFlowMinSecondFlowMixing[3];
+        double outNearT2 = maxSecondFlowMinFirstFlowMixing[3];
+
+        if( (outNearT1 < outNearT2 && outTx <= outNearT1) || (outNearT1 > outNearT2 && outTx >= outNearT1) )
+            return maxFirstFlowMinSecondFlowMixing;
+        if( (outNearT2 < outNearT1 && outTx <= outNearT2) || (outNearT2 > outNearT1 && outTx >= outNearT2) )
+            return maxSecondFlowMinFirstFlowMixing;
+
+        // For all other cases, first and second flow will be adjusted to determine outTx
+        BrentSolver solver = new BrentSolver("Mixing OutTxMda Solver");
+        solver.setCounterpartPoints(firstMinFixedDryMassFlow, outDryAirFlow);
+        solver.calcForFunction(iterMda1 -> {
+            double mda2 = outDryAirFlow - iterMda1;
+            double[] iterResult = calcMixing(air1,iterMda1,air2,mda2);
+            System.out.println(iterMda1 + "  " + mda2);
+            copyResults(iterResult,result);
+            double t3 = iterResult[3];
+            var gg = outTx - t3;
+            System.out.println(gg);
+            return outTx - t3;
+        });
+
+        return result;
 
     }
 
@@ -339,15 +414,14 @@ public abstract class LibPsychroProcess {
         return massFlowDa * (x1 - x2);
     }
 
-    private static void validateFlow(FlowOfMoistAir flow){
-        if (flow==null)
-            throw new ProcessNullPointerException("Flow instance passed as null.");
-    }
-
     private static void copyResults(double[] source, double[] target){
         System.arraycopy(source, 0, target, 0, source.length);
     }
 
+    private static void validateForPositiveValue(double value, String message){
+        if(value < 0.0)
+            throw new ProcessArgumentException(message);
+    }
+
 
 }
-
