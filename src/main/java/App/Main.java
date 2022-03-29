@@ -2,27 +2,27 @@ package App;
 
 import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
-import Model.Process.ProcAirHeatCool;
+import Model.Process.ProcessOfHeatingCooling;
 import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
 import Physics.LibPropertyOfAir;
 import Physics.LibPsychroProcess;
 
+
 public class Main {
 
     public static void main(String[] args) {
 
-      var fl1 = 0 * 3600;
-      var fl2 = 0 * 3600;
+      var flow1 = FlowOfMoistAir.ofM3hVolFlow(2000,-20,95);
+      var flow2 = FlowOfMoistAir.ofM3hVolFlow(300,15,60);
 
-      var flow1 = FlowOfMoistAir.ofM3hVolFlow(fl1,20,50);
-      var flow2 = FlowOfMoistAir.ofM3hVolFlow(fl2,-20,95);
+      double[] result = LibPsychroProcess.calcMixingInletFlowsFromOutTxOutMda(flow1,5000,flow2,2000,1000,11);
 
-      var result = LibPsychroProcess.calcMixingOfMultipleFlows(flow1,flow2,flow2);
-
-        System.out.println(result[0]);
-        System.out.println(result[1]);
-        System.out.println(result[2]);
+        System.out.println("mda1= " + result[0]);
+        System.out.println("mda2= " + result[1]);
+        System.out.println("mda3= " + result[2]);
+        System.out.println("t3= " + result[3]);
+        System.out.println("x3= " + result[4]);
 
      //  runUserGuideMethods();
 
@@ -71,7 +71,7 @@ public class Main {
         var RH = 50; //%
         var volFlowMa = 5000.0/3600.0; //m3/s
         var air1 = new MoistAir("NewAir", tx, RH);
-        var flow1 = new FlowOfMoistAir("Test flow", volFlowMa, FlowOfMoistAir.AirFlowType.MA_VOL_FLOW,air1);
+        var flow1 = new FlowOfMoistAir("Test flow", volFlowMa,FlowOfMoistAir.AirFlowType.MA_VOL_FLOW,air1);
         System.out.println(flow1);
 
         //By use of builder pattern
@@ -111,14 +111,14 @@ public class Main {
 
         //HEATING
         var inputFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20,95);
-        var heater = new ProcAirHeatCool(inputFlow);
+        var heater = new ProcessOfHeatingCooling(inputFlow);
         var expectedOutTemperature = 18.0; //oC
         heater.applyHeatingInQFromOutTx(expectedOutTemperature);
         System.out.println(heater);
 
         //COOLING
         var inputSummerFlow = FlowOfMoistAir.ofM3hVolFlow(5000,32,50);
-        var coolingCoil = new ProcAirHeatCool(inputSummerFlow);
+        var coolingCoil = new ProcessOfHeatingCooling(inputSummerFlow);
         var expectedOutSupplyTemp = 24.0; //oC
         var coolantSupTemp = 8.0;
         var coolantRetTemp = 14.0;
@@ -127,7 +127,7 @@ public class Main {
         coolingCoil.applyCoolingInQFromOutTx(expectedOutSupplyTemp);
         System.out.println(coolingCoil);
 
-        var newHeater = new ProcAirHeatCool.Builder()
+        var newHeater = new ProcessOfHeatingCooling.Builder()
                                            .withName("zajac")
                                            .withInletFlow(inputSummerFlow)
                                            .withCoolantTemps(8.0, 14.0)

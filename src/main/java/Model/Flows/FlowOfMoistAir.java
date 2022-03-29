@@ -2,9 +2,9 @@ package Model.Flows;
 
 import Model.Exceptions.FlowArgumentException;
 import Model.Exceptions.FlowNullPointerException;
-import Model.Properties.Fluid;
 import Model.Properties.MoistAir;
 import Physics.LibDefaults;
+import Physics.LibLimiters;
 import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
@@ -187,6 +187,18 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         }
     }
 
+    public double getFlow(){
+        switch(lockedFlowType){
+            case DA_VOL_FLOW -> {return volFlowDa;}
+            case MA_VOL_FLOW -> {return volFlowMa;}
+            case DA_MASS_FLOW -> {return massFlowDa;}
+            case MA_MASS_FLOW -> {return massFlowMa;}
+        }
+
+        throw new FlowArgumentException("Invalid lockedFlowType, cannot return value");
+
+    }
+
     public AirFlowType getLockedFlowType() {
         return lockedFlowType;
     }
@@ -198,6 +210,11 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
         this.lockedFlowType = lockedFlowType;
         updateFlows();
+    }
+
+    public void setMinimumFixedFlowRatio(double fixedFlowRatio){
+        if(fixedFlowRatio<0.0 || fixedFlowRatio > 1.0)
+            throw new FlowArgumentException("Minimum flow limiter factor must be between 1.0 to 0.0");
     }
 
     public void setTx(double inTx){
@@ -411,7 +428,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
         public FlowOfMoistAir build(){
             if(moistAir==null)
-                moistAir = new MoistAir(airName,tx, xRH, Pat, humidType);
+                moistAir = new MoistAir(airName, tx, xRH, Pat, humidType);
             else
                 adjustMoistAirInstance();
 

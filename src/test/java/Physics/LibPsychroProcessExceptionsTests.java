@@ -13,17 +13,17 @@ public class LibPsychroProcessExceptionsTests {
 
     @Test
     void calcHeatingOutTxFromInQ() {
-        Assertions.assertThrows(ProcessNullPointerException.class,()->LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(null,1000));
+        Assertions.assertThrows(NullPointerException.class,()->LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(null,1000));
     }
 
     @Test
     void calcHeatingOrDryCoolingInQFromOutTx() {
-        Assertions.assertThrows(ProcessNullPointerException.class,()->LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(null,1000));
+        Assertions.assertThrows(NullPointerException.class,()->LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(null,1000));
     }
 
     @Test
     void calcHeatingInQOutTxFromOutRH() {
-        Assertions.assertThrows(ProcessNullPointerException.class,()->LibPsychroProcess.calcHeatingInQOutTxFromOutRH(null,50));
+        Assertions.assertThrows(NullPointerException.class,()->LibPsychroProcess.calcHeatingInQOutTxFromOutRH(null,50));
         Assertions.assertThrows(ProcessArgumentException.class,()->LibPsychroProcess.calcHeatingInQOutTxFromOutRH(AIRFLOW,-60));
         Assertions.assertThrows(ProcessArgumentException.class,()->LibPsychroProcess.calcHeatingInQOutTxFromOutRH(AIRFLOW,101));
         Assertions.assertThrows(ProcessArgumentException.class,()->LibPsychroProcess.calcHeatingInQOutTxFromOutRH(AIRFLOW,60));
@@ -32,13 +32,13 @@ public class LibPsychroProcessExceptionsTests {
 
     @Test
     void calcCoolingInQFromOutTx() {
-        Assertions.assertThrows(ProcessNullPointerException.class,()->LibPsychroProcess.calcCoolingInQFromOutTx(null,9,13));
+        Assertions.assertThrows(NullPointerException.class,()->LibPsychroProcess.calcCoolingInQFromOutTx(null,9,13));
         Assertions.assertThrows(ProcessArgumentException.class,()->LibPsychroProcess.calcCoolingInQFromOutTx(AIRFLOW,9,AIRFLOW.getMoistAir().getTx()+0.000000001));
     }
 
     @Test
     void calcCoolingInQFromOutRH() {
-        Assertions.assertThrows(ProcessNullPointerException.class,()->LibPsychroProcess.calcCoolingInQFromOutRH(null,9,50));
+        Assertions.assertThrows(NullPointerException.class,()->LibPsychroProcess.calcCoolingInQFromOutRH(null,9,50));
         Assertions.assertThrows(ProcessArgumentException.class,()->LibPsychroProcess.calcCoolingInQFromOutRH(AIRFLOW,9,100.1));
         Assertions.assertThrows(ProcessArgumentException.class,()->LibPsychroProcess.calcCoolingInQFromOutRH(AIRFLOW,9,-10.1));
         Assertions.assertThrows(ProcessArgumentException.class,()->LibPsychroProcess.calcCoolingInQFromOutRH(AIRFLOW,9,AIRFLOW.getMoistAir().getRH()-0.0000001));
