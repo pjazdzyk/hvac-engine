@@ -2,7 +2,9 @@ package Physics;
 
 import Model.Properties.Fluid;
 import Model.Properties.MoistAir;
-import Physics.Exceptions.FlowPhysicsNullPointerException;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * FLOW CALCULATION AND CONVERSION
@@ -20,12 +22,8 @@ public class LibPhysicsOfFlow {
      * @return volumetric flow rate in m3/s
      */
     public static double calcVolFlowFromMassFlow(Fluid fluid, double massFlow) {
-
-        if(fluid==null)
-            throw new FlowPhysicsNullPointerException("[calc_volFlow]: Null value passed in inFluid argument");
-
+        Objects.requireNonNull(fluid,"[calc_volFlow]: Null value passed in inFluid argument");
         return massFlow / fluid.getRho();
-
     }
 
     /**
@@ -35,12 +33,8 @@ public class LibPhysicsOfFlow {
      * @return mass flow rate in kg/s
      */
     public static double calcMassFlowFromVolFlow(Fluid fluid, double volFlow) {
-
-        if(fluid==null)
-            throw new FlowPhysicsNullPointerException("[calc_massFlow]: Null value passed in inFluid argument");
-
+        Objects.requireNonNull(fluid,"[calc_massFlow]: Null value passed in inFluid argument");
         return volFlow * fluid.getRho();
-
     }
 
     // MOIST AIR SPECIFIC FLOW RATE CONVERSION METHODS
@@ -52,13 +46,20 @@ public class LibPhysicsOfFlow {
      * @param massFlowMa moist air flow in kg/s
      * @return dry air flow in kg/s
      */
-    public static double calc_Da_MassFlowFromMa(MoistAir moistAir, double massFlowMa) {
+    public static double calcDaMassFlowFromMaMassFlow(MoistAir moistAir, double massFlowMa) {
+        Objects.requireNonNull(moistAir,"[calc_Da_massFlow_X]: Null value passed in moistAir argument");
+        return massFlowMa / (1.0 + moistAir.getX());
+    }
 
-        if(moistAir==null)
-            throw new FlowPhysicsNullPointerException("[calc_Da_massFlow_X]: Null value passed in moistAir argument");
-
-        return massFlowMa / (1 + moistAir.getX());
-
+    /**
+     * Returns dry air mass flow in kg/s from volumetric air mass flow in kg/s.
+     * @param moistAir moist air instance
+     * @param volFlowDa dry air volumetric flow in kg/s
+     * @return dry air mass flow in kg/s
+     */
+    public static double calcDaMassFlowFromDaVolFlow(MoistAir moistAir, double volFlowDa) {
+        Objects.requireNonNull(moistAir,"[calc_Da_massFlow]: Null value passed in moistAir argument");
+        return volFlowDa * moistAir.getRho_Da();
     }
 
     /**
@@ -68,41 +69,43 @@ public class LibPhysicsOfFlow {
      * @param massFlowDa dry air mass flow in kg/s
      * @return moist air mass flow in kg/s
      */
-    public static double calc_Ma_MassFlowFromDa(MoistAir moistAir, double massFlowDa) {
-
-        if(moistAir==null)
-            throw new FlowPhysicsNullPointerException("[calc_Ma_massFlow_X]: Null value passed in moistAir argument");
-
-        return massFlowDa * (1 + moistAir.getX());
-
+    public static double calcMaMassFlowFromDaMassFlow(MoistAir moistAir, double massFlowDa) {
+        Objects.requireNonNull(moistAir,"[calc_Ma_massFlow_X]: Null value passed in moistAir argument");
+        return massFlowDa * (1.0 + moistAir.getX());
     }
 
     /**
-     * Returns dry air volumetric flow in kg/s from dry air mass flow in kg/s.
+     * Returns dry air volumetric flow in m3/s from dry air mass flow in kg/s.
      * @param moistAir moist air instance
-     * @param massFlowDa dry air mass flow ing kg/s
-     * @return dry air volumetric flow in kg/s
+     * @param massFlowDa dry air mass flow in kg/s
+     * @return dry air volumetric flow in m3/s
      */
-    public static double calc_Da_VolFlowFromMassFlowDa(MoistAir moistAir, double massFlowDa) {
-
-        if(moistAir==null)
-            throw new FlowPhysicsNullPointerException("[calc_Ma_massFlow_X]: Null value passed in moistAir argument");
-
+    public static double calcDaVolFlowFromDaMassFlow(MoistAir moistAir, double massFlowDa) {
+        Objects.requireNonNull(moistAir,"[calc_Ma_massFlow_X]: Null value passed in moistAir argument");
         return massFlowDa / moistAir.getRho_Da();
     }
 
     /**
-     * Returns dry air mass flow in kg/s from volumetric air mass flow in kg/s.
+     * Returns moist air volumetric flow in m3/s from dry air mass flow in kg/s.
      * @param moistAir moist air instance
-     * @param volFlowDa dry air volumetric flow ing kg/s
-     * @return dry air mass flow in kg/s
+     * @param massFlowDa dry air mass flow in kg/s
+     * @return moist air volumetric flow in m3/s
      */
-    public static double calc_Da_MassFlowFromVolFlowDa(MoistAir moistAir, double volFlowDa) {
+    public static double calcMaVolFlowFromDaMassFlow(MoistAir moistAir, double massFlowDa){
+        double massFlowMa = calcMaMassFlowFromDaMassFlow(moistAir,massFlowDa);
+        return calcVolFlowFromMassFlow(moistAir,massFlowDa);
+    }
 
-        if(moistAir==null)
-            throw new FlowPhysicsNullPointerException("[calc_Da_massFlow]: Null value passed in moistAir argument");
+    /**
+     * Returns dry air mass flow in kg/s from moist air volumetric flow in m3/s.
+     * @param moistAir moist air instance
+     * @param volFlowMa moist air volumetric flow in m3/s
+     * @return moist air volumetric flow in m3/s
+     */
+    public static double calcDaMassFlowFromMaVolFlow(MoistAir moistAir, double volFlowMa){
+        double massFlowMa = calcMassFlowFromVolFlow(moistAir,volFlowMa);
+        return calcDaMassFlowFromMaMassFlow(moistAir,massFlowMa);
 
-        return volFlowDa * moistAir.getRho_Da();
     }
 
 }

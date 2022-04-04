@@ -1,13 +1,13 @@
 package Model.Flows;
 
 import Model.Exceptions.FlowArgumentException;
-import Model.Exceptions.FlowNullPointerException;
 import Model.Properties.Fluid;
 import Model.Properties.LiquidWater;
 import Physics.LibDefaults;
 import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -25,7 +25,7 @@ public class FlowOfFluid implements Flow, Serializable {
     private Fluid fluid;
     private double massFlow;
     private double volFlow;
-    private FluidFlowType lockedFluidFlowType;
+    private TypeOfFluidFlow lockedTypeOfFluidFlow;
 
     /**
      * Default constructor. Creates FlowOfFluid instance with
@@ -40,7 +40,7 @@ public class FlowOfFluid implements Flow, Serializable {
      * @param flowRate fluid mass flow in kg/h
      */
     public FlowOfFluid(double flowRate) {
-        this(DEFAULT_NAME, flowRate, FluidFlowType.MASS_FLOW, new LiquidWater());
+        this(DEFAULT_NAME, flowRate, TypeOfFluidFlow.MASS_FLOW, new LiquidWater());
     }
 
     /**
@@ -48,11 +48,9 @@ public class FlowOfFluid implements Flow, Serializable {
      * @param builder instance of Builder interior nested class
      */
     public FlowOfFluid(Builder<Fluid> builder){
-
         this(builder.fluidName, builder.flowRate, builder.lockedFlowType, builder.fluid);
         if(builder.overrideLockedFlowType!=null)
-            this.lockedFluidFlowType = builder.overrideLockedFlowType;
-
+            this.lockedTypeOfFluidFlow = builder.overrideLockedFlowType;
     }
 
     /**
@@ -60,38 +58,28 @@ public class FlowOfFluid implements Flow, Serializable {
      * @param name flow name or tag,
      * @param flowRate flow rate of specified type of flow in kg/s or m3/s
      * @param fluid type of Fluid
-     * @param lockedFluidFlowType - type of Flow (selected from FluidFlowType enum).
+     * @param lockedTypeOfFluidFlow - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfFluid(String name, double flowRate, FluidFlowType lockedFluidFlowType, Fluid fluid){
-
-        if(fluid==null)
-            throw new FlowNullPointerException("Error. Fluid instance does not exist.");
-        if(lockedFluidFlowType == null)
-            throw new FlowNullPointerException("FluidFlowType has not been specified");
-
+    public FlowOfFluid(String name, double flowRate, TypeOfFluidFlow lockedTypeOfFluidFlow, Fluid fluid){
+        Objects.requireNonNull(fluid,"Error. Fluid instance does not exist.");
+        Objects.requireNonNull(lockedTypeOfFluidFlow,"FluidFlowType has not been specified");
         this.name = name;
         this.fluid = fluid;
-
-        switch(lockedFluidFlowType){
+        switch(lockedTypeOfFluidFlow){
             case MASS_FLOW -> setMassFlow(flowRate);
             case VOL_FLOW -> setVolFlow(flowRate);
         }
-
     }
 
     /**
      * Update flows if Fluid property has changed. It is invoked automatically.
      */
     public void updateFlows() {
-
-        if(lockedFluidFlowType == null)
-            throw new FlowNullPointerException("FluidFlowType has not been specified");
-
-        switch (lockedFluidFlowType) {
+        Objects.requireNonNull(lockedTypeOfFluidFlow,"FluidFlowType has not been specified");
+        switch (lockedTypeOfFluidFlow) {
             case MASS_FLOW -> volFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(fluid,massFlow);
             case VOL_FLOW -> massFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(fluid,volFlow);
         }
-
     }
 
     public String getName() {
@@ -110,8 +98,8 @@ public class FlowOfFluid implements Flow, Serializable {
         return volFlow;
     }
 
-    public FluidFlowType getLockedFlowType(){
-        return this.lockedFluidFlowType;
+    public TypeOfFluidFlow getLockedFlowType(){
+        return this.lockedTypeOfFluidFlow;
     }
 
     public void setName(String inName){
@@ -119,40 +107,30 @@ public class FlowOfFluid implements Flow, Serializable {
     }
 
     public void setMassFlow(double inMassFlow) {
-
         if(inMassFlow<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
-
-        this.lockedFluidFlowType = FluidFlowType.MASS_FLOW;
+        this.lockedTypeOfFluidFlow = TypeOfFluidFlow.MASS_FLOW;
         this.massFlow = inMassFlow;
         updateFlows();
     }
 
     public void setVolFlow(double inVolFlow) {
-
         if(inVolFlow<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
-
-        this.lockedFluidFlowType = FluidFlowType.VOL_FLOW;
+        this.lockedTypeOfFluidFlow = TypeOfFluidFlow.VOL_FLOW;
         this.volFlow = inVolFlow;
         updateFlows();
     }
 
     public void setFluid(Fluid inFluid) {
-
-        if(inFluid==null)
-            throw new FlowNullPointerException("Error. Fluid instance does not exist.");
-
+        Objects.requireNonNull(inFluid,"Error. Fluid instance does not exist.");
         this.fluid = inFluid;
         updateFlows();
     }
 
-    public void setLockedFlowType(FluidFlowType lockedFluidFlowType) {
-
-        if(lockedFluidFlowType == null)
-            throw new FlowNullPointerException("FluidFlowType has not been specified");
-
-        this.lockedFluidFlowType = lockedFluidFlowType;
+    public void setLockedFlowType(TypeOfFluidFlow lockedTypeOfFluidFlow) {
+        Objects.requireNonNull(lockedTypeOfFluidFlow,"FluidFlowType has not been specified");
+        this.lockedTypeOfFluidFlow = lockedTypeOfFluidFlow;
         updateFlows();
     }
 
@@ -169,11 +147,6 @@ public class FlowOfFluid implements Flow, Serializable {
     @Override
     public double getIx() {
         return fluid.getIx();
-    }
-
-    public enum FluidFlowType {
-        MASS_FLOW,
-        VOL_FLOW;
     }
 
     //QUICK INSTANCE
@@ -199,7 +172,7 @@ public class FlowOfFluid implements Flow, Serializable {
      */
     public static FlowOfFluid ofM3hWaterVolFlow(String ID, double volFlowMaM3h, double tx){
         LiquidWater water = new LiquidWater("Water of: " + ID, tx);
-        return new FlowOfFluid(ID,volFlowMaM3h/3600d, FluidFlowType.VOL_FLOW, water);
+        return new FlowOfFluid(ID,volFlowMaM3h/3600d, TypeOfFluidFlow.VOL_FLOW, water);
     }
 
     //BUILDER PATTERN
@@ -217,8 +190,8 @@ public class FlowOfFluid implements Flow, Serializable {
         private String fluidName = "Fluid of: " + flowName;
         private double tx = LibDefaults.DEF_WT_TW;
         private double flowRate = LibDefaults.DEF_FLUID_FLOW;
-        private FluidFlowType lockedFlowType = FluidFlowType.VOL_FLOW;
-        private FluidFlowType overrideLockedFlowType;
+        private TypeOfFluidFlow lockedFlowType = TypeOfFluidFlow.VOL_FLOW;
+        private TypeOfFluidFlow overrideLockedFlowType;
         private K fluid;
         private final Supplier<K> fluidSupplier;
 
@@ -242,13 +215,13 @@ public class FlowOfFluid implements Flow, Serializable {
 
         public Builder<K> withMassFlow(double massFlow){
             this.flowRate = massFlow;
-            this.lockedFlowType = FluidFlowType.MASS_FLOW;
+            this.lockedFlowType = TypeOfFluidFlow.MASS_FLOW;
             return this;
         }
 
         public Builder<K> withVolFlow(double volFlow){
             this.flowRate = volFlow;
-            this.lockedFlowType = FluidFlowType.VOL_FLOW;
+            this.lockedFlowType = TypeOfFluidFlow.VOL_FLOW;
             return this;
         }
 
@@ -262,7 +235,7 @@ public class FlowOfFluid implements Flow, Serializable {
             return this;
         }
 
-        public Builder<K> withLockedFlow(FluidFlowType lockedFlowType){
+        public Builder<K> withLockedFlow(TypeOfFluidFlow lockedFlowType){
             this.overrideLockedFlowType = lockedFlowType;
             return this;
         }
@@ -275,14 +248,10 @@ public class FlowOfFluid implements Flow, Serializable {
             }
             else
                 adjustFluid();
-
             FlowOfFluid flowOfFluid = new FlowOfFluid(flowName, flowRate, lockedFlowType, fluid);
-
             if(overrideLockedFlowType!=null)
                 flowOfFluid.setLockedFlowType(overrideLockedFlowType);
-
             return flowOfFluid;
-
         }
 
         private void adjustFluid(){
@@ -290,14 +259,13 @@ public class FlowOfFluid implements Flow, Serializable {
             if(fluid.getTx() != tx)
                 fluid.setTx(tx);
         }
-
     }
 
     @Override
     public String toString() {
         StringBuilder bld = new StringBuilder();
         bld.append("Flow name: \t\t").append(name).append("\n");
-        bld.append("Locked flow: \t").append(lockedFluidFlowType).append("\n");
+        bld.append("Locked flow: \t").append(lockedTypeOfFluidFlow).append("\n");
         bld.append("m_Con = ").append(String.format("%.3f",massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
                 .append("v_Con = ").append(String.format("%.6f",volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
                 .append("v_Con = ").append(String.format("%.3f",volFlow*3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");

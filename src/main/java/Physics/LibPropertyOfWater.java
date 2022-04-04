@@ -62,7 +62,6 @@ public class LibPropertyOfWater {
      * @return water isobaric specific heat
      */
     public static double calc_Cp(double tx) {
-
         if (tx > 0 && tx <= 100)
             return 3.93240161 * Math.pow(10, -13) * Math.pow(tx, 6)
                     - 1.525847751 * Math.pow(10, -10) * Math.pow(tx, 5)
@@ -78,7 +77,6 @@ public class LibPropertyOfWater {
                     + 1.25584188 * Math.pow(10, -4) * Math.pow(tx, 3)
                     - 1.370455849 * Math.pow(10, -2) * Math.pow(tx, 2)
                     + 8.093157187 * Math.pow(10, -1) * tx - 15.75651097;
-
     }
 
 }

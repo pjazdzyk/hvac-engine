@@ -5,10 +5,14 @@ import Model.Exceptions.ProcessArgumentException;
 import Model.Exceptions.SolutionNotConvergedException;
 import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
+import Model.Flows.TypeOfAirFlow;
 import Model.Properties.Fluid;
 import Model.Properties.MoistAir;
 import Physics.MathUtils;
 import Physics.*;
+
+import java.util.Objects;
+import java.util.function.DoubleConsumer;
 
 /**
  * HEATING AND COOLING WITH CONDENSATE DISCHARGE
@@ -29,12 +33,14 @@ public class ProcessOfHeatingCooling implements Process {
     private MoistAir outletAir;
     private FlowOfFluid condensateFlow;
     private Fluid condensate;
-
     private double heatQ;
     private double tsHydr;
     private double trHydr;
     private double tmWall;
     private double BF;
+    // Fields dedicated for executing last used method functionality
+    private double targetvalue;
+    private DoubleConsumer lastMethod;
 
     /**
      *Default Constructor. Creates Heating and Cooling Process instance with default flows.
@@ -90,10 +96,11 @@ public class ProcessOfHeatingCooling implements Process {
      * EQUATION LIMITS: {0.0 W, TBC W}<br>
      * @param inQ input heat in W,
      */
-    public void applyHeatingOutTxFromInQ(double inQ){
+    public void applyHeatingOutTxFromInQ(double inQ) {
         resetProcess();
-        double[] result = LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow,inQ);
-        commitResultsToOutlet(result);
+        double[] result = LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ);
+        commitResults(result);
+        setLastFunctionAndTargetValue(this::applyHeatingOutTxFromInQ,inQ);
     }
 
     /**
@@ -105,7 +112,8 @@ public class ProcessOfHeatingCooling implements Process {
     public void applyHeatingInQFromOutTx(double outTx){
         resetProcess();
         double[] result = LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,outTx);
-        commitResultsToOutlet(result);
+        commitResults(result);
+        setLastFunctionAndTargetValue(this::applyHeatingInQFromOutTx,outTx);
     }
 
     /**
@@ -116,9 +124,10 @@ public class ProcessOfHeatingCooling implements Process {
     public void applyHeatingInQOutTxFromOutRH(double outRH){
         resetProcess();
         double[] result = LibPsychroProcess.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
-        commitResultsToOutlet(result);
+        commitResults(result);
         BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
+        setLastFunctionAndTargetValue(this::applyHeatingInQOutTxFromOutRH,outRH);
     }
 
     /**
@@ -128,8 +137,9 @@ public class ProcessOfHeatingCooling implements Process {
     public void applyCoolingOutTxFromInQ(double inQ){
         resetProcess();
         double[] result = LibPsychroProcess.calcCoolingOutTxFromInQ(inletFlow, tmWall,inQ);
-        commitResultsToOutlet(result);
+        commitResults(result);
         BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
+        setLastFunctionAndTargetValue(this::applyCoolingOutTxFromInQ,inQ);
     }
 
     /**
@@ -139,8 +149,9 @@ public class ProcessOfHeatingCooling implements Process {
     public void applyCoolingInQFromOutTx(double outTx){
         resetProcess();
         double[] result = LibPsychroProcess.calcCoolingInQFromOutTx(inletFlow, tmWall,outTx);
-        commitResultsToOutlet(result);
+        commitResults(result);
         BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(),outTx);
+        setLastFunctionAndTargetValue(this::applyCoolingInQFromOutTx,outTx);
     }
 
     /**
@@ -150,12 +161,24 @@ public class ProcessOfHeatingCooling implements Process {
     public void applyCoolingInQFromOutRH(double outRH) {
         resetProcess();
         double[] result = LibPsychroProcess.calcCoolingInQFromOutRH(inletFlow, tmWall,outRH);
-        commitResultsToOutlet(result);
+        commitResults(result);
         BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
+        setLastFunctionAndTargetValue(this::applyCoolingInQFromOutRH,outRH);
     }
 
     //TOOL METHODS
+    public void executeLastFunction(){
+        if(lastMethod!=null)
+            lastMethod.accept(targetvalue);
+    }
+
+    public void setLastFunctionAndTargetValue(DoubleConsumer method, double targetvalue){
+        Objects.requireNonNull(method,"Specified method must not be null");
+        this.targetvalue = targetvalue;
+        this.lastMethod = method;
+    }
+
     @Override
     public void resetProcess(){
         outletFlow.setTx(inletFlow.getMoistAir().getTx());
@@ -173,7 +196,8 @@ public class ProcessOfHeatingCooling implements Process {
             throw new SolutionNotConvergedException("Solution convergence error. Expected outlet RH= " + outRH + " actual outlet RH= " + resultingRH2);
     }
 
-    private void commitResultsToOutlet(double[] result){
+    private void commitResults(double[] result){
+        Objects.requireNonNull(result,"Result must not be null");
         if(result.length!=5)
             throw new ProcessArgumentException("Invalid result. Array length is different than 5");
         heatQ = result[0];
@@ -191,6 +215,7 @@ public class ProcessOfHeatingCooling implements Process {
 
     @Override
     public void setInletFlow(FlowOfMoistAir inletFlow) {
+        Objects.requireNonNull(inletFlow,"Inlet flow must not be null");
         this.inletFlow = inletFlow;
         this.inletAir = inletFlow.getMoistAir();
         resetProcess();
@@ -203,6 +228,7 @@ public class ProcessOfHeatingCooling implements Process {
 
     @Override
     public void setOutletFlow(FlowOfMoistAir outletFlow) {
+        Objects.requireNonNull(outletFlow,"Outlet flow must not be null");
         this.outletFlow = outletFlow;
         this.outletAir = outletFlow.getMoistAir();
         resetProcess();
@@ -246,16 +272,24 @@ public class ProcessOfHeatingCooling implements Process {
         return BF;
     }
 
-    public String getID() {
+    public String getiD() {
         return ID;
     }
 
-    public void setID(String ID) {
+    public void setiD(String ID) {
         this.ID = ID;
     }
 
     public double getAvrgWallTemp(){
         return this.tmWall;
+    }
+
+    public double getTargetvalue() {
+        return targetvalue;
+    }
+
+    public void setTargetvalue(double targetvalue) {
+        this.targetvalue = targetvalue;
     }
 
     @Override
@@ -328,18 +362,18 @@ public class ProcessOfHeatingCooling implements Process {
 
         public ProcessOfHeatingCooling build(){
             if(inletFlow==null && outletFlow==null) {
-                inletFlow = createDefaultFlow("Inlet Flow", FlowOfMoistAir.AirFlowType.MA_VOL_FLOW);
-                outletFlow = createDefaultFlow("Outlet Flow", FlowOfMoistAir.AirFlowType.DA_MASS_FLOW);
+                inletFlow = createDefaultFlow("Inlet Flow", TypeOfAirFlow.MA_VOL_FLOW);
+                outletFlow = createDefaultFlow("Outlet Flow", TypeOfAirFlow.DA_MASS_FLOW);
             }
             if(inletFlow==null && outletFlow!=null){
                 inletFlow = outletFlow.clone();
                 inletFlow.setName("Inlet Flow");
-                inletFlow.setLockedFlowType(FlowOfMoistAir.AirFlowType.MA_MASS_FLOW);
+                inletFlow.setLockedFlowType(TypeOfAirFlow.MA_MASS_FLOW);
             }
             if(outletFlow==null && inletFlow!=null){
                 outletFlow = inletFlow.clone();
                 outletFlow.setName("Outlet Flow");
-                outletFlow.setLockedFlowType(FlowOfMoistAir.AirFlowType.DA_MASS_FLOW);
+                outletFlow.setLockedFlowType(TypeOfAirFlow.DA_MASS_FLOW);
             }
             if(condensateFlow==null){
                 condensateFlow = new FlowOfFluid();
@@ -349,7 +383,7 @@ public class ProcessOfHeatingCooling implements Process {
             return new ProcessOfHeatingCooling(this);
         }
 
-        private FlowOfMoistAir createDefaultFlow(String name, FlowOfMoistAir.AirFlowType lockedFlow){
+        private FlowOfMoistAir createDefaultFlow(String name, TypeOfAirFlow lockedFlow){
             FlowOfMoistAir flow = new FlowOfMoistAir.Builder().withFlowName(name).build();
             flow.setLockedFlowType(lockedFlow);
             return flow;
