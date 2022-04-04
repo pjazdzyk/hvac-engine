@@ -1,23 +1,23 @@
 package Model.Flows;
 
 import Model.Exceptions.FlowArgumentException;
-import Model.Exceptions.FlowNullPointerException;
 import Model.Properties.MoistAir;
 import Physics.LibDefaults;
-import Physics.LibLimiters;
 import Physics.LibPhysicsOfFlow;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
     private String name;
     private MoistAir moistAir;
+    private TypeOfAirFlow lockedFlowType;
     private double massFlowMa;
     private double volFlowMa;
     private double massFlowDa;
     private double volFlowDa;
-    private AirFlowType lockedFlowType;
+    private double minMassFlowDa;
 
     /**
      * Default constructor. Create FlowOfFluid instance with default FlowOfMoistAir instance and default mass flow as 0.1kg/s
@@ -32,9 +32,10 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
      */
     public FlowOfMoistAir(Builder builder){
         this(builder.flowName, builder.flowRate, builder.lockedFlowType, builder.moistAir);
-
         if(builder.userDefinedLockedFlowType != null)
             this.setLockedFlowType(builder.userDefinedLockedFlowType);
+        if(builder.typeOfMinFlow!=null)
+            setMinFlow(builder.typeOfMinFlow,builder.minFlow);
     }
 
     /**
@@ -43,7 +44,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
      * @param flowRate fluid mass flow in kg/h
      */
     public FlowOfMoistAir(double flowRate) {
-        this(LibDefaults.DEF_FLOW_NAME, flowRate, AirFlowType.MA_MASS_FLOW, new MoistAir());
+        this(LibDefaults.DEF_FLOW_NAME, flowRate, TypeOfAirFlow.MA_MASS_FLOW, new MoistAir());
 
     }
 
@@ -54,16 +55,11 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
      * @param moistAir type of Fluid (moist air)
      * @param flowType - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfMoistAir(String name, double flowRate, AirFlowType flowType, MoistAir moistAir){
-
-        if(moistAir == null)
-            throw new FlowNullPointerException("Error. MoistAir instance does not exist.");
-        if(flowType == null)
-            throw new FlowNullPointerException("FluidFlowType has not been specified");
-
+    public FlowOfMoistAir(String name, double flowRate, TypeOfAirFlow flowType, MoistAir moistAir){
+        Objects.requireNonNull(moistAir,"Error. MoistAir instance does not exist.");
+        Objects.requireNonNull(flowType,"FluidFlowType has not been specified");
         this.name = name;
         this.moistAir = moistAir;
-
         switch(flowType){
             case MA_MASS_FLOW -> setMassFlow(flowRate);
             case MA_VOL_FLOW -> setVolFlow(flowRate);
@@ -73,29 +69,26 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     }
 
     public void updateFlows() {
-
-        if(lockedFlowType == null)
-            throw new FlowNullPointerException("FluidFlowType has not been specified");
-
+        Objects.requireNonNull(lockedFlowType,"FluidFlowType has not been specified");
         switch (lockedFlowType) {
             case MA_MASS_FLOW -> {
                 volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
-                massFlowDa = LibPhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
-                volFlowDa = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
+                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir,massFlowMa);
+                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,massFlowDa);
             }
             case MA_VOL_FLOW -> {
                 massFlowMa = LibPhysicsOfFlow.calcMassFlowFromVolFlow(moistAir,volFlowMa);
-                massFlowDa = LibPhysicsOfFlow.calc_Da_MassFlowFromMa(moistAir,massFlowMa);
-                volFlowDa = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
+                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir,massFlowMa);
+                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,massFlowDa);
             }
             case DA_MASS_FLOW -> {
-                massFlowMa = LibPhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
+                massFlowMa = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir,massFlowDa);
                 volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
-                volFlowDa = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(moistAir,massFlowDa);
+                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,massFlowDa);
             }
             case DA_VOL_FLOW -> {
-                massFlowDa = LibPhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(moistAir,volFlowDa);
-                massFlowMa = LibPhysicsOfFlow.calc_Ma_MassFlowFromDa(moistAir,massFlowDa);
+                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir,volFlowDa);
+                massFlowMa = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir,massFlowDa);
                 volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
             }
         }
@@ -110,10 +103,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     }
 
     public void setMoistAir(MoistAir moistAir) {
-
-        if(moistAir==null)
-            throw new FlowNullPointerException("Error. MoistAir instance does not exist.");
-
+        Objects.requireNonNull(moistAir,"Error. MoistAir instance does not exist.");
         this.moistAir = moistAir;
         updateFlows();
     }
@@ -127,7 +117,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         if(massFlowMa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = AirFlowType.MA_MASS_FLOW;
+        lockedFlowType = TypeOfAirFlow.MA_MASS_FLOW;
         this.massFlowMa = massFlowMa;
         updateFlows();
     }
@@ -145,7 +135,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         if(volFlowMa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = AirFlowType.MA_VOL_FLOW;
+        lockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
         this.volFlowMa = volFlowMa;
         updateFlows();
     }
@@ -159,7 +149,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         if(massFlowDa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = AirFlowType.DA_MASS_FLOW;
+        lockedFlowType = TypeOfAirFlow.DA_MASS_FLOW;
         this.massFlowDa = massFlowDa;
         updateFlows();
     }
@@ -173,12 +163,12 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         if(volFlowDa<0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
 
-        lockedFlowType = AirFlowType.DA_VOL_FLOW;
+        lockedFlowType = TypeOfAirFlow.DA_VOL_FLOW;
         this.volFlowDa = volFlowDa;
         updateFlows();
     }
 
-    public void setFlow(double flow, AirFlowType flowType){
+    public void setFlow(double flow, TypeOfAirFlow flowType){
         switch(flowType){
             case MA_MASS_FLOW -> setMassFlow(flow);
             case MA_VOL_FLOW -> setVolFlow(flow);
@@ -188,33 +178,54 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     }
 
     public double getFlow(){
-        switch(lockedFlowType){
+        return getFlow(lockedFlowType);
+    }
+
+    public double getFlow(TypeOfAirFlow typeOfFlow){
+        switch(typeOfFlow){
             case DA_VOL_FLOW -> {return volFlowDa;}
             case MA_VOL_FLOW -> {return volFlowMa;}
             case DA_MASS_FLOW -> {return massFlowDa;}
             case MA_MASS_FLOW -> {return massFlowMa;}
         }
-
-        throw new FlowArgumentException("Invalid lockedFlowType, cannot return value");
-
+        throw new FlowArgumentException("Invalid type of flow, cannot return value");
     }
 
-    public AirFlowType getLockedFlowType() {
+    public void setMinFlow(TypeOfAirFlow typeOfFlow, double minFlow){
+        if(minMassFlowDa < 0.0)
+            throw new FlowArgumentException("Flow value must not be negative");
+        switch(typeOfFlow){
+            case DA_VOL_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir,minFlow);
+            case MA_VOL_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaVolFlow(moistAir,minFlow);
+            case DA_MASS_FLOW -> this.minMassFlowDa = minFlow;
+            case MA_MASS_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir,minFlow);
+        }
+    }
+
+    public double getMinFlow(TypeOfAirFlow typeOfFlow){
+        if(minMassFlowDa == 0.0)
+            return 0.0;
+        switch(typeOfFlow){
+            case DA_VOL_FLOW -> {return LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,minMassFlowDa);}
+            case MA_VOL_FLOW -> {return LibPhysicsOfFlow.calcMaVolFlowFromDaMassFlow(moistAir,minMassFlowDa);}
+            case DA_MASS_FLOW -> {return minMassFlowDa;}
+            case MA_MASS_FLOW -> {return LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir,minMassFlowDa);}
+        }
+        throw new FlowArgumentException("Invalid type of flow, cannot return value");
+    }
+
+    public double getMinFlow(){
+        return getMinFlow(lockedFlowType);
+    }
+
+    public TypeOfAirFlow getLockedFlowType() {
         return lockedFlowType;
     }
 
-    public void setLockedFlowType(AirFlowType lockedFlowType) {
-
-        if(lockedFlowType == null)
-            throw new FlowNullPointerException("FluidFlowType has not been specified");
-
+    public void setLockedFlowType(TypeOfAirFlow lockedFlowType) {
+        Objects.requireNonNull(lockedFlowType,"FluidFlowType has not been specified");
         this.lockedFlowType = lockedFlowType;
         updateFlows();
-    }
-
-    public void setMinimumFixedFlowRatio(double fixedFlowRatio){
-        if(fixedFlowRatio<0.0 || fixedFlowRatio > 1.0)
-            throw new FlowArgumentException("Minimum flow limiter factor must be between 1.0 to 0.0");
     }
 
     public void setTx(double inTx){
@@ -290,15 +301,6 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         return bld.toString();
     }
 
-    public enum AirFlowType {
-
-        MA_MASS_FLOW,
-        MA_VOL_FLOW,
-        DA_MASS_FLOW,
-        DA_VOL_FLOW;
-
-    }
-
     //QUICK INSTANCE
     /**
      * Returns FlowOfMoistAir instance based on volumetric flow of moist air provided in m3/h and air temperature and relative humidity, with default ID and pressure<>br</>
@@ -337,7 +339,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
      */
     public static FlowOfMoistAir ofM3hVolFlow(String ID, double volFlowMaM3h, double tx, double RH, double Pat){
        MoistAir air = MoistAir.ofAir("Air of " + ID, tx, RH, Pat);
-       return new FlowOfMoistAir(ID, volFlowMaM3h/3600d, AirFlowType.MA_VOL_FLOW, air);
+       return new FlowOfMoistAir(ID, volFlowMaM3h/3600d, TypeOfAirFlow.MA_VOL_FLOW, air);
     }
 
     //BUILDER PATTERN
@@ -356,9 +358,11 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         private double xRH = LibDefaults.DEF_AIR_RH;
         private double flowRate = LibDefaults.DEF_AIR_FLOW;
         private MoistAir.HumidityType humidType = MoistAir.HumidityType.REL_HUMID;
-        private AirFlowType lockedFlowType = AirFlowType.MA_VOL_FLOW;
-        private AirFlowType userDefinedLockedFlowType;
+        private TypeOfAirFlow lockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
+        private TypeOfAirFlow userDefinedLockedFlowType;
         private MoistAir moistAir;
+        private double minFlow;
+        private TypeOfAirFlow typeOfMinFlow;
 
         public Builder withFlowName(String name){
             this.flowName = name;
@@ -394,25 +398,25 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
         public Builder withVolFlowMa(double volFlowMa){
             this.flowRate = volFlowMa;
-            this.lockedFlowType = AirFlowType.MA_VOL_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
             return this;
         }
 
         public Builder withMassFlowMa(double massFlowMa){
             this.flowRate = massFlowMa;
-            this.lockedFlowType = AirFlowType.MA_MASS_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.MA_MASS_FLOW;
             return this;
         }
 
         public Builder withVolFlowDa(double volFlowDa){
             this.flowRate = volFlowDa;
-            this.lockedFlowType = AirFlowType.DA_VOL_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.DA_VOL_FLOW;
             return this;
         }
 
         public Builder withMassFlowDa(double massFlowDa){
             this.flowRate = massFlowDa;
-            this.lockedFlowType = AirFlowType.DA_MASS_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.DA_MASS_FLOW;
             return this;
         }
 
@@ -421,8 +425,14 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
             return this;
         }
 
-        public Builder withLockedFlow(AirFlowType lockedFlowType){
+        public Builder withLockedFlow(TypeOfAirFlow lockedFlowType){
             this.userDefinedLockedFlowType = lockedFlowType;
+            return this;
+        }
+
+        public Builder withMinFlow(TypeOfAirFlow typeOfMinFlow, double minFlow){
+            this.minFlow = minFlow;
+            this.typeOfMinFlow = typeOfMinFlow;
             return this;
         }
 
@@ -432,13 +442,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
             else
                 adjustMoistAirInstance();
 
-            FlowOfMoistAir flowOfMoistAir = new FlowOfMoistAir(flowName, flowRate, lockedFlowType, moistAir);
-
-            if(userDefinedLockedFlowType!=null)
-                flowOfMoistAir.setLockedFlowType(userDefinedLockedFlowType);
-
-            return flowOfMoistAir;
-
+            return new FlowOfMoistAir(this);
         }
 
         private void adjustMoistAirInstance(){

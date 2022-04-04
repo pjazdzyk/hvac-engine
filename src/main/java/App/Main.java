@@ -2,11 +2,12 @@ package App;
 
 import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
+import Model.Flows.TypeOfAirFlow;
+import Model.Flows.TypeOfFluidFlow;
 import Model.Process.ProcessOfHeatingCooling;
 import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
 import Physics.LibPropertyOfAir;
-import Physics.LibPsychroProcess;
 
 
 public class Main {
@@ -15,16 +16,11 @@ public class Main {
 
       var flow1 = FlowOfMoistAir.ofM3hVolFlow(2000,-20,95);
       var flow2 = FlowOfMoistAir.ofM3hVolFlow(300,15,60);
-
-      double[] result = LibPsychroProcess.calcMixingInletFlowsFromOutTxOutMda(flow1,5000,flow2,2000,1000,11);
-
-        System.out.println("mda1= " + result[0]);
-        System.out.println("mda2= " + result[1]);
-        System.out.println("mda3= " + result[2]);
-        System.out.println("t3= " + result[3]);
-        System.out.println("x3= " + result[4]);
-
-     //  runUserGuideMethods();
+      ProcessOfHeatingCooling process = new ProcessOfHeatingCooling();
+      process.setInletFlow(flow1);
+      process.setOutletFlow(flow2);
+      process.executeLastFunction();
+      System.out.println(process);
 
     }
 
@@ -71,7 +67,7 @@ public class Main {
         var RH = 50; //%
         var volFlowMa = 5000.0/3600.0; //m3/s
         var air1 = new MoistAir("NewAir", tx, RH);
-        var flow1 = new FlowOfMoistAir("Test flow", volFlowMa,FlowOfMoistAir.AirFlowType.MA_VOL_FLOW,air1);
+        var flow1 = new FlowOfMoistAir("Test flow", volFlowMa, TypeOfAirFlow.MA_VOL_FLOW,air1);
         System.out.println(flow1);
 
         //By use of builder pattern
@@ -99,7 +95,7 @@ public class Main {
         var volFlow = 1.2; // m3/s
         var temp = 10.0; //oC
         var condensate = new LiquidWater("condensate",temp);
-        var condensateFlow1 = new FlowOfFluid("CondensateFlow", volFlow, FlowOfFluid.FluidFlowType.VOL_FLOW, condensate);
+        var condensateFlow1 = new FlowOfFluid("CondensateFlow", volFlow, TypeOfFluidFlow.VOL_FLOW, condensate);
 
         //Using Builder pattern
         var condensateFlow2 = new FlowOfFluid.Builder<LiquidWater>(LiquidWater::new).withFlowName("CondensateFlow")

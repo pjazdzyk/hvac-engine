@@ -51,9 +51,7 @@ public class BrentSolver {
      * Constructor. Creates solver instance with function output set as 0, with default name.
      */
     public BrentSolver(){
-
         this("DefaultSolver");
-
     }
 
     /**
@@ -94,57 +92,42 @@ public class BrentSolver {
      * @return root value
      */
     public final double calcResult() {
-
         //To check and set value b as being closer to the root
         checkSetAndSwapABPoints(a0, b0);
-
         //In case provided by user point "a" or "b" is actually a root
         if(Math.abs(f_b)<accuracy)
             return b;
-
         //Checking if Brent AB condition is not met to launch automatic AB points evaluation procedure
         if (initialABConditionIsNotMet())
             evaluateValidCondition();
-
         //In case evaluation procedure will output b as a root
         if(Math.abs(f_b)<accuracy)
             return b;
-
         //If at this stage proper AB condition is not achievable - an exception is thrown.
         if(initialABConditionIsNotMet())
             throw new BrentSolverConditionException(name + ": EVALUATION PROCEDURE FAILED: f(a) i f(b) must have an opposite signs. Current values:"
                     + String.format(" a = %.3f, b = %.3f,  f(a)= %.3f, f(b)=%.3f", a, b, f_a, f_b));
-
         printSolverDiagnostics("\n" + name + ": BEFORE RUN:\n","\n");
-
         /*--------BEGINNING OF ITERATIVE LOOP--------*/
-
         while (runFlag) {
-
             counter++;
-
             //New additional condition proposed by Zhengqiu Zhang
             c = (a + b) / 2;
             f_c = func.apply(c);
-
             //Determining better interpolation: inverse quadratic or else - secant method
             if ((f_a != f_c) && (f_b != f_c))
                 s = inverseQuadraticInterpolation(a,b,c,f_a,f_b,f_c);
             else
                 s = secantMethod(a,b,f_a,f_b);
-
             diff = Math.abs(b - a);
-
             if (c > s) {
                 var tempC = c;
                 var tempS = s;
                 c = tempS;
                 s = tempC;
             }
-
             f_c = func.apply(c);
             f_s = func.apply(s);
-
             if (f_c * f_s < 0) {
                 a = s;
                 b = c;
@@ -155,14 +138,10 @@ public class BrentSolver {
                     b = s;
                 }
             }
-
             f_a = func.apply(a);
             f_b = func.apply(b);
-
             //Calculating current difference after this iteration cycle
-
             printSolverDiagnostics(name + ": ITERATION: " + counter + " ", "Diff= " + diff);
-
             if (diff < accuracy) {
                 runFlag = false;
             } else if (counter > maxIter) {
@@ -170,15 +149,11 @@ public class BrentSolver {
             } else if (f_b == 0) {
                 runFlag = false;
             }
-
             //Exception will be thrown if NaN or Infinite values are detected
             checkForInfiniteOrNaN(f_a,f_b,f_c,f_s);
-
             /*-----------END OF ITERATIVE LOOP-----------*/
         }
-
         return b;
-
     }
 
     private boolean initialABConditionIsNotMet() {
@@ -186,10 +161,8 @@ public class BrentSolver {
     }
 
     private void checkSetAndSwapABPoints(double pointA, double pointB) {
-
         f_a = func.apply(pointA);
         f_b = func.apply(pointB);
-
         if (Math.abs(f_a) < Math.abs(f_b)) {
             a = pointB;
             b = pointA;
@@ -199,24 +172,18 @@ public class BrentSolver {
             a = pointA;
             b = pointB;
         }
-
-
-
     }
 
     private void checkForInfiniteOrNaN(double... values){
-
         for(double num : values) {
             if (Double.isInfinite(num))
                 throw new BrentSolverResultException(name + ": Solution error. Infinite number detected.");
             if (Double.isNaN(num))
                 throw new BrentSolverResultException(name + ": Solution error. NaN value detected.");
         }
-
     }
 
     private void evaluateValidCondition() {
-
         /*This method attempts to evaluate valid Brent Solver counterpart point condition
         PROCEDURE EXPLANATION
         Using linear extrapolation to determine opposite sign of the "b" value.
@@ -225,22 +192,15 @@ public class BrentSolver {
         3. Second point P2 is created from b/P2_COEF and its function value.
         4. f_x is an x value we expect to have an opposite sign to -b, and to make it closer to the root - it is divided by P3_COEF
         5. In some cases initial values of P2_COEF and P3_COEF may be adjusted by user. For an example if your initial guess is very close to the root
-        you are looking for small P3_COEF values, like 2 or even 1.
-
-        */
+        you are looking for small P3_COEF values, like 2 or even 1. */
 
         printEvaluationDiagnostics(name + " EVALUATION PROCEDURE \nINITIAL:");
-
         double x, f_x, x1, f_x1, x2, f_x2, f_xExact;
-
         if(p3Coef > evalCycles)
             evalCycles = p3Coef;
-
         for(int i = 0; i<= evalCycles; i++){
-
             if(p3Coef -i == 0.0)
                 continue;
-
             //Point 1
             x1 = b;
             f_x1 = f_b;
@@ -250,17 +210,12 @@ public class BrentSolver {
             //Point 3:
             f_x = -f_b/(p3Coef -i);
             x = linearExtrapolationFromValue(x1, f_x1, x2, f_x2, f_x);
-
             f_xExact = func.apply(x);
-
             checkSetAndSwapABPoints(b,x);
             printEvaluationDiagnostics("STEP " + i + ":");
-
             if(f_xExact*f_x1<0)
                 break;
         }
-
-
     }
 
     /**
@@ -278,10 +233,8 @@ public class BrentSolver {
      * Resets solver flags ans iteration counter
      */
     public final void resetSolverRunFlags(){
-
         this.runFlag = true;
         this.counter = 0;
-
     }
 
     /**
@@ -306,10 +259,8 @@ public class BrentSolver {
      * @param func tested function (use lambda expression or method reference)
      */
     public void setFunction(DoubleFunction<Double> func){
-
         this.func = func;
         resetSolverRunFlags();
-
     }
 
     /**
@@ -318,10 +269,8 @@ public class BrentSolver {
      * @return function root (Double)
      */
     public double calcForFunction(DoubleFunction<Double> func){
-
         setFunction(func);
         return calcResult();
-
     }
 
     /**
@@ -332,10 +281,8 @@ public class BrentSolver {
      * @return function root (Double)
      */
     public double calcForFunction(DoubleFunction<Double> func, double a0, double b0){
-
         setCounterpartPoints(a0,b0);
         return calcForFunction(func);
-
     }
 
     /**
@@ -351,9 +298,7 @@ public class BrentSolver {
      * @param accuracy solver accuracy
      */
     public final void setAccuracy(double accuracy) {
-
         this.accuracy = Math.abs(accuracy);
-
     }
 
     /**
@@ -435,9 +380,7 @@ public class BrentSolver {
      * @return f_x as value of function for argument x.
      */
     public static double linearExtrapolation(double x1, double f_x1, double x2, double f_x2, double x) {
-
         return f_x1 + ((x - x1)/(x2 - x1)) * (f_x2 - f_x1);
-
     }
 
     /**
@@ -446,9 +389,7 @@ public class BrentSolver {
      * @return x as argument for f_x value.
      */
     public static double linearExtrapolationFromValue(double x1, double f_x1, double x2, double f_x2, double f_x){
-
         return ((x1-x2)/(f_x1-f_x2)) * (f_x-f_x1 + x1*(f_x1-f_x2)/(x1-x2));
-
     }
 
     /**
@@ -458,11 +399,9 @@ public class BrentSolver {
      * @return estimated function root x as argument for f_x = 0.
      */
     public static double inverseQuadraticInterpolation(double x2, double x1, double xn, double f_x2, double f_x1, double f_xn){
-
         return x2 * f_x1 * f_xn / ((f_x2 - f_x1) * (f_x2 - f_xn))
                + x1 * f_x2 * f_xn / ((f_x1 - f_x2) * (f_x1 - f_xn))
                + xn * f_x2 * f_x1 / ((f_xn - f_x2) * (f_xn - f_x1));
-
     }
 
     /**
@@ -470,24 +409,18 @@ public class BrentSolver {
      * @return estimated function root x as argument for f_x = 0.
      */
     public static double secantMethod(double x2, double x1, double f_x2, double f_x1){
-
        return x1 - f_x1 * (x1 - x2) / (f_x1 - f_x2);
-
     }
 
     // Diagnostic outputs
     private void printEvaluationDiagnostics(String titleMsg) {
-
         if(showDiagnostics)
             printer.printLine("\n" +  titleMsg + " \t EVAL VALUES:" + String.format("a = %.3f, b = %.3f, f(a)= %.3f, f(b)=%.3f", a, b, f_a, f_b));
-
     }
 
     private void printSolverDiagnostics(String titleMsg, String endMsg){
-
         if(showDiagnostics)
             printer.printLine(String.format(titleMsg + "s= %.5f, a= %.5f, f(a)= %.5f, b= %.5f, f(b)= %.5f, c= %.5f, f(c)= %.5f \t\t\t" + endMsg, s, a, f_a, b, f_b, c, f_c));
-
     }
 
     // QUICK INSTANCE

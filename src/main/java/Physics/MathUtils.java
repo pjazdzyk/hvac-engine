@@ -32,4 +32,7 @@ public class MathUtils {
         return optional.orElseThrow();
     }
 
+    public static void rewriteResults(double[] source, double[] target){
+        System.arraycopy(source, 0, target, 0, source.length);
+    }
 }

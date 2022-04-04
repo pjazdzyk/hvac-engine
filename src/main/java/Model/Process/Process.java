@@ -7,5 +7,7 @@ public interface Process {
     FlowOfMoistAir getOutletFlow();
     void setInletFlow(FlowOfMoistAir inletFlow);
     void setOutletFlow(FlowOfMoistAir outletFlow);
+    String getiD();
+    void setiD(String id);
     void resetProcess();
 }

@@ -25,10 +25,10 @@ public class LibPhysicsOfFlowTests {
         var actualWaterVolFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(water,massFlow);
         var actualWaterMassFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(water,actualWaterVolFlow);
 
-        var acutalDaAirMassFlow = LibPhysicsOfFlow.calc_Da_MassFlowFromMa(air,massFlowMa);
-        var actualDaAirVolFlow = LibPhysicsOfFlow.calc_Da_VolFlowFromMassFlowDa(air,acutalDaAirMassFlow);
-        var actualMaAirMassFlow = LibPhysicsOfFlow.calc_Ma_MassFlowFromDa(air,acutalDaAirMassFlow);
-        var actualDaAirMassFlow = LibPhysicsOfFlow.calc_Da_MassFlowFromVolFlowDa(air,actualDaAirVolFlow);
+        var acutalDaAirMassFlow = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air,massFlowMa);
+        var actualDaAirVolFlow = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air,acutalDaAirMassFlow);
+        var actualMaAirMassFlow = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air,acutalDaAirMassFlow);
+        var actualDaAirMassFlow = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(air,actualDaAirVolFlow);
 
         // Assert
         Assertions.assertEquals(expectedWaterVolFlow,actualWaterVolFlow,mathAccuracy);
