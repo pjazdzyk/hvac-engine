@@ -4,7 +4,7 @@ import Model.Flows.FlowOfMoistAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LibPsychroProcessTest {
+public class LibPhysicsProcessTest {
 
     public FlowOfMoistAir AIRFLOW = new Model.Flows.FlowOfMoistAir();
     public static double PAT = 987*100;
@@ -31,7 +31,7 @@ public class LibPsychroProcessTest {
         var expectedCondFlow = 0.0;
 
         //Act
-        var result = LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(AIRFLOW,expectedQ);
+        var result = LibPhysicsOfProcess.calcHeatingOrDryCoolingOutTxFromInQ(AIRFLOW,expectedQ);
         var actualQ = result[0];
         var actualTemp = result[1];
         var actualX = result[2];
@@ -63,7 +63,7 @@ public class LibPsychroProcessTest {
         var expectedCondFlow = 0.0;
 
         //Assert
-        var result = LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(AIRFLOW,30.0);
+        var result = LibPhysicsOfProcess.calcHeatingOrDryCoolingInQFromOutTx(AIRFLOW,30.0);
         var actualQ = result[0];
         var actualTemp = result[1];
         var actualX = result[2];
@@ -97,7 +97,7 @@ public class LibPsychroProcessTest {
         var expectedCondFlow = 0.0;
 
         //Assert
-        var result = LibPsychroProcess.calcHeatingInQOutTxFromOutRH(AIRFLOW,17.4);
+        var result = LibPhysicsOfProcess.calcHeatingInQOutTxFromOutRH(AIRFLOW,17.4);
         var actualQ = result[0];
         var actualTemp = result[1];
         var actualX = result[2];
@@ -130,25 +130,25 @@ public class LibPsychroProcessTest {
         AIRFLOW.setMassFlow(mMa);
         var expectedT2 = 17.0; //oC
         var mDa = AIRFLOW.getMassFlowDa();
-        var expectedBF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm,t1,expectedT2);
+        var expectedBF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tm,t1,expectedT2);
         var mDa_DirectContact = (1.0 - expectedBF) * mDa;
         var x1 = AIRFLOW.getMoistAir().getX();
         var i1 = AIRFLOW.getMoistAir().getIx();
-        var PsTm = LibPropertyOfAir.calc_Ma_Ps(tm);
-        var xAtTm = LibPropertyOfAir.calc_Ma_X(100,PsTm,PAT);
-        var iTm = LibPropertyOfAir.calc_Ma_Ix(tm,xAtTm,PAT);
+        var PsTm = LibPhysicsOfAir.calc_Ma_Ps(tm);
+        var xAtTm = LibPhysicsOfAir.calc_Ma_X(100,PsTm,PAT);
+        var iTm = LibPhysicsOfAir.calc_Ma_Ix(tm,xAtTm,PAT);
         var expectedX = 0.0099;
         var expectedCondTemp = tm;
 
         //Act
-        var result = LibPsychroProcess.calcCoolingInQFromOutTx(AIRFLOW,tm,expectedT2);
+        var result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(AIRFLOW,tm,expectedT2);
         var actualQ = result[0];
         var actualTemp = result[1];
         var actualX = result[2];
         var actualCondTemp = result[3];
         var actualCondFlow = result[4];
-        var expectedCondFlow = LibPsychroProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
-        var iCond = LibPropertyOfWater.calc_Ix(actualCondTemp);
+        var expectedCondFlow = LibPhysicsOfProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
+        var iCond = LibPhysicsOfWater.calc_Ix(actualCondTemp);
         var expectedQ = (mDa_DirectContact * (iTm - i1) + actualCondFlow * iCond) * 1000;
 
         //Assert
@@ -175,27 +175,27 @@ public class LibPsychroProcessTest {
         var expectedRH2 = 80.0;
         var expectedT2 = 17.0; //oC
         var mDa = AIRFLOW.getMassFlowDa();
-        var expectedBF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm,t1,expectedT2);
+        var expectedBF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tm,t1,expectedT2);
         var mDa_DirectContact = (1.0 - expectedBF) * mDa;
         var x1 = AIRFLOW.getMoistAir().getX();
         var i1 = AIRFLOW.getMoistAir().getIx();
-        var PsTm = LibPropertyOfAir.calc_Ma_Ps(tm);
-        var xAtTm = LibPropertyOfAir.calc_Ma_X(100,PsTm,PAT);
-        var iTm = LibPropertyOfAir.calc_Ma_Ix(tm,xAtTm,PAT);
+        var PsTm = LibPhysicsOfAir.calc_Ma_Ps(tm);
+        var xAtTm = LibPhysicsOfAir.calc_Ma_X(100,PsTm,PAT);
+        var iTm = LibPhysicsOfAir.calc_Ma_Ix(tm,xAtTm,PAT);
         var expectedX = 0.0099;
         var expectedCondTemp = tm;
 
         //Act
-        var result = LibPsychroProcess.calcCoolingInQFromOutRH(AIRFLOW,tm,expectedRH2);
+        var result = LibPhysicsOfProcess.calcCoolingInQFromOutRH(AIRFLOW,tm,expectedRH2);
         var actualQ = result[0];
         var actualTemp = result[1];
         var actualX = result[2];
         var actualCondTemp = result[3];
         var actualCondFlow = result[4];
-        var expectedCondFlow = LibPsychroProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
-        var iCond = LibPropertyOfWater.calc_Ix(actualCondTemp);
+        var expectedCondFlow = LibPhysicsOfProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
+        var iCond = LibPhysicsOfWater.calc_Ix(actualCondTemp);
         var expectedQ = (mDa_DirectContact * (iTm - i1) + actualCondFlow * iCond) * 1000;
-        var actualRH2 = LibPropertyOfAir.calc_Ma_RH(actualTemp,actualX,PAT);
+        var actualRH2 = LibPhysicsOfAir.calc_Ma_RH(actualTemp,actualX,PAT);
 
         //Assert
         var heatDelta = Math.abs(expectedQ * HEAT_PERCENT_ACCURACY /100d);
@@ -221,24 +221,24 @@ public class LibPsychroProcessTest {
         AIRFLOW.setMassFlow(mMa);
         var expectedT2 = 17.0; //oC
         var mDa = AIRFLOW.getMassFlowDa();
-        var expectedBF = LibPsychroProcess.calcCoolingCoilBypassFactor(tm,t1,expectedT2);
+        var expectedBF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tm,t1,expectedT2);
         var mDa_DirectContact = (1.0 - expectedBF) * mDa;
         var x1 = AIRFLOW.getMoistAir().getX();
-        var PsTm = LibPropertyOfAir.calc_Ma_Ps(tm);
-        var xAtTm = LibPropertyOfAir.calc_Ma_X(100,PsTm,PAT);
+        var PsTm = LibPhysicsOfAir.calc_Ma_Ps(tm);
+        var xAtTm = LibPhysicsOfAir.calc_Ma_X(100,PsTm,PAT);
         var expectedX = 0.0099;
         var expectedQ = -26600.447840124318;
         var expectedCondTemp = tm;
 
         //Act
-        var result = LibPsychroProcess.calcCoolingOutTxFromInQ(AIRFLOW,tm,expectedQ);
+        var result = LibPhysicsOfProcess.calcCoolingOutTxFromInQ(AIRFLOW,tm,expectedQ);
         var actualQ = result[0];
         var actualTemp = result[1];
         var actualX = result[2];
         var actualCondTemp = result[3];
         var actualCondFlow = result[4];
-        var expectedCondFlow = LibPsychroProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
-        var iCond = LibPropertyOfWater.calc_Ix(actualCondTemp);
+        var expectedCondFlow = LibPhysicsOfProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
+        var iCond = LibPhysicsOfWater.calc_Ix(actualCondTemp);
 
         //Assert
         Assertions.assertEquals(expectedQ,actualQ);
@@ -257,7 +257,7 @@ public class LibPsychroProcessTest {
         var expectedOutTemp = 24.0;
 
         //Act
-        var result = LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,expectedOutTemp);
+        var result = LibPhysicsOfProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,expectedOutTemp);
         var actualQHeat = result[0];
         var actualOutTemp = result[1];
 
@@ -276,7 +276,7 @@ public class LibPsychroProcessTest {
         var expectedTm = 9.0;
 
         //Act
-        var actualTm = LibPsychroProcess.calcAverageWallTemp(tSupply,tReturn);
+        var actualTm = LibPhysicsOfProcess.calcAverageWallTemp(tSupply,tReturn);
 
         //Assert
         Assertions.assertEquals(expectedTm,actualTm);
@@ -292,7 +292,7 @@ public class LibPsychroProcessTest {
         var expectedBF = 0.0952380952380952380952380952381;
 
         //Act
-        var actualBF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall,inTx,outTx);
+        var actualBF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall,inTx,outTx);
 
         //Assert
         Assertions.assertEquals(expectedBF,actualBF);
@@ -308,7 +308,7 @@ public class LibPsychroProcessTest {
         var expectedCondFlow = 0.03015; //kg/s
 
         //Act
-        var actualCondFlow = LibPsychroProcess.calcCondensateDischarge(mDa,x1,x2);
+        var actualCondFlow = LibPhysicsOfProcess.calcCondensateDischarge(mDa,x1,x2);
 
         //Assert
         Assertions.assertEquals(expectedCondFlow,actualCondFlow);

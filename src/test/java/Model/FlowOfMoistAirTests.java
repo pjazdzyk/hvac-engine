@@ -44,7 +44,7 @@ public class FlowOfMoistAirTests {
         double densityDa = air.getRho_Da();
         double expectedMassFlow_Ma = initFlow;
         double expectedVolFlow_Ma = initFlow / densityMa;
-        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air,expectedMassFlow_Ma);
+        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
 
         //Act
@@ -78,7 +78,7 @@ public class FlowOfMoistAirTests {
         double densityDa = air.getRho_Da();
         double expectedMassFlow_Ma = initFlow;
         double expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air,expectedMassFlow_Ma);
+        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
         double actualMassFlowMa = flowAir.getMassFlow();
         double actualVolFlowMa = flowAir.getVolFlow();
@@ -96,7 +96,7 @@ public class FlowOfMoistAirTests {
         flowAir.setMassFlow(newFlow);
         expectedMassFlow_Ma = newFlow;
         expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air,expectedMassFlow_Ma);
+        expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
         expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
         actualMassFlowMa = flowAir.getMassFlow();
         actualVolFlowMa = flowAir.getVolFlow();
@@ -114,7 +114,7 @@ public class FlowOfMoistAirTests {
         flowAir.setVolFlow(newFlow);
         expectedVolFlow_Ma = newFlow;
         expectedMassFlow_Ma = expectedVolFlow_Ma * densityMa;
-        expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air,expectedMassFlow_Ma);
+        expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
         expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
         actualMassFlowMa = flowAir.getMassFlow();
         actualVolFlowMa = flowAir.getVolFlow();
@@ -133,7 +133,7 @@ public class FlowOfMoistAirTests {
         flowAir.setMassFlowDa(newFlow);
         expectedMassFlow_Da = newFlow;
         expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
-        expectedMassFlow_Ma = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air,expectedMassFlow_Da);
+        expectedMassFlow_Ma = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air.getX(),expectedMassFlow_Da);
         expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
         actualMassFlowMa = flowAir.getMassFlow();
         actualVolFlowMa = flowAir.getVolFlow();
@@ -151,7 +151,7 @@ public class FlowOfMoistAirTests {
         flowAir.setVolFlowDa(newFlow);
         expectedVolFlow_Da = newFlow;
         expectedMassFlow_Da = expectedVolFlow_Da * densityDa;
-        expectedMassFlow_Ma = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air,expectedMassFlow_Da);
+        expectedMassFlow_Ma = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air.getX(),expectedMassFlow_Da);
         expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
         actualMassFlowMa = flowAir.getMassFlow();
         actualVolFlowMa = flowAir.getVolFlow();
@@ -187,7 +187,7 @@ public class FlowOfMoistAirTests {
         double densityMa = newAir.getRho();
         double densityDa = newAir.getRho_Da();
         double expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(newAir,expectedMassFlow_Ma);
+        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(newAir.getX(),expectedMassFlow_Ma);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
         double actualMassFlowMa = flowAir.getMassFlow();
         double actualVolFlowMa = flowAir.getVolFlow();
@@ -216,12 +216,10 @@ public class FlowOfMoistAirTests {
         double expectedVolFlow_Ma = flowAir.getVolFlow();
         air.setTx(70.5);
         flowAir.updateFlows();
-        double densityMa = air.getRho();
-        double densityDa = air.getRho_Da();
         double actualVolFlowMa = flowAir.getVolFlow();
-        double expectedMassFlow_Ma = LibPhysicsOfFlow.calcMassFlowFromVolFlow(air,actualVolFlowMa);
+        double expectedMassFlow_Ma = LibPhysicsOfFlow.calcMassFlowFromVolFlow(air.getRho(),actualVolFlowMa);
         double actualMassFlowMa = flowAir.getMassFlow();
-        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air,actualMassFlowMa);
+        double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),actualMassFlowMa);
         double actualMassFlowDa = flowAir.getMassFlowDa();
         double expectedVolFlow_Da = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air,actualMassFlowDa);
         double actualVolFlowDa = flowAir.getVolFlowDa();

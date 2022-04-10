@@ -91,11 +91,14 @@ public class BrentSolver {
      * expressions provided in implemented <i>testedEquation()</i> method.
      * @return root value
      */
-    public final double calcResult() {
+    private double calcResult() {
         //To check and set value b as being closer to the root
         checkSetAndSwapABPoints(a0, b0);
         //In case provided by user point "a" or "b" is actually a root
         if(Math.abs(f_b)<accuracy)
+            return b;
+        //If solver were stopped
+        if(!runFlag)
             return b;
         //Checking if Brent AB condition is not met to launch automatic AB points evaluation procedure
         if (initialABConditionIsNotMet())
@@ -216,6 +219,10 @@ public class BrentSolver {
             if(f_xExact*f_x1<0)
                 break;
         }
+    }
+
+    public void stopSolver(){
+        this.runFlag=false;
     }
 
     /**
@@ -371,6 +378,10 @@ public class BrentSolver {
      */
     public void setP3Coef(int p3Coef) {
         this.p3Coef = p3Coef;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 
     // Interpolation methods

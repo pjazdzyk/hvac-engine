@@ -29,7 +29,7 @@ import java.util.function.DoubleFunction;
  *
  */
 
-public class LibPropertyOfAir {
+public class LibPhysicsOfAir {
 
     private static final double WG_RATIO = LibConstants.CST_WV_MM / LibConstants.CST_DA_MM;
     private static final double SOLVER_A_COEF = 0.8;
@@ -203,7 +203,7 @@ public class LibPropertyOfAir {
             if(temp<=0)
                 hw1 = calc_Ice_I(temp);
             else
-                hw1 = LibPropertyOfWater.calc_Ix(temp);
+                hw1 = LibPhysicsOfWater.calc_Ix(temp);
             return h + (x1 - x) * hw1 - h1;
         });
         return exactWbt;
@@ -233,7 +233,7 @@ public class LibPropertyOfAir {
             throw new AirPhysicsArgumentException("Error. Value of x is smaller than or equal 0." + String.format("x= %.3f", x));
         if(x==0.0)
             return 0.0;
-        double Ps = LibPropertyOfAir.calc_Ma_Ps(ta);
+        double Ps = LibPhysicsOfAir.calc_Ma_Ps(ta);
         double RH = x * Pat / (WG_RATIO * Ps + x * Ps);
         return RH > 1 ? 100 : RH*100;
     }
@@ -452,7 +452,7 @@ public class LibPropertyOfAir {
         if(x==0.0)
             return i_Da;
         //Case2: x <= xMax, unsaturated air
-        double Ps = LibPropertyOfAir.calc_Ma_Ps(ta);
+        double Ps = LibPhysicsOfAir.calc_Ma_Ps(ta);
         double xMax = calc_Ma_XMax(Ps, Pat);
         double i_Wv = calc_Wv_I(ta) * x;
         if (x <= xMax)
@@ -702,7 +702,7 @@ public class LibPropertyOfAir {
      */
     public static double calc_Ma_Ta_IX(double ix, double x, double Pat) {
         BrentSolver solver = new BrentSolver("T_SOLVER",2,5);
-        return solver.calcForFunction(tx -> ix - LibPropertyOfAir.calc_Ma_Ix(tx, x, Pat));
+        return solver.calcForFunction(tx -> ix - LibPhysicsOfAir.calc_Ma_Ix(tx, x, Pat));
     }
 
     /**

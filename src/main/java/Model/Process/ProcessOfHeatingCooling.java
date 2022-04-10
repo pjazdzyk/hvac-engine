@@ -1,8 +1,7 @@
 package Model.Process;
 
-import IO.MessagePrinter;
 import Model.Exceptions.ProcessArgumentException;
-import Model.Exceptions.SolutionNotConvergedException;
+import Model.Exceptions.ProcessSolutionNotConvergedException;
 import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
 import Model.Flows.TypeOfAirFlow;
@@ -10,8 +9,8 @@ import Model.Properties.Fluid;
 import Model.Properties.MoistAir;
 import Physics.MathUtils;
 import Physics.*;
+import Validators.Validators;
 
-import java.util.Objects;
 import java.util.function.DoubleConsumer;
 
 /**
@@ -24,9 +23,7 @@ import java.util.function.DoubleConsumer;
 
 public class ProcessOfHeatingCooling implements Process {
 
-    private final MessagePrinter PRINTER = new MessagePrinter();
-
-    private String ID;
+    private String iD;
     private FlowOfMoistAir inletFlow;
     private MoistAir inletAir;
     private FlowOfMoistAir outletFlow;
@@ -39,7 +36,7 @@ public class ProcessOfHeatingCooling implements Process {
     private double tmWall;
     private double BF;
     // Fields dedicated for executing last used method functionality
-    private double targetvalue;
+    private double lastMethodArgument;
     private DoubleConsumer lastMethod;
 
     /**
@@ -67,15 +64,15 @@ public class ProcessOfHeatingCooling implements Process {
 
     /**
      * Primary constructor. Creates Heating and Cooling Process instance based on ID, inlet flow, outlet flow, condensate flow instances and provided coolant supply and return temperatures.
-     * @param ID process name or ID
+     * @param iD process name or ID
      * @param inletFlow inlet flow of moist air
      * @param outletFlow outlet flow of moist air
      * @param condensateFlow condensate flow
      * @param coolingSupplyTemp coolant supply temperature
      * @param coolingReturnTemp coolant return temperature
      */
-    public ProcessOfHeatingCooling(String ID, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
-        this.ID = ID;
+    public ProcessOfHeatingCooling(String iD, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
+        this.iD = iD;
         this.inletFlow = inletFlow;
         this.outletFlow = outletFlow;
         this.condensateFlow = condensateFlow;
@@ -84,7 +81,7 @@ public class ProcessOfHeatingCooling implements Process {
         this.condensate = condensateFlow.getFluid();
         this.tsHydr = coolingSupplyTemp;
         this.trHydr = coolingReturnTemp;
-        this.tmWall = LibPsychroProcess.calcAverageWallTemp(tsHydr, trHydr);
+        this.tmWall = LibPhysicsOfProcess.calcAverageWallTemp(tsHydr, trHydr);
         resetProcess();
     }
 
@@ -98,7 +95,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingOutTxFromInQ(double inQ) {
         resetProcess();
-        double[] result = LibPsychroProcess.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ);
+        double[] result = LibPhysicsOfProcess.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ);
         commitResults(result);
         setLastFunctionAndTargetValue(this::applyHeatingOutTxFromInQ,inQ);
     }
@@ -111,7 +108,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingInQFromOutTx(double outTx){
         resetProcess();
-        double[] result = LibPsychroProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,outTx);
+        double[] result = LibPhysicsOfProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,outTx);
         commitResults(result);
         setLastFunctionAndTargetValue(this::applyHeatingInQFromOutTx,outTx);
     }
@@ -123,9 +120,9 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingInQOutTxFromOutRH(double outRH){
         resetProcess();
-        double[] result = LibPsychroProcess.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
+        double[] result = LibPhysicsOfProcess.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
         commitResults(result);
-        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
+        BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
         setLastFunctionAndTargetValue(this::applyHeatingInQOutTxFromOutRH,outRH);
     }
@@ -136,9 +133,9 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingOutTxFromInQ(double inQ){
         resetProcess();
-        double[] result = LibPsychroProcess.calcCoolingOutTxFromInQ(inletFlow, tmWall,inQ);
+        double[] result = LibPhysicsOfProcess.calcCoolingOutTxFromInQ(inletFlow, tmWall,inQ);
         commitResults(result);
-        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
+        BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         setLastFunctionAndTargetValue(this::applyCoolingOutTxFromInQ,inQ);
     }
 
@@ -148,9 +145,9 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingInQFromOutTx(double outTx){
         resetProcess();
-        double[] result = LibPsychroProcess.calcCoolingInQFromOutTx(inletFlow, tmWall,outTx);
+        double[] result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(inletFlow, tmWall,outTx);
         commitResults(result);
-        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(),outTx);
+        BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(),outTx);
         setLastFunctionAndTargetValue(this::applyCoolingInQFromOutTx,outTx);
     }
 
@@ -160,25 +157,14 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingInQFromOutRH(double outRH) {
         resetProcess();
-        double[] result = LibPsychroProcess.calcCoolingInQFromOutRH(inletFlow, tmWall,outRH);
+        double[] result = LibPhysicsOfProcess.calcCoolingInQFromOutRH(inletFlow, tmWall,outRH);
         commitResults(result);
-        BF = LibPsychroProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
+        BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
         setLastFunctionAndTargetValue(this::applyCoolingInQFromOutRH,outRH);
     }
 
     //TOOL METHODS
-    public void executeLastFunction(){
-        if(lastMethod!=null)
-            lastMethod.accept(targetvalue);
-    }
-
-    public void setLastFunctionAndTargetValue(DoubleConsumer method, double targetvalue){
-        Objects.requireNonNull(method,"Specified method must not be null");
-        this.targetvalue = targetvalue;
-        this.lastMethod = method;
-    }
-
     @Override
     public void resetProcess(){
         outletFlow.setTx(inletFlow.getMoistAir().getTx());
@@ -187,17 +173,22 @@ public class ProcessOfHeatingCooling implements Process {
         condensateFlow.setTx(LibDefaults.DEF_WT_TW);
         condensateFlow.setMassFlow(0.0);
         heatQ = 0.0;
-        tmWall = LibPsychroProcess.calcAverageWallTemp(tsHydr, trHydr);
+        tmWall = LibPhysicsOfProcess.calcAverageWallTemp(tsHydr, trHydr);
     }
 
-    private void convergenceCheckForRH(double outRH){
-        double resultingRH2 = outletAir.getRH();
-        if (!MathUtils.compareDoubleWithTolerance(outRH, resultingRH2, LibDefaults.DEF_MATH_ACCURACY))
-            throw new SolutionNotConvergedException("Solution convergence error. Expected outlet RH= " + outRH + " actual outlet RH= " + resultingRH2);
+    public void executeLastFunction(){
+        if(lastMethod!=null)
+            lastMethod.accept(lastMethodArgument);
+    }
+
+    public void setLastFunctionAndTargetValue(DoubleConsumer method, double targetvalue){
+        Validators.validateForNotNull("lastMethod",method);
+        this.lastMethodArgument = targetvalue;
+        this.lastMethod = method;
     }
 
     private void commitResults(double[] result){
-        Objects.requireNonNull(result,"Result must not be null");
+        Validators.validateForNotNull("HC Result array",result);
         if(result.length!=5)
             throw new ProcessArgumentException("Invalid result. Array length is different than 5");
         heatQ = result[0];
@@ -205,6 +196,12 @@ public class ProcessOfHeatingCooling implements Process {
         outletFlow.setX(result[2]);
         condensateFlow.setTx(result[3]);
         condensateFlow.setMassFlow(result[4]);
+    }
+
+    private void convergenceCheckForRH(double outRH){
+        double resultingRH2 = outletAir.getRH();
+        if (!MathUtils.compareDoubleWithTolerance(outRH, resultingRH2, LibDefaults.DEF_MATH_ACCURACY))
+            throw new ProcessSolutionNotConvergedException("Solution convergence error. Expected outlet RH= " + outRH + " actual outlet RH= " + resultingRH2);
     }
 
     //GETTERS & SETTERS
@@ -215,7 +212,7 @@ public class ProcessOfHeatingCooling implements Process {
 
     @Override
     public void setInletFlow(FlowOfMoistAir inletFlow) {
-        Objects.requireNonNull(inletFlow,"Inlet flow must not be null");
+        Validators.validateForNotNull("Inlet flow",inletFlow);
         this.inletFlow = inletFlow;
         this.inletAir = inletFlow.getMoistAir();
         resetProcess();
@@ -228,7 +225,7 @@ public class ProcessOfHeatingCooling implements Process {
 
     @Override
     public void setOutletFlow(FlowOfMoistAir outletFlow) {
-        Objects.requireNonNull(outletFlow,"Outlet flow must not be null");
+        Validators.validateForNotNull("Outlet flow",outletFlow);
         this.outletFlow = outletFlow;
         this.outletAir = outletFlow.getMoistAir();
         resetProcess();
@@ -250,7 +247,7 @@ public class ProcessOfHeatingCooling implements Process {
 
     public void setTsHydr(double tsHydr) {
         this.tsHydr = tsHydr;
-        tmWall = LibPsychroProcess.calcAverageWallTemp(tsHydr, trHydr);
+        tmWall = LibPhysicsOfProcess.calcAverageWallTemp(tsHydr, trHydr);
         //TO DO: Implement last method used
     }
 
@@ -260,7 +257,7 @@ public class ProcessOfHeatingCooling implements Process {
 
     public void setTrHydr(double trHydr) {
         this.trHydr = trHydr;
-        tmWall = LibPsychroProcess.calcAverageWallTemp(tsHydr, trHydr);
+        tmWall = LibPhysicsOfProcess.calcAverageWallTemp(tsHydr, trHydr);
         //TO DO: Implement last method used
     }
 
@@ -272,24 +269,24 @@ public class ProcessOfHeatingCooling implements Process {
         return BF;
     }
 
-    public String getiD() {
-        return ID;
+    public String getID() {
+        return iD;
     }
 
-    public void setiD(String ID) {
-        this.ID = ID;
+    public void setID(String ID) {
+        this.iD = ID;
     }
 
     public double getAvrgWallTemp(){
         return this.tmWall;
     }
 
-    public double getTargetvalue() {
-        return targetvalue;
+    public double getLastMethodArgument() {
+        return lastMethodArgument;
     }
 
-    public void setTargetvalue(double targetvalue) {
-        this.targetvalue = targetvalue;
+    public void setLastMethodArgument(double lastMethodArgument) {
+        this.lastMethodArgument = lastMethodArgument;
     }
 
     @Override
@@ -304,9 +301,9 @@ public class ProcessOfHeatingCooling implements Process {
 
         bld.append("\n>>OUTLET FLOW:\n");
         bld.append(outletFlow.toString());
-        bld.append(String.format("tx_Out = %.2f" + " oC " + "\tinlet air temperature\n", outletAir.getTx()));
-        bld.append(String.format("RH_Out = %.2f" + " %% " + "\tinlet air relative humidity\n", outletAir.getRH()));
-        bld.append(String.format("x_Out = %.5f" + " kgWv/kgDa " + "\tinlet air humidity ratio\n", outletAir.getX()));
+        bld.append(String.format("tx_Out = %.2f" + " oC " + "\toutlet air temperature\n", outletAir.getTx()));
+        bld.append(String.format("RH_Out = %.2f" + " %% " + "\toutlet air relative humidity\n", outletAir.getRH()));
+        bld.append(String.format("x_Out = %.5f" + " kgWv/kgDa " + "\toutlet air humidity ratio\n", outletAir.getX()));
 
         bld.append("\n>>CONDENSATE FLOW:\n");
         bld.append(condensateFlow.toString());
@@ -361,21 +358,21 @@ public class ProcessOfHeatingCooling implements Process {
         }
 
         public ProcessOfHeatingCooling build(){
-            if(inletFlow==null && outletFlow==null) {
-                inletFlow = createDefaultFlow("Inlet Flow", TypeOfAirFlow.MA_VOL_FLOW);
-                outletFlow = createDefaultFlow("Outlet Flow", TypeOfAirFlow.DA_MASS_FLOW);
+            if(inletFlow == null && outletFlow == null) {
+                inletFlow = FlowOfMoistAir.createDefaultAirFlow("Inlet Flow", TypeOfAirFlow.MA_VOL_FLOW, LibDefaults.DEF_AIR_FLOW);
+                outletFlow = FlowOfMoistAir.createDefaultAirFlow("Outlet Flow", TypeOfAirFlow.DA_MASS_FLOW, LibDefaults.DEF_AIR_FLOW);
             }
-            if(inletFlow==null && outletFlow!=null){
+            if(inletFlow == null){
                 inletFlow = outletFlow.clone();
                 inletFlow.setName("Inlet Flow");
                 inletFlow.setLockedFlowType(TypeOfAirFlow.MA_MASS_FLOW);
             }
-            if(outletFlow==null && inletFlow!=null){
+            if(outletFlow == null){
                 outletFlow = inletFlow.clone();
                 outletFlow.setName("Outlet Flow");
                 outletFlow.setLockedFlowType(TypeOfAirFlow.DA_MASS_FLOW);
             }
-            if(condensateFlow==null){
+            if(condensateFlow == null){
                 condensateFlow = new FlowOfFluid();
                 condensateFlow.setName("Condensate");
             }
@@ -383,13 +380,6 @@ public class ProcessOfHeatingCooling implements Process {
             return new ProcessOfHeatingCooling(this);
         }
 
-        private FlowOfMoistAir createDefaultFlow(String name, TypeOfAirFlow lockedFlow){
-            FlowOfMoistAir flow = new FlowOfMoistAir.Builder().withFlowName(name).build();
-            flow.setLockedFlowType(lockedFlow);
-            return flow;
-        }
-
     }
-
 
 }

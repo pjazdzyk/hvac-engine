@@ -1,7 +1,7 @@
 package Model.Properties;
 
 import Physics.LibDefaults;
-import Physics.LibPropertyOfWater;
+import Physics.LibPhysicsOfWater;
 import java.io.Serializable;
 
 /**
@@ -29,7 +29,7 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
 
     /**
      * CONSTRUCTOR. Creates new LiquidWater instance based on Builder instance.
-     * @param builder
+     * @param builder Builder instance
      */
     private LiquidWater(Builder builder){
 
@@ -63,9 +63,9 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
      */
     @Override
     public void updateProperties(){
-        cp = LibPropertyOfWater.calc_Cp(tx);
-        rho = LibPropertyOfWater.calc_rho(tx);
-        ix = LibPropertyOfWater.calc_Ix(tx);
+        cp = LibPhysicsOfWater.calc_Cp(tx);
+        rho = LibPhysicsOfWater.calc_rho(tx);
+        ix = LibPhysicsOfWater.calc_Ix(tx);
     }
 
     // GETTERS

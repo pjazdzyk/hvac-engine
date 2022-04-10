@@ -19,7 +19,7 @@ import Physics.Exceptions.WaterPhysicsArgumentException;
  *
  */
 
-public class LibPropertyOfWater {
+public class LibPhysicsOfWater {
 
     /**
      * Returns water enthalpy at provided temperature in kJ/kg<br>

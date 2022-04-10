@@ -68,34 +68,39 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         }
     }
 
+    @Override
     public void updateFlows() {
         Objects.requireNonNull(lockedFlowType,"FluidFlowType has not been specified");
         switch (lockedFlowType) {
             case MA_MASS_FLOW -> {
-                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
-                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir,massFlowMa);
+                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getRho(),massFlowMa);
+                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getX(),massFlowMa);
                 volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,massFlowDa);
             }
             case MA_VOL_FLOW -> {
-                massFlowMa = LibPhysicsOfFlow.calcMassFlowFromVolFlow(moistAir,volFlowMa);
-                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir,massFlowMa);
+                massFlowMa = LibPhysicsOfFlow.calcMassFlowFromVolFlow(moistAir.getRho(),volFlowMa);
+                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getX(),massFlowMa);
                 volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,massFlowDa);
             }
             case DA_MASS_FLOW -> {
-                massFlowMa = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir,massFlowDa);
-                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
+                massFlowMa = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getX(),massFlowDa);
+                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getRho(),massFlowMa);
                 volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,massFlowDa);
             }
             case DA_VOL_FLOW -> {
-                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir,volFlowDa);
-                massFlowMa = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir,massFlowDa);
-                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir,massFlowMa);
+                massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir.getRho_Da(),volFlowDa);
+                massFlowMa = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getX(),massFlowDa);
+                volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getRho(),massFlowMa);
             }
         }
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String inName){
+        this.name = inName;
     }
 
     public MoistAir getMoistAir() {
@@ -108,10 +113,12 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         updateFlows();
     }
 
+    @Override
     public double getMassFlow() {
         return massFlowMa;
     }
 
+    @Override
     public void setMassFlow(double massFlowMa) {
 
         if(massFlowMa<0.0)
@@ -122,14 +129,12 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         updateFlows();
     }
 
+    @Override
     public double getVolFlow() {
         return volFlowMa;
     }
 
-    public void setName(String inName){
-        this.name = inName;
-    }
-
+    @Override
     public void setVolFlow(double volFlowMa) {
 
         if(volFlowMa<0.0)
@@ -168,19 +173,6 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         updateFlows();
     }
 
-    public void setFlow(double flow, TypeOfAirFlow flowType){
-        switch(flowType){
-            case MA_MASS_FLOW -> setMassFlow(flow);
-            case MA_VOL_FLOW -> setVolFlow(flow);
-            case DA_MASS_FLOW -> setMassFlowDa(flow);
-            case DA_VOL_FLOW -> setVolFlowDa(flow);
-        }
-    }
-
-    public double getFlow(){
-        return getFlow(lockedFlowType);
-    }
-
     public double getFlow(TypeOfAirFlow typeOfFlow){
         switch(typeOfFlow){
             case DA_VOL_FLOW -> {return volFlowDa;}
@@ -191,14 +183,16 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         throw new FlowArgumentException("Invalid type of flow, cannot return value");
     }
 
-    public void setMinFlow(TypeOfAirFlow typeOfFlow, double minFlow){
-        if(minMassFlowDa < 0.0)
-            throw new FlowArgumentException("Flow value must not be negative");
-        switch(typeOfFlow){
-            case DA_VOL_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir,minFlow);
-            case MA_VOL_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaVolFlow(moistAir,minFlow);
-            case DA_MASS_FLOW -> this.minMassFlowDa = minFlow;
-            case MA_MASS_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir,minFlow);
+    public double getFlow(){
+        return getFlow(lockedFlowType);
+    }
+
+    public void setFlow(double flow, TypeOfAirFlow flowType){
+        switch(flowType){
+            case MA_MASS_FLOW -> setMassFlow(flow);
+            case MA_VOL_FLOW -> setVolFlow(flow);
+            case DA_MASS_FLOW -> setMassFlowDa(flow);
+            case DA_VOL_FLOW -> setVolFlowDa(flow);
         }
     }
 
@@ -207,15 +201,26 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
             return 0.0;
         switch(typeOfFlow){
             case DA_VOL_FLOW -> {return LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir,minMassFlowDa);}
-            case MA_VOL_FLOW -> {return LibPhysicsOfFlow.calcMaVolFlowFromDaMassFlow(moistAir,minMassFlowDa);}
+            case MA_VOL_FLOW -> {return LibPhysicsOfFlow.calcMaVolFlowFromDaMassFlow(moistAir.getRho(),moistAir.getX(),minMassFlowDa);}
             case DA_MASS_FLOW -> {return minMassFlowDa;}
-            case MA_MASS_FLOW -> {return LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir,minMassFlowDa);}
+            case MA_MASS_FLOW -> {return LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getX(),minMassFlowDa);}
         }
         throw new FlowArgumentException("Invalid type of flow, cannot return value");
     }
 
     public double getMinFlow(){
-        return getMinFlow(lockedFlowType);
+        return minMassFlowDa;
+    }
+
+    public void setMinFlow(TypeOfAirFlow typeOfFlow, double minFlow){
+        if(minMassFlowDa < 0.0)
+            throw new FlowArgumentException("Flow value must not be negative");
+        switch(typeOfFlow){
+            case DA_VOL_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir.getRho_Da(),minFlow);
+            case MA_VOL_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaVolFlow(moistAir.getRho(),moistAir.getX(),minFlow);
+            case DA_MASS_FLOW -> this.minMassFlowDa = minFlow;
+            case MA_MASS_FLOW -> this.minMassFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getX(),minFlow);
+        }
     }
 
     public TypeOfAirFlow getLockedFlowType() {
@@ -228,9 +233,19 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         updateFlows();
     }
 
+    @Override
+    public double getTx(){
+        return moistAir.getTx();
+    }
+
+    @Override
     public void setTx(double inTx){
         moistAir.setTx(inTx);
         updateFlows();
+    }
+
+    public double getRH(){
+        return moistAir.getRH();
     }
 
     public void setRH(double inRH){
@@ -238,9 +253,17 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         updateFlows();
     }
 
+    public double getX(){
+        return moistAir.getX();
+    }
+
     public void setX(double inX){
         moistAir.setX(inX);
         updateFlows();
+    }
+
+    public double getPat(){
+        return moistAir.getPat();
     }
 
     public void setPat(double inPat){
@@ -249,25 +272,8 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     }
 
     @Override
-    public double getTx(){
-        return moistAir.getTx();
-    }
-
-    @Override
     public double getIx() {
         return moistAir.getIx();
-    }
-
-    public double getRH(){
-        return moistAir.getRH();
-    }
-
-    public double getX(){
-        return moistAir.getX();
-    }
-
-    public double getPat(){
-        return moistAir.getPat();
     }
 
     @Override
@@ -298,6 +304,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         bld.append("m_Da = ").append(String.format("%.3f",massFlowDa)).append(" kg/s ").append("\t").append("dry air mass flow\t | ")
                 .append("v_Da = ").append(String.format("%.3f",volFlowDa)).append(" m3/s ").append("\t").append("dry air vol flow\t |  ")
                 .append("v_Da = ").append(String.format("%.1f",volFlowDa*3600)).append(" m3/h ").append("\t").append("dry air vol flow\n");
+        bld.append("min_m_Da = ").append(String.format("%.3f",minMassFlowDa)).append(" kg/s ").append("\t").append("fixed minimum dry air mass flow\t\n");
         return bld.toString();
     }
 
@@ -340,6 +347,20 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     public static FlowOfMoistAir ofM3hVolFlow(String ID, double volFlowMaM3h, double tx, double RH, double Pat){
        MoistAir air = MoistAir.ofAir("Air of " + ID, tx, RH, Pat);
        return new FlowOfMoistAir(ID, volFlowMaM3h/3600d, TypeOfAirFlow.MA_VOL_FLOW, air);
+    }
+
+     /**
+     *Returns FlowOfMoistAir instance with default MoistAir instance, based on name, specified flow type and flow rate.
+     * @param ID flow identification / name. Air ID will be constructed by adding "Air of " to provided flow ID.
+     * @param lockedFlow flow type
+     * @param flow flow in m3/s or kg/s
+     * @return FlowOfMoistAir instance
+     */
+    public static FlowOfMoistAir createDefaultAirFlow(String ID, TypeOfAirFlow lockedFlow, double flow){
+        FlowOfMoistAir flowOfAir = new FlowOfMoistAir.Builder().withFlowName(ID).build();
+        flowOfAir.setLockedFlowType(lockedFlow);
+        flowOfAir.setFlow(flow,lockedFlow);
+        return flowOfAir;
     }
 
     //BUILDER PATTERN

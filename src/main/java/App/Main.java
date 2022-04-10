@@ -5,29 +5,23 @@ import Model.Flows.FlowOfMoistAir;
 import Model.Flows.TypeOfAirFlow;
 import Model.Flows.TypeOfFluidFlow;
 import Model.Process.ProcessOfHeatingCooling;
+import Model.Process.ProcessOfMixing;
 import Model.Properties.LiquidWater;
 import Model.Properties.MoistAir;
-import Physics.LibPropertyOfAir;
-
+import Physics.LibPhysicsOfAir;
 
 public class Main {
 
     public static void main(String[] args) {
 
-      var flow1 = FlowOfMoistAir.ofM3hVolFlow(2000,-20,95);
-      var flow2 = FlowOfMoistAir.ofM3hVolFlow(300,15,60);
-      ProcessOfHeatingCooling process = new ProcessOfHeatingCooling();
-      process.setInletFlow(flow1);
-      process.setOutletFlow(flow2);
-      process.executeLastFunction();
-      System.out.println(process);
+        runUserGuideMethods();
 
     }
 
     public static void runUserGuideMethods(){
 
         // Using LibClass for single value calculation
-        var saturationPressure = LibPropertyOfAir.calc_Ma_Ps(20);
+        var saturationPressure = LibPhysicsOfAir.calc_Ma_Ps(20);
         System.out.println(saturationPressure); //Outputs 2338.80 Pa
 
         // Creating and using MoistAir class
@@ -100,7 +94,8 @@ public class Main {
         //Using Builder pattern
         var condensateFlow2 = new FlowOfFluid.Builder<LiquidWater>(LiquidWater::new).withFlowName("CondensateFlow")
                                                                                                        .withVolFlow(volFlow)
-                                                                                                       .withFluidInstance(condensate);
+                                                                                                       .withFluidInstance(condensate)
+                                                                                                       .build();
         //Using of() methods for water in m3/h:
         var volFlow1 = volFlow * 3600; //m3/h
         var condensateFlow3 = FlowOfFluid.ofM3hWaterVolFlow(volFlow1, temp);
@@ -123,14 +118,19 @@ public class Main {
         coolingCoil.applyCoolingInQFromOutTx(expectedOutSupplyTemp);
         System.out.println(coolingCoil);
 
-        var newHeater = new ProcessOfHeatingCooling.Builder()
-                                           .withName("zajac")
-                                           .withInletFlow(inputSummerFlow)
-                                           .withCoolantTemps(8.0, 14.0)
-                                           .build();
+        //MIXING
+        var intakeFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20.0,100);
+        var recircFlow = FlowOfMoistAir.ofM3hVolFlow(5000,15,30);
+        var mixingSection = new ProcessOfMixing();
+        mixingSection.setInletFlow(intakeFlow);
+        mixingSection.setRecirculationFlow(recircFlow);
+        mixingSection.applyMixing();
+        System.out.println(mixingSection);
 
-        newHeater.applyCoolingInQFromOutTx(expectedOutSupplyTemp);
-        System.out.println(newHeater);
+        //Using Builder pattern
+        var mixingPlenuum = new ProcessOfMixing.Builder().withInletFlow(intakeFlow)
+                                                                        .withRecirculationFlow(recircFlow)
+                                                                        .build();
 
     }
 

@@ -5,9 +5,8 @@ import Model.Properties.Fluid;
 import Model.Properties.LiquidWater;
 import Physics.LibDefaults;
 import Physics.LibPhysicsOfFlow;
-
+import Validators.Validators;
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -61,8 +60,8 @@ public class FlowOfFluid implements Flow, Serializable {
      * @param lockedTypeOfFluidFlow - type of Flow (selected from FluidFlowType enum).
      */
     public FlowOfFluid(String name, double flowRate, TypeOfFluidFlow lockedTypeOfFluidFlow, Fluid fluid){
-        Objects.requireNonNull(fluid,"Error. Fluid instance does not exist.");
-        Objects.requireNonNull(lockedTypeOfFluidFlow,"FluidFlowType has not been specified");
+        Validators.validateForNotNull("Fluid",fluid);
+        Validators.validateForNotNull("Locked flow",lockedTypeOfFluidFlow);
         this.name = name;
         this.fluid = fluid;
         switch(lockedTypeOfFluidFlow){
@@ -75,10 +74,10 @@ public class FlowOfFluid implements Flow, Serializable {
      * Update flows if Fluid property has changed. It is invoked automatically.
      */
     public void updateFlows() {
-        Objects.requireNonNull(lockedTypeOfFluidFlow,"FluidFlowType has not been specified");
+        Validators.validateForNotNull("locked flow", lockedTypeOfFluidFlow);
         switch (lockedTypeOfFluidFlow) {
-            case MASS_FLOW -> volFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(fluid,massFlow);
-            case VOL_FLOW -> massFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(fluid,volFlow);
+            case MASS_FLOW -> volFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(fluid.getRho(),massFlow);
+            case VOL_FLOW -> massFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(fluid.getRho(),volFlow);
         }
     }
 
@@ -123,13 +122,13 @@ public class FlowOfFluid implements Flow, Serializable {
     }
 
     public void setFluid(Fluid inFluid) {
-        Objects.requireNonNull(inFluid,"Error. Fluid instance does not exist.");
+        Validators.validateForNotNull("Fluid",inFluid);
         this.fluid = inFluid;
         updateFlows();
     }
 
     public void setLockedFlowType(TypeOfFluidFlow lockedTypeOfFluidFlow) {
-        Objects.requireNonNull(lockedTypeOfFluidFlow,"FluidFlowType has not been specified");
+       Validators.validateForNotNull("Locked flow", lockedTypeOfFluidFlow);
         this.lockedTypeOfFluidFlow = lockedTypeOfFluidFlow;
         updateFlows();
     }
