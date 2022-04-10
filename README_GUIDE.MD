@@ -4,7 +4,7 @@
 
 <span style="font-weight:700;font-size:15px">
 
-[HOME](README.MD) | [MOIST AIR](#moist-air-thermophysical-properties) | [LIQUID WATER](#liquid-water-thermophysical-properties) | [FLOW HANDLING](#flow-of-moist-air) | [HEATING & COOLING](#heating-and-cooling-with-condensate-discharge)
+[HOME](README.MD) | [MOIST AIR](#moist-air-thermophysical-properties) | [LIQUID WATER](#liquid-water-thermophysical-properties) | [FLOW HANDLING](#flow-of-moist-air) | [HEATING & COOLING](#heating-and-cooling-with-condensate-discharge) | [AIR MIXING](#mixing-of-two-moist-air-flows)
 
 </span>
 
@@ -24,7 +24,7 @@ For some values where a direct calculation is not possible, the [Modified Brent 
 used for quick and efficient iterative calculations. Use an example of moist air property library is shown below:
 ```
 //Saturation pressure calculation for a ta=20oC
-var saturationPressure = LibPropertyOfAir.calc_Ma_Ps(20); 
+var saturationPressure = LibPhysicsOfAir.calc_Ma_Ps(20);
 System.out.println(saturationPressure); //Outputs 2338.80 Pa
 ```
 For flow calculation or heating/cooling process analysis, an instance of MoistAir is required.
@@ -93,11 +93,11 @@ calculate and set all others. Flow depends on moist air instance. It is importan
 action (ie: in case MoistAir reference is shared across other classes). For such an event, updateFlows() method is provided. Let's try to create some flows and see how it works. Creating a flow of moist air
 with volumetric flow 5000m3/h of temperature ta=20oC and relative humidity RH=50%.
 ```
-var ta = 20; //OC
+var tx= 20; //OC
 var RH = 50; //%
 var volFlowMa = 5000.0/3600.0; //m3/s
-var air1 = new MoistAir("NewAir", 20, 50);
-var flow = new FlowOfMoistAir("Test flow", volFlowMa, FlowOfMoistAir.AirFlowType.MA_VOL_FLOW,air1);
+var air1 = new MoistAir("NewAir", tx, RH);
+var flow1 = new FlowOfMoistAir("Test flow", volFlowMa, TypeOfAirFlow.MA_VOL_FLOW,air1);
 ```
 Please note that if you are using constructors for flow creation, you have to specify which flow type are you providing by use of Enum AirFlowType as shown above. For simplicity and ease of use
 you can always use the Builder pattern:
@@ -145,13 +145,15 @@ FlowOfFluid can be initiated as shown below:
 ```
 //Using Constructor
 var volFlow = 1.2; // m3/s
-var condensate = new LiquidWater("condensate",10);
-var condensateFlow1 = new FlowOfFluid("CondensateFlow", volFlow, FlowOfFluid.FluidFlowType.VOL_FLOW, condensate);
+var temp = 10.0; //oC
+var condensate = new LiquidWater("condensate",temp);
+var condensateFlow1 = new FlowOfFluid("CondensateFlow", volFlow, TypeOfFluidFlow.VOL_FLOW, condensate);
         
 //Using Builder pattern
 var condensateFlow2 = new FlowOfFluid.Builder<LiquidWater>(LiquidWater::new).withFlowName("CondensateFlow")
                                                                             .withVolFlow(volFlow)
-                                                                            .withFluidInstance(condensate);
+                                                                            .withFluidInstance(condensate)
+                                                                            .build();
 //Using of() methods for water in m3/h:
 var volFlow1 = volFlow * 3600; //m3/h
 var condensateFlow3 = FlowOfFluid.ofM3hWaterVolFlow(volFlow1, temp);
@@ -159,7 +161,7 @@ var condensateFlow3 = FlowOfFluid.ofM3hWaterVolFlow(volFlow1, temp);
 Please note that Builder class in FlowOfFluid is generic, therefore an extractor must be provided as the argument (a reference to the constructor of the specific Fluid class).
 
 ## HEATING AND COOLING WITH CONDENSATE DISCHARGE
-The heating and cooling of the moist air are modeled by the AirHeatingCooling class. This class is based on psychrometric equations stored in LibPsychroProcess. This class allows determining the outlet moist air properties including the condensate flow and its properties for typical HVAC cooling or heating applications. The following functionality has been
+The heating and cooling of the moist air is represented by the ProcessOfHeatingCooling class. Physical part is based on LibPhysicsOfProcess class. This class allows determining the outlet moist air properties including the condensate flow and its properties for typical HVAC cooling or heating applications. The following functionality has been
 developed so far:</br>
 * air heating or cooling if input heating power is known,</br>
 * air heating or cooling result if expected output temperature is known,</br>
@@ -171,9 +173,9 @@ To create the heating and cooling process class just use the constructor and pas
 output flow will be created automatically as an independent object cloned from the input flow. Here is some example: let's try to heat 5000m3/h of winter air of -20oC/RH=95% to the +18oC:
 ```
 var inputFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20,95);
-var heater = new AirHeatingCooling(inputFlow);
-var expectedOutTemp = 18.0; //oC
-heater.applyHeatingInQFromOutTx(expectedOutTemp);
+var heater = new ProcessOfHeatingCooling(inputFlow);
+var expectedOutTemperature = 18.0; //oC
+heater.applyHeatingInQFromOutTx(expectedOutTemperature);
 ````
 Process summary can be easily shown by invoking toString(). Output air instance can be also accessed by provided getters. Here is a process result summary:
 ```
@@ -225,19 +227,19 @@ return temperature, and resulting average wall temperature. This value must be p
 try to simulate cooling for a typical air conditioning scenario: ambient air 32oC/50%, expected supply temperature +24oC, volumetric flow = 5000m3/h. Coolant parameters: 8/14oC.
 ```
 var inputSummerFlow = FlowOfMoistAir.ofM3hVolFlow(5000,32,50);
-var coolingCoil = new AirHeatingCooling(inputSummerFlow);
+var coolingCoil = new ProcessOfHeatingCooling(inputSummerFlow);
 var expectedOutSupplyTemp = 24.0; //oC
-var coolantSupTemp = 8.0; //oC
-var coolantRetTemp = 14.0; //oC
-coolingCoil.setTs_Hydr(coolantSupTemp);
-coolingCoil.setTr_Hydr(coolantRetTemp);
+var coolantSupTemp = 8.0;
+var coolantRetTemp = 14.0;
+coolingCoil.setTsHydr(coolantSupTemp);
+coolingCoil.setTrHydr(coolantRetTemp);
 coolingCoil.applyCoolingInQFromOutTx(expectedOutSupplyTemp);
 ```
 Let's see the results:
 ```
 -------------------------------------HEATING/COOLING PROCESS-------------------------------------
 >>INLET FLOW:
-Flow name: 		New Flow
+Flow name:  	New Flow
 Locked flow: 		MA_VOL_FLOW
 Air properties: 	ta = 32.00 oC 	RH = 45.00 % 	x = 0.01343 kg.wv/kg.da 	status = UNSATURATED
 m_Ma = 1.572 kg/s 	moist air mass flow	 | v_Ma = 1.389 m3/s 	moist air vol flow	 |  v_Ma = 5000.0 m3/h 	moist air vol flow
@@ -278,3 +280,62 @@ and bypass factors were calculated based on the provided input data. <br>
 LIMITATIONS:<br>
 A typical HVAC temperature range should be used. Achieving negative temperatures for cooling is not possible at the moment, ice buildup is not included in the process.
 At this stage of development, this functionality is dedicated to air conditioning, not industrial deep cooling/freezing.
+
+## MIXING OF TWO MOIST AIR FLOWS
+The process of mixing is represented by the ProcessOfMixing class. The physical part is based on LibPhysicsOfProcess class. The mixing process is designed to allow the mixing of two separate air flows
+and calculate output flow rate and outlet air properties as the result. Typical usage is to model the AHU recirculation section, where ambient intake is mixed with recirculated air from the room
+to reduce the heat output of the heating coil if the amount of fresh air could be reduced.<br>
+Let's try following example: intake air of 5000m3/h (-20oC/100%) mixed with 5000 m3/h of recirculated air (15oC/30%):
+```
+var intakeFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20.0,100);
+var recircFlow = FlowOfMoistAir.ofM3hVolFlow(5000,15.0,30);
+var mixingSection = new ProcessOfMixing();
+mixingSection.setInletFlow(intakeFlow);
+mixingSection.setRecirculationFlow(recircFlow);
+mixingSection.applyMixing();
+```
+Alternatively use builder pattern for simplicity:
+```
+var mixingPlenuum = new ProcessOfMixing.Builder().withInletFlow(intakeFlow)
+                                                 .withRecirculationFlow(recircFlow)
+                                                 .build();
+mixingPlenuum.applyMixing();
+```
+Both methods will output the same result as shown below:
+```
+-----------------------------------------MIXING PROCESS-----------------------------------------
+>>INLET FLOW:
+Flow name: 		New Flow
+Locked flow: 		DA_MASS_FLOW
+Air properties: 	ta = -20.00 oC 	RH = 100.00 % 	x = 0.00063 kg.wv/kg.da 	status = SATURATED
+m_Ma = 1.934 kg/s 	moist air mass flow	 | v_Ma = 1.389 m3/s 	moist air vol flow	 |  v_Ma = 5000.0 m3/h 	moist air vol flow
+m_Da = 1.933 kg/s 	dry air mass flow	 | v_Da = 1.386 m3/s 	dry air vol flow	 |  v_Da = 4991.0 m3/h 	dry air vol flow
+min_m_Da = 0.000 kg/s 	fixed minimum dry air mass flow	
+tx_In = -20.00 oC 	inlet air temperature
+RH_In = 100.00 % 	inlet air relative humidity
+x_In = 0.00063 kgWv/kgDa 	inlet air humidity ratio
+
+>>RECIRCULATION FLOW:
+Flow name: 		New Flow
+Locked flow: 		DA_MASS_FLOW
+Air properties: 	ta = 15.00 oC 	RH = 30.00 % 	x = 0.00316 kg.wv/kg.da 	status = UNSATURATED
+m_Ma = 1.693 kg/s 	moist air mass flow	 | v_Ma = 1.389 m3/s 	moist air vol flow	 |  v_Ma = 5000.0 m3/h 	moist air vol flow
+m_Da = 1.687 kg/s 	dry air mass flow	 | v_Da = 1.377 m3/s 	dry air vol flow	 |  v_Da = 4958.3 m3/h 	dry air vol flow
+min_m_Da = 0.000 kg/s 	fixed minimum dry air mass flow	
+tx_Out = 15.00 oC 	recirculation air temperature
+RH_Out = 30.00 % 	recirculation air relative humidity
+x_Out = 0.00316 kgWv/kgDa 	recirculation air humidity ratio
+
+>>OUTLET FLOW:
+Flow name: 		New Flow
+Locked flow: 		DA_MASS_FLOW
+Air properties: 	ta = -3.64 oC 	RH = 65.16 % 	x = 0.00181 kg.wv/kg.da 	status = UNSATURATED
+m_Ma = 3.627 kg/s 	moist air mass flow	 | v_Ma = 2.778 m3/s 	moist air vol flow	 |  v_Ma = 9999.8 m3/h 	moist air vol flow
+m_Da = 3.620 kg/s 	dry air mass flow	 | v_Da = 2.764 m3/s 	dry air vol flow	 |  v_Da = 9951.2 m3/h 	dry air vol flow
+min_m_Da = 0.000 kg/s 	fixed minimum dry air mass flow	
+tx_Out = -3.64 oC 	outlet air temperature
+RH_Out = 65.16 % 	outlet air relative humidity
+x_Out = 0.00181 kgWv/kgDa 	outlet air humidity ratio
+-----------------------------------------END OF RESULTS-----------------------------------------
+```
+This process does not assume any humidity discharge. If x > xMax, water fog or ice fog is assumed to be traveling with air outside mixing plenum.

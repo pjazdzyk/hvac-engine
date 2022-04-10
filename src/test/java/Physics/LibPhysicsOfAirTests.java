@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-public class LibPropertyOfAirTests {
+public class LibPhysicsOfAirTests {
 
     static final double Pat = 100_000.0;
     static final double MATH_ACCURACY = 1.0E-11;
@@ -37,7 +37,7 @@ public class LibPropertyOfAirTests {
         var expected = 101.325*Math.pow((1-2.25577*Math.pow(10, -5)*altitude),5.2559)*1000;
 
         //Act
-        double actual = LibPropertyOfAir.calc_PatAlt(altitude);
+        double actual = LibPhysicsOfAir.calc_PatAlt(altitude);
 
         //Assert
         Assertions.assertEquals(expected, actual, MATH_ACCURACY);
@@ -53,7 +53,7 @@ public class LibPropertyOfAirTests {
         var expected = tempAtSea-0.0065*altitude;
 
         //Act
-        var actual = LibPropertyOfAir.calc_TxAlt(tempAtSea, altitude);
+        var actual = LibPhysicsOfAir.calc_TxAlt(tempAtSea, altitude);
 
         // Assert
         Assertions.assertEquals(expected, actual, MATH_ACCURACY);
@@ -65,7 +65,7 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_PsTest(double ta, double expected){
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Ps(ta);
+        var actual = LibPhysicsOfAir.calc_Ma_Ps(ta);
         double accuracy;
 
         if(ta<0)
@@ -101,7 +101,7 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_TdpTests(double ta, double RH, double expected){
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Tdp(ta,RH,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_Tdp(ta,RH,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,TDP_ACCURACY);
@@ -125,7 +125,7 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_WbtTests(double ta, double RH, double expected){
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Wbt(ta,RH,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_Wbt(ta,RH,Pat);
 
         var accuracy = ta < 60 ? WBT_LOW_TEMP_ACCURACY : WBT_HIGH_TEMP_ACCURACY;
 
@@ -167,7 +167,7 @@ public class LibPropertyOfAirTests {
         var x = 0.007359483455449959;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Ps(x,RH,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_Ps(x,RH,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -179,7 +179,7 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_RHTdpTest(double ta, double tdp, double expected){
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_RH(tdp,ta);
+        var actual = LibPhysicsOfAir.calc_Ma_RH(tdp,ta);
 
         //Assert
         Assertions.assertEquals(expected,actual,TDP_ACCURACY);
@@ -207,7 +207,7 @@ public class LibPropertyOfAirTests {
         var expected = 45.0;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_RH(ta,x,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_RH(ta,x,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -223,7 +223,7 @@ public class LibPropertyOfAirTests {
         var expected = 0.015143324009257978;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_X(RH,Ps,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_X(RH,Ps,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -238,7 +238,7 @@ public class LibPropertyOfAirTests {
         var expected = 0.020356309472910922;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_XMax(Ps,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_XMax(Ps,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -250,7 +250,7 @@ public class LibPropertyOfAirTests {
     public void calc_Da_dynVisTest(double ta, double expected){
 
         //Act
-        var actual = LibPropertyOfAir.calc_Da_dynVis(ta);
+        var actual = LibPhysicsOfAir.calc_Da_dynVis(ta);
 
         //Assert
         Assertions.assertEquals(expected,actual,DYN_VIS_ACCURACY);
@@ -281,7 +281,7 @@ public class LibPropertyOfAirTests {
         var expected = 9.731572271822231E-6;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Wv_dynVis(ta);
+        var actual = LibPhysicsOfAir.calc_Wv_dynVis(ta);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -297,7 +297,7 @@ public class LibPropertyOfAirTests {
         var expected = 1.7971489177670825E-5;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_dynVis(ta,x);
+        var actual = LibPhysicsOfAir.calc_Ma_dynVis(ta,x);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -310,8 +310,8 @@ public class LibPropertyOfAirTests {
 
         //Act
         var Pat = 101325;
-        var actualDa = LibPropertyOfAir.calc_Da_Rho(ta,Pat);
-        var actualMa = LibPropertyOfAir.calc_Ma_Rho(ta,x,Pat);
+        var actualDa = LibPhysicsOfAir.calc_Da_Rho(ta,Pat);
+        var actualMa = LibPhysicsOfAir.calc_Ma_Rho(ta,x,Pat);
 
         //Arrange
         Assertions.assertEquals(expectedDa,actualDa,RHO_ACCURACY);
@@ -341,7 +341,7 @@ public class LibPropertyOfAirTests {
         var expected = 0.8327494782009955;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Wv_Rho(ta,RH,Pat);
+        var actual = LibPhysicsOfAir.calc_Wv_Rho(ta,RH,Pat);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -353,11 +353,11 @@ public class LibPropertyOfAirTests {
 
         //Arrange
         var ta = 20.0;
-        var rhoDa = LibPropertyOfAir.calc_Da_Rho(ta,Pat);
+        var rhoDa = LibPhysicsOfAir.calc_Da_Rho(ta,Pat);
         var expected = 1.519954676200779E-5;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Da_kinVis(ta,rhoDa);
+        var actual = LibPhysicsOfAir.calc_Da_kinVis(ta,rhoDa);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -369,11 +369,11 @@ public class LibPropertyOfAirTests {
         //Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var rhoWv = LibPropertyOfAir.calc_Wv_Rho(ta,RH,Pat);
+        var rhoWv = LibPhysicsOfAir.calc_Wv_Rho(ta,RH,Pat);
         var expected = 1.168607429553187E-5;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Wv_kinVis(ta,rhoWv);
+        var actual = LibPhysicsOfAir.calc_Wv_kinVis(ta,rhoWv);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -386,13 +386,13 @@ public class LibPropertyOfAirTests {
         //Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var Ps = LibPropertyOfAir.calc_Ma_Ps(ta);
-        var x = LibPropertyOfAir.calc_Ma_X(RH,Ps,Pat);
-        var rhoMa = LibPropertyOfAir.calc_Ma_Rho(ta,x,Pat);
+        var Ps = LibPhysicsOfAir.calc_Ma_Ps(ta);
+        var x = LibPhysicsOfAir.calc_Ma_X(RH,Ps,Pat);
+        var rhoMa = LibPhysicsOfAir.calc_Ma_Rho(ta,x,Pat);
         var expected = 1.529406259567132E-5;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_kinVis(ta,x,rhoMa);
+        var actual = LibPhysicsOfAir.calc_Ma_kinVis(ta,x,rhoMa);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -404,7 +404,7 @@ public class LibPropertyOfAirTests {
     public void calc_Da_kTest(double ta, double expected){
 
         //Act
-        var actual = LibPropertyOfAir.calc_Da_k(ta);
+        var actual = LibPhysicsOfAir.calc_Da_k(ta);
         var accuracy = K_LOW_TEMP_ACCURACY;
 
         if(ta>200)
@@ -443,7 +443,7 @@ public class LibPropertyOfAirTests {
     public void calc_Da_CpTest(double ta, double expected)
     {
         //Act
-        var actual = LibPropertyOfAir.calc_Da_Cp(ta);
+        var actual = LibPhysicsOfAir.calc_Da_Cp(ta);
 
         //Assert
         Assertions.assertEquals(expected, actual, CPDA_ACCURACY);
@@ -476,7 +476,7 @@ public class LibPropertyOfAirTests {
     public void calc_Wv_CpTest(double ta, double expected)
     {
         //Act
-        var actual = LibPropertyOfAir.calc_Wv_Cp(ta);
+        var actual = LibPhysicsOfAir.calc_Wv_Cp(ta);
 
         //Assert
         Assertions.assertEquals(expected, actual, CPWV_ACCURACY);
@@ -518,7 +518,7 @@ public class LibPropertyOfAirTests {
         var expected = 1.0181616347871336;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Cp(ta,x);
+        var actual = LibPhysicsOfAir.calc_Ma_Cp(ta,x);
 
         //Assert
         Assertions.assertEquals(expected,actual,MATH_ACCURACY);
@@ -533,7 +533,7 @@ public class LibPropertyOfAirTests {
         var expected = 20.093833530674114;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Da_I(ta);
+        var actual = LibPhysicsOfAir.calc_Da_I(ta);
 
         //Assert
         Assertions.assertEquals(actual,expected,MATH_ACCURACY);
@@ -548,7 +548,7 @@ public class LibPropertyOfAirTests {
         var expected = 2537.997710797728;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Wv_I(ta);
+        var actual = LibPhysicsOfAir.calc_Wv_I(ta);
 
         //Assert
         Assertions.assertEquals(actual,expected,MATH_ACCURACY);
@@ -564,8 +564,8 @@ public class LibPropertyOfAirTests {
         var expected_negative = 0.0;
 
         //Act
-        var actual_positive = LibPropertyOfAir.calc_Wt_I(ta);
-        var actual_negative = LibPropertyOfAir.calc_Wt_I(-ta);
+        var actual_positive = LibPhysicsOfAir.calc_Wt_I(ta);
+        var actual_negative = LibPhysicsOfAir.calc_Wt_I(-ta);
 
         //Assert
         Assertions.assertEquals(actual_positive,expected_positive,MATH_ACCURACY);
@@ -583,8 +583,8 @@ public class LibPropertyOfAirTests {
         var expected_negative = -375.90000000000003;
 
         //Act
-        var actual_positive = LibPropertyOfAir.calc_Ice_I(ta);
-        var actual_negative = LibPropertyOfAir.calc_Ice_I(-ta);
+        var actual_positive = LibPhysicsOfAir.calc_Ice_I(ta);
+        var actual_negative = LibPhysicsOfAir.calc_Ice_I(-ta);
 
         //Assert
         Assertions.assertEquals(actual_positive,expected_positive,MATH_ACCURACY);
@@ -608,10 +608,10 @@ public class LibPropertyOfAirTests {
         var expectedNegUnsat = -19.682530744707513;
 
         //Act
-        var actualPosUnsat = LibPropertyOfAir.calc_Ma_Ix(ta1,x1,Pat);
-        var actualWaterMist = LibPropertyOfAir.calc_Ma_Ix(ta1,x2,Pat);
-        var actualIceMist = LibPropertyOfAir.calc_Ma_Ix(ta2,x2,Pat);
-        var actualNegUnsat = LibPropertyOfAir.calc_Ma_Ix(ta2,x3,Pat);
+        var actualPosUnsat = LibPhysicsOfAir.calc_Ma_Ix(ta1,x1,Pat);
+        var actualWaterMist = LibPhysicsOfAir.calc_Ma_Ix(ta1,x2,Pat);
+        var actualIceMist = LibPhysicsOfAir.calc_Ma_Ix(ta2,x2,Pat);
+        var actualNegUnsat = LibPhysicsOfAir.calc_Ma_Ix(ta2,x3,Pat);
 
         //Assert
         Assertions.assertEquals(actualPosUnsat,expectedPosUnsat,MATH_ACCURACY);
@@ -627,13 +627,13 @@ public class LibPropertyOfAirTests {
         //Arrange
         var Pat = 101_300;
         var ta = 26.85;
-        var rhoDa = LibPropertyOfAir.calc_Da_Rho(ta,Pat);
-        var kDa = LibPropertyOfAir.calc_Da_k(ta);
-        var cpDa = LibPropertyOfAir.calc_Da_Cp(ta);
+        var rhoDa = LibPhysicsOfAir.calc_Da_Rho(ta,Pat);
+        var kDa = LibPhysicsOfAir.calc_Da_k(ta);
+        var cpDa = LibPhysicsOfAir.calc_Da_Cp(ta);
         var expected = 2.218E-5;
 
         //Act
-        var actual = LibPropertyOfAir.calc_ThDiff(rhoDa,kDa,cpDa);
+        var actual = LibPhysicsOfAir.calc_ThDiff(rhoDa,kDa,cpDa);
 
         //Assert
         Assertions.assertEquals(actual,expected,THDIFF_ACCURACY);
@@ -646,13 +646,13 @@ public class LibPropertyOfAirTests {
         //Arrange
         var Pat = 101_300;
         var ta = 26.85;
-        var dynVis = LibPropertyOfAir.calc_Da_dynVis(ta);
-        var kDa = LibPropertyOfAir.calc_Da_k(ta);
-        var cpDa = LibPropertyOfAir.calc_Da_Cp(ta);
+        var dynVis = LibPhysicsOfAir.calc_Da_dynVis(ta);
+        var kDa = LibPhysicsOfAir.calc_Da_k(ta);
+        var cpDa = LibPhysicsOfAir.calc_Da_Cp(ta);
         var expected = 0.707;
 
         //Act
-        var actual = LibPropertyOfAir.calc_Prandtl(dynVis,kDa,cpDa);
+        var actual = LibPhysicsOfAir.calc_Prandtl(dynVis,kDa,cpDa);
 
         //Assert
         Assertions.assertEquals(actual,expected,PRANDTL_ACCURACY);
@@ -664,10 +664,10 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_Ta_TdpRHTest(double ta, double RH){
 
         //Arrange
-        var tdp = LibPropertyOfAir.calc_Ma_Tdp(ta,RH,Pat);
+        var tdp = LibPhysicsOfAir.calc_Ma_Tdp(ta,RH,Pat);
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Ta_TdpRH(tdp,RH,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_Ta_TdpRH(tdp,RH,Pat);
 
         //Assert
         Assertions.assertEquals(ta,actual,MATH_ACCURACY);
@@ -698,11 +698,11 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_Ta_RHXTest(double ta, double RH){
 
         //Arrange
-        var Ps = LibPropertyOfAir.calc_Ma_Ps(ta);
-        var x = LibPropertyOfAir.calc_Ma_X(RH,Ps,Pat);
+        var Ps = LibPhysicsOfAir.calc_Ma_Ps(ta);
+        var x = LibPhysicsOfAir.calc_Ma_X(RH,Ps,Pat);
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Ta_RHX(x,RH,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_Ta_RHX(x,RH,Pat);
 
         //Assert
         Assertions.assertEquals(actual,ta,MATH_ACCURACY);
@@ -736,10 +736,10 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_Ta_IXTest(double ta, double x){
 
         //Arrange
-        var ix = LibPropertyOfAir.calc_Ma_Ix(ta,x,Pat);
+        var ix = LibPhysicsOfAir.calc_Ma_Ix(ta,x,Pat);
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Ta_IX(ix,x,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_Ta_IX(ix,x,Pat);
 
         //Assert
         Assertions.assertEquals(ta,actual,MATH_ACCURACY);
@@ -773,8 +773,8 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_TMax_PatTest(double Pat){
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_TMax_Pat(Pat);
-        var Ps = LibPropertyOfAir.calc_Ma_Ps(actual);
+        var actual = LibPhysicsOfAir.calc_Ma_TMax_Pat(Pat);
+        var Ps = LibPhysicsOfAir.calc_Ma_Ps(actual);
 
         //Assert
         Assertions.assertEquals(Ps,Pat,LIMITED_MATH_ACCURACY);
@@ -796,10 +796,10 @@ public class LibPropertyOfAirTests {
     public void calc_Ma_Wbt_TaTest(double ta, double RH) {
 
         //Arrange
-        var wbt = LibPropertyOfAir.calc_Ma_Wbt(ta,RH,Pat);
+        var wbt = LibPhysicsOfAir.calc_Ma_Wbt(ta,RH,Pat);
 
         //Act
-        var actual = LibPropertyOfAir.calc_Ma_Wbt_Ta(wbt,RH,Pat);
+        var actual = LibPhysicsOfAir.calc_Ma_Wbt_Ta(wbt,RH,Pat);
 
         //Assert
         Assertions.assertEquals(ta,actual,LIMITED_MATH_ACCURACY);

@@ -4,8 +4,8 @@ import Model.Flows.FlowOfFluid;
 import Model.Flows.FlowOfMoistAir;
 import Model.Process.ProcessOfHeatingCooling;
 import Physics.LibDefaults;
-import Physics.LibPropertyOfAir;
-import Physics.LibPsychroProcess;
+import Physics.LibPhysicsOfAir;
+import Physics.LibPhysicsOfProcess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ public class ProcessOfHeatingCoolingTests {
        var expectedCondensate = new FlowOfFluid();
        var tsHydr = 8.0;
        var trHydr = 14.0;
-       var expectedTm = LibPsychroProcess.calcAverageWallTemp(tsHydr,trHydr);
+       var expectedTm = LibPhysicsOfProcess.calcAverageWallTemp(tsHydr,trHydr);
        var expectedOutTemp = -20.0;
 
        //Act
@@ -49,7 +49,7 @@ public class ProcessOfHeatingCoolingTests {
         var expectedX = winterInletFlow.getMoistAir().getX();
         var expectedMda = winterInletFlow.getMassFlowDa();
         var i1 = winterInletFlow.getMoistAir().getIx();
-        var i2 = LibPropertyOfAir.calc_Ma_Ix(expectedTout,expectedX,LibDefaults.DEF_PAT);
+        var i2 = LibPhysicsOfAir.calc_Ma_Ix(expectedTout,expectedX,LibDefaults.DEF_PAT);
         var expectedQ = (i2-i1)*expectedMda * 1000.0; //W
 
         // ACT
@@ -99,9 +99,9 @@ public class ProcessOfHeatingCoolingTests {
         var expectedX = winterInletFlow.getMoistAir().getX();
         var expectedMda = winterInletFlow.getMassFlowDa();
         var i1 = winterInletFlow.getMoistAir().getIx();
-        var i2 = LibPropertyOfAir.calc_Ma_Ix(expectedTout,expectedX,LibDefaults.DEF_PAT);
+        var i2 = LibPhysicsOfAir.calc_Ma_Ix(expectedTout,expectedX,LibDefaults.DEF_PAT);
         var expectedQ = (i2-i1)*expectedMda * 1000.0; //W
-        var expectedRH = LibPropertyOfAir.calc_Ma_RH(expectedTout,expectedX,LibDefaults.DEF_PAT);
+        var expectedRH = LibPhysicsOfAir.calc_Ma_RH(expectedTout,expectedX,LibDefaults.DEF_PAT);
 
         // ACT
         heating.applyHeatingInQOutTxFromOutRH(expectedRH);
@@ -136,9 +136,9 @@ public class ProcessOfHeatingCoolingTests {
         var actualTout = cooling.getOutletFlow().getTx();
         var actualX = cooling.getOutletFlow().getX();
         var actualMda = cooling.getOutletFlow().getMassFlowDa();
-        var condMFlow = LibPsychroProcess.calcCondensateDischarge(actualMda,inletX,actualX);
+        var condMFlow = LibPhysicsOfProcess.calcCondensateDischarge(actualMda,inletX,actualX);
         var expectedX = inletX - condMFlow/actualMda;
-        var expectedRH = LibPropertyOfAir.calc_Ma_RH(actualTout,expectedX,LibDefaults.DEF_PAT);
+        var expectedRH = LibPhysicsOfAir.calc_Ma_RH(actualTout,expectedX,LibDefaults.DEF_PAT);
         var actualRH = cooling.getOutletFlow().getRH();
 
         // ASSERT
@@ -158,12 +158,12 @@ public class ProcessOfHeatingCoolingTests {
        var expectedOutT = 11.0;
        var expectedMda = summerInletFlow.getMassFlowDa();
        var expectedTm = cooling.getAvrgWallTemp();
-       var result = LibPsychroProcess.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
+       var result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
        var expectedHeatQ = result[0];
        var expectedX = result[2];
        var expectedCondTemp = result[3];
        var expectedCondMassFlow = result[4];
-       var expectedRH = LibPropertyOfAir.calc_Ma_RH(expectedOutT,expectedX,LibDefaults.DEF_PAT);
+       var expectedRH = LibPhysicsOfAir.calc_Ma_RH(expectedOutT,expectedX,LibDefaults.DEF_PAT);
 
        // ACT
        cooling.applyCoolingOutTxFromInQ(expectedHeatQ);
@@ -197,12 +197,12 @@ public class ProcessOfHeatingCoolingTests {
        var expectedOutT = 11.0;
        var expectedMda = summerInletFlow.getMassFlowDa();
        var expectedTm = cooling.getAvrgWallTemp();
-       var result = LibPsychroProcess.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
+       var result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
        var expectedHeatQ = result[0];
        var expectedX = result[2];
        var expectedCondTemp = result[3];
        var expectedCondMassFlow = result[4];
-       var expectedRH = LibPropertyOfAir.calc_Ma_RH(expectedOutT,expectedX,LibDefaults.DEF_PAT);
+       var expectedRH = LibPhysicsOfAir.calc_Ma_RH(expectedOutT,expectedX,LibDefaults.DEF_PAT);
 
        // ACT
        cooling.applyCoolingInQFromOutRH(expectedRH);

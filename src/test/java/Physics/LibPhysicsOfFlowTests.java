@@ -19,25 +19,32 @@ public class LibPhysicsOfFlowTests {
         var massFlowMa = 1.0; // moist air flow in kg/s
         var expectedWaterVolFlow = 0.00100111684564597;
         var expectedDaAirMassFlow = 0.992790473618731;
-        var expectedDaAirVolflow = 0.824510144149681;
+        var expectedDaAirVolFlow = 0.824510144149681;
 
         // ACT
-        var actualWaterVolFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(water,massFlow);
-        var actualWaterMassFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(water,actualWaterVolFlow);
+        var actualWaterVolFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(water.getRho(),massFlow);
+        var actualWaterMassFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(water.getRho(),actualWaterVolFlow);
 
-        var acutalDaAirMassFlow = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air,massFlowMa);
-        var actualDaAirVolFlow = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air,acutalDaAirMassFlow);
-        var actualMaAirMassFlow = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air,acutalDaAirMassFlow);
-        var actualDaAirMassFlow = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(air,actualDaAirVolFlow);
+        var actualDaAirMassFlow = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),massFlowMa);
+        var actualDaAirVolFlow = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air,actualDaAirMassFlow);
+        var actualMaAirMassFlow = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air.getX(),actualDaAirMassFlow);
+        var actualDaAirMassFlow2 = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(air.getRho_Da(),actualDaAirVolFlow);
+
+        var actualMaVolFLow = LibPhysicsOfFlow.calcMaVolFlowFromDaMassFlow(air.getRho(),air.getX(),actualDaAirMassFlow2);
+        var actualDaAirMassFlow3 = LibPhysicsOfFlow.calcDaMassFlowFromMaVolFlow(air.getRho(),air.getX(),actualMaVolFLow);
+        var actualDaAirVolFlow2 = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air,actualDaAirMassFlow3);
 
         // Assert
         Assertions.assertEquals(expectedWaterVolFlow,actualWaterVolFlow,mathAccuracy);
         Assertions.assertEquals(massFlow,actualWaterMassFlow);
 
-        Assertions.assertEquals(expectedDaAirMassFlow,acutalDaAirMassFlow,mathAccuracy);
-        Assertions.assertEquals(expectedDaAirVolflow,actualDaAirVolFlow,mathAccuracy);
-        Assertions.assertEquals(massFlowMa,actualMaAirMassFlow,mathAccuracy);
         Assertions.assertEquals(expectedDaAirMassFlow,actualDaAirMassFlow,mathAccuracy);
+        Assertions.assertEquals(expectedDaAirVolFlow,actualDaAirVolFlow,mathAccuracy);
+        Assertions.assertEquals(massFlowMa,actualMaAirMassFlow,mathAccuracy);
+        Assertions.assertEquals(expectedDaAirMassFlow,actualDaAirMassFlow3,mathAccuracy);
+
+        Assertions.assertEquals(expectedDaAirMassFlow,actualDaAirMassFlow3,mathAccuracy);
+        Assertions.assertEquals(expectedDaAirVolFlow,actualDaAirVolFlow2,mathAccuracy);
 
     }
 
