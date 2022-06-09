@@ -28,7 +28,7 @@ At the present state of development following modules are finalized ready for us
 
 LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 
-## FUNCTIONALITY
+<h1> FUNCTIONALITY </h1>
 #### Moist air thermophysical properties:
 * atmospheric pressure based on height above sea level,
 * temperature change based on height above sea level,
@@ -49,7 +49,7 @@ LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 * density,
 * specific enthalpy.
 
-#### Physics of flow:
+#### physics of flow:
 * each FlowOfMoistAir instance stores moist air volumetric flow, moist air mass flow, dry air volumetric flow, and dry air mass flow.
 * each flow type depends on aggregated MoistAir instance and flows are adjusted if the temperature or humidity changes,
 * option to lock one selected flow type
