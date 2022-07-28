@@ -28,11 +28,11 @@ public class LibPhysicsMixingTests {
 
         //Act
         var result = LibPhysicsOfProcess.calcMixing(firstFlow, secondFlow);
-        var actualMda1 = result[0];
-        var actualMda2 = result[1];
-        var actualMda3 = result[2];
-        var actualOutT = result[3];
-        var actualOutX = result[4];
+        var actualMda1 = result.inMda();
+        var actualMda2 = result.recMda();
+        var actualMda3 = result.outMda();
+        var actualOutT = result.outTx();
+        var actualOutX = result.outX();
 
         //Assert
         Assertions.assertEquals(actualMda1, expectedMda1);

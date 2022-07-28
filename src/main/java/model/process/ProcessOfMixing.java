@@ -6,6 +6,7 @@ import model.flows.TypeOfAirFlow;
 import model.properties.MoistAir;
 import physics.*;
 import physics.validators.Validators;
+import physics.LibPhysicsOfProcess.MixingResult;
 
 /**
  * <h3>AIR MIXING</h3>
@@ -85,7 +86,7 @@ public class ProcessOfMixing implements Process {
      * Calculates and sets outlet properties based on mixing result<br>
      */
     public void applyMixing() {
-        double[] result = LibPhysicsOfProcess.calcMixing(inletFlow, recirculationFlow);
+        MixingResult result = LibPhysicsOfProcess.calcMixing(inletFlow, recirculationFlow);
         commitResults(result);
         lastMethod = this::applyMixing;
     }
@@ -105,15 +106,13 @@ public class ProcessOfMixing implements Process {
         this.lastMethod = method;
     }
 
-    private void commitResults(double[] result) {
+    private void commitResults(MixingResult result) {
         Validators.validateForNotNull("Mixing result", result);
-        if (result.length != 5)
-            throw new ProcessArgumentException("Invalid result. Array length is different than 5");
-        inletFlow.setMassFlowDa(result[0]);
-        recirculationFlow.setMassFlowDa(result[1]);
-        outletFlow.setMassFlowDa(result[2]);
-        outletFlow.setTx(result[3]);
-        outletFlow.setX(result[4]);
+        inletFlow.setMassFlowDa(result.inMda());
+        recirculationFlow.setMassFlowDa(result.recMda());
+        outletFlow.setMassFlowDa(result.outMda());
+        outletFlow.setTx(result.outTx());
+        outletFlow.setX(result.outX());
     }
 
     @Override
