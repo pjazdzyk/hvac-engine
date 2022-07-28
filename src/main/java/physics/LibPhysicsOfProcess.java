@@ -262,7 +262,7 @@ public class LibPhysicsOfProcess {
      * @param secondInDryAirFlow flow of dry air of inSecondAir
      * @return [first inlet dry air mass flow (kg/s), second inlet dry air mass flow (kg/s), outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static double[] calcMixing(MoistAir inFirstAir, double firstInDryAirFlow, MoistAir inSecondAir, double secondInDryAirFlow) {
+    public static MixingResult calcMixing(MoistAir inFirstAir, double firstInDryAirFlow, MoistAir inSecondAir, double secondInDryAirFlow) {
         Validators.validateForNotNull("Inlet air", inFirstAir);
         Validators.validateForNotNull("Second air", inSecondAir);
         Validators.validateForPositiveValue("Inlet dry air flow", firstInDryAirFlow);
@@ -271,16 +271,16 @@ public class LibPhysicsOfProcess {
         double x1 = inFirstAir.getX();
         double x2 = inSecondAir.getX();
         if (firstInDryAirFlow == 0.0)
-            return new double[]{firstInDryAirFlow, secondInDryAirFlow, outDryAirFlow, inSecondAir.getTx(), x2};
+            return new MixingResult(firstInDryAirFlow,secondInDryAirFlow,outDryAirFlow,inSecondAir.getTx(), x2);
         if (secondInDryAirFlow == 0.0 || outDryAirFlow == 0.0)
-            return new double[]{firstInDryAirFlow, secondInDryAirFlow, outDryAirFlow, inFirstAir.getTx(), x1};
+            return new MixingResult(firstInDryAirFlow,secondInDryAirFlow,outDryAirFlow,inFirstAir.getTx(), x1);
         double i1 = inFirstAir.getIx();
         double i2 = inSecondAir.getIx();
         double x3 = (firstInDryAirFlow * x1 + secondInDryAirFlow * x2) / outDryAirFlow;
         double i3 = (firstInDryAirFlow * i1 + secondInDryAirFlow * i2) / outDryAirFlow;
         double Pat = inFirstAir.getPat();
         double t3 = LibPhysicsOfAir.calc_Ma_Ta_IX(i3, x3, Pat);
-        return new double[]{firstInDryAirFlow, secondInDryAirFlow, outDryAirFlow, t3, x3};
+        return new MixingResult(firstInDryAirFlow,secondInDryAirFlow,outDryAirFlow,t3, x3);
     }
 
     /**
@@ -290,7 +290,7 @@ public class LibPhysicsOfProcess {
      * @param secondFlow moist air second flow to be mixed with inlet flow
      * @return [first inlet dry air mass flow (kg/s), second inlet dry air mass flow (kg/s), outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static double[] calcMixing(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow) {
+    public static MixingResult calcMixing(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow) {
         Validators.validateForNotNull("First flow", firstFlow);
         Validators.validateForNotNull("Second flow", secondFlow);
         return calcMixing(firstFlow.getMoistAir(), firstFlow.getMassFlowDa(), secondFlow.getMoistAir(), secondFlow.getMassFlowDa());
@@ -302,7 +302,7 @@ public class LibPhysicsOfProcess {
      * @param flows array of any number of moist air flows,
      * @return [outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static double[] calcMixingFromMultipleFlows(FlowOfMoistAir... flows) {
+    public static MixingMultiResult calcMixingFromMultipleFlows(FlowOfMoistAir... flows) {
         Validators.validateArrayForNull("Flows array", flows);
         double mda3 = 0.0;
         double xMda = 0.0;
@@ -315,13 +315,13 @@ public class LibPhysicsOfProcess {
             Pat = Double.max(Pat, flow.getPat());
         }
         if (mda3 == 0.0)
-            return new double[]{mda3, flows[0].getTx(), flows[0].getX()};
+            return new MixingMultiResult(mda3,flows[0].getTx(),flows[0].getX());
         if (Pat == 0.0)
             Pat = LibDefaults.DEF_PAT;
         double x3 = xMda / mda3;
         double i3 = iMda / mda3;
         double t3 = LibPhysicsOfAir.calc_Ma_Ta_IX(i3, x3, Pat);
-        return new double[]{mda3, t3, x3};
+        return new MixingMultiResult(mda3,t3,x3);
     }
 
     /**
@@ -336,29 +336,28 @@ public class LibPhysicsOfProcess {
      * @param outTx         expected outlet air temperature, as a target for air mixing ratio
      * @return [first dry air mass flow (kg/s), second air dry air mass flow (kg/s), mixed dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static double[] calcMixingFromOutTxOutMda(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow, double outDryAirFlow, double outTx) {
+    public static MixingResult calcMixingFromOutTxOutMda(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow, double outDryAirFlow, double outTx) {
         //Objects validation stage
         double firstMinFixedDryMassFlow = firstFlow.getMinFlow();
         double secondMinFixedDryMassFlow = secondFlow.getMinFlow();
         Validators.validateForNotNull("First flow", firstFlow);
         Validators.validateForNotNull("Second flow", secondFlow);
         Validators.validateForPositiveValue("Out dry air flow", outDryAirFlow);
-        double[] result = new double[5];
         MoistAir air1 = firstFlow.getMoistAir();
         MoistAir air2 = secondFlow.getMoistAir();
         // In case specified outflow is lower than sum of minimal inlet fixed values
         double minFlowSum = firstMinFixedDryMassFlow + secondMinFixedDryMassFlow;
         if (minFlowSum == 0.0 && outDryAirFlow == 0.0)
-            return new double[]{0.0, 0.0, outDryAirFlow, air1.getTx(), air1.getX()};
+            return new MixingResult(0.0,0.0,outDryAirFlow,air1.getTx(), air1.getX());
         if (minFlowSum > outDryAirFlow)
             return calcMixing(air1, firstMinFixedDryMassFlow, air2, secondMinFixedDryMassFlow);
         // Determining possible outcome to validate provided outlet temperature with respect to provided minimal flows
         double firstMaxPossibleMda = outDryAirFlow - secondMinFixedDryMassFlow;
         double secondMaxPossibleMda = outDryAirFlow - firstMinFixedDryMassFlow;
-        double[] maxFirstFlowMinSecondFlowMixing = calcMixing(air1, firstMaxPossibleMda, air2, secondMinFixedDryMassFlow);
-        double[] maxSecondFlowMinFirstFlowMixing = calcMixing(air1, firstMinFixedDryMassFlow, air2, secondMaxPossibleMda);
-        double outNearT1 = maxFirstFlowMinSecondFlowMixing[3];
-        double outNearT2 = maxSecondFlowMinFirstFlowMixing[3];
+        MixingResult maxFirstFlowMinSecondFlowMixing = calcMixing(air1, firstMaxPossibleMda, air2, secondMinFixedDryMassFlow);
+        MixingResult maxSecondFlowMinFirstFlowMixing = calcMixing(air1, firstMinFixedDryMassFlow, air2, secondMaxPossibleMda);
+        double outNearT1 = maxFirstFlowMinSecondFlowMixing.outTx();
+        double outNearT2 = maxSecondFlowMinFirstFlowMixing.outTx();
         // When expected outlet temperature is greater of equals to first or second flow
         // Result is returned maximum possible flow mixing result of flow which temperature is closer to the expected outTx
         if ((outNearT1 <= outNearT2 && outTx <= outNearT1) || (outNearT1 >= outNearT2 && outTx >= outNearT1))
@@ -366,16 +365,16 @@ public class LibPhysicsOfProcess {
         if ((outNearT2 <= outNearT1 && outTx <= outNearT2) || (outNearT2 >= outNearT1 && outTx >= outNearT2))
             return maxSecondFlowMinFirstFlowMixing;
         // For all other cases, first and second flow will be adjusted to determine outTx
+        MixingResult[] result = new MixingResult[1];
         BrentSolver solver = new BrentSolver("Mixing OutTxMda Solver");
         solver.setCounterpartPoints(firstMinFixedDryMassFlow, outDryAirFlow);
         solver.calcForFunction(iterMda1 -> {
             double mda2 = outDryAirFlow - iterMda1;
-            double[] iterResult = calcMixing(air1, iterMda1, air2, mda2);
-            MathUtils.rewriteArrayResults(iterResult, result);
-            double t3 = iterResult[3];
+            result[0] = calcMixing(air1, iterMda1, air2, mda2);
+            double t3 = result[0].outTx;
             return outTx - t3;
         });
-        return result;
+        return result[0];
     }
 
     //SECONDARY PROPERTIES - COOLING
@@ -422,5 +421,6 @@ public class LibPhysicsOfProcess {
     //RECORDS TO ACT AS MULTIPLE OUTPUT RESULT CARRIERS
     public record HeatCoolResult(double heatQ, double outTx, double outX, double condTx, double condMassFlow) {}
     public record MixingResult(double inMda, double recMda, double outMda, double outTx, double outX) {}
+    public record MixingMultiResult(double outMda, double outTx, double outX) {}
 
 }
