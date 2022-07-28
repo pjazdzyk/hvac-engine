@@ -2,11 +2,11 @@ package model.exceptions;
 
 public class MoistAirArgumentException extends RuntimeException {
 
-    public MoistAirArgumentException(){
+    public MoistAirArgumentException() {
         super();
     }
 
-    public MoistAirArgumentException(String msg){
+    public MoistAirArgumentException(String msg) {
 
         super(msg);
     }

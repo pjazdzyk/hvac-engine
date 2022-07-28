@@ -2,11 +2,11 @@ package model.exceptions;
 
 public class FlowArgumentException extends RuntimeException {
 
-    public FlowArgumentException(){
+    public FlowArgumentException() {
         super();
     }
 
-    public FlowArgumentException(String msg){
+    public FlowArgumentException(String msg) {
 
         super(msg);
     }

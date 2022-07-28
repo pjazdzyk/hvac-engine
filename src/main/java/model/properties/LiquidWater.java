@@ -1,16 +1,27 @@
 package model.properties;
 
 import physics.LibDefaults;
+import physics.LibPhysicsOfAir;
 import physics.LibPhysicsOfWater;
+
 import java.io.Serializable;
 
 /**
- * LIQUID WATER / CONDENSATE PROPERTIES MODEL
- * VERSION: 1.1
- * CODE AUTHOR: PIOTR JAŻDŻYK
- * COMPANY: SYNERSET / <a href="http://synerset.com/">www.synerset.com</a> / EMAIL: info@synerset.com
- * LINKEDIN: <a href="https://www.linkedin.com/in/pjazdzyk/">LINKEDIN</a>
+ * <h3>LIQUID WATER</h3>
+ * <p>
+ * This class represents a model of liquid water for a typical air conditioning low near atmospheric pressure appliances.
+ * Properties are calculated based on equations in {@link LibPhysicsOfWater}.<br>
+ * <span><b>IMPORTANT: </b></span> Please note that at this stage of development, this model is not dedicated for
+ * high pressure applications. Usage limit is <100oC and  >0oC.
+ * </p><br>
+ * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
+ * <span><b>CONTACT: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
+ * <a href="mailto:info@synerset.com">e-mail</a> |
+ * <a href="http://synerset.com/">www.synerset.com</a>
+ * </p><br><br>
  */
+
 
 public class LiquidWater implements Fluid, Serializable, Cloneable {
 
@@ -23,15 +34,16 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
     /**
      * DEFAULT CONSTRUCTOR: Creates new liquid water instance with default temperature of 10oC.
      */
-    public LiquidWater(){
+    public LiquidWater() {
         this(LibDefaults.DEF_WT_NAME, LibDefaults.DEF_WT_TW);
     }
 
     /**
      * CONSTRUCTOR. Creates new LiquidWater instance based on Builder instance.
+     *
      * @param builder Builder instance
      */
-    private LiquidWater(Builder builder){
+    private LiquidWater(Builder builder) {
 
         this(builder.name, builder.tx);
 
@@ -39,19 +51,20 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
 
     /**
      * CONSTRUCTOR. Creates new liquid water instance with provided water temperature.
+     *
      * @param tx - water temperature in oC
      */
-    public LiquidWater(double tx)
-    {
+    public LiquidWater(double tx) {
         this(LibDefaults.DEF_WT_NAME, tx);
     }
 
     /**
      * PRIMARY CONSTRUCTOR. Creates new liquid water instance with provided name and water temperature.
+     *
      * @param name - instance name or tag
-     * @param tx - water temperature in oC
+     * @param tx   - water temperature in oC
      */
-    public LiquidWater(String name, double tx){
+    public LiquidWater(String name, double tx) {
 
         this.name = name;
         this.tx = tx;
@@ -62,7 +75,7 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
      * Updates all properties.
      */
     @Override
-    public void updateProperties(){
+    public void updateProperties() {
         cp = LibPhysicsOfWater.calc_Cp(tx);
         rho = LibPhysicsOfWater.calc_rho(tx);
         ix = LibPhysicsOfWater.calc_Ix(tx);
@@ -113,7 +126,7 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
     }
 
     @Override
-    public final String toString(){
+    public final String toString() {
 
         StringBuilder strb = new StringBuilder();
         strb.append("Fluid name: " + name + "\n");
@@ -124,31 +137,31 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
     }
 
     //QUICK INSTANCE
-    public static LiquidWater ofWater(double tx){
+    public static LiquidWater ofWater(double tx) {
         return new LiquidWater(LibDefaults.DEF_WT_NAME, tx);
     }
 
-    public static LiquidWater ofWater(String name, double tx){
-        return new LiquidWater(name,tx);
+    public static LiquidWater ofWater(String name, double tx) {
+        return new LiquidWater(name, tx);
     }
 
     //BUILDER PATTERN
-    public static class Builder{
+    public static class Builder {
 
         private String name = LibDefaults.DEF_WT_NAME;
         private double tx = LibDefaults.DEF_WT_TW;
 
-        public Builder withName(final String name){
+        public Builder withName(final String name) {
             this.name = name;
             return this;
         }
 
-        public Builder withTa(final double tx){
+        public Builder withTa(final double tx) {
             this.tx = tx;
             return this;
         }
 
-        public LiquidWater build(){
+        public LiquidWater build() {
             return new LiquidWater(this);
         }
 
