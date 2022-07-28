@@ -5,12 +5,12 @@ import model.exceptions.ProcessSolutionNotConvergedException;
 import model.flows.FlowOfFluid;
 import model.flows.FlowOfMoistAir;
 import model.flows.TypeOfAirFlow;
-import model.flows.TypeOfFluidFlow;
 import model.properties.Fluid;
 import model.properties.MoistAir;
 import physics.MathUtils;
 import physics.*;
-import validators.Validators;
+import physics.validators.Validators;
+import physics.LibPhysicsOfProcess.HeatCoolResult;
 
 import java.util.function.DoubleConsumer;
 
@@ -110,7 +110,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingOutTxFromInQ(double inQ) {
         resetProcess();
-        double[] result = LibPhysicsOfProcess.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ);
+        HeatCoolResult result = LibPhysicsOfProcess.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ);
         commitResults(result);
         setLastFunctionAndTargetValue(this::applyHeatingOutTxFromInQ, inQ);
     }
@@ -124,7 +124,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingInQFromOutTx(double outTx) {
         resetProcess();
-        double[] result = LibPhysicsOfProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow, outTx);
+        HeatCoolResult result = LibPhysicsOfProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow, outTx);
         commitResults(result);
         setLastFunctionAndTargetValue(this::applyHeatingInQFromOutTx, outTx);
     }
@@ -137,7 +137,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingInQOutTxFromOutRH(double outRH) {
         resetProcess();
-        double[] result = LibPhysicsOfProcess.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
+        HeatCoolResult result = LibPhysicsOfProcess.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
         commitResults(result);
         BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
@@ -151,7 +151,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingOutTxFromInQ(double inQ) {
         resetProcess();
-        double[] result = LibPhysicsOfProcess.calcCoolingOutTxFromInQ(inletFlow, tmWall, inQ);
+        HeatCoolResult result = LibPhysicsOfProcess.calcCoolingOutTxFromInQ(inletFlow, tmWall, inQ);
         commitResults(result);
         BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         setLastFunctionAndTargetValue(this::applyCoolingOutTxFromInQ, inQ);
@@ -164,7 +164,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingInQFromOutTx(double outTx) {
         resetProcess();
-        double[] result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(inletFlow, tmWall, outTx);
+        HeatCoolResult result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(inletFlow, tmWall, outTx);
         commitResults(result);
         BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outTx);
         setLastFunctionAndTargetValue(this::applyCoolingInQFromOutTx, outTx);
@@ -177,7 +177,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingInQFromOutRH(double outRH) {
         resetProcess();
-        double[] result = LibPhysicsOfProcess.calcCoolingInQFromOutRH(inletFlow, tmWall, outRH);
+        HeatCoolResult result = LibPhysicsOfProcess.calcCoolingInQFromOutRH(inletFlow, tmWall, outRH);
         commitResults(result);
         BF = LibPhysicsOfProcess.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
@@ -207,15 +207,13 @@ public class ProcessOfHeatingCooling implements Process {
         this.lastMethod = method;
     }
 
-    private void commitResults(double[] result) {
-        Validators.validateForNotNull("HC Result array", result);
-        if (result.length != 5)
-            throw new ProcessArgumentException("Invalid result. Array length is different than 5");
-        heatQ = result[0];
-        outletFlow.setTx(result[1]);
-        outletFlow.setX(result[2]);
-        condensateFlow.setTx(result[3]);
-        condensateFlow.setMassFlow(result[4]);
+    private void commitResults(HeatCoolResult result) {
+        Validators.validateForNotNull("HeatCoolResult", result);
+        heatQ = result.heatQ();
+        outletFlow.setTx(result.outTx());
+        outletFlow.setX(result.outX());
+        condensateFlow.setTx(result.condTx());
+        condensateFlow.setMassFlow(result.condMassFlow());
     }
 
     private void convergenceCheckForRH(double outRH) {

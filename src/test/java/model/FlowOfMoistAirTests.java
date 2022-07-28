@@ -221,7 +221,7 @@ public class FlowOfMoistAirTests {
         double actualMassFlowMa = flowAir.getMassFlow();
         double expectedMassFlow_Da = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),actualMassFlowMa);
         double actualMassFlowDa = flowAir.getMassFlowDa();
-        double expectedVolFlow_Da = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air,actualMassFlowDa);
+        double expectedVolFlow_Da = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air.getRho_Da(),actualMassFlowDa);
         double actualVolFlowDa = flowAir.getVolFlowDa();
         TypeOfAirFlow expectedLockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
         TypeOfAirFlow actualLockedFlowType = flowAir.getLockedFlowType();

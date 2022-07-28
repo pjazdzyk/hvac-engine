@@ -95,17 +95,17 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
             case MA_MASS_FLOW -> {
                 volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getRho(), massFlowMa);
                 massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getX(), massFlowMa);
-                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir, massFlowDa);
+                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getRho_Da(), massFlowDa);
             }
             case MA_VOL_FLOW -> {
                 massFlowMa = LibPhysicsOfFlow.calcMassFlowFromVolFlow(moistAir.getRho(), volFlowMa);
                 massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getX(), massFlowMa);
-                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir, massFlowDa);
+                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getRho_Da(), massFlowDa);
             }
             case DA_MASS_FLOW -> {
                 massFlowMa = LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getX(), massFlowDa);
                 volFlowMa = LibPhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getRho(), massFlowMa);
-                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir, massFlowDa);
+                volFlowDa = LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getRho_Da(), massFlowDa);
             }
             case DA_VOL_FLOW -> {
                 massFlowDa = LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir.getRho_Da(), volFlowDa);
@@ -229,7 +229,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
             return 0.0;
         switch (typeOfFlow) {
             case DA_VOL_FLOW -> {
-                return LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir, minMassFlowDa);
+                return LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getRho_Da(), minMassFlowDa);
             }
             case MA_VOL_FLOW -> {
                 return LibPhysicsOfFlow.calcMaVolFlowFromDaMassFlow(moistAir.getRho(), moistAir.getX(), minMassFlowDa);
