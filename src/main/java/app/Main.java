@@ -11,6 +11,10 @@ import model.properties.MoistAir;
 import physics.LibPhysicsOfAir;
 import physics.LibPhysicsOfWater;
 
+
+import java.util.Calendar;
+import java.util.Locale;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -18,10 +22,10 @@ public class Main {
         var result = LibPhysicsOfWater.calc_rho(70);
         var result2 = LibPhysicsOfWater.calc_Cp(70);
         System.out.println(result2);
+
     }
 
-        public static void runUserGuideMethods(){
-
+    public static void runUserGuideMethods(){
         // Using LibClass for single value calculation
         var saturationPressure = LibPhysicsOfAir.calc_Ma_Ps(20);
         System.out.println(saturationPressure); //Outputs 2338.80 Pa

@@ -1,13 +1,25 @@
 package physics;
 
 /**
- * LIST OF PHYSICAL CONSTANTS
- * CODE AUTHOR: PIOTR JAŻDŻYK / jazdzyk@gmail.com / <a href="https://www.linkedin.com/in/pjazdzyk/">LINKEDIN</a>
- * VERSION: 1.1
- *
- * L E G E N D:
- * CST - physical constant or application constant,
- * WT - water / WV - water vapour / DA - dry Air / MA - moist air / ST - steam
+ * <h3>LIST OF PHYSICAL CONSTANTS</h3>
+ * <p>Set of most relevant physical constants used in calculations.</p><br>
+ * <p><span><b>PROPERTY ABBREVIATIONS:<b/></span>
+ * <ul style="margin:0px 10px;">
+ *     <li>CST - physical constant</li>
+ *     <li>WT - water</li>
+ *     <li>WV - water vapour</li>
+ *     <li>DA - dry air</li>
+ *     <li>MA - moist air</li>
+ *     <li>ST - steam</li>
+ *     <li>ICE - ice</li>
+ * </ul><br>
+ * </p>
+ * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
+ * <span><b>CONTACT: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
+ * <a href="mailto:info@synerset.com">e-mail</a> |
+ * <a href="http://synerset.com/">www.synerset.com</a>
+ * </p><br><br>
  */
 
 public class LibConstants {

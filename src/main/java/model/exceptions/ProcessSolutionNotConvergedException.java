@@ -1,12 +1,12 @@
 package model.exceptions;
 
-public class ProcessSolutionNotConvergedException extends RuntimeException{
+public class ProcessSolutionNotConvergedException extends RuntimeException {
 
-    public ProcessSolutionNotConvergedException(){
+    public ProcessSolutionNotConvergedException() {
         super();
     }
 
-    public ProcessSolutionNotConvergedException(String msg){
+    public ProcessSolutionNotConvergedException(String msg) {
 
         super(msg);
     }

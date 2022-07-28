@@ -6,15 +6,25 @@ import model.properties.LiquidWater;
 import physics.LibDefaults;
 import physics.LibPhysicsOfFlow;
 import validators.Validators;
+
 import java.io.Serializable;
 import java.util.function.Supplier;
 
 /**
- * The FlowOfFluid class represents continuous flow of any single-phase <code>Fluid</code>.
+ * <h3>FLOW OF FLUID</h3>
+ * <p>
+ * This class represents model of continuous flow of any single-phase fluid.
  * Mass flow and volumetric flow are stored and calculated based on fluid type nad provided initial flow rate.
- * Variable <code>LockedFlowType<code/> defines a type of flow (Volumetric or Mass flow) which should be locked
+ * Enum parameter {@link TypeOfFluidFlow} defines a type of flow (Volumetric or Mass flow) which should be locked
  * upon any change of fluid properties. This could be useful in case of systems which are designed to measure and
  * keep volumetric flow at defined rate in case of density changes. By default, it is set to keep constant mass flow.
+ * </p><br>
+ * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
+ * <span><b>CONTACT: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
+ * <a href="mailto:info@synerset.com">e-mail</a> |
+ * <a href="http://synerset.com/">www.synerset.com</a>
+ * </p><br><br>
  */
 
 public class FlowOfFluid implements Flow, Serializable {
@@ -28,13 +38,14 @@ public class FlowOfFluid implements Flow, Serializable {
     /**
      * Default constructor. Creates FlowOfFluid instance with
      */
-    public FlowOfFluid(){
+    public FlowOfFluid() {
         this(LibDefaults.DEF_FLUID_FLOW);
     }
 
     /**
      * Constructor. Creates FlowOfFluid instance with default Fluid as liquid water, massFlow as a flow type
      * and user input flow rate.
+     *
      * @param flowRate fluid mass flow in kg/h
      */
     public FlowOfFluid(double flowRate) {
@@ -43,27 +54,29 @@ public class FlowOfFluid implements Flow, Serializable {
 
     /**
      * Constructor. Creates FlowOfFluid instance using Builder pattern.
+     *
      * @param builder instance of Builder interior nested class
      */
-    public FlowOfFluid(Builder<Fluid> builder){
+    public FlowOfFluid(Builder<Fluid> builder) {
         this(builder.fluidName, builder.flowRate, builder.lockedFlowType, builder.fluid);
-        if(builder.overrideLockedFlowType!=null)
+        if (builder.overrideLockedFlowType != null)
             this.lockedTypeOfFluidFlow = builder.overrideLockedFlowType;
     }
 
     /**
      * Primary constructor.
-     * @param name flow name or tag,
-     * @param flowRate flow rate of specified type of flow in kg/s or m3/s
-     * @param fluid type of Fluid
+     *
+     * @param name                  flow name or tag,
+     * @param flowRate              flow rate of specified type of flow in kg/s or m3/s
+     * @param fluid                 type of Fluid
      * @param lockedTypeOfFluidFlow - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfFluid(String name, double flowRate, TypeOfFluidFlow lockedTypeOfFluidFlow, Fluid fluid){
-        Validators.validateForNotNull("Fluid",fluid);
-        Validators.validateForNotNull("Locked flow",lockedTypeOfFluidFlow);
+    public FlowOfFluid(String name, double flowRate, TypeOfFluidFlow lockedTypeOfFluidFlow, Fluid fluid) {
+        Validators.validateForNotNull("Fluid", fluid);
+        Validators.validateForNotNull("Locked flow", lockedTypeOfFluidFlow);
         this.name = name;
         this.fluid = fluid;
-        switch(lockedTypeOfFluidFlow){
+        switch (lockedTypeOfFluidFlow) {
             case MASS_FLOW -> setMassFlow(flowRate);
             case VOL_FLOW -> setVolFlow(flowRate);
         }
@@ -75,8 +88,8 @@ public class FlowOfFluid implements Flow, Serializable {
     public void updateFlows() {
         Validators.validateForNotNull("locked flow", lockedTypeOfFluidFlow);
         switch (lockedTypeOfFluidFlow) {
-            case MASS_FLOW -> volFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(fluid.getRho(),massFlow);
-            case VOL_FLOW -> massFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(fluid.getRho(),volFlow);
+            case MASS_FLOW -> volFlow = LibPhysicsOfFlow.calcVolFlowFromMassFlow(fluid.getRho(), massFlow);
+            case VOL_FLOW -> massFlow = LibPhysicsOfFlow.calcMassFlowFromVolFlow(fluid.getRho(), volFlow);
         }
     }
 
@@ -96,16 +109,16 @@ public class FlowOfFluid implements Flow, Serializable {
         return volFlow;
     }
 
-    public TypeOfFluidFlow getLockedFlowType(){
+    public TypeOfFluidFlow getLockedFlowType() {
         return this.lockedTypeOfFluidFlow;
     }
 
-    public void setName(String inName){
+    public void setName(String inName) {
         this.name = inName;
     }
 
     public void setMassFlow(double inMassFlow) {
-        if(inMassFlow<0.0)
+        if (inMassFlow < 0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
         this.lockedTypeOfFluidFlow = TypeOfFluidFlow.MASS_FLOW;
         this.massFlow = inMassFlow;
@@ -113,7 +126,7 @@ public class FlowOfFluid implements Flow, Serializable {
     }
 
     public void setVolFlow(double inVolFlow) {
-        if(inVolFlow<0.0)
+        if (inVolFlow < 0.0)
             throw new FlowArgumentException("Error. Negative value passed as flow argument.");
         this.lockedTypeOfFluidFlow = TypeOfFluidFlow.VOL_FLOW;
         this.volFlow = inVolFlow;
@@ -121,24 +134,24 @@ public class FlowOfFluid implements Flow, Serializable {
     }
 
     public void setFluid(Fluid inFluid) {
-        Validators.validateForNotNull("Fluid",inFluid);
+        Validators.validateForNotNull("Fluid", inFluid);
         this.fluid = inFluid;
         updateFlows();
     }
 
     public void setLockedFlowType(TypeOfFluidFlow lockedTypeOfFluidFlow) {
-       Validators.validateForNotNull("Locked flow", lockedTypeOfFluidFlow);
+        Validators.validateForNotNull("Locked flow", lockedTypeOfFluidFlow);
         this.lockedTypeOfFluidFlow = lockedTypeOfFluidFlow;
         updateFlows();
     }
 
-    public void setTx(double inTx){
+    public void setTx(double inTx) {
         fluid.setTx(inTx);
         updateFlows();
     }
 
     @Override
-    public double getTx(){
+    public double getTx() {
         return fluid.getTx();
     }
 
@@ -147,30 +160,32 @@ public class FlowOfFluid implements Flow, Serializable {
         return fluid.getIx();
     }
 
-    //QUICK INSTANCE
+    //QUICK INSTANCE for flows in m3/h
 
     /**
      * Returns FlowOfFluid instance based on volumetric flow of moist air provided in m3/h and fluid temperature with default ID<>br</>
      * To be used for quick and easy flow instance creation for a most common cases in HVAC.
+     *
      * @param volFlowMaM3h volumetric flow of fluid in m3/h
-     * @param tx fluid temperature in oC
+     * @param tx           fluid temperature in oC
      * @return FlowOfFluid instance with default ID
      */
-    public static FlowOfFluid ofM3hWaterVolFlow(double volFlowMaM3h, double tx){
+    public static FlowOfFluid ofM3hWaterVolFlow(double volFlowMaM3h, double tx) {
         return FlowOfFluid.ofM3hWaterVolFlow(LibDefaults.DEF_FLOW_NAME, volFlowMaM3h, tx);
     }
 
     /**
      * Returns FlowOfFluid instance based on volumetric flow of moist air provided in m3/h and fluid temperature with provided ID ID<>br</>
      * To be used for quick and easy flow instance creation for a most common cases in HVAC.
-     * @param ID fluid ID or name
+     *
+     * @param ID           fluid ID or name
      * @param volFlowMaM3h volumetric flow of fluid in m3/h
-     * @param tx fluid temperature in oC
+     * @param tx           fluid temperature in oC
      * @return FlowOfFluid instance
      */
-    public static FlowOfFluid ofM3hWaterVolFlow(String ID, double volFlowMaM3h, double tx){
+    public static FlowOfFluid ofM3hWaterVolFlow(String ID, double volFlowMaM3h, double tx) {
         LiquidWater water = new LiquidWater("Water of: " + ID, tx);
-        return new FlowOfFluid(ID,volFlowMaM3h/3600d, TypeOfFluidFlow.VOL_FLOW, water);
+        return new FlowOfFluid(ID, volFlowMaM3h / 3600d, TypeOfFluidFlow.VOL_FLOW, water);
     }
 
     //BUILDER PATTERN
@@ -183,7 +198,7 @@ public class FlowOfFluid implements Flow, Serializable {
      *
      * @param <K> type of Fluid
      */
-    public static class Builder<K extends Fluid>{
+    public static class Builder<K extends Fluid> {
         private String flowName = LibDefaults.DEF_FLOW_NAME;
         private String fluidName = "Fluid of: " + flowName;
         private double tx = LibDefaults.DEF_WT_TW;
@@ -195,66 +210,66 @@ public class FlowOfFluid implements Flow, Serializable {
 
         /**
          * Constructor. Creates generic Builder instance. Requires a supplier as a reference to constructor of a given Fluid class type.
+         *
          * @param fluidCreator supplier, reference to Fluid class constructor is required.
          */
-        public Builder(Supplier<K> fluidCreator){
+        public Builder(Supplier<K> fluidCreator) {
             this.fluidSupplier = fluidCreator;
         }
 
-        public Builder<K> withFlowName(String name){
+        public Builder<K> withFlowName(String name) {
             this.flowName = name;
             return this;
         }
 
-        public Builder<K> withFluidName(String name){
+        public Builder<K> withFluidName(String name) {
             this.fluidName = name;
             return this;
         }
 
-        public Builder<K> withMassFlow(double massFlow){
+        public Builder<K> withMassFlow(double massFlow) {
             this.flowRate = massFlow;
             this.lockedFlowType = TypeOfFluidFlow.MASS_FLOW;
             return this;
         }
 
-        public Builder<K> withVolFlow(double volFlow){
+        public Builder<K> withVolFlow(double volFlow) {
             this.flowRate = volFlow;
             this.lockedFlowType = TypeOfFluidFlow.VOL_FLOW;
             return this;
         }
 
-        public Builder<K> withTx(double inTx){
+        public Builder<K> withTx(double inTx) {
             this.tx = inTx;
             return this;
         }
 
-        public Builder<K> withFluidInstance(K fluid){
+        public Builder<K> withFluidInstance(K fluid) {
             this.fluid = fluid;
             return this;
         }
 
-        public Builder<K> withLockedFlow(TypeOfFluidFlow lockedFlowType){
+        public Builder<K> withLockedFlow(TypeOfFluidFlow lockedFlowType) {
             this.overrideLockedFlowType = lockedFlowType;
             return this;
         }
 
         public FlowOfFluid build() {
-            if(fluid==null) {
+            if (fluid == null) {
                 fluid = fluidSupplier.get();
                 fluid.setName(fluidName);
                 fluid.setTx(tx);
-            }
-            else
+            } else
                 adjustFluid();
             FlowOfFluid flowOfFluid = new FlowOfFluid(flowName, flowRate, lockedFlowType, fluid);
-            if(overrideLockedFlowType!=null)
+            if (overrideLockedFlowType != null)
                 flowOfFluid.setLockedFlowType(overrideLockedFlowType);
             return flowOfFluid;
         }
 
-        private void adjustFluid(){
+        private void adjustFluid() {
             fluid.setName(fluidName);
-            if(fluid.getTx() != tx)
+            if (fluid.getTx() != tx)
                 fluid.setTx(tx);
         }
     }
@@ -264,9 +279,9 @@ public class FlowOfFluid implements Flow, Serializable {
         StringBuilder bld = new StringBuilder();
         bld.append("Flow name: \t\t").append(name).append("\n");
         bld.append("Locked flow: \t").append(lockedTypeOfFluidFlow).append("\n");
-        bld.append("m_Con = ").append(String.format("%.3f",massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
-                .append("v_Con = ").append(String.format("%.6f",volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
-                .append("v_Con = ").append(String.format("%.3f",volFlow*3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
+        bld.append("m_Con = ").append(String.format("%.3f", massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
+                .append("v_Con = ").append(String.format("%.6f", volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
+                .append("v_Con = ").append(String.format("%.3f", volFlow * 3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
         return bld.toString();
     }
 

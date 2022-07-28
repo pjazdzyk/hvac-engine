@@ -3,20 +3,27 @@ package physics;
 import physics.exceptions.WaterPhysicsArgumentException;
 
 /**
- * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)
- * CODE AUTHOR: PIOTR JAŻDŻYK / jazdzyk@gmail.com / <a href="https://www.linkedin.com/in/pjazdzyk/">LINKEDIN</a>
- * COMPANY: SYNERSET / https://www.synerset.com / info@synerset.com
+ * <h3>LIQUID WATER EQUATIONS LIBRARY (PSYCHROMETRICS)</h3>
+ * <p>Set of static methods outputs process result as an array with process heat, core output air parameters (temperature, humidity ratio) and condensate
+ * properties. Methods do not create a separate instance of FlowOfMoistAir for performance reasons - each ot these methods may be used in iterative solvers, and we
+ * do not want to lose memory or performance for unnecessary object creation.
+ * </p><br>
+ * <p><span><b>PROPERTY ABBREVIATIONS:<b/></span>
+ * <ol style="margin:0px 10px;">
+ *      <li>F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards calibration. Journal of Research of the National Institute of Standards and Technology (1992)</li>
+ *      <li>Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html</li>
+ * </ol><br>
+ * </p>
  *
- * VERSION: 1.1
- * LIBRARY FIRST ISSUE DATE: 2021.03
+ * <p><b>REFERENCES LEGEND KEY: <b/></p>
+ * <p>[reference no] [value symbology in standard, unit] (equation number) [page]</p><br>
  *
- * SOURCE PUBLICATIONS:
- * [1] - F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards calibration. Journal of Research of the National Institute of Standards and Technology (1992)
- * [2] - Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html
- *
- * LEGEND KEY:
- * [reference no] [value symbology in standard, unit] (equation number) [page]  - Description
- *
+ * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
+ * <span><b>CONTACT: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
+ * <a href="mailto:info@synerset.com">e-mail</a> |
+ * <a href="http://synerset.com/">www.synerset.com</a>
+ * </p><br><br>
  */
 
 public class LibPhysicsOfWater {
@@ -25,6 +32,7 @@ public class LibPhysicsOfWater {
      * Returns water enthalpy at provided temperature in kJ/kg<br>
      * REFERENCE SOURCE: [-] [kJ/kg] (-) [-]<br>
      * EQUATION LIMITS: n/a <br>
+     *
      * @param tx water temperature, oC
      * @return water enthalpy at provided temperature, kJ/kg
      */
@@ -37,13 +45,14 @@ public class LibPhysicsOfWater {
      * Returns water density at provided temperature and constant pressure at 101.325kPa Pa<br>
      * REFERENCE SOURCE: [1] [kg/m3] (1) [kg/m3]<br>
      * EQUATION LIMITS: {0.0 oC,+150.0 oC} at Pat=101.325kPa <br>
+     *
      * @param tx water temperature, oC
      * @return water density at temperature tx and atmospheric pressure, kg/m3
      */
     public static double calc_rho(double tx) {
         if (tx <= 0) {
             throw new WaterPhysicsArgumentException("[calcWtRho] ERROR: Temperature equals or lower than 0 oC");
-       } else if (tx > 150) {
+        } else if (tx > 150) {
             throw new WaterPhysicsArgumentException("[calcWtRho] WARNING: Temperature exceeds formula threshold tw>150 oC ");
         }
         return (999.83952 + 16.945176 * tx
@@ -58,6 +67,7 @@ public class LibPhysicsOfWater {
      * Returns water isobaric specific heat kJ/kgK<br>
      * REFERENCE SOURCE: [2] [kJ/kgK] (1) [kg/m3]<br>
      * EQUATION LIMITS: {0.0 oC,+250 oC}<br>
+     *
      * @param tx water temperature, oC
      * @return water isobaric specific heat
      */

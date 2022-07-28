@@ -1,12 +1,12 @@
 package model.exceptions;
 
-public class ProcessArgumentException extends RuntimeException{
+public class ProcessArgumentException extends RuntimeException {
 
-    public ProcessArgumentException(){
+    public ProcessArgumentException() {
         super();
     }
 
-    public ProcessArgumentException(String msg){
+    public ProcessArgumentException(String msg) {
 
         super(msg);
     }

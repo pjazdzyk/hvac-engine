@@ -1,13 +1,23 @@
 package physics;
 
 /**
- * LIST OF APPLICATION DEFAULTS
- * CODE AUTHOR: PIOTR JAŻDŻYK / jazdzyk@gmail.com / <a href="https://www.linkedin.com/in/pjazdzyk/">LINKEDIN</a>
- * VERSION: 1.0
- *
- * L E G E N D:
- * DEF - default value,
- * WT - water / WV - water vapour / DA - dry Air / MA - moist air / ST - steam / CHW - chilled water
+ * <h3>APP DEFAULT VALUES</h3>
+ * <p>List of default values, typically for no argument object initializations.</p><br>
+ * <p><span><b>PROPERTY ABBREVIATIONS:<b/></span>
+ * <ul style="margin:0px 10px;">
+ *     <li>WT - water</li>
+ *     <li>WV - water vapour</li>
+ *     <li>DA - dry air</li>
+ *     <li>MA - moist air</li>
+ *     <li>ST - steam</li>
+ * </ul><br>
+ * </p>
+ * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
+ * <span><b>CONTACT: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
+ * <a href="mailto:info@synerset.com">e-mail</a> |
+ * <a href="http://synerset.com/">www.synerset.com</a>
+ * </p><br><br>
  */
 
 public class LibDefaults {
