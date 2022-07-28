@@ -4,13 +4,16 @@ import io.MessagePrinter;
 import model.exceptions.ProcessArgumentException;
 import model.flows.FlowOfMoistAir;
 import model.properties.MoistAir;
-import validators.Validators;
+import physics.validators.Validators;
+
+import java.util.HashMap;
 
 /**
  * <h3>PSYCHROMETRICS PROCESS EQUATIONS LIBRARY</h3>
  * <p>Set of static methods outputs process result as an array with process heat, core output air parameters (temperature, humidity ratio) and condensate
  * properties. Methods do not create a separate instance of FlowOfMoistAir for performance reasons - each ot these methods may be used in iterative solvers, and we
- * do not want to lose memory or performance for unnecessary object creation.
+ * do not want to lose memory or performance for unnecessary object creation.<br>
+ * Variable literals have following meaning: 1or in - stands for input/inlet air, 2 or out - stands for output/outlet air.
  * </p><br>
  * <p><span><b>PROPERTY ABBREVIATIONS:<b/></span>
  * <ol style="margin:0px 10px;">
@@ -47,20 +50,20 @@ public class LibPhysicsOfProcess {
      * @param inQ       input heat in W,
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static double[] calcHeatingOrDryCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double inQ) {
+    public static HeatCoolResult calcHeatingOrDryCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double inQ) {
         Validators.validateForNotNull("Inlet flow", inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
         if (inQ == 0.0 || inletFlow.getFlow() == 0.0)
-            return new double[]{0.0, t1, x1, LibDefaults.DEF_WT_TW, 0.0};
+            return new HeatCoolResult(0.0,t1,x1,LibDefaults.DEF_WT_TW, 0.0);
         double Pat = inletAirProp.getPat();
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getIx();
         double x2 = x1; // no humidity change for heating
         double i2 = (m1 * i1 + inQ / 1000) / m1;
         double t2 = LibPhysicsOfAir.calc_Ma_Ta_IX(i2, x2, Pat);
-        return new double[]{inQ, t2, x2, LibDefaults.DEF_WT_TW, 0.0};
+        return new HeatCoolResult(inQ,t2,x2,LibDefaults.DEF_WT_TW, 0.0);
     }
 
     /**
@@ -75,14 +78,14 @@ public class LibPhysicsOfProcess {
      * @param outTx     expected outlet temperature in oC.
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static double[] calcHeatingOrDryCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double outTx) {
+    public static HeatCoolResult calcHeatingOrDryCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double outTx) {
         Validators.validateForNotNull("Inlet flow", inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double Pat = inletAirProp.getPat();
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
         if (outTx == t1)
-            return new double[]{0.0, t1, x1, t1, 0.0};
+            return new HeatCoolResult(0.0, t1, x1, t1,0.0);
         double tdp = inletAirProp.getTdp();
         if (outTx < tdp)
             throw new ProcessArgumentException("Expected temperature must be higher than dew point. Not applicable for dry cooling process.");
@@ -91,7 +94,7 @@ public class LibPhysicsOfProcess {
         double x2 = x1; // no humidity change for heating
         double i2 = LibPhysicsOfAir.calc_Ma_Ix(outTx, x1, Pat);
         double heatQ = (m1 * i2 - m1 * i1) * 1000;
-        return new double[]{heatQ, outTx, x2, outTx, 0.0};
+        return new HeatCoolResult(heatQ, outTx, x2, outTx,0.0);
     }
 
     /**
@@ -103,7 +106,7 @@ public class LibPhysicsOfProcess {
      * @param outRH     expected relative humidity at outlet after heating in %,
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static double[] calcHeatingInQOutTxFromOutRH(FlowOfMoistAir inletFlow, double outRH) {
+    public static HeatCoolResult calcHeatingInQOutTxFromOutRH(FlowOfMoistAir inletFlow, double outRH) {
         Validators.validateForNotNull("Inlet flow", inletFlow);
         if (outRH > 100.0 || outRH <= 0.0)
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
@@ -112,7 +115,7 @@ public class LibPhysicsOfProcess {
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
         if (outRH == RH1)
-            return new double[]{0.0, t1, x1, LibDefaults.DEF_WT_TW, 0.0};
+            return new HeatCoolResult(0.0, t1, x1, LibDefaults.DEF_WT_TW,0.0);
         if (outRH > RH1)
             throw new ProcessArgumentException("Expected RH must be smaller than initial value. If this was intended - use methods dedicated for cooling.");
         double Pat = inletAirProp.getPat();
@@ -122,7 +125,7 @@ public class LibPhysicsOfProcess {
         double x2 = x1; //no humidity change for heating
         double i2 = LibPhysicsOfAir.calc_Ma_Ix(t2, x2, Pat);
         double heatQ = (m1 * i2 - m1 * i1) * 1000;
-        return new double[]{heatQ, t2, x2, t2, 0.0};
+        return new HeatCoolResult(heatQ, t2, x2, t2,0.0);
     }
 
     // REAL COOLING COIL
@@ -139,7 +142,7 @@ public class LibPhysicsOfProcess {
      * @param outTx     expected outlet temperature in oC,
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static double[] calcCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double tm_Wall, double outTx) {
+    public static HeatCoolResult calcCoolingInQFromOutTx(FlowOfMoistAir inletFlow, double tm_Wall, double outTx) {
         //Determining Bypass Factor and direct near-wall contact airflow and bypassing airflow
         Validators.validateForNotNull("Inlet flow", inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
@@ -148,7 +151,7 @@ public class LibPhysicsOfProcess {
         if (outTx > inTx)
             throw new ProcessArgumentException("Expected outlet temperature must be lover than inlet for cooling process. Use heating process method instead");
         if (outTx == inTx)
-            return new double[]{0.0, outTx, inX, tm_Wall, 0.0};
+            return new HeatCoolResult(0.0, outTx, inX, tm_Wall,0.0);
         double BF = calcCoolingCoilBypassFactor(tm_Wall, inTx, outTx);
         double mDa_Inlet = inletFlow.getMassFlowDa();
         double mDa_DirectContact = (1.0 - BF) * mDa_Inlet;
@@ -174,7 +177,7 @@ public class LibPhysicsOfProcess {
         //Determining outlet humidity ratio
         double outX = (x_Tm * mDa_DirectContact + x1 * mDa_Bypassing) / mDa_Inlet;
 
-        return new double[]{heatQ, outTx, outX, t_Cond, m_Cond};
+        return new HeatCoolResult(heatQ, outTx, outX, t_Cond,m_Cond);
     }
 
     /**
@@ -187,7 +190,7 @@ public class LibPhysicsOfProcess {
      * @param outRH     expected outlet relative humidity in %,
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static double[] calcCoolingInQFromOutRH(FlowOfMoistAir inletFlow, double tm_Wall, double outRH) {
+    public static HeatCoolResult calcCoolingInQFromOutRH(FlowOfMoistAir inletFlow, double tm_Wall, double outRH) {
         Validators.validateForNotNull("Inlet flow", inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double Pat = inletAirProp.getPat();
@@ -196,25 +199,24 @@ public class LibPhysicsOfProcess {
         if (outRH < inletAirProp.getRH())
             throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
         if (outRH == inletAirProp.getRH())
-            return new double[]{0.0, inletAirProp.getTx(), inletAirProp.getX(), LibDefaults.DEF_WT_TW, 0.0};
+            return new HeatCoolResult(0.0, inletAirProp.getTx(), inletAirProp.getX(), LibDefaults.DEF_WT_TW, 0.0);
         if (outRH > 99.0) {
             PRINTER.printLine("Non-physical process. The area of the exchanger would have to be infinite.");
             return calcCoolingInQFromOutTx(inletFlow, tm_Wall, tm_Wall);
         }
         //Iterative loop to determine which outlet temperature will result in expected RH.
-        double[] result = new double[5];
+        HeatCoolResult[] result = new HeatCoolResult[1]; // Array is needed here to work-around issue of updating result variable from the inside of inner class.
         BrentSolver solver = new BrentSolver("CoolingFromOutRH SOLVER");
         solver.setCounterpartPoints(inletAirProp.getTx(), inletAirProp.getTdp());
         solver.calcForFunction(testOutTx -> {
-            double[] tempResult = calcCoolingInQFromOutTx(inletFlow, tm_Wall, testOutTx);
-            MathUtils.rewriteArrayResults(tempResult, result);
-            double outTx = tempResult[1];
-            double outX = tempResult[2];
+            result[0] = calcCoolingInQFromOutTx(inletFlow, tm_Wall, testOutTx);
+            double outTx = result[0].outTx();
+            double outX = result[0].outX();
             double actualRH = LibPhysicsOfAir.calc_Ma_RH(outTx, outX, Pat);
             return outRH - actualRH;
         });
         solver.resetSolverRunFlags();
-        return result;
+        return result[0];
     }
 
     /**
@@ -227,27 +229,26 @@ public class LibPhysicsOfProcess {
      * @param inQ       cooling power in W (must be negative),
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static double[] calcCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double tm_Wall, double inQ) {
+    public static HeatCoolResult calcCoolingOutTxFromInQ(FlowOfMoistAir inletFlow, double tm_Wall, double inQ) {
         Validators.validateForNotNull("Inlet flow", inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double t1 = inletAirProp.getTx();
         double x1 = inletAirProp.getX();
         if (inQ == 0.0)
-            return new double[]{inQ, t1, x1, LibDefaults.DEF_WT_TW, 0.0};
-        double[] result = new double[5];
+            new HeatCoolResult(inQ, t1, x1, LibDefaults.DEF_WT_TW, 0.0);
+        HeatCoolResult[] result =  new HeatCoolResult[1];
         double tMin = inletAirProp.getTx();
         //For the provided inQ, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
-        double tMax = calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ)[1];
+        double tMax = calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ).outTx();
         BrentSolver solver = new BrentSolver("CoolingFromOutInQ SOLVER");
         solver.setCounterpartPoints(tMin, tMax);
         solver.calcForFunction(outTemp -> {
-            double[] tempResult = calcCoolingInQFromOutTx(inletFlow, tm_Wall, outTemp);
-            MathUtils.rewriteArrayResults(tempResult, result);
-            double calculatedQ = tempResult[0];
+            result[0] = calcCoolingInQFromOutTx(inletFlow, tm_Wall, outTemp);
+            double calculatedQ = result[0].heatQ();
             return calculatedQ - inQ;
         });
         solver.resetSolverRunFlags();
-        return result;
+        return result[0];
     }
 
     // AIR MIXING
@@ -417,5 +418,9 @@ public class LibPhysicsOfProcess {
             return 0.0;
         return massFlowDa * (x1 - x2);
     }
+
+    //RECORDS TO ACT AS MULTIPLE OUTPUT RESULT CARRIERS
+    public record HeatCoolResult(double heatQ, double outTx, double outX, double condTx, double condMassFlow) {}
+    public record MixingResult(double inMda, double recMda, double outMda, double outTx, double outX) {}
 
 }

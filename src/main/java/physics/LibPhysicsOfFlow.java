@@ -1,9 +1,6 @@
 package physics;
 
-import model.exceptions.FlowArgumentException;
-import model.flows.TypeOfAirFlow;
-import model.properties.MoistAir;
-import validators.Validators;
+import physics.validators.Validators;
 
 /**
  * <h3>PHYSICS OF FLOW, CALCULATION AND CONVERSION LIBRARY</h3>
@@ -22,7 +19,6 @@ import validators.Validators;
  * <a href="http://synerset.com/">www.synerset.com</a>
  * </p><br><br>
  */
-
 
 public class LibPhysicsOfFlow {
 
@@ -100,13 +96,13 @@ public class LibPhysicsOfFlow {
     /**
      * Returns dry air volumetric flow in m3/s from dry air mass flow in kg/s.
      *
-     * @param moistAir   moist air instance
+     * @param densityOfDryAir density of dry air
      * @param massFlowDa dry air mass flow in kg/s
      * @return dry air volumetric flow in m3/s
      */
-    public static double calcDaVolFlowFromDaMassFlow(MoistAir moistAir, double massFlowDa) {
-        Validators.validateForNotNull("Moist air", moistAir);
-        return massFlowDa / moistAir.getRho_Da();
+    public static double calcDaVolFlowFromDaMassFlow(double densityOfDryAir, double massFlowDa) {
+        Validators.validateForPositiveAndNonZeroValue("Density of dry air", densityOfDryAir);
+        return massFlowDa / densityOfDryAir;
     }
 
     /**
@@ -134,49 +130,6 @@ public class LibPhysicsOfFlow {
         double massFlowMa = calcMassFlowFromVolFlow(densityOfMoistAir, volFlowMa);
         return calcDaMassFlowFromMaMassFlow(humidityRatio, massFlowMa);
     }
-
-    // TOOLS
-    public static double getMassFlowDaFromFlowType(MoistAir moistAir, TypeOfAirFlow typeOfFlow, double flow) {
-        Validators.validateForNotNull("Moist air", moistAir);
-        Validators.validateForNotNull("Type of flow", typeOfFlow);
-        if (flow < 0) throw new FlowArgumentException("Flow rate must not be negative value");
-        switch (typeOfFlow) {
-            case DA_VOL_FLOW -> {
-                return LibPhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir.getRho_Da(), flow);
-            }
-            case MA_VOL_FLOW -> {
-                return LibPhysicsOfFlow.calcDaMassFlowFromMaVolFlow(moistAir.getRho(), moistAir.getX(), flow);
-            }
-            case DA_MASS_FLOW -> {
-                return flow;
-            }
-            case MA_MASS_FLOW -> {
-                return LibPhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getX(), flow);
-            }
-        }
-        throw new FlowArgumentException("Invalid flow type");
-    }
-
-    public static double getFlowOfTypeFromMassFlowDa(MoistAir moistAir, TypeOfAirFlow typeOfFlow, double massFlowDa) {
-        if (massFlowDa == 0.0)
-            return 0.0;
-        switch (typeOfFlow) {
-            case DA_VOL_FLOW -> {
-                return LibPhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir, massFlowDa);
-            }
-            case MA_VOL_FLOW -> {
-                return LibPhysicsOfFlow.calcMaVolFlowFromDaMassFlow(moistAir.getRho(), moistAir.getX(), massFlowDa);
-            }
-            case DA_MASS_FLOW -> {
-                return massFlowDa;
-            }
-            case MA_MASS_FLOW -> {
-                return LibPhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getX(), massFlowDa);
-            }
-        }
-        throw new FlowArgumentException("Invalid type of flow, cannot return value");
-    }
-
 
 }
 

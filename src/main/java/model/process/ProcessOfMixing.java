@@ -5,7 +5,7 @@ import model.flows.FlowOfMoistAir;
 import model.flows.TypeOfAirFlow;
 import model.properties.MoistAir;
 import physics.*;
-import validators.Validators;
+import physics.validators.Validators;
 
 /**
  * <h3>AIR MIXING</h3>

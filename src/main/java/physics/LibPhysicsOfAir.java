@@ -1,7 +1,6 @@
 package physics;
 
 import physics.exceptions.AirPhysicsArgumentException;
-
 import java.util.function.DoubleFunction;
 
 /**

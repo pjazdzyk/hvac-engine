@@ -32,11 +32,11 @@ public class LibPhysicsHeatingCoolingTest {
 
         //Act
         var result = LibPhysicsOfProcess.calcHeatingOrDryCoolingOutTxFromInQ(AIRFLOW,expectedQ);
-        var actualQ = result[0];
-        var actualTemp = result[1];
-        var actualX = result[2];
-        var actualCondTemp = result[3];
-        var actualCondFlow = result[4];
+        var actualQ = result.heatQ();
+        var actualTemp = result.outTx();
+        var actualX = result.outX();
+        var actualCondTemp = result.condTx();
+        var actualCondFlow = result.condMassFlow();
 
         //Assert
         Assertions.assertEquals(expectedTemp,actualTemp,TEMP_ACCURACY);
@@ -64,11 +64,11 @@ public class LibPhysicsHeatingCoolingTest {
 
         //Assert
         var result = LibPhysicsOfProcess.calcHeatingOrDryCoolingInQFromOutTx(AIRFLOW,30.0);
-        var actualQ = result[0];
-        var actualTemp = result[1];
-        var actualX = result[2];
-        var actualCondTemp = result[3];
-        var actualCondFlow = result[4];
+        var actualQ = result.heatQ();
+        var actualTemp = result.outTx();
+        var actualX = result.outX();
+        var actualCondTemp = result.condTx();
+        var actualCondFlow = result.condMassFlow();
 
         //Act
         var heatDelta = expectedQ * HEAT_PERCENT_ACCURACY /100d;
@@ -98,11 +98,11 @@ public class LibPhysicsHeatingCoolingTest {
 
         //Assert
         var result = LibPhysicsOfProcess.calcHeatingInQOutTxFromOutRH(AIRFLOW,17.4);
-        var actualQ = result[0];
-        var actualTemp = result[1];
-        var actualX = result[2];
-        var actualCondTemp = result[3];
-        var actualCondFlow = result[4];
+        var actualQ = result.heatQ();
+        var actualTemp = result.outTx();
+        var actualX = result.outX();
+        var actualCondTemp = result.condTx();
+        var actualCondFlow = result.condMassFlow();
         var expectedCondTemp = actualTemp;
 
         //Act
@@ -142,11 +142,11 @@ public class LibPhysicsHeatingCoolingTest {
 
         //Act
         var result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(AIRFLOW,tm,expectedT2);
-        var actualQ = result[0];
-        var actualTemp = result[1];
-        var actualX = result[2];
-        var actualCondTemp = result[3];
-        var actualCondFlow = result[4];
+        var actualQ = result.heatQ();
+        var actualTemp = result.outTx();
+        var actualX = result.outX();
+        var actualCondTemp = result.condTx();
+        var actualCondFlow = result.condMassFlow();
         var expectedCondFlow = LibPhysicsOfProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
         var iCond = LibPhysicsOfWater.calc_Ix(actualCondTemp);
         var expectedQ = (mDa_DirectContact * (iTm - i1) + actualCondFlow * iCond) * 1000;
@@ -187,11 +187,11 @@ public class LibPhysicsHeatingCoolingTest {
 
         //Act
         var result = LibPhysicsOfProcess.calcCoolingInQFromOutRH(AIRFLOW,tm,expectedRH2);
-        var actualQ = result[0];
-        var actualTemp = result[1];
-        var actualX = result[2];
-        var actualCondTemp = result[3];
-        var actualCondFlow = result[4];
+        var actualQ = result.heatQ();
+        var actualTemp = result.outTx();
+        var actualX = result.outX();
+        var actualCondTemp = result.condTx();
+        var actualCondFlow = result.condMassFlow();
         var expectedCondFlow = LibPhysicsOfProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
         var iCond = LibPhysicsOfWater.calc_Ix(actualCondTemp);
         var expectedQ = (mDa_DirectContact * (iTm - i1) + actualCondFlow * iCond) * 1000;
@@ -232,11 +232,11 @@ public class LibPhysicsHeatingCoolingTest {
 
         //Act
         var result = LibPhysicsOfProcess.calcCoolingOutTxFromInQ(AIRFLOW,tm,expectedQ);
-        var actualQ = result[0];
-        var actualTemp = result[1];
-        var actualX = result[2];
-        var actualCondTemp = result[3];
-        var actualCondFlow = result[4];
+        var actualQ = result.heatQ();
+        var actualTemp = result.outTx();
+        var actualX = result.outX();
+        var actualCondTemp = result.condTx();
+        var actualCondFlow = result.condMassFlow();
         var expectedCondFlow = LibPhysicsOfProcess.calcCondensateDischarge(mDa_DirectContact,x1,xAtTm);
         var iCond = LibPhysicsOfWater.calc_Ix(actualCondTemp);
 
@@ -258,8 +258,8 @@ public class LibPhysicsHeatingCoolingTest {
 
         //Act
         var result = LibPhysicsOfProcess.calcHeatingOrDryCoolingInQFromOutTx(inletFlow,expectedOutTemp);
-        var actualQHeat = result[0];
-        var actualOutTemp = result[1];
+        var actualQHeat = result.heatQ();
+        var actualOutTemp = result.outTx();
 
         //Assert
         Assertions.assertEquals(expectedOutTemp,actualOutTemp);

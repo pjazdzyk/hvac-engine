@@ -1,4 +1,4 @@
-package validators;
+package physics.validators;
 
 import physics.exceptions.FlowPhysicsArgumentException;
 import java.util.Arrays;
@@ -14,7 +14,6 @@ import java.util.Objects;
  * <a href="http://synerset.com/">www.synerset.com</a>
  * </p><br><br>
  */
-
 
 public class Validators {
 

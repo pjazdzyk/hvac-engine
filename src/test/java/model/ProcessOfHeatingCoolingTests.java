@@ -159,10 +159,10 @@ public class ProcessOfHeatingCoolingTests {
        var expectedMda = summerInletFlow.getMassFlowDa();
        var expectedTm = cooling.getAvrgWallTemp();
        var result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
-       var expectedHeatQ = result[0];
-       var expectedX = result[2];
-       var expectedCondTemp = result[3];
-       var expectedCondMassFlow = result[4];
+       var expectedHeatQ = result.heatQ();
+       var expectedX = result.outX();
+       var expectedCondTemp = result.condTx();
+       var expectedCondMassFlow = result.condMassFlow();
        var expectedRH = LibPhysicsOfAir.calc_Ma_RH(expectedOutT,expectedX,LibDefaults.DEF_PAT);
 
        // ACT
@@ -198,10 +198,10 @@ public class ProcessOfHeatingCoolingTests {
        var expectedMda = summerInletFlow.getMassFlowDa();
        var expectedTm = cooling.getAvrgWallTemp();
        var result = LibPhysicsOfProcess.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
-       var expectedHeatQ = result[0];
-       var expectedX = result[2];
-       var expectedCondTemp = result[3];
-       var expectedCondMassFlow = result[4];
+       var expectedHeatQ = result.heatQ();
+       var expectedX = result.outX();
+       var expectedCondTemp = result.condTx();
+       var expectedCondMassFlow = result.condMassFlow();
        var expectedRH = LibPhysicsOfAir.calc_Ma_RH(expectedOutT,expectedX,LibDefaults.DEF_PAT);
 
        // ACT
