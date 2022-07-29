@@ -22,7 +22,6 @@ import java.io.Serializable;
  * </p><br><br>
  */
 
-
 public class LiquidWater implements Fluid, Serializable, Cloneable {
 
     private String name;                                        // -                - liquid water instance name

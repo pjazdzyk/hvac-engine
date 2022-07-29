@@ -12,7 +12,6 @@ import model.flows.FlowOfMoistAir;
  * <a href="http://synerset.com/">www.synerset.com</a>
  * </p><br><br>
  */
-
 public interface Process {
     FlowOfMoistAir getInletFlow();
     FlowOfMoistAir getOutletFlow();

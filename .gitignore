@@ -85,3 +85,4 @@ nb-configuration.xml
 
 #######OTHER##########
 *.sample
+*.sns

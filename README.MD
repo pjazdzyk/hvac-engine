@@ -1,12 +1,10 @@
 ## DEW|POINT - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
 
-> AUTHOR: <b>Piotr Jażdżyk</b> <br>
 > VERSION: 1.0.0 <br>
 > DATE: 2021.09.17<br>
-> LAST UPDATE: 2022.02.23<br>
-> EMAIL: jazdzyk@gmail.com<br>
-> LINKEDIN: https://www.linkedin.com/in/pjazdzyk/ <br>
-> COMPANY: SYNERSET / https://www.synerset.com | info@synerset.com <br>
+> LAST UPDATE: 2022.06.29<br>
+> AUTHOR: <b>Piotr Jażdżyk, MScEng</b> <br>
+> LINKEDIN: https://pl.linkedin.com/in/pjazdzyk/en <br>
 
 ---
 
@@ -18,7 +16,7 @@
 
 ---
 
-DEW|POINT is analytical psychrometrics tool allowing for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
+DEW|POINT is analytical psychrometrics set of libraries for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
 used as an engine for any type of HVAC software development.
 
 At the present state of development following modules are finalized ready for use:
@@ -67,7 +65,7 @@ properly include the source and author in your references or documentation. For 
 
 ## AUTHORS COMMENTS
 This code is dedicated to reading and development by programmers with a strong academic mechanical engineering background.
-To improve code readability for this group of engineers I have decided to deviate from some elements of the Java naming convention.
+To improve code readability, PhysicsOfAir library uses snake_case for method names instead of camelCase, as an exception. Please lower your swords.
 For example, the code for determining humidity ratio is written as below:
 ```
 return x * Pat / ((WG_RATIO * RH / 100.0) + x * RH / 100.0);
@@ -91,16 +89,12 @@ structure, where corresponding methods are sorting themselves while writing a co
 
 IMPROVEMENT REQUEST:
 1. Code review and improvement suggestions,
-2. Any clever idea how to handle the problem of determining humidity ratio if Ps is greater than Pat (for high air temperatures above 90 oC)
-3. Any clever idea how to determine humidity ratio if the humid air enthalpy, air temperature, and Pat is available (seems easy, but the problem is that for the temperatures close to 0oC,
-   for which two different air states can result in the same specific enthalpy).
-4. Information on any papers or scientific journals which may contain better accuracy temperature and pressure-dependent property formulation.
+2. Information on any papers or scientific journals which may contain better accuracy temperature and pressure-dependent property formulation.
 
 ## UPCOMING FUNCTIONALITY
-1. Module for humid air mixing with multiple streams of air (50%)
-2. Module for water spray air humidification
-3. Module for superheated steam air humidification
-4. Module for simplified heat and humid recovery exchanger
+1. Module for water spray air humidification
+2. Module for superheated steam air humidification
+3. Module for simplified heat and humid recovery exchanger
 
 ## REFERENCE SOURCE
 

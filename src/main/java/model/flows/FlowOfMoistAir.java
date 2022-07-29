@@ -4,7 +4,6 @@ import model.exceptions.FlowArgumentException;
 import model.properties.MoistAir;
 import physics.LibDefaults;
 import physics.LibPhysicsOfFlow;
-
 import java.io.Serializable;
 import java.util.Objects;
 

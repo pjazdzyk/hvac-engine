@@ -468,11 +468,10 @@ public class BrentSolver {
     }
 
     // QUICK INSTANCE
-
     /**
      * Method for obtaining quick and single result for a provided function and expected result range.
      *
-     * @param func   function provided eqn = 0 as an lambda expression: value -> f(value)
+     * @param func function provided eqn = 0 as an lambda expression: value -> f(value)
      * @param rangeA first point of the result range
      * @param rangeB second point of the result range
      * @return calculated root

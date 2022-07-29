@@ -12,7 +12,6 @@ package model.flows;
  * <a href="http://synerset.com/">www.synerset.com</a>
  * </p><br><br>
  */
-
 public enum TypeOfFluidFlow {
     MASS_FLOW,
     VOL_FLOW;
