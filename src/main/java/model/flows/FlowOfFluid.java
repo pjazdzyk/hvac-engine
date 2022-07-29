@@ -7,6 +7,7 @@ import physics.LibDefaults;
 import physics.LibPhysicsOfFlow;
 import physics.validators.Validators;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -28,7 +29,7 @@ import java.util.function.Supplier;
 
 public class FlowOfFluid implements Flow, Serializable {
     private static final String DEFAULT_NAME = "FlowOfFluid";
-    private String name;
+    private String id;
     private Fluid fluid;
     private double massFlow;
     private double volFlow;
@@ -65,15 +66,15 @@ public class FlowOfFluid implements Flow, Serializable {
     /**
      * Primary constructor.
      *
-     * @param name                  flow name or tag,
+     * @param id                  flow name or tag,
      * @param flowRate              flow rate of specified type of flow in kg/s or m3/s
      * @param fluid                 type of Fluid
      * @param lockedTypeOfFluidFlow - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfFluid(String name, double flowRate, TypeOfFluidFlow lockedTypeOfFluidFlow, Fluid fluid) {
+    public FlowOfFluid(String id, double flowRate, TypeOfFluidFlow lockedTypeOfFluidFlow, Fluid fluid) {
         Validators.validateForNotNull("Fluid", fluid);
         Validators.validateForNotNull("Locked flow", lockedTypeOfFluidFlow);
-        this.name = name;
+        this.id = id;
         this.fluid = fluid;
         switch (lockedTypeOfFluidFlow) {
             case MASS_FLOW -> setMassFlow(flowRate);
@@ -92,8 +93,8 @@ public class FlowOfFluid implements Flow, Serializable {
         }
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
     public Fluid getFluid() {
@@ -112,8 +113,8 @@ public class FlowOfFluid implements Flow, Serializable {
         return this.lockedTypeOfFluidFlow;
     }
 
-    public void setName(String inName) {
-        this.name = inName;
+    public void setId(String inName) {
+        this.id = inName;
     }
 
     public void setMassFlow(double inMassFlow) {
@@ -256,7 +257,7 @@ public class FlowOfFluid implements Flow, Serializable {
         public FlowOfFluid build() {
             if (fluid == null) {
                 fluid = fluidSupplier.get();
-                fluid.setName(fluidName);
+                fluid.setId(fluidName);
                 fluid.setTx(tx);
             } else
                 adjustFluid();
@@ -267,7 +268,7 @@ public class FlowOfFluid implements Flow, Serializable {
         }
 
         private void adjustFluid() {
-            fluid.setName(fluidName);
+            fluid.setId(fluidName);
             if (fluid.getTx() != tx)
                 fluid.setTx(tx);
         }
@@ -276,7 +277,7 @@ public class FlowOfFluid implements Flow, Serializable {
     @Override
     public String toString() {
         StringBuilder bld = new StringBuilder();
-        bld.append("Flow name: \t\t").append(name).append("\n");
+        bld.append("Flow name: \t\t").append(id).append("\n");
         bld.append("Locked flow: \t").append(lockedTypeOfFluidFlow).append("\n");
         bld.append("m_Con = ").append(String.format("%.3f", massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
                 .append("v_Con = ").append(String.format("%.6f", volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
@@ -284,4 +285,17 @@ public class FlowOfFluid implements Flow, Serializable {
         return bld.toString();
     }
 
+    // Equals & hashcode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FlowOfFluid that = (FlowOfFluid) o;
+        return Double.compare(that.massFlow, massFlow) == 0 && id.equals(that.id) && fluid.equals(that.fluid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fluid, massFlow);
+    }
 }

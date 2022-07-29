@@ -1,10 +1,10 @@
 package model.properties;
 
 import physics.LibDefaults;
-import physics.LibPhysicsOfAir;
 import physics.LibPhysicsOfWater;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * <h3>LIQUID WATER</h3>
@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 public class LiquidWater implements Fluid, Serializable, Cloneable {
 
-    private String name;                                        // -                - liquid water instance name
+    private String id;                                          // -                - liquid water instance name
     private double tx;                                          // [oC]             - liquid water temperature
     private double cp;                                          // [kJ/kg*K]        - liquid water isobaric specific heat
     private double rho;                                         // [kg/m3]          - liquid water density at temperature tx
@@ -60,12 +60,12 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
     /**
      * PRIMARY CONSTRUCTOR. Creates new liquid water instance with provided name and water temperature.
      *
-     * @param name - instance name or tag
+     * @param id - instance name or tag
      * @param tx   - water temperature in oC
      */
-    public LiquidWater(String name, double tx) {
+    public LiquidWater(String id, double tx) {
 
-        this.name = name;
+        this.id = id;
         this.tx = tx;
         updateProperties();
     }
@@ -103,8 +103,8 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
 
     // SETTERS
     @Override
-    public final void setName(String name) {
-        this.name = name;
+    public final void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
     public final String toString() {
 
         StringBuilder strb = new StringBuilder();
-        strb.append("Fluid name: " + name + "\n");
+        strb.append("Fluid name: " + id + "\n");
         strb.append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n", tx, cp, rho, ix));
 
         return strb.toString();
@@ -166,5 +166,19 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
 
     }
 
+    // Equals & hashcode
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LiquidWater that = (LiquidWater) o;
+        return Double.compare(that.tx, tx) == 0 && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tx);
+    }
 }
 

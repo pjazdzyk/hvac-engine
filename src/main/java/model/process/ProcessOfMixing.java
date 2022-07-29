@@ -1,12 +1,13 @@
 package model.process;
 
-import model.exceptions.ProcessArgumentException;
 import model.flows.FlowOfMoistAir;
 import model.flows.TypeOfAirFlow;
 import model.properties.MoistAir;
 import physics.*;
 import physics.validators.Validators;
 import physics.LibPhysicsOfProcess.MixingResult;
+
+import java.util.Objects;
 
 /**
  * <h3>AIR MIXING</h3>
@@ -23,7 +24,7 @@ import physics.LibPhysicsOfProcess.MixingResult;
  */
 public class ProcessOfMixing implements Process {
 
-    private String iD;
+    private String id;
     private FlowOfMoistAir inletFlow;
     private MoistAir inletAir;
     private FlowOfMoistAir recirculationFlow;
@@ -61,16 +62,16 @@ public class ProcessOfMixing implements Process {
     /**
      * Constructor. Creates Mixing Process instance based on InletFlow and RecirculationFlow instance. OutletFlow will be created as an inlet clone.
      *
-     * @param iD                process name
+     * @param id                process name
      * @param inletFlow         inlet flow of moist air
      * @param recirculationFlow recirculation flow of moist air to be mixed with inlet
      * @param outletFlow        outlet flow instance
      */
-    public ProcessOfMixing(String iD, FlowOfMoistAir inletFlow, FlowOfMoistAir recirculationFlow, FlowOfMoistAir outletFlow) {
+    public ProcessOfMixing(String id, FlowOfMoistAir inletFlow, FlowOfMoistAir recirculationFlow, FlowOfMoistAir outletFlow) {
         Validators.validateForNotNull("Inlet flow", inletFlow);
         Validators.validateForNotNull("Recirculation flow", recirculationFlow);
         Validators.validateForNotNull("Outlet flow", outletFlow);
-        this.iD = iD;
+        this.id = id;
         this.inletFlow = inletFlow;
         this.outletFlow = outletFlow;
         this.recirculationFlow = recirculationFlow;
@@ -155,12 +156,12 @@ public class ProcessOfMixing implements Process {
 
     @Override
     public String getID() {
-        return iD;
+        return id;
     }
 
     @Override
     public void setID(String id) {
-        this.iD = id;
+        this.id = id;
     }
 
     @Override
@@ -221,22 +222,22 @@ public class ProcessOfMixing implements Process {
 
             if (inletFlow == null && outletFlow != null) {
                 inletFlow = outletFlow.clone();
-                inletFlow.setName("Inlet Flow");
+                inletFlow.setId("Inlet Flow");
             }
             if (inletFlow == null && recirculationFlow != null) {
                 inletFlow = recirculationFlow.clone();
-                inletFlow.setName("Inlet Flow");
+                inletFlow.setId("Inlet Flow");
             }
             if (inletFlow == null) {
                 inletFlow = FlowOfMoistAir.createDefaultAirFlow("Inlet Flow", TypeOfAirFlow.MA_VOL_FLOW, LibDefaults.DEF_AIR_FLOW);
             }
             if (recirculationFlow == null) {
                 recirculationFlow = inletFlow.clone();
-                recirculationFlow.setName("Recirculation Flow");
+                recirculationFlow.setId("Recirculation Flow");
             }
             if (outletFlow == null) {
                 outletFlow = inletFlow.clone();
-                outletFlow.setName("Outlet Flow");
+                outletFlow.setId("Outlet Flow");
                 recirculationFlow.setLockedFlowType(TypeOfAirFlow.DA_MASS_FLOW);
             }
 
@@ -245,4 +246,18 @@ public class ProcessOfMixing implements Process {
 
     }
 
+    // Equals & hashcode
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessOfMixing that = (ProcessOfMixing) o;
+        return id.equals(that.id) && inletFlow.equals(that.inletFlow) && recirculationFlow.equals(that.recirculationFlow) && outletFlow.equals(that.outletFlow);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, inletFlow, recirculationFlow, outletFlow);
+    }
 }

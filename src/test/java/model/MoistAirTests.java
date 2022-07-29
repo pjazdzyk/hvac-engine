@@ -44,9 +44,9 @@ public class MoistAirTests {
         var actualX2 = air2.getX();
         var actualX3 = air3.getX();
 
-        var actualName1 = air1.getName();
-        var actualName2 = air2.getName();
-        var actualName3 = air3.getName();
+        var actualName1 = air1.getId();
+        var actualName2 = air2.getId();
+        var actualName3 = air3.getId();
 
         //Assert
         Assertions.assertEquals(expectedTx1,actualTx1);
@@ -73,9 +73,9 @@ public class MoistAirTests {
 
        MoistAir air = new MoistAir("1234!@#$ąęźć2",35,65,100000, MoistAir.HumidityType.REL_HUMID);
 
-       air.setName("Name Changed");
+       air.setId("Name Changed");
        var expectedName = "Name Changed";
-       var actualName = air.getName();
+       var actualName = air.getId();
        Assertions.assertEquals(expectedName,actualName);
 
        air.setTx(15);
