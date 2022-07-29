@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
-    private String name;
+    private String id;
     private MoistAir moistAir;
     private TypeOfAirFlow lockedFlowType;
     private double massFlowMa;
@@ -69,15 +69,15 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     /**
      * Primary constructor. Creates FlowOfFluid instance for provided Moist Air, flow and flow type.
      *
-     * @param name     flow name or tag,
+     * @param id     flow name or tag,
      * @param flowRate flow rate of specified type of flow in kg/s or m3/s
      * @param moistAir type of Fluid (moist air)
      * @param flowType - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfMoistAir(String name, double flowRate, TypeOfAirFlow flowType, MoistAir moistAir) {
+    public FlowOfMoistAir(String id, double flowRate, TypeOfAirFlow flowType, MoistAir moistAir) {
         Objects.requireNonNull(moistAir, "Error. MoistAir instance does not exist.");
         Objects.requireNonNull(flowType, "FluidFlowType has not been specified");
-        this.name = name;
+        this.id = id;
         this.moistAir = moistAir;
         switch (flowType) {
             case MA_MASS_FLOW -> setMassFlow(flowRate);
@@ -114,12 +114,12 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         }
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public void setName(String inName) {
-        this.name = inName;
+    public void setId(String inName) {
+        this.id = inName;
     }
 
     public MoistAir getMoistAir() {
@@ -329,7 +329,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     @Override
     public String toString() {
         StringBuilder bld = new StringBuilder();
-        bld.append("Flow name: \t\t\t").append(name).append("\n");
+        bld.append("Flow name: \t\t\t").append(id).append("\n");
         bld.append("Locked flow: \t\t").append(lockedFlowType).append("\n");
         bld.append("Air properties: \t");
         bld.append("ta = ").append(String.format("%.2f", moistAir.getTx())).append(" oC ").append("\t")
@@ -511,7 +511,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
         }
 
         private void adjustMoistAirInstance() {
-            moistAir.setName(airName);
+            moistAir.setId(airName);
             if (moistAir.getPat() != Pat)
                 moistAir.setPat(Pat);
             if (moistAir.getTx() != tx)
@@ -524,4 +524,18 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
 
     }
 
+    // Equals & hashcode
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FlowOfMoistAir that = (FlowOfMoistAir) o;
+        return Double.compare(that.massFlowDa, massFlowDa) == 0 && id.equals(that.id) && moistAir.equals(that.moistAir);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, moistAir, massFlowDa);
+    }
 }

@@ -22,7 +22,7 @@ public interface Fluid {
 
     double getTx();
 
-    void setName(String name);
+    void setId(String id);
 
     void setTx(double inTx);
 }

@@ -59,7 +59,7 @@ public class FlowOfMoistAirTests {
         Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
         Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
         Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getName(),expectedName);
+        Assertions.assertEquals(flowAir.getId(),expectedName);
         Assertions.assertEquals(flowAir.getMoistAir(),air);
 
     }
@@ -88,7 +88,7 @@ public class FlowOfMoistAirTests {
         Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
         Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
         Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getName(),expectedName);
+        Assertions.assertEquals(flowAir.getId(),expectedName);
         Assertions.assertEquals(flowAir.getMoistAir(),air);
 
         // MassFlowMa change
@@ -106,7 +106,7 @@ public class FlowOfMoistAirTests {
         Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
         Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
         Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getName(),expectedName);
+        Assertions.assertEquals(flowAir.getId(),expectedName);
         Assertions.assertEquals(flowAir.getMoistAir(),air);
 
         //VolFlowMa change
@@ -124,7 +124,7 @@ public class FlowOfMoistAirTests {
         Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
         Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
         Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getName(),expectedName);
+        Assertions.assertEquals(flowAir.getId(),expectedName);
         Assertions.assertEquals(flowAir.getMoistAir(),air);
 
 
@@ -143,7 +143,7 @@ public class FlowOfMoistAirTests {
         Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
         Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
         Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getName(),expectedName);
+        Assertions.assertEquals(flowAir.getId(),expectedName);
         Assertions.assertEquals(flowAir.getMoistAir(),air);
 
         // VolFlowDa change
@@ -161,7 +161,7 @@ public class FlowOfMoistAirTests {
         Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
         Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
         Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getName(),expectedName);
+        Assertions.assertEquals(flowAir.getId(),expectedName);
         Assertions.assertEquals(flowAir.getMoistAir(),air);
 
     }
@@ -177,8 +177,8 @@ public class FlowOfMoistAirTests {
 
         // Name change
         String newName = "TestName";
-        flowAir.setName(newName);
-        Assertions.assertEquals(flowAir.getName(),newName);
+        flowAir.setId(newName);
+        Assertions.assertEquals(flowAir.getId(),newName);
 
         // MoistAir instance change
         MoistAir newAir = new MoistAir();
@@ -197,7 +197,7 @@ public class FlowOfMoistAirTests {
         Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
         Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
         Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getName(),newName);
+        Assertions.assertEquals(flowAir.getId(),newName);
         Assertions.assertEquals(flowAir.getMoistAir(),newAir);
 
     }

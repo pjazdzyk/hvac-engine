@@ -25,7 +25,7 @@ import java.util.function.DoubleFunction;
 public class BrentSolver {
 
     // IDENTITY DATA
-    private final String name;                                  // Solver instance name
+    private final String id;                                  // Solver instance name
 
     // BRENT-DECKER SOLVER VARIABLE FIELDS
     private double a0 = -50;                                    // initial guess or arbitrarily assumed values to get opposite (negative and positive) result from tested equation
@@ -62,8 +62,8 @@ public class BrentSolver {
     /**
      * Constructor. Creates solver instance with function output set as 0.
      */
-    public BrentSolver(String name) {
-        this.name = name;
+    public BrentSolver(String id) {
+        this.id = id;
         this.func = val -> 0.0;
         printer = new MessagePrinter();
     }
@@ -77,8 +77,8 @@ public class BrentSolver {
      * @param p2Coef AB evaluation procedure second point coefficient
      * @param p3Coef AB evaluation procedure third point coefficient
      */
-    public BrentSolver(String name, int p2Coef, int p3Coef) {
-        this(name);
+    public BrentSolver(String id, int p2Coef, int p3Coef) {
+        this(id);
         setP2Coef(p2Coef);
         setP3Coef(p3Coef);
     }
@@ -88,8 +88,8 @@ public class BrentSolver {
      *
      * @param func tested function (use lambda expression or method reference)
      */
-    public BrentSolver(String name, DoubleFunction<Double> func, int p2coef, int p3coef) {
-        this(name, p2coef, p3coef);
+    public BrentSolver(String id, DoubleFunction<Double> func, int p2coef, int p3coef) {
+        this(id, p2coef, p3coef);
         this.func = func;
     }
 
@@ -116,9 +116,9 @@ public class BrentSolver {
             return b;
         //If at this stage proper AB condition is not achievable - an exception is thrown.
         if (initialABConditionIsNotMet())
-            throw new BrentSolverConditionException(name + ": EVALUATION PROCEDURE FAILED: f(a) i f(b) must have an opposite signs. Current values:"
+            throw new BrentSolverConditionException(id + ": EVALUATION PROCEDURE FAILED: f(a) i f(b) must have an opposite signs. Current values:"
                     + String.format(" a = %.3f, b = %.3f,  f(a)= %.3f, f(b)=%.3f", a, b, f_a, f_b));
-        printSolverDiagnostics("\n" + name + ": BEFORE RUN:\n", "\n");
+        printSolverDiagnostics("\n" + id + ": BEFORE RUN:\n", "\n");
 
         /*--------BEGINNING OF ITERATIVE LOOP--------*/
         while (runFlag) {
@@ -156,7 +156,7 @@ public class BrentSolver {
             f_b = func.apply(b);
 
             //Calculating current difference after this iteration cycle
-            printSolverDiagnostics(name + ": ITERATION: " + counter + " ", "Diff= " + diff);
+            printSolverDiagnostics(id + ": ITERATION: " + counter + " ", "Diff= " + diff);
             if (diff < accuracy) {
                 runFlag = false;
             } else if (counter > maxIter) {
@@ -193,9 +193,9 @@ public class BrentSolver {
     private void checkForInfiniteOrNaN(double... values) {
         for (double num : values) {
             if (Double.isInfinite(num))
-                throw new BrentSolverResultException(name + ": Solution error. Infinite number detected.");
+                throw new BrentSolverResultException(id + ": Solution error. Infinite number detected.");
             if (Double.isNaN(num))
-                throw new BrentSolverResultException(name + ": Solution error. NaN value detected.");
+                throw new BrentSolverResultException(id + ": Solution error. NaN value detected.");
         }
     }
 
@@ -210,7 +210,7 @@ public class BrentSolver {
         5. In some cases initial values of P2_COEF and P3_COEF may be adjusted by user. For an example if your initial guess is very close to the root
         you are looking for small P3_COEF values, like 2 or even 1. */
 
-        printEvaluationDiagnostics(name + " EVALUATION PROCEDURE \nINITIAL:");
+        printEvaluationDiagnostics(id + " EVALUATION PROCEDURE \nINITIAL:");
         double x, f_x, x1, f_x1, x2, f_x2, f_xExact;
         if (p3Coef > evalCycles)
             evalCycles = p3Coef;

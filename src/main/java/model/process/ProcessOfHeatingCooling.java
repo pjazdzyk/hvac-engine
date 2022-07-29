@@ -1,6 +1,5 @@
 package model.process;
 
-import model.exceptions.ProcessArgumentException;
 import model.exceptions.ProcessSolutionNotConvergedException;
 import model.flows.FlowOfFluid;
 import model.flows.FlowOfMoistAir;
@@ -12,6 +11,7 @@ import physics.*;
 import physics.validators.Validators;
 import physics.LibPhysicsOfProcess.HeatCoolResult;
 
+import java.util.Objects;
 import java.util.function.DoubleConsumer;
 
 /**
@@ -33,7 +33,7 @@ import java.util.function.DoubleConsumer;
 
 public class ProcessOfHeatingCooling implements Process {
 
-    private String iD;
+    private String id;
     private FlowOfMoistAir inletFlow;
     private MoistAir inletAir;
     private FlowOfMoistAir outletFlow;
@@ -77,15 +77,15 @@ public class ProcessOfHeatingCooling implements Process {
     /**
      * Primary constructor. Creates Heating and Cooling Process instance based on ID, inlet flow, outlet flow, condensate flow instances and provided coolant supply and return temperatures.
      *
-     * @param iD                process name or ID
+     * @param id                process name or ID
      * @param inletFlow         inlet flow of moist air
      * @param outletFlow        outlet flow of moist air
      * @param condensateFlow    condensate flow
      * @param coolingSupplyTemp coolant supply temperature
      * @param coolingReturnTemp coolant return temperature
      */
-    public ProcessOfHeatingCooling(String iD, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
-        this.iD = iD;
+    public ProcessOfHeatingCooling(String id, FlowOfMoistAir inletFlow, FlowOfMoistAir outletFlow, FlowOfFluid condensateFlow, double coolingSupplyTemp, double coolingReturnTemp) {
+        this.id = id;
         this.inletFlow = inletFlow;
         this.outletFlow = outletFlow;
         this.condensateFlow = condensateFlow;
@@ -288,11 +288,11 @@ public class ProcessOfHeatingCooling implements Process {
     }
 
     public String getID() {
-        return iD;
+        return id;
     }
 
     public void setID(String ID) {
-        this.iD = ID;
+        this.id = ID;
     }
 
     public double getAvrgWallTemp() {
@@ -382,17 +382,17 @@ public class ProcessOfHeatingCooling implements Process {
             }
             if (inletFlow == null) {
                 inletFlow = outletFlow.clone();
-                inletFlow.setName("Inlet Flow");
+                inletFlow.setId("Inlet Flow");
                 inletFlow.setLockedFlowType(TypeOfAirFlow.MA_MASS_FLOW);
             }
             if (outletFlow == null) {
                 outletFlow = inletFlow.clone();
-                outletFlow.setName("Outlet Flow");
+                outletFlow.setId("Outlet Flow");
                 outletFlow.setLockedFlowType(TypeOfAirFlow.DA_MASS_FLOW);
             }
             if (condensateFlow == null) {
                 condensateFlow = new FlowOfFluid();
-                condensateFlow.setName("Condensate");
+                condensateFlow.setId("Condensate");
             }
 
             return new ProcessOfHeatingCooling(this);
@@ -400,4 +400,17 @@ public class ProcessOfHeatingCooling implements Process {
 
     }
 
+    // Equals & hashcode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessOfHeatingCooling that = (ProcessOfHeatingCooling) o;
+        return id.equals(that.id) && inletFlow.equals(that.inletFlow) && outletFlow.equals(that.outletFlow) && condensateFlow.equals(that.condensateFlow);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, inletFlow, outletFlow, condensateFlow);
+    }
 }

@@ -22,7 +22,7 @@ public class FlowOfFluidTests {
         FlowOfFluid flow1 = new FlowOfFluid(expectedMassFlow);
         double actualMassFlow = flow1.getMassFlow();
         double actualVolFlow = flow1.getVolFlow();
-        String actualName = flow1.getName();
+        String actualName = flow1.getId();
 
         //Assert
         Assertions.assertEquals(actualMassFlow,expectedMassFlow);
@@ -49,7 +49,7 @@ public class FlowOfFluidTests {
         double actualVolFlow1 = flow1.getVolFlow();
         double actualMassFlow2 = flow2.getMassFlow();
         double actualVolFlow2 = flow2.getVolFlow();
-        String actualName = flow1.getName();
+        String actualName = flow1.getId();
 
         //Assert
         Assertions.assertEquals(actualMassFlow1, initFlow);
@@ -119,8 +119,8 @@ public class FlowOfFluidTests {
 
         // Name change
         String newName = "TestName";
-        flow.setName(newName);
-        Assertions.assertEquals(flow.getName(),newName);
+        flow.setId(newName);
+        Assertions.assertEquals(flow.getId(),newName);
 
         // Fluid instance change
         LiquidWater newWater = new LiquidWater("changedWater", 35.6);

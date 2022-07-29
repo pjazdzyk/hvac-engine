@@ -5,6 +5,7 @@ import physics.LibDefaults;
 import physics.LibPhysicsOfAir;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * <h3>MOIST AIR</h3>
@@ -24,7 +25,7 @@ import java.io.Serializable;
 public class MoistAir implements Serializable, Cloneable, Fluid {
 
     //General parameters
-    protected String name;                   // -                - air instance name
+    protected String id;                   // -                - air instance name
     private VapStatus status;                // -                - vapor status: unsaturated, saturated, water fog, ice fog
 
     //Moist air parameters
@@ -93,9 +94,9 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
      * @param ta - dry bulb air temperature in oC,
      * @param RH - moist air relative humidity in %,
      */
-    public MoistAir(String name, double ta, double RH) {
+    public MoistAir(String id, double ta, double RH) {
 
-        this(name, ta, RH, LibDefaults.DEF_PAT, HumidityType.REL_HUMID);
+        this(id, ta, RH, LibDefaults.DEF_PAT, HumidityType.REL_HUMID);
 
     }
 
@@ -108,9 +109,9 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
      * @param Pat       - atmospheric pressure in Pa,
      * @param humidType - provide REL_HUMID if RH is provided or HUM_RATIO if humidity ratio is provided.
      */
-    public MoistAir(String name, double ta, double xRH, double Pat, HumidityType humidType) {
+    public MoistAir(String id, double ta, double xRH, double Pat, HumidityType humidType) {
 
-        this.name = name;
+        this.id = id;
         this.pat = Pat;
         this.tx = ta;
         this.Ps = LibPhysicsOfAir.calc_Ma_Ps(ta);
@@ -214,7 +215,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
     public final String toString() {
 
         StringBuilder strb = new StringBuilder();
-        strb.append("Instance name \t : " + name + "\n");
+        strb.append("Instance name \t : " + id + "\n");
         strb.append(String.format("Core parameters  : Pat=%.0f Pa | ta=%.3f degC | RH_Ma= %.3f %% | Wbt_Ma=%.3f degC | Tdp_Ma=%.3f degC | Ps= %.2f Pa | x_Ma= %.6f kg/kg | xMax= %.6f kg/kg \n", pat, tx, RH, Wbt, Tdp, Ps, x, xMax));
         strb.append(String.format("Dry air          : rho_Da= %.3f kg/m3 | cp_Da= %.4f kJ/kgK | k_Da= %.4f W/(m*K) | thDiff_Da= %.8f m2/s | dynVis_Da = %.8f kg/(m*s) | kinVis_Da=%.7f m2/s | Pr_Da=%.2f | i_Da= %.2f kJ/kg.da \n", rho_Da, cp_Da, k_Da, thDiff_Da, dynVis_Da, kinVis_Da, Pr_Da, i_Da));
         strb.append(String.format("Water vapour     : rho_Wv= %.3f kg/m3 | cp_Wv= %.4f kJ/kgK | k_Wv= %.4f W/(m*K) | thDiff_Wv= %.8f m2/s | dynVis_Wv = %.8f kg/(m*s) | kinVis_Mv=%.7f m2/s | Pr_Wv=%.2f | i_Wv= %.2f kJ/kg.da | i_Wt= %.2f kJ/kg.da | i_Ice= %.2f kJ/kg.da \n", rho_Wv, cp_Wv, k_Wv, thDiff_Wv, dynVis_Wv, kinVis_Wv, Pr_Wv, i_Wv, i_Wt, i_Ice));
@@ -226,8 +227,8 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
     //GETTERS
     //IDENTITY AND STATUS
-    public final String getName() {
-        return name;
+    public final String getId() {
+        return id;
     }
 
     public final VapStatus getStatus() {
@@ -374,8 +375,8 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
     }
 
     //SETTERS
-    public final void setName(String name) {
-        this.name = name;
+    public final void setId(String id) {
+        this.id = id;
     }
 
     public final void setPat(double inPat) {
@@ -400,7 +401,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
     public final void setX(double inX) {
 
         if (inX <= 0)
-            throw new MoistAirArgumentException(name + " [setX] -> X cannot be 0 or negative value.");
+            throw new MoistAirArgumentException(id + " [setX] -> X cannot be 0 or negative value.");
         this.x = inX;
         this.RH = LibPhysicsOfAir.calc_Ma_RH(tx, inX, pat);
         this.Ps = LibPhysicsOfAir.calc_Ma_Ps(tx);
@@ -511,5 +512,18 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
     }
 
+    // Equals & hashcode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoistAir moistAir = (MoistAir) o;
+        return Double.compare(moistAir.pat, pat) == 0 && Double.compare(moistAir.tx, tx) == 0 && Double.compare(moistAir.x, x) == 0 && id.equals(moistAir.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pat, tx, x);
+    }
 }
 
