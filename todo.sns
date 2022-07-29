@@ -1,5 +1,8 @@
 CRITICAL & ERRORS:
 
+OPTIMIZATION:
+- try to remove model classes form physics to reduce dependency
+
 TO DO:
 - steam and water humidification
 - heat recovery exchanger

@@ -11,7 +11,6 @@ package model.properties;
  * </p><br><br>
  */
 
-
 public interface Fluid {
     void updateProperties();
 

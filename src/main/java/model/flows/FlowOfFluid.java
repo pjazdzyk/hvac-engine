@@ -6,7 +6,6 @@ import model.properties.LiquidWater;
 import physics.LibDefaults;
 import physics.LibPhysicsOfFlow;
 import physics.validators.Validators;
-
 import java.io.Serializable;
 import java.util.function.Supplier;
 

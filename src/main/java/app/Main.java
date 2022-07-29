@@ -9,22 +9,14 @@ import model.process.ProcessOfMixing;
 import model.properties.LiquidWater;
 import model.properties.MoistAir;
 import physics.LibPhysicsOfAir;
-import physics.LibPhysicsOfWater;
-
-
-import java.util.Calendar;
-import java.util.Locale;
 
 public class Main {
 
     public static void main(String[] args) {
-        // runUserGuideMethods();
-        var result = LibPhysicsOfWater.calc_rho(70);
-        var result2 = LibPhysicsOfWater.calc_Cp(70);
-        System.out.println(result2);
+
+        runUserGuideMethods();
 
     }
-
     public static void runUserGuideMethods(){
         // Using LibClass for single value calculation
         var saturationPressure = LibPhysicsOfAir.calc_Ma_Ps(20);
