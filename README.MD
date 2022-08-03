@@ -16,7 +16,7 @@
 
 ---
 
-DEW|POINT is analytical psychrometrics set of libraries for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
+DEW|POINT is a set of libraries for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
 used as an engine for any type of HVAC software development.
 
 At the present state of development following modules are finalized ready for use:
@@ -27,6 +27,7 @@ At the present state of development following modules are finalized ready for us
 LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 
 <h1> FUNCTIONALITY </h1>
+
 #### Moist air thermophysical properties:
 * atmospheric pressure based on height above sea level,
 * temperature change based on height above sea level,
