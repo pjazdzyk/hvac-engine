@@ -26,7 +26,7 @@ At the present state of development following modules are finalized ready for us
 
 LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 
-<h1> FUNCTIONALITY </h1>
+## FUNCTIONALITY
 
 #### Moist air thermophysical properties:
 * atmospheric pressure based on height above sea level,
