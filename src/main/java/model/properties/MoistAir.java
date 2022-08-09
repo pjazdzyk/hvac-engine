@@ -15,17 +15,15 @@ import java.util.Objects;
  * in {@link LibPhysicsOfAir} and {@link physics.LibPhysicsOfWater} classes.
  * </p><br>
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
- * <span><b>CONTACT: </span>
- * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
- * <a href="mailto:info@synerset.com">e-mail</a> |
- * <a href="http://synerset.com/">www.synerset.com</a>
+ * <span><b>SOCIAL: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/>
  * </p><br><br>
  */
 
 public class MoistAir implements Serializable, Cloneable, Fluid {
 
     //General parameters
-    protected String id;                   // -                - air instance name
+    private String id;                       // -                - air instance name
     private VapStatus status;                // -                - vapor status: unsaturated, saturated, water fog, ice fog
 
     //Moist air parameters
@@ -215,7 +213,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
     public final String toString() {
 
         StringBuilder strb = new StringBuilder();
-        strb.append("Instance name \t : " + id + "\n");
+        strb.append("Instance name \t : ").append(id).append("\n");
         strb.append(String.format("Core parameters  : Pat=%.0f Pa | ta=%.3f degC | RH_Ma= %.3f %% | Wbt_Ma=%.3f degC | Tdp_Ma=%.3f degC | Ps= %.2f Pa | x_Ma= %.6f kg/kg | xMax= %.6f kg/kg \n", pat, tx, RH, Wbt, Tdp, Ps, x, xMax));
         strb.append(String.format("Dry air          : rho_Da= %.3f kg/m3 | cp_Da= %.4f kJ/kgK | k_Da= %.4f W/(m*K) | thDiff_Da= %.8f m2/s | dynVis_Da = %.8f kg/(m*s) | kinVis_Da=%.7f m2/s | Pr_Da=%.2f | i_Da= %.2f kJ/kg.da \n", rho_Da, cp_Da, k_Da, thDiff_Da, dynVis_Da, kinVis_Da, Pr_Da, i_Da));
         strb.append(String.format("Water vapour     : rho_Wv= %.3f kg/m3 | cp_Wv= %.4f kJ/kgK | k_Wv= %.4f W/(m*K) | thDiff_Wv= %.8f m2/s | dynVis_Wv = %.8f kg/(m*s) | kinVis_Mv=%.7f m2/s | Pr_Wv=%.2f | i_Wv= %.2f kJ/kg.da | i_Wt= %.2f kJ/kg.da | i_Ice= %.2f kJ/kg.da \n", rho_Wv, cp_Wv, k_Wv, thDiff_Wv, dynVis_Wv, kinVis_Wv, Pr_Wv, i_Wv, i_Wt, i_Ice));
@@ -464,6 +462,20 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         return new MoistAir(ID, tx, RH, Pat, HumidityType.REL_HUMID);
     }
 
+    // Equals & hashcode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoistAir moistAir = (MoistAir) o;
+        return Double.compare(moistAir.pat, pat) == 0 && Double.compare(moistAir.tx, tx) == 0 && Double.compare(moistAir.x, x) == 0 && id.equals(moistAir.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pat, tx, x);
+    }
+
     //BUILDER PATTERN
     public static class Builder {
 
@@ -512,18 +524,5 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
     }
 
-    // Equals & hashcode
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MoistAir moistAir = (MoistAir) o;
-        return Double.compare(moistAir.pat, pat) == 0 && Double.compare(moistAir.tx, tx) == 0 && Double.compare(moistAir.x, x) == 0 && id.equals(moistAir.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, pat, tx, x);
-    }
 }
 

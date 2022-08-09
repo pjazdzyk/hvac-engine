@@ -11,6 +11,14 @@ import java.util.function.DoubleFunction;
  * readability and function selection in IDE. Please lower your sword.
  * </p><br>
  * <p><span><b>PROPERTY ABBREVIATIONS:<b/></span>
+ *  <ul style="margin:0px 10px;">
+ *      <li>WT - water</li>
+ *      <li>WV - water vapour</li>
+ *      <li>DA - dry air</li>
+ *      <li>MA - moist air</li>
+ *      <li>ST - steam</li>
+ *   </ul><br>
+ * <p><span><b>REFERENCE SOURCE:<b/></span>
  * <ol style="margin:0px 10px;">
  *      <li>ASHRAE FUNDAMENTALS 2002, CHAPTER 6</li>
  *      <li>Buck, Arden L. "New Equations for Computing Vapour Pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981)</li>
@@ -30,10 +38,8 @@ import java.util.function.DoubleFunction;
  * <p>[reference no] [value symbology in standard, unit] (equation number) [page]</p><br>
  *
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
- * <span><b>CONTACT: </span>
- * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
- * <a href="mailto:info@synerset.com">e-mail</a> |
- * <a href="http://synerset.com/">www.synerset.com</a>
+ * <span><b>SOCIAL: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/>
  * </p><br><br>
  */
 

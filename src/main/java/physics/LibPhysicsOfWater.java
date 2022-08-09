@@ -8,7 +8,7 @@ import physics.exceptions.WaterPhysicsArgumentException;
  * properties. Methods do not create a separate instance of FlowOfMoistAir for performance reasons - each ot these methods may be used in iterative solvers, and we
  * do not want to lose memory or performance for unnecessary object creation.
  * </p><br>
- * <p><span><b>PROPERTY ABBREVIATIONS:<b/></span>
+ * <p><span><b>REFERENCE SOURCES:<b/></span>
  * <ol style="margin:0px 10px;">
  *      <li>F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards calibration. Journal of Research of the National Institute of Standards and Technology (1992)</li>
  *      <li>Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html</li>
@@ -19,10 +19,8 @@ import physics.exceptions.WaterPhysicsArgumentException;
  * <p>[reference no] [value symbology in standard, unit] (equation number) [page]</p><br>
  *
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
- * <span><b>CONTACT: </span>
- * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
- * <a href="mailto:info@synerset.com">e-mail</a> |
- * <a href="http://synerset.com/">www.synerset.com</a>
+ * <span><b>SOCIAL: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/>
  * </p><br><br>
  */
 
