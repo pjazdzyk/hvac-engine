@@ -14,9 +14,8 @@ package physics;
  * </p>
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
  * <span><b>CONTACT: </span>
- * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
- * <a href="mailto:info@synerset.com">e-mail</a> |
- * <a href="http://synerset.com/">www.synerset.com</a>
+ * <span><b>SOCIAL: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/>
  * </p><br><br>
  */
 

@@ -14,10 +14,8 @@ import java.util.function.DoubleFunction;
  * Implemented improvements are based on a scientific paper published by Zhengqiu Zhang in 2011. </p><br>
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
  * <p>
- * <span><b>CONTACT: </span>
- * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/> |
- * <a href="mailto:info@synerset.com">e-mail</a> |
- * <a href="http://synerset.com/">www.synerset.com</a>
+ * <span><b>SOCIAL: </span>
+ * <a href="https://pl.linkedin.com/in/pjazdzyk/en">LinkedIn<a/>
  * </p>
  * <p><span><b>VERSION: </span> 1.1.1</p><br>
  */
