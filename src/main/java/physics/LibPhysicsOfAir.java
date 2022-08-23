@@ -1,6 +1,8 @@
 package physics;
 
+import io.github.pjazdzyk.solver.BrentSolver;
 import physics.exceptions.AirPhysicsArgumentException;
+
 import java.util.function.DoubleFunction;
 
 /**
@@ -573,7 +575,7 @@ public class LibPhysicsOfAir {
         if (ta <= -73.15)
             return 1.002;
         if (ta > -73.15 && ta <= -53.15)
-            return BrentSolver.linearExtrapolation(-73.15, 1.002, -53.15, 1.003, ta);
+            return BrentSolver.linearInterpolation(-73.15, 1.002, -53.15, 1.003, ta);
         if (ta > -53.15 && ta <= -13.15)
             return 1.003;
         if (ta > -13.15 && ta <= 86.85) {
@@ -616,7 +618,11 @@ public class LibPhysicsOfAir {
         c4 = 2.0703915723982299E-012;
         c5 = -7.0213425618115390E-016;
         c6 = 9.8631583006961855E-020;
-        return c0 + c1 * tk + c2 * tk * tk + c3 * tk * tk * tk + c4 * tk * tk * tk * tk + c5 * tk * tk * tk * tk * tk + c6 * tk * tk * tk * tk * tk * tk;
+        return c0 + c1 * tk + c2 * tk * tk
+                + c3 * tk * tk * tk
+                + c4 * tk * tk * tk * tk
+                + c5 * tk * tk * tk * tk * tk
+                + c6 * tk * tk * tk * tk * tk * tk;
     }
 
     /*DENSITY CALCULATION*/
