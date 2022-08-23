@@ -1,12 +1,11 @@
 package physics;
 
 import io.MessagePrinter;
+import io.github.pjazdzyk.solver.BrentSolver;
 import model.exceptions.ProcessArgumentException;
 import model.flows.FlowOfMoistAir;
 import model.properties.MoistAir;
 import physics.validators.Validators;
-
-import java.util.HashMap;
 
 /**
  * <h3>PSYCHROMETRICS PROCESS EQUATIONS LIBRARY</h3>

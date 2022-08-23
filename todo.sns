@@ -1,13 +1,9 @@
-CRITICAL & ERRORS:
-
-OPTIMIZATION:
-- try to remove model classes form physics to reduce dependency
-
 TO DO:
 - steam and water humidification
 - heat recovery exchanger
 - cooling tower
 - maybe the more complex heat exchanger
+- consider hexagon architecture
 
 MINOR:
 - correct and unify JAVADOC
