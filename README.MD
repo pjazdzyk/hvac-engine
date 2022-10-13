@@ -1,10 +1,8 @@
 ## DEW|POINT - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
 
-> VERSION: 1.0.0 <br>
-> DATE: 2021.09.17<br>
-> LAST UPDATE: 2022.06.29<br>
+> VERSION: 1.0 - SNAPSHOT <br>
 > AUTHOR: <b>Piotr Jażdżyk, MScEng</b> <br>
-> LINKEDIN: https://pl.linkedin.com/in/pjazdzyk/en <br>
+> LINKEDIN: https://www.linkedin.com/in/pjazdzyk <br>
 
 ---
 
@@ -25,6 +23,11 @@ At the present state of development following modules are finalized ready for us
 3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
 
 LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
+
+## TECH
+![image](https://img.shields.io/badge/16-Java-orange?style=for-the-badge)
+![image](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+![image](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
 
 ## FUNCTIONALITY
 
@@ -48,7 +51,7 @@ LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 * density,
 * specific enthalpy.
 
-#### physics of flow:
+#### Physics of flow:
 * each FlowOfMoistAir instance stores moist air volumetric flow, moist air mass flow, dry air volumetric flow, and dry air mass flow.
 * each flow type depends on aggregated MoistAir instance and flows are adjusted if the temperature or humidity changes,
 * option to lock one selected flow type
@@ -88,16 +91,12 @@ calc_Ma_Ta_TdpRH(){}
 The approach presented above, which probably may cause a serious headache to any professional programmer, helps me organize all methods into a clear
 structure, where corresponding methods are sorting themselves while writing a code using this library.
 
-IMPROVEMENT REQUEST:
-1. Code review and improvement suggestions,
-2. Information on any papers or scientific journals which may contain better accuracy temperature and pressure-dependent property formulation.
-
 ## UPCOMING FUNCTIONALITY
 1. Module for water spray air humidification
 2. Module for superheated steam air humidification
 3. Module for simplified heat and humid recovery exchanger
 
-## REFERENCE SOURCE
+## REFERENCE SOURCES
 
 Each physical property has provided a reference source as well as the argument limit range for which the result is still reliable. There are also several methods allowing for calculations of some properties if others are available.
 All methods accept arguments and output results in SI units. However, please read method java-doc to make sure that you are aware of what unit output value is represented. Some properties for example specific enthalpy,
