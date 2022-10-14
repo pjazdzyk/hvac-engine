@@ -793,7 +793,7 @@ public class PhysicsOfAirTests {
     }
 
     @ParameterizedTest
-    @MethodSource("wbtTaInlindeData")
+    @MethodSource("wbtTaInlineData")
     public void calc_Ma_Wbt_TaTest(double ta, double RH) {
 
         //Arrange
@@ -807,7 +807,7 @@ public class PhysicsOfAirTests {
 
     }
 
-    public static Stream<Arguments>wbtTaInlindeData(){
+    public static Stream<Arguments> wbtTaInlineData(){
 
         return Stream.of(
                 Arguments.of(-20,0.1),

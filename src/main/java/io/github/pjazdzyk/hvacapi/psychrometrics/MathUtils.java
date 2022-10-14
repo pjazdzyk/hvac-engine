@@ -3,9 +3,9 @@ package io.github.pjazdzyk.hvacapi.psychrometrics;
 import java.util.Arrays;
 import java.util.OptionalDouble;
 
-public final class MathExtensions {
+public final class MathUtils {
 
-    private MathExtensions() {}
+    private MathUtils() {}
 
     public static boolean compareDoubleWithTolerance(double d1, double d2, double tolerance) {
         return Math.abs(d1 - d2) <= tolerance;

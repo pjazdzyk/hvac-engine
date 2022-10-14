@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class LibPhysicsProcessExceptionsTests {
 
-    public FlowOfMoistAir AIRFLOW = new FlowOfMoistAir(); //ta=20oc, RH=50%
-    public static double PAT = 987 * 100;
+    public FlowOfMoistAir AIRFLOW = new FlowOfMoistAir();
 
     @Test
     void calcHeatingOutTxFromInQ() {

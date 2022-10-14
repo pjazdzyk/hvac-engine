@@ -10,6 +10,8 @@
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
+        <junit.version>5.9.0</junit.version>
+        <brent-solver.version>1.1.1</brent-solver.version>
     </properties>
 
     <dependencies>
@@ -17,14 +19,14 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.7.1</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.github.pjazdzyk</groupId>
             <artifactId>brent-decker-solver</artifactId>
-            <version>1.1.1</version>
+            <version>${brent-solver.version}</version>
             <scope>compile</scope>
         </dependency>
 
