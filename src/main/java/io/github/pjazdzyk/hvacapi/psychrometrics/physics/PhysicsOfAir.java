@@ -723,7 +723,6 @@ public final class PhysicsOfAir {
         //New instance of BrentSolver is required, to avoid clash between two methods using P_SOLVER
         //at the same time.
         BrentSolver solver = new BrentSolver();
-        solver.setShowDiagnostics(true);
         solver.setCounterpartPoints(taEstimated * SOLVER_A_COEF, taEstimated * SOLVER_B_COEF);
         return solver.calcForFunction(temp -> tdp - calcMaTdp(temp, RH, Pat));
     }
@@ -780,7 +779,6 @@ public final class PhysicsOfAir {
      */
     public static double calcMaWbtTa(double wbt, double RH, double Pat) {
         BrentSolver solver = new BrentSolver();
-        solver.setShowDiagnostics(true);
         return solver.calcForFunction(temp -> wbt - calcMaWbt(temp, RH, Pat));
     }
 

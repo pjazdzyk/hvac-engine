@@ -67,21 +67,10 @@ LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 This code is my intellectual property. Please have respect for this. You can use it freely in any academic or non-commercial use if you
 properly include the source and author in your references or documentation. For commercial use, please contact me first to discuss the license fee.
 
-## AUTHORS COMMENTS
-This code is dedicated to reading and development by programmers with a strong academic mechanical engineering background.
-To improve code readability, PhysicsOfAir library uses snake_case for method names instead of camelCase, as an exception. Please lower your swords.
-For example, the code for determining humidity ratio is written as below:
+## NAMING CONVENTION
+Physics method names meets following convention:
 ```
-return x * Pat / ((WG_RATIO * RH / 100.0) + x * RH / 100.0);
-```
-instead of:
-```
-return humidityRatio * atmosphericPressure / ((WG_RATIO * relativeHumidity / 100.0) + humidityRatio * relativeHumidity / 100.0);
-```
-For any MEP engineer, the first one is much easier to read, as it is very close to the equation notation in handbooks and guidelines.
-Method naming convention is key is as follows:
-```
-calc_Ma_Ta_TdpRH(){}
+calcMaTaTdpRH(){}
 ```
 - a first fragment - "calc": stands for calculation type method of a given property. "Set" is for setters, "get" for getters.
 - a second fragment - next part is a type of fluid: Ma - moist air, Da - dry air, Wv - water vapour, Wt - water

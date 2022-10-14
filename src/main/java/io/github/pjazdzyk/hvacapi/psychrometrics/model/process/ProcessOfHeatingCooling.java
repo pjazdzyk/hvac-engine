@@ -6,7 +6,7 @@ import io.github.pjazdzyk.hvacapi.psychrometrics.model.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvacapi.psychrometrics.model.flows.TypeOfAirFlow;
 import io.github.pjazdzyk.hvacapi.psychrometrics.Defaults;
 import io.github.pjazdzyk.hvacapi.psychrometrics.physics.PhysicsOfHeatingCooling;
-import io.github.pjazdzyk.hvacapi.psychrometrics.MathExtensions;
+import io.github.pjazdzyk.hvacapi.psychrometrics.MathUtils;
 import io.github.pjazdzyk.hvacapi.psychrometrics.Validators;
 import io.github.pjazdzyk.hvacapi.psychrometrics.model.properties.Fluid;
 import io.github.pjazdzyk.hvacapi.psychrometrics.model.properties.MoistAir;
@@ -214,7 +214,7 @@ public class ProcessOfHeatingCooling implements Process {
 
     private void convergenceCheckForRH(double outRH) {
         double resultingRH2 = outletAir.getRH();
-        if (!MathExtensions.compareDoubleWithTolerance(outRH, resultingRH2, Defaults.DEF_MATH_ACCURACY))
+        if (!MathUtils.compareDoubleWithTolerance(outRH, resultingRH2, Defaults.DEF_MATH_ACCURACY))
             throw new ProcessSolutionNotConvergedException("Solution convergence error. Expected outlet RH= " + outRH + " actual outlet RH= " + resultingRH2);
     }
 

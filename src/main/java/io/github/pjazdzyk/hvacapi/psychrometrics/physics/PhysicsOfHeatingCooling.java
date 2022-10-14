@@ -2,7 +2,7 @@ package io.github.pjazdzyk.hvacapi.psychrometrics.physics;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvacapi.psychrometrics.Defaults;
-import io.github.pjazdzyk.hvacapi.psychrometrics.MathExtensions;
+import io.github.pjazdzyk.hvacapi.psychrometrics.MathUtils;
 import io.github.pjazdzyk.hvacapi.useroutput.Messenger;
 import io.github.pjazdzyk.hvacapi.psychrometrics.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvacapi.psychrometrics.model.flows.FlowOfMoistAir;
@@ -255,7 +255,7 @@ public final class PhysicsOfHeatingCooling {
      * @return linear average coil wall temperature in oC,
      */
     public static double calcAverageWallTemp(double supplyTemp, double returnTemp) {
-        return MathExtensions.calcArithmeticAverage(supplyTemp, returnTemp);
+        return MathUtils.calcArithmeticAverage(supplyTemp, returnTemp);
     }
 
     /**
