@@ -8,7 +8,7 @@
 
 <span style="font-weight:700;font-size:15px">
 
-[FUNCTIONALITY](#functionality) | [USER GUIDE](README_GUIDE.MD) | [LEGAL DISCLAIMER](#legal-disclaimer) | [UPCOMING](#upcoming-functionality) | [AUTHORS COMMENTS](#authors-comments) | [RESOURCES](#reference-source)
+[USER GUIDE](README_GUIDE.MD) | [FUNCTIONALITY](#functionality) | [LEGAL DISCLAIMER](#legal-disclaimer) | [UPCOMING](#upcoming-functionality) | [RESOURCES](#reference-sources)
 
 </span>
 
@@ -25,9 +25,9 @@ At the present state of development following modules are finalized ready for us
 LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 
 ## TECH
-![image](https://img.shields.io/badge/16-Java-orange?style=for-the-badge)
-![image](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
-![image](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
+![image](https://img.shields.io/badge/16-Java-orange?style=for-the-badge) &nbsp;
+![image](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white) &nbsp;
+![image](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white) &nbsp;
 
 ## FUNCTIONALITY
 
@@ -60,7 +60,7 @@ LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 #### Heating and cooling with condensate discharge:
 * moist air heating or dry cooling,
 * moist air cooling based on real cooling coil average wall temperature,
-* condensate discharge is determined for the cooling process,
+* condensate discharge is calculated for the cooling process,
 * different methods for most typical cases: determining resulting air state based on expected outlet temperature, outlet RH or available heat of the process.
 
 ## LEGAL DISCLAIMER
@@ -106,5 +106,3 @@ AIR AND WATER VAPOUR PROPERTIES:
 LIQUID WATER PROPERTIES:
 * [1] - F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards' calibration. Journal of Research of the National Institute of Standards and Technology (1992)
 * [2] - Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html
-
-> <b>*"EARTH MUST COME FIRST"*</b>
