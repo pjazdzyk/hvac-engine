@@ -14,7 +14,7 @@
 
 ---
 
-DEW|POINT is a set of libraries for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics API, to be further 
+HVAC-LIB is a set of libraries for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics library, to be further 
 used as an engine for any type of HVAC software development.
 
 At the present state of development following modules are finalized ready for use:
