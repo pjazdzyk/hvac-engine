@@ -1,7 +1,7 @@
-## DEW|POINT - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
+## HVAC|LIB - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
 
 > VERSION: 1.0 - SNAPSHOT <br>
-> AUTHOR: <b>Piotr Jażdżyk, MScEng</b> <br>
+> AUTHOR: <b>Piotr Jażdżyk</b> <br>
 > LINKEDIN: https://www.linkedin.com/in/pjazdzyk <br>
 
 ---
