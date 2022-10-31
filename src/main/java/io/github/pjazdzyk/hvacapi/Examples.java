@@ -124,9 +124,8 @@ public class Examples {
         mixingSection.setRecirculationFlow(recircFlow);
         mixingSection.applyMixing();
         System.out.println(mixingSection);
-
         //Using Builder pattern
-        var mixingPlenuum = new ProcessOfMixing.Builder().withInletFlow(intakeFlow)
+        var mixingPlenum = new ProcessOfMixing.Builder().withInletFlow(intakeFlow)
                                                                         .withRecirculationFlow(recircFlow)
                                                                         .build();
 
