@@ -1,4 +1,4 @@
-## HVAC|LIB - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
+## HVAC-LIB - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
 
 > VERSION: 1.0 - SNAPSHOT <br>
 > AUTHOR: <b>Piotr Jażdżyk</b> <br>
@@ -14,7 +14,7 @@
 
 ---
 
-HVAC-LIB is a set of libraries for moist air properties calculations and most psychrometrics processes in HVAC industry. The aim of this project is to create easy to use psychrometrics library, to be further 
+HVAC-LIB is a set of libraries for moist air properties calculations including typical air thermodynamic processes in HVAC industry. The aim of this project is to create easy to use psychrometrics library, to be further 
 used as an engine for any type of HVAC software development.
 
 At the present state of development following modules are finalized ready for use:
