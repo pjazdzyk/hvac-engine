@@ -12,14 +12,14 @@ import java.util.function.DoubleFunction;
  * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)<br>
  * Set of static methods for calculating temperature dependant thermophysical air properties. Properties are calculated independently for dry air,
  * water vapour, water mist or ice mist to determine correct values for moist air.<br>
- * <p>
+ * <p><br>
  * PROPERTY ABBREVIATIONS: <br>
  * WT - water <br>
  * WV - water vapour <br>
  * DA - dry air <br>
  * MA - moist air <br>
  * ST - steam <br>
- * <p>
+ * <p><br>
  * REFERENCE SOURCE: <br>
  * [1] ASHRAE Fundamentals 2002, CHAPTER 6 <br>
  * [2] Buck, Arden L. "New Equations for Computing Vapour Pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981) <br>
@@ -32,8 +32,9 @@ import java.util.function.DoubleFunction;
  * [9] Tsilingiris P.T "Thermophysical and transport properties of humid air at temperature range between 0 and 100oC". Elsevier, Science Direct (September 2007) <br>
  * [10] E.W. Lemmon, R.T. Jacobsen, S.G. Penoncello, D. Friend. Thermodynamic Properties of Air and Mixtures of Nitrogen, Argon, and Oxygen from 60 to 2000 K at Pressures to 2000 MPa. J. Phys. Chem. Ref. Data, Vol. 29, No. 3, (2000) <br>
  * [11] M. Wanielista, R. Kersten,  R. Eaglin. "Hydrology Water Quantity and Quality Control. 2nd ed." (1997) <br>
- * <p>
- * REFERENCES LEGEND KEY: <br>
+ * <p><br>
+ *
+ * REFERENCES DESCRIPTION KEY: <br>
  * [reference no] [value symbology in standard, unit] (equation number) [page] <br>
  *
  * @author Piotr Jażdżyk, MScEng
@@ -760,12 +761,11 @@ public final class PhysicsOfAir {
      * @param inPat atmospheric pressure, Pa
      * @return maximum dry bulb air temperature, oC
      */
-    public static double calcMaTMaxPat(double inPat) {
+    public static double calcMaTaMaxPat(double inPat) {
         double estimatedTa = -237300 * Math.log(0.001638 * inPat) / (1000 * Math.log(0.001638 * inPat) - 17269);
         BrentSolver solver = new BrentSolver();
         solver.setCounterpartPoints(estimatedTa * SOLVER_A_COEF, estimatedTa * SOLVER_B_COEF * 1.5);
-        double exactMaxTa = solver.calcForFunction(ta -> inPat - calcMaPs(ta));
-        return exactMaxTa;
+        return solver.calcForFunction(ta -> inPat - calcMaPs(ta));
     }
 
     /*OTHER FUNCTIONS*/
@@ -777,7 +777,7 @@ public final class PhysicsOfAir {
      * @param RH  relative humidity, %
      * @return air dry bulb temperature, oC
      */
-    public static double calcMaWbtTa(double wbt, double RH, double Pat) {
+    public static double calcMaTaWbt(double wbt, double RH, double Pat) {
         BrentSolver solver = new BrentSolver();
         return solver.calcForFunction(temp -> wbt - calcMaWbt(temp, RH, Pat));
     }

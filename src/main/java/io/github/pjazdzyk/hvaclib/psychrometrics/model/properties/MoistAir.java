@@ -423,7 +423,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
     public final void setWbt_RH(double wbt) {
 
-        this.tx = PhysicsOfAir.calcMaWbtTa(wbt, RH, pat);
+        this.tx = PhysicsOfAir.calcMaTaWbt(wbt, RH, pat);
         this.Ps = PhysicsOfAir.calcMaPs(tx);
         this.x = PhysicsOfAir.calcMaX(RH, Ps, pat);
         updateProperties();
