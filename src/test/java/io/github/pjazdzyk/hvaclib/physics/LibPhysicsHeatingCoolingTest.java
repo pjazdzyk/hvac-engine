@@ -1,10 +1,7 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.Defaults;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfHeatingCooling;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfWater;
+import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.common.Defaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

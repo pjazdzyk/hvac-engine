@@ -1,7 +1,7 @@
 package io.github.pjazdzyk.hvaclib.model;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.properties.MoistAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.Defaults;
+import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.common.Defaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

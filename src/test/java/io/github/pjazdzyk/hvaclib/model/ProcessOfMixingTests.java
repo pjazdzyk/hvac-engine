@@ -1,11 +1,11 @@
 package io.github.pjazdzyk.hvaclib.model;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.process.ProcessOfMixing;
+import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.model.process.ProcessOfMixing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.github.pjazdzyk.hvaclib.psychrometrics.Defaults;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfAir;
+import io.github.pjazdzyk.hvaclib.common.Defaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
 
 public class ProcessOfMixingTests {
 

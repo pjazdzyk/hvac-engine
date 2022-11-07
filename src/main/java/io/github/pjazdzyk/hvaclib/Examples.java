@@ -1,20 +1,33 @@
 package io.github.pjazdzyk.hvaclib;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.FlowOfFluid;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.TypeOfAirFlow;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.TypeOfFluidFlow;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.process.ProcessOfHeatingCooling;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.process.ProcessOfMixing;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.properties.LiquidWater;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.model.flows.FlowOfFluid;
+import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.model.flows.TypeOfAirFlow;
+import io.github.pjazdzyk.hvaclib.model.flows.TypeOfFluidFlow;
+import io.github.pjazdzyk.hvaclib.model.properties.Fluid;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
+import io.github.pjazdzyk.hvaclib.model.process.ProcessOfHeatingCooling;
+import io.github.pjazdzyk.hvaclib.model.process.ProcessOfMixing;
+import io.github.pjazdzyk.hvaclib.model.properties.LiquidWater;
+import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 
 public class Examples {
 
     public static void main(String[] args) {
 
-        runUserGuideMethods();
+            final double MATH_ACCURACY = 10E-15;
+            final Fluid SAMPLE_LIQ_WATER = new LiquidWater("water", 15);
+            final MoistAir SAMPLE_AIR = new MoistAir("air", 20, 50);
+            final double SAMPLE_MASS_FLOW = 1.0;  // kg/s
+            final double SAMPLE_FLUID_VOL_FLOW = 0.00100111684564597; // m3/s
+            final double SAMPLE_AIR_DA_MASS_FLOW = 0.992790473618731;  // kg/s
+            final double SAMPLE_AIR_MA_VOL_FLOW = 0.824510144149681; // kg/s
+
+            double dryAir = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
+        var actualMaAirMassFlow = PhysicsOfFlow.calcMaVolFlowFromDaMassFlow(SAMPLE_AIR.getRho(), SAMPLE_AIR.getX(), dryAir);
+            System.out.println(actualMaAirMassFlow);
+        //runUserGuideMethods();
 
     }
     public static void runUserGuideMethods(){
