@@ -1,8 +1,7 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.exceptions.ProcessArgumentException;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfHeatingCooling;
+import io.github.pjazdzyk.hvaclib.exceptions.ProcessArgumentException;
+import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

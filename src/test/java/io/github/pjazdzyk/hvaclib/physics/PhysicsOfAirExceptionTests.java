@@ -1,8 +1,7 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.Limiters;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.exceptions.AirPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.common.Limiters;
+import io.github.pjazdzyk.hvaclib.exceptions.AirPhysicsArgumentException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

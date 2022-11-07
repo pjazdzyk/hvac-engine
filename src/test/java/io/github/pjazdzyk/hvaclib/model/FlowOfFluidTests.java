@@ -1,9 +1,9 @@
 package io.github.pjazdzyk.hvaclib.model;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.FlowOfFluid;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.flows.TypeOfFluidFlow;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.properties.LiquidWater;
-import io.github.pjazdzyk.hvaclib.psychrometrics.Defaults;
+import io.github.pjazdzyk.hvaclib.model.flows.FlowOfFluid;
+import io.github.pjazdzyk.hvaclib.model.flows.TypeOfFluidFlow;
+import io.github.pjazdzyk.hvaclib.model.properties.LiquidWater;
+import io.github.pjazdzyk.hvaclib.common.Defaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
