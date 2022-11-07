@@ -1,52 +1,125 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.properties.LiquidWater;
-import io.github.pjazdzyk.hvaclib.psychrometrics.model.properties.MoistAir;
-import io.github.pjazdzyk.hvaclib.psychrometrics.physics.PhysicsOfFlow;
-import org.junit.jupiter.api.Assertions;
+import io.github.pjazdzyk.hvaclib.model.properties.Fluid;
+import io.github.pjazdzyk.hvaclib.model.properties.LiquidWater;
+import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.withPrecision;
 
 public class PhysicsOfFlowTests {
 
-    public static final double mathAccuracy = 10E-15;
+    public static final double MATH_ACCURACY = 10E-15;
+    static final Fluid SAMPLE_LIQ_WATER = new LiquidWater("water", 15);
+    static final MoistAir SAMPLE_AIR = new MoistAir("air", 20, 50);
+    static final double SAMPLE_MASS_FLOW = 1.0;  // kg/s
+    static final double SAMPLE_FLUID_VOL_FLOW = 0.00100111684564597; // m3/s
+    static final double SAMPLE_AIR_DA_MASS_FLOW = 0.992790473618731;  // kg/s
 
     @Test
-    public void CalcVolFlowFromMassFlow(){
-
+    @DisplayName("should calculate volumetric flow flows when mass flow and fluid density is given")
+    public void calcVolFlowFromMassFlow_shouldReturnVolumetricFlow_whenMassFlowAndFluidDensityIsGiven() {
         // Arrange
-        var water = new LiquidWater("water",15);
-        var air = new MoistAir("air",20,50);
-        var massFlow = 1.0;  // water flow kg/s
-        var massFlowMa = 1.0; // moist air flow in kg/s
-        var expectedWaterVolFlow = 0.00100111684564597;
-        var expectedDaAirMassFlow = 0.992790473618731;
-        var expectedDaAirVolFlow = 0.824510144149681;
-
         // ACT
-        var actualWaterVolFlow = PhysicsOfFlow.calcVolFlowFromMassFlow(water.getRho(),massFlow);
-        var actualWaterMassFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(water.getRho(),actualWaterVolFlow);
-
-        var actualDaAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),massFlowMa);
-        var actualDaAirVolFlow = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air.getRho_Da(),actualDaAirMassFlow);
-        var actualMaAirMassFlow = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air.getX(),actualDaAirMassFlow);
-        var actualDaAirMassFlow2 = PhysicsOfFlow.calcDaMassFlowFromDaVolFlow(air.getRho_Da(),actualDaAirVolFlow);
-
-        var actualMaVolFLow = PhysicsOfFlow.calcMaVolFlowFromDaMassFlow(air.getRho(),air.getX(),actualDaAirMassFlow2);
-        var actualDaAirMassFlow3 = PhysicsOfFlow.calcDaMassFlowFromMaVolFlow(air.getRho(),air.getX(),actualMaVolFLow);
-        var actualDaAirVolFlow2 = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air.getRho_Da(),actualDaAirMassFlow3);
+        var actualWaterVolFlow = PhysicsOfFlow.calcVolFlowFromMassFlow(SAMPLE_LIQ_WATER.getRho(), SAMPLE_MASS_FLOW);
 
         // Assert
-        Assertions.assertEquals(expectedWaterVolFlow,actualWaterVolFlow,mathAccuracy);
-        Assertions.assertEquals(massFlow,actualWaterMassFlow);
+        assertThat(actualWaterVolFlow).isEqualTo(SAMPLE_FLUID_VOL_FLOW, withPrecision(MATH_ACCURACY));
+    }
 
-        Assertions.assertEquals(expectedDaAirMassFlow,actualDaAirMassFlow,mathAccuracy);
-        Assertions.assertEquals(expectedDaAirVolFlow,actualDaAirVolFlow,mathAccuracy);
-        Assertions.assertEquals(massFlowMa,actualMaAirMassFlow,mathAccuracy);
-        Assertions.assertEquals(expectedDaAirMassFlow,actualDaAirMassFlow3,mathAccuracy);
+    @Test
+    @DisplayName("should calculate mass flow flows when volumetric flow and fluid density is given")
+    public void calcMassFlowFromVolFlow_shouldReturnMassFlow_whenVolumetricFlowAndFluidDensityIsGiven() {
+        // Arrange
+        // ACT
+        var actualWaterMassFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(SAMPLE_LIQ_WATER.getRho(), SAMPLE_FLUID_VOL_FLOW);
 
-        Assertions.assertEquals(expectedDaAirMassFlow,actualDaAirMassFlow3,mathAccuracy);
-        Assertions.assertEquals(expectedDaAirVolFlow,actualDaAirVolFlow2,mathAccuracy);
+        // Assert
+        assertThat(actualWaterMassFlow).isEqualTo(SAMPLE_MASS_FLOW, withPrecision(MATH_ACCURACY));
+    }
 
+    // AIR MASS FLOWS
+
+    @Test
+    @DisplayName("should calculate moist air mass flow when dry air mass flow and moist air density is given")
+    public void calcMaMassFlowFromDaMassFlow_shouldReturnMoistAirMassFlow_whenDryAirMassFlowAndMoistAirDensityIsGiven() {
+        // Arrange
+        var dryAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
+
+        // ACT
+        var actualMaAirMassFlow = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(SAMPLE_AIR.getX(), dryAirMassFlow);
+
+        // Assert
+        assertThat(actualMaAirMassFlow).isEqualTo(SAMPLE_MASS_FLOW, withPrecision(MATH_ACCURACY));
+    }
+
+    @Test
+    @DisplayName("should calculate dry air mass flow when moist air mass flow and humidity ratio is given")
+    public void calcDaMassFlowFromMaMassFlow_shouldReturnDryAirMassFlow_whenMoistAirMassAndHumidityRatioIsGiven() {
+        // Arrange
+        // ACT
+        var actualDaAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
+
+        // Assert
+        assertThat(actualDaAirMassFlow).isEqualTo(SAMPLE_AIR_DA_MASS_FLOW, withPrecision(MATH_ACCURACY));
+    }
+
+    @Test
+    @DisplayName("should calculate dry air mass flow when moist air volumetric flow, humidity ratio and moist air density is given")
+    public void calcDaMassFlowFromMaVolFlow_shouldReturnDryAirMassFlow_whenMoistAirVolFlowHumidityRatioAndMoistAirDensityIsGiven() {
+        // Arrange
+        var volFlowMa = 0.8403259531006995;
+
+        // Act
+        var actualDaAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaVolFlow(SAMPLE_AIR.getRho(), SAMPLE_AIR.getX(), volFlowMa);
+
+        // Assert
+        assertThat(actualDaAirMassFlow).isEqualTo(SAMPLE_AIR_DA_MASS_FLOW, withPrecision(MATH_ACCURACY));
+    }
+
+    @Test
+    @DisplayName("should calculate dry air mass flow when dry air volumetric flow and dry air density is given")
+    public void calcDaMassFlowFromDaVolFlow_shouldReturnDryAirMassFlow_whenDryAirVolFlowAndDryAirDensityIsGiven() {
+        // Arrange
+        var volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(SAMPLE_AIR.getRho_Da(), SAMPLE_AIR_DA_MASS_FLOW);
+
+        // Act
+        var actualDaAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromDaVolFlow(SAMPLE_AIR.getRho_Da(), volFlowDa);
+
+        // Assert
+        assertThat(actualDaAirMassFlow).isEqualTo(SAMPLE_AIR_DA_MASS_FLOW, withPrecision(MATH_ACCURACY));
+    }
+
+    // AIR VOL FLOWS
+
+    @Test
+    @DisplayName("should calculate dry air volumetric flow when dry air mass flow and dry air density is given")
+    public void calcDaVolFlowFromDaMassFlow_shouldReturnDryAirVolumetricFlow_whenDryAirMassFlowAndDryAirDensityIsGiven() {
+        // Arrange
+        var dryAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
+        var expectedDryAirVolFlow = 0.8245101441496746;
+
+        // ACT
+        var actualDaAirMassFlow = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(SAMPLE_AIR.getRho_Da(), dryAirMassFlow);
+
+        // Assert
+        assertThat(actualDaAirMassFlow).isEqualTo(expectedDryAirVolFlow, withPrecision(MATH_ACCURACY));
+    }
+
+    @Test
+    @DisplayName("should calculate moist air mass flow when dry air mass flow and moist air density is given")
+    public void calcMaVolFlowFromDaMassFlow_shouldReturnMoistAirVolumetricFlow_whenDryAirMassFlowAndHumidityRatioAndAndMoistAirDensityIsGiven() {
+        // Arrange
+        var dryAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
+        var expectedMaVolFLow = 0.8403259531006995;
+
+        // ACT
+        var actualMaAirMassFlow = PhysicsOfFlow.calcMaVolFlowFromDaMassFlow(SAMPLE_AIR.getRho(), SAMPLE_AIR.getX(), dryAirMassFlow);
+
+        // Assert
+        assertThat(actualMaAirMassFlow).isEqualTo(expectedMaVolFLow, withPrecision(MATH_ACCURACY));
     }
 
 
