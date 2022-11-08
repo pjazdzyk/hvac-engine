@@ -1,8 +1,8 @@
-package io.github.pjazdzyk.hvaclib.model.flows;
+package io.github.pjazdzyk.hvaclib.flows;
 
 import io.github.pjazdzyk.hvaclib.exceptions.FlowArgumentException;
-import io.github.pjazdzyk.hvaclib.model.properties.Fluid;
-import io.github.pjazdzyk.hvaclib.model.properties.LiquidWater;
+import io.github.pjazdzyk.hvaclib.fluids.Fluid;
+import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import io.github.pjazdzyk.hvaclib.common.Validators;

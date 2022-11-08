@@ -2,6 +2,7 @@ package io.github.pjazdzyk.hvaclib.physics;
 
 import io.github.pjazdzyk.hvaclib.common.Limiters;
 import io.github.pjazdzyk.hvaclib.exceptions.AirPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

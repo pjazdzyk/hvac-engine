@@ -1,8 +1,9 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.model.properties.Fluid;
-import io.github.pjazdzyk.hvaclib.model.properties.LiquidWater;
-import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.fluids.Fluid;
+import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
+import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

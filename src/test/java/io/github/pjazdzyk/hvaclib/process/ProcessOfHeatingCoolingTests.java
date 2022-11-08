@@ -1,8 +1,8 @@
-package io.github.pjazdzyk.hvaclib.model;
+package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfFluid;
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.model.process.ProcessOfHeatingCooling;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.process.ProcessOfHeatingCooling;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;

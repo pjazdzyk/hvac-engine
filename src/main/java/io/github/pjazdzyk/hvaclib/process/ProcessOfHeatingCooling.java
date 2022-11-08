@@ -1,15 +1,15 @@
-package io.github.pjazdzyk.hvaclib.model.process;
+package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.hvaclib.exceptions.ProcessSolutionNotConvergedException;
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfFluid;
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.model.flows.TypeOfAirFlow;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
 import io.github.pjazdzyk.hvaclib.common.Validators;
-import io.github.pjazdzyk.hvaclib.model.properties.Fluid;
-import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.fluids.Fluid;
+import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 
 import java.util.Objects;
 import java.util.function.DoubleConsumer;

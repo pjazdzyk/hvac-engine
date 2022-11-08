@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.model.properties;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.hvaclib.exceptions.MoistAirArgumentException;
 import io.github.pjazdzyk.hvaclib.common.Defaults;

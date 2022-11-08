@@ -1,7 +1,7 @@
-package io.github.pjazdzyk.hvaclib.model;
+package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.model.process.ProcessOfMixing;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.process.ProcessOfMixing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import io.github.pjazdzyk.hvaclib.common.Defaults;

@@ -1,6 +1,6 @@
-package io.github.pjazdzyk.hvaclib.model.process;
+package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 
 public interface Process {
     FlowOfMoistAir getInletFlow();
