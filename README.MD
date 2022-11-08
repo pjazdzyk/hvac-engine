@@ -1,4 +1,4 @@
-## HVAC-LIB - Psychrometrics Analysis Tool <br> Thermodynamics of humid air API for MEP/HVAC engineers
+## HVAC-LIB - Psychrometrics Analysis Library <br> Thermodynamics of humid air for MEP/HVAC engineers
 
 > VERSION: 1.0 - SNAPSHOT <br>
 > AUTHOR: <b>Piotr Jażdżyk</b> <br>
