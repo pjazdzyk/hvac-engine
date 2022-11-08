@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LibPhysicsProcessExceptionsTests {
+class LibPhysicsProcessExceptionsTests {
 
-    public static final FlowOfMoistAir SAMPLE_AIRFLOW = new FlowOfMoistAir();
-    public static final double AVERAGE_WALL_TEMP = 9.0; // oC
+    static final FlowOfMoistAir SAMPLE_AIRFLOW = new FlowOfMoistAir();
+    static final double AVERAGE_WALL_TEMP = 9.0; // oC
 
     @Test
     @DisplayName("should throw exception for heat based heating when inlet air is given as null")

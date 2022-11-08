@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import static io.github.pjazdzyk.hvaclib.physics.PhysicsOfAirMixing.calcMixing;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LibPhysicsMixingTests {
+class LibPhysicsMixingTests {
 
     @Test
     @DisplayName("should return results for mixing of two different moist air flows")
-    public void calcMixing_shouldReturnResultsForMixingOfTwoDifferentMoistAirFlows() {
+    void calcMixing_shouldReturnResultsForMixingOfTwoDifferentMoistAirFlows() {
         //Arrange
         var Pat = Defaults.DEF_PAT;
         var firstFlowAirTemp = -20.0; //oC

@@ -1,6 +1,5 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-public class PhysicsOfAirTest {
+class PhysicsOfAirTest {
 
     static final double P_ATM = 100_000.0;
     static final double MATH_ACCURACY = 1.0E-11;
@@ -35,7 +34,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return atmospheric pressure when higher altitude is given")
-    public void calcPatAltTest_shouldReturnLowerAtmPressure_whenHigherAltitudeIsGiven() {
+    void calcPatAltTest_shouldReturnLowerAtmPressure_whenHigherAltitudeIsGiven() {
         //Arrange
         var altitude = 2000;
         var expectedPressure = 101.325 * Math.pow((1 - 2.25577 * Math.pow(10, -5) * altitude), 5.2559) * 1000;
@@ -50,7 +49,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return lower temperature for higher altitudes")
-    public void calcTxAltTest_shouldReturnLowerTemperature_whenHigherAltitudeIsGiven() {
+    void calcTxAltTest_shouldReturnLowerTemperature_whenHigherAltitudeIsGiven() {
         // Arrange
         var altitude = 2000;
         var tempAtSea = 20.0;
@@ -67,7 +66,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("psInlineData")
     @DisplayName("should return saturation pressures as in ASHRAE tables when air temperature is given")
-    public void calcMaPsTest_shouldReturnSatPressureAsInAshraeTables_whenAirTempIsGiven(double ta, double expected) {
+    void calcMaPsTest_shouldReturnSatPressureAsInAshraeTables_whenAirTempIsGiven(double ta, double expected) {
         //Act
         var actual = PhysicsOfAir.calcMaPs(ta);
         double accuracy;
@@ -84,7 +83,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED: ASHRAE Tables /6.3, table 2/
-    public static Stream<Arguments> psInlineData() {
+    static Stream<Arguments> psInlineData() {
         return Stream.of(
                 Arguments.of(-60, 0.00108 * 1000), Arguments.of(-55, 0.00209 * 1000), Arguments.of(-50, 0.00394 * 1000),
                 Arguments.of(-45, 0.00721 * 1000), Arguments.of(-40, 0.01285 * 1000), Arguments.of(-35, 0.02235 * 1000),
@@ -102,7 +101,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("tdpInlineData")
     @DisplayName("should return dew point temperature as in generated source set, when air temperature is given")
-    public void calcMaTdpTests_shouldReturnDewPointTempAsInSourceSet_whenAirTempIsGiven(double ta, double RH, double expected) {
+    void calcMaTdpTests_shouldReturnDewPointTempAsInSourceSet_whenAirTempIsGiven(double ta, double RH, double expected) {
         //Act
         var actual = PhysicsOfAir.calcMaTdp(ta, RH, P_ATM);
 
@@ -111,7 +110,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED: -> generated from: https://www.psychrometric-calculator.com/humidairweb.aspx
-    public static Stream<Arguments> tdpInlineData() {
+    static Stream<Arguments> tdpInlineData() {
         return Stream.of(
                 Arguments.of(-90, 90, -90.575488), Arguments.of(-90, 100, -90.00000), Arguments.of(-20, 50, -27.0240449),
                 Arguments.of(0.0, 50, -8.16537708), Arguments.of(20, 0.01, -70.77560076), Arguments.of(20, 2, -27.995737532),
@@ -124,7 +123,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest()
     @MethodSource("wbtInlineData")
     @DisplayName("should return wet bulb temperature as in provided dataset when air temperature and RH is given")
-    public void calcMaWbtTests_shouldReturnWetBulbTempAsInDataSet_whenAirTempAndRHIsGiven(double ta, double RH, double expected) {
+    void calcMaWbtTests_shouldReturnWetBulbTempAsInDataSet_whenAirTempAndRHIsGiven(double ta, double RH, double expected) {
         //Arrange
         var accuracy = ta < 60 ? WBT_LOW_TEMP_ACCURACY : WBT_HIGH_TEMP_ACCURACY;
 
@@ -136,7 +135,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED -> generated from: https://www.psychrometric-calculator.com/humidairweb.aspx
-    public static Stream<Arguments> wbtInlineData() {
+    static Stream<Arguments> wbtInlineData() {
 
         return Stream.of(
                 Arguments.of(-90, 100, -90.00),
@@ -160,7 +159,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return correct saturation pressure, when humidity ratio, RH and atm pressure is given")
-    public void calcMaPSTest_shouldReturnSatPressure_whenHumidityRatioRHandAtmPressureIsGiven() {
+    void calcMaPSTest_shouldReturnSatPressure_whenHumidityRatioRHandAtmPressureIsGiven() {
         //Arrange
         var expected = 2338.880310914088;
         var RH = 50.0;
@@ -176,7 +175,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("tdpRhInlineData")
     @DisplayName("should return RH as in provided data set for each dry bulb air temperature and dew point temperature")
-    public void calcMaRHTdpTest_shouldReturnRHasInDataSet_whenAirTempAndDwPointTempIsGiven(double ta, double tdp, double expected) {
+    void calcMaRHTdpTest_shouldReturnRHasInDataSet_whenAirTempAndDwPointTempIsGiven(double ta, double tdp, double expected) {
         //Act
         var actualRH = PhysicsOfAir.calcMaRH(tdp, ta);
 
@@ -185,7 +184,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED -> generated from: calc_Ma_Tdp
-    public static Stream<Arguments> tdpRhInlineData() {
+    static Stream<Arguments> tdpRhInlineData() {
         return Stream.of(
                 Arguments.of(-90, -90.575488, 90), Arguments.of(-90, -90, 100), Arguments.of(-20, -27.0240449, 50),
                 Arguments.of(0.0, -8.16537708, 50), Arguments.of(20, -70.77560076, 0.01), Arguments.of(20, -27.995737532, 2),
@@ -197,7 +196,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return relative humidity when dry bulb air temperature and humidity ratio is given")
-    public void calcMaRHTest_shouldReturnRH_whenAirTempAndHumidityRatioIsGiven() {
+    void calcMaRHTest_shouldReturnRH_whenAirTempAndHumidityRatioIsGiven() {
         //Arrange
         var ta = 20.0;
         var x = 0.006615487885540037;
@@ -212,7 +211,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return humidity ratio when RH and saturation pressure is given")
-    public void calcMaXTest_shouldReturnHumidityRatio_whenRHAndSaturationPressureIsGiven() {
+    void calcMaXTest_shouldReturnHumidityRatio_whenRHAndSaturationPressureIsGiven() {
         //Arrange
         var RH = 75.0;
         var Ps = 3169.2164701436063;
@@ -227,7 +226,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return correct maximum humidity ratio when saturation pressure Ps and atmospheric pressure Pat is given")
-    public void calcMaXMaxTest_shouldReturnMaxHumidityRatio_WhenSaturationPressureAndAtmPressureIsGiven() {
+    void calcMaXMaxTest_shouldReturnMaxHumidityRatio_WhenSaturationPressureAndAtmPressureIsGiven() {
         //Arrange
         var Ps = 3169.2164701436063;
         var expectedHumidityRatio = 0.020356309472910922;
@@ -242,7 +241,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("dynVisDaInlineData")
     @DisplayName("should return dry air dynamic viscosity according to the physics tables for each temperature in dataset")
-    public void calcDaDynVisTest_shouldReturnDryAirDynamicViscosity_whenAirTemperatureIsGiven(double ta, double expectedDynViscosityFromTables) {
+    void calcDaDynVisTest_shouldReturnDryAirDynamicViscosity_whenAirTemperatureIsGiven(double ta, double expectedDynViscosityFromTables) {
         //Act
         var actualDynamicViscosity = PhysicsOfAir.calcDaDynVis(ta);
 
@@ -251,7 +250,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED -> based on: https://www.engineeringtoolbox.com/air-absolute-kinematic-viscosity-d_601.html
-    public static Stream<Arguments> dynVisDaInlineData() {
+    static Stream<Arguments> dynVisDaInlineData() {
         return Stream.of(
                 Arguments.of(-75, 13.18 / 1000000), Arguments.of(-50, 14.56 / 1000000),
                 Arguments.of(-25, 15.88 / 1000000), Arguments.of(-5, 16.90 / 1000000),
@@ -266,7 +265,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return correct water vapour dynamic viscosity when input temperature is given")
-    public void calcWvDynVisTest_shouldReturnDynamicWaterVapourDynamicViscosity_whenInputTemperatureIsGiven() {
+    void calcWvDynVisTest_shouldReturnDynamicWaterVapourDynamicViscosity_whenInputTemperatureIsGiven() {
         //Arrange
         var ta = 20.0;
         var expectedDynViscosity = 9.731572271822231E-6;
@@ -280,7 +279,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return correct moist air dynamic viscosity when air temperature and humidity ratio is given")
-    public void calcMaDynVisTest_shouldReturnMoistAirDynamicViscosity_whenAirTemperatureAndHumidityRatioIsGiven() {
+    void calcMaDynVisTest_shouldReturnMoistAirDynamicViscosity_whenAirTemperatureAndHumidityRatioIsGiven() {
         //Arrange
         var ta = 20.0;
         var x = 0.00648405507311303;
@@ -296,7 +295,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("densityInlineData")
     @DisplayName("should return correct air density according to ASHRARE tables for given air temperature and humidity ratio ")
-    public void calcRhoDaMaTest_shouldReturnAirDensityAccToASHRAETables_whenAirTempAndHumidityRatioIsGiven(double ta, double humRatio, double expectedDaDensity, double expectedMaDensity) {
+    void calcRhoDaMaTest_shouldReturnAirDensityAccToASHRAETables_whenAirTempAndHumidityRatioIsGiven(double ta, double humRatio, double expectedDaDensity, double expectedMaDensity) {
         //Act
         var Pat = 101325;
         var actualDaDensity = PhysicsOfAir.calcDaRho(ta, Pat);
@@ -308,7 +307,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED -> generated from: ASHRAE TABLES
-    public static Stream<Arguments> densityInlineData() {
+    static Stream<Arguments> densityInlineData() {
         return Stream.of(
                 Arguments.of(-60, 0.0000067, 1.0 / 0.6027, 1.0 / 0.6027), Arguments.of(-50, 0.0000243, 1.0 / 0.6312, 1.0 / 0.6312),
                 Arguments.of(-30, 0.0000793, 1.0 / 0.6881, 1.0 / 0.6884), Arguments.of(-20, 0.0006373, 1.0 / 0.7165, 1.0 / 0.7173),
@@ -322,7 +321,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return water vapour density when input temperature is given")
-    public void calcWvRhoTest_shouldReturnWaterVapourDensity_whenAirTemperatureIsGiven() {
+    void calcWvRhoTest_shouldReturnWaterVapourDensity_whenAirTemperatureIsGiven() {
         //Arrange
         var ta = 20.0;
         var RH = 50.0;
@@ -337,7 +336,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return dry air kinematic viscosity when air temperature and density are given")
-    public void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
+    void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
         //Arrange
         var ta = 20.0;
         var rhoDa = PhysicsOfAir.calcDaRho(ta, P_ATM);
@@ -352,7 +351,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return water vapour kinematic viscosity when air temperature and density are given")
-    public void calcWvKinVisTest_shouldReturnWaterVapourKinematicViscosity_whenAirTempAndDensityIsGiven() {
+    void calcWvKinVisTest_shouldReturnWaterVapourKinematicViscosity_whenAirTempAndDensityIsGiven() {
         //Arrange
         var ta = 20.0;
         var RH = 50.0;
@@ -368,7 +367,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return moist air kinematic viscosity when air temperature, density and humidity ratio are given")
-    public void calc_Ma_kinVisTest_shouldReturnMoistAirKinematicViscosity_whenAirTempDensityAndHumRatioIsGiven() {
+    void calc_Ma_kinVisTest_shouldReturnMoistAirKinematicViscosity_whenAirTempDensityAndHumRatioIsGiven() {
         //Arrange
         var ta = 20.0;
         var RH = 50.0;
@@ -387,7 +386,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("kDaInlineData")
     @DisplayName("should return dry air thermal conductivity according to tables when air temperature is given")
-    public void calcDaKTest_shouldReturnDryAirThermalConductivity_WhenAirTemperatureIsGiven(double ta, double expectedDryAirThermalConductivity) {
+    void calcDaKTest_shouldReturnDryAirThermalConductivity_WhenAirTemperatureIsGiven(double ta, double expectedDryAirThermalConductivity) {
         //Act
         var actualDryAirThermalConductivity = PhysicsOfAir.calcDaK(ta);
         var accuracy = K_LOW_TEMP_ACCURACY;
@@ -399,7 +398,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED -> generated from: https://www.engineeringtoolbox.com/dry-air-properties-d_973.html
-    public static Stream<Arguments> kDaInlineData() {
+    static Stream<Arguments> kDaInlineData() {
         return Stream.of(
                 Arguments.of(-98.15, 0.01593),
                 Arguments.of(-73.15, 0.01809),
@@ -423,7 +422,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("cpDaInlineData")
     @DisplayName("should return dry specific heat air according to tables when air temperature is given")
-    public void calcDaCpTest_shouldReturnDryAirSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedDaSpecificHeat) {
+    void calcDaCpTest_shouldReturnDryAirSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedDaSpecificHeat) {
         //Act
         var actualDaSpecificHeat = PhysicsOfAir.calcDaCp(ta);
 
@@ -432,7 +431,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED -> Based on E.W. Lemmon. Thermodynamic Properties of Air (..)" (2000)
-    public static Stream<Arguments> cpDaInlineData() {
+    static Stream<Arguments> cpDaInlineData() {
         return Stream.of(
                 Arguments.of(-73.15, 1.002),
                 Arguments.of(-53.15, 1.003),
@@ -454,7 +453,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("cpWvInlineData")
     @DisplayName("should return water vapour specific heat according to tables when air temperature is given")
-    public void calcWvCpTest_shouldReturnWaterVapourSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedWvSpecificHeat) {
+    void calcWvCpTest_shouldReturnWaterVapourSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedWvSpecificHeat) {
         //Act
         var actualWvSpecificHeat = PhysicsOfAir.calcWvCp(ta);
 
@@ -463,7 +462,7 @@ public class PhysicsOfAirTest {
     }
 
     //INLINE DATA SEED -> Based on https://www.engineeringtoolbox.com/water-vapor-d_979.html
-    public static Stream<Arguments> cpWvInlineData() {
+    static Stream<Arguments> cpWvInlineData() {
         return Stream.of(
                 Arguments.of(-98.15, 1.850),
                 Arguments.of(-73.15, 1.851),
@@ -489,7 +488,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return moist air specific heat when air temperature is given")
-    public void calcMaCpTest_shouldReturnMoistAirSpecificHeat_whenAirTemperatureIsGiven() {
+    void calcMaCpTest_shouldReturnMoistAirSpecificHeat_whenAirTemperatureIsGiven() {
         //Arrange
         var ta = 20.0;
         var humRatio = 0.007261881104670626;
@@ -504,7 +503,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return dry air specific enthalpy when air temperature is given")
-    public void calcDaITest_shouldReturnDryAirSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void calcDaITest_shouldReturnDryAirSpecificEnthalpy_whenAirTemperatureIsGiven() {
         //Arrange
         var ta = 20.0;
         var expectedDaSpecificEnthalpy = 20.093833530674114;
@@ -518,7 +517,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return water vapour specific enthalpy when air temperature is given")
-    public void calcWvITest_shouldReturnWaterVapourSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void calcWvITest_shouldReturnWaterVapourSpecificEnthalpy_whenAirTemperatureIsGiven() {
         //Arrange
         var ta = 20.0;
         var expectedWvSpecificEnthalpy = 2537.997710797728;
@@ -532,7 +531,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return water mist enthalpy when air temperature is given")
-    public void calcWtITest_shouldReturnWaterSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void calcWtITest_shouldReturnWaterSpecificEnthalpy_whenAirTemperatureIsGiven() {
         //Arrange
         var ta = 20.0;
         var expectedWtMistEnthalpyForPositiveTemp = 83.80000000000001;
@@ -549,7 +548,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return ice mist enthalpy when air temperature is given")
-    public void calcIceITest_shouldReturnIceMistSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void calcIceITest_shouldReturnIceMistSpecificEnthalpy_whenAirTemperatureIsGiven() {
         //Arrange
         var ta = 20.0;
         var expectedIceMistEnthalpyForPositiveTemp = 0.0;
@@ -566,7 +565,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return moist air specific enthalpy when air temperature and humidity ratio is given")
-    public void calcMaIxTest_shouldReturnMoistAirSpecificEnthalpy_whenAirTemperatureAndHumidityRatioIsGiven() {
+    void calcMaIxTest_shouldReturnMoistAirSpecificEnthalpy_whenAirTemperatureAndHumidityRatioIsGiven() {
         //Arrange
         var ta1 = 20.0;
         var x1 = 0.0072129;     //unsaturated for 20oC
@@ -594,7 +593,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return dry air thermal diffusivity when air temperature is given")
-    public void calcThDiffTest_shouldReturnDryAirThermalDiffusivity_whenAirTemperatureIsGiven() {
+    void calcThDiffTest_shouldReturnDryAirThermalDiffusivity_whenAirTemperatureIsGiven() {
         //Arrange
         var Pat = 101_300;
         var ta = 26.85;
@@ -612,7 +611,7 @@ public class PhysicsOfAirTest {
 
     @Test
     @DisplayName("should return dry air Prandtl number when air temperature is given")
-    public void calcPrandtlTest_shouldReturnDryAirPrandtlNumber_whenAirTemperatureIsGiven() {
+    void calcPrandtlTest_shouldReturnDryAirPrandtlNumber_whenAirTemperatureIsGiven() {
         //Arrange
         var ta = 26.85;
         var dynVis = PhysicsOfAir.calcDaDynVis(ta);
@@ -630,7 +629,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("taTDPInlineData")
     @DisplayName("should return moist air temperature when dew point temperature and relative humidity is given")
-    public void calcMaTaTdpRHTest_shouldReturnMoistAirTemperature_whenAirDewPointTemperatureAndRelHumidityIsGiven(double expectedTa, double RH) {
+    void calcMaTaTdpRHTest_shouldReturnMoistAirTemperature_whenAirDewPointTemperatureAndRelHumidityIsGiven(double expectedTa, double RH) {
         //Arrange
         var tdp = PhysicsOfAir.calcMaTdp(expectedTa, RH, P_ATM);
 
@@ -641,7 +640,7 @@ public class PhysicsOfAirTest {
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
     }
 
-    public static Stream<Arguments> taTDPInlineData() {
+    static Stream<Arguments> taTDPInlineData() {
         return Stream.of(
                 Arguments.of(-20, 0.1),
                 Arguments.of(-20, 10),
@@ -661,7 +660,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("RHXInlineData")
     @DisplayName("should return moist air temperature when humidity ratio and relative humidity is given")
-    public void calcMaTaRHXTest_shouldReturnAirTemperature_whenHumidityRatioAndRelHumidityIsGiven(double expectedTa, double RH) {
+    void calcMaTaRHXTest_shouldReturnAirTemperature_whenHumidityRatioAndRelHumidityIsGiven(double expectedTa, double RH) {
         //Arrange
         var Ps = PhysicsOfAir.calcMaPs(expectedTa);
         var x = PhysicsOfAir.calcMaX(RH, Ps, P_ATM);
@@ -673,7 +672,7 @@ public class PhysicsOfAirTest {
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
     }
 
-    public static Stream<Arguments> RHXInlineData() {
+    static Stream<Arguments> RHXInlineData() {
         return Stream.of(
                 Arguments.of(-20, 0.1),
                 Arguments.of(-20, 10),
@@ -696,7 +695,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("taIXInlineData")
     @DisplayName("should return moist air temperature when moist air enthalpy and humidity ratio is given")
-    public void calcMaTaIXTest_shouldReturnMoistAirTemperature_WhenMoistAirEnthalpyAndHumidityRatioIsGiven(double expectedTa, double x) {
+    void calcMaTaIXTest_shouldReturnMoistAirTemperature_WhenMoistAirEnthalpyAndHumidityRatioIsGiven(double expectedTa, double x) {
         //Arrange
         var ix = PhysicsOfAir.calcMaIx(expectedTa, x, P_ATM);
 
@@ -707,7 +706,7 @@ public class PhysicsOfAirTest {
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
     }
 
-    public static Stream<Arguments> taIXInlineData() {
+    static Stream<Arguments> taIXInlineData() {
         return Stream.of(
                 Arguments.of(-70, 0.00000000275360841),
                 Arguments.of(-70, 0.00000261593898083),
@@ -730,7 +729,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("tmaxPatInlineData")
     @DisplayName("should return maximum dry bulb air temperature for Ps<Pat condition, when saturation pressure and atm pressures are given")
-    public void calcMaTaMaxPatTest_shouldReturnMaxDryBulbAirTemperature_whenSaturationPressureAndAtmPressureAreGiven(double expectedPat) {
+    void calcMaTaMaxPatTest_shouldReturnMaxDryBulbAirTemperature_whenSaturationPressureAndAtmPressureAreGiven(double expectedPat) {
         //Act
         var actualMaxTemperature = PhysicsOfAir.calcMaTaMaxPat(expectedPat);
         var actualPs = PhysicsOfAir.calcMaPs(actualMaxTemperature);
@@ -740,7 +739,7 @@ public class PhysicsOfAirTest {
         Assertions.assertEquals(actualPs, expectedPat, LIMITED_MATH_ACCURACY);
     }
 
-    public static Stream<Arguments> tmaxPatInlineData() {
+    static Stream<Arguments> tmaxPatInlineData() {
         return Stream.of(
                 Arguments.of(80_000),
                 Arguments.of(100_000),
@@ -751,7 +750,7 @@ public class PhysicsOfAirTest {
     @ParameterizedTest
     @MethodSource("wbtTaInlineData")
     @DisplayName("should return dry bulb air temperature when wet bulb air temperature and relative humidity is given")
-    public void calcMaTaWbtTest_shouldReturnDryBulbAirTemperature_WhenWetBulbAirTemperatureAndRelativeHumidityIsGiven(double expectedTa, double RH) {
+    void calcMaTaWbtTest_shouldReturnDryBulbAirTemperature_WhenWetBulbAirTemperatureAndRelativeHumidityIsGiven(double expectedTa, double RH) {
         //Arrange
         var wbt = PhysicsOfAir.calcMaWbt(expectedTa, RH, P_ATM);
 
@@ -762,7 +761,7 @@ public class PhysicsOfAirTest {
         Assertions.assertEquals(expectedTa, actualTa, LIMITED_MATH_ACCURACY);
     }
 
-    public static Stream<Arguments> wbtTaInlineData() {
+    static Stream<Arguments> wbtTaInlineData() {
         return Stream.of(
                 Arguments.of(-20, 0.1),
                 Arguments.of(-20, 10),
