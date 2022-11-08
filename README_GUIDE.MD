@@ -2,11 +2,7 @@
 
 ---
 
-<span style="font-weight:700;font-size:15px">
-
-[HOME](README.MD) | [MOIST AIR](#moist-air-thermophysical-properties) | [LIQUID WATER](#liquid-water-thermophysical-properties) | [FLOW HANDLING](#flow-of-moist-air) | [HEATING & COOLING](#heating-and-cooling-with-condensate-discharge) | [AIR MIXING](#mixing-of-two-moist-air-flows)
-
-</span>
+<span style="font-weight:700;font-size:15px">[HOME](README.MD) | [MOIST AIR](#moist-air-thermophysical-properties) | [LIQUID WATER](#liquid-water-thermophysical-properties) | [FLOW HANDLING](#flow-of-moist-air) | [HEATING & COOLING](#heating-and-cooling-with-condensate-discharge) | [AIR MIXING](#mixing-of-two-moist-air-flows)</span>
 
 ---
 

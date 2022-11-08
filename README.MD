@@ -6,11 +6,7 @@
 
 ---
 
-<span style="font-weight:700;font-size:15px">
-
-[USER GUIDE](README_GUIDE.MD) | [FUNCTIONALITY](#functionality) | [LEGAL DISCLAIMER](#legal-disclaimer) | [UPCOMING](#upcoming-functionality) | [RESOURCES](#reference-sources)
-
-</span>
+<span style="font-weight:700;font-size:15px">[USER GUIDE](README_GUIDE.MD) | [FUNCTIONALITY](#functionality) | [LEGAL DISCLAIMER](#legal-disclaimer) | [UPCOMING](#upcoming-functionality) | [RESOURCES](#reference-sources)</span>
 
 ---
 
@@ -21,8 +17,6 @@ At the present state of development following modules are finalized ready for us
 1. Moist Air thermophysical properties (MoistAir) including simplified liquid water properties for condensate handling (LiquidWater)
 2. Flow of moist air and liquid water (FlowOfMoistAir, FlowOfFluid)
 3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
-
-LAST UPDATE: 14.03.2022 / Added physics of flow, air heating, and cooling.
 
 ## TECH
 ![image](https://img.shields.io/badge/16-Java-orange?style=for-the-badge) &nbsp;
