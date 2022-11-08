@@ -106,7 +106,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingOutTxFromInQ(double inQ) {
         resetProcess();
-        PhysicsOfHeatingCooling.HeatCoolResultDTO result = PhysicsOfHeatingCooling.calcHeatingOrDryCoolingOutTxFromInQ(inletFlow, inQ);
+        PhysicsOfHeatingCooling.HeatCoolResult result = PhysicsOfHeatingCooling.calcHeatingOrDryCoolingFromInputHeat(inletFlow, inQ);
         commitResults(result);
         setLastFunctionAndTargetValue(this::applyHeatingOutTxFromInQ, inQ);
     }
@@ -120,7 +120,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingInQFromOutTx(double outTx) {
         resetProcess();
-        PhysicsOfHeatingCooling.HeatCoolResultDTO result = PhysicsOfHeatingCooling.calcHeatingOrDryCoolingInQFromOutTx(inletFlow, outTx);
+        PhysicsOfHeatingCooling.HeatCoolResult result = PhysicsOfHeatingCooling.calcHeatingOrDryCoolingFromOutputTx(inletFlow, outTx);
         commitResults(result);
         setLastFunctionAndTargetValue(this::applyHeatingInQFromOutTx, outTx);
     }
@@ -133,7 +133,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyHeatingInQOutTxFromOutRH(double outRH) {
         resetProcess();
-        PhysicsOfHeatingCooling.HeatCoolResultDTO result = PhysicsOfHeatingCooling.calcHeatingInQOutTxFromOutRH(inletFlow, outRH);
+        PhysicsOfHeatingCooling.HeatCoolResult result = PhysicsOfHeatingCooling.calcHeatingFromOutletRH(inletFlow, outRH);
         commitResults(result);
         BF = PhysicsOfHeatingCooling.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
@@ -147,7 +147,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingOutTxFromInQ(double inQ) {
         resetProcess();
-        PhysicsOfHeatingCooling.HeatCoolResultDTO result = PhysicsOfHeatingCooling.calcCoolingOutTxFromInQ(inletFlow, tmWall, inQ);
+        PhysicsOfHeatingCooling.HeatCoolResult result = PhysicsOfHeatingCooling.calcCoolingFromInputHeat(inletFlow, tmWall, inQ);
         commitResults(result);
         BF = PhysicsOfHeatingCooling.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         setLastFunctionAndTargetValue(this::applyCoolingOutTxFromInQ, inQ);
@@ -160,7 +160,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingInQFromOutTx(double outTx) {
         resetProcess();
-        PhysicsOfHeatingCooling.HeatCoolResultDTO result = PhysicsOfHeatingCooling.calcCoolingInQFromOutTx(inletFlow, tmWall, outTx);
+        PhysicsOfHeatingCooling.HeatCoolResult result = PhysicsOfHeatingCooling.calcCoolingFromOutletTx(inletFlow, tmWall, outTx);
         commitResults(result);
         BF = PhysicsOfHeatingCooling.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outTx);
         setLastFunctionAndTargetValue(this::applyCoolingInQFromOutTx, outTx);
@@ -173,7 +173,7 @@ public class ProcessOfHeatingCooling implements Process {
      */
     public void applyCoolingInQFromOutRH(double outRH) {
         resetProcess();
-        PhysicsOfHeatingCooling.HeatCoolResultDTO result = PhysicsOfHeatingCooling.calcCoolingInQFromOutRH(inletFlow, tmWall, outRH);
+        PhysicsOfHeatingCooling.HeatCoolResult result = PhysicsOfHeatingCooling.calcCoolingFromOutletRH(inletFlow, tmWall, outRH);
         commitResults(result);
         BF = PhysicsOfHeatingCooling.calcCoolingCoilBypassFactor(tmWall, inletAir.getTx(), outletAir.getTx());
         convergenceCheckForRH(outRH);
@@ -203,7 +203,7 @@ public class ProcessOfHeatingCooling implements Process {
         this.lastMethod = method;
     }
 
-    private void commitResults(PhysicsOfHeatingCooling.HeatCoolResultDTO result) {
+    private void commitResults(PhysicsOfHeatingCooling.HeatCoolResult result) {
         Validators.validateForNotNull("HeatCoolResult", result);
         heatQ = result.heatQ();
         outletFlow.setTx(result.outTx());
