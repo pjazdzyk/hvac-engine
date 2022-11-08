@@ -1,237 +1,134 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FlowOfMoistAirTests {
 
-    @Test
-    public void FlowOfMoistAirDefaultConstructorTests(){
-
-        //Arrange
-        double initFlow = 2.0;
-        FlowOfMoistAir flowAir = new FlowOfMoistAir(initFlow);
-        MoistAir air = flowAir.getMoistAir();
-
-        double densityMa = air.getRho();
-        double densityDa = air.getRho_Da();
-        double expectedMassFlow_Ma = initFlow;
-        double expectedVolFlow_Ma = initFlow / densityMa;
-
-        //Act
-        double actualMassFlowMa = flowAir.getMassFlow();
-        double actualVolFlowMa = flowAir.getVolFlow();
-
-        //Assert
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-
-    }
+    public static final String SAMPLE_FLOW_NAME = "sample flow";
+    public static final TypeOfAirFlow SAMPLE_INIT_FLOW_TYPE = TypeOfAirFlow.MA_MASS_FLOW;
+    public static final double INIT_MASS_FLOW_MA = 2.0; // kg/s
 
     @Test
-    public void FlowOfMoistAirConstructorTests(){
-
-        //Arrange
-        double initFlow = 2.0;
-        MoistAir air = new MoistAir();
-        String expectedName = "Aążźć@#$12324 54 - 0";
-        double densityMa = air.getRho();
-        double densityDa = air.getRho_Da();
-        double expectedMassFlow_Ma = initFlow;
-        double expectedVolFlow_Ma = initFlow / densityMa;
-        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
+    @DisplayName("should create FlowOfMoistAir instance with properly calculated flows when valid input is given")
+    void flowOfMoistAirInstance_shouldCreateValidFlowOfMoistAirInstance_whenValidSampleInputIsGiven() {
+        // Arrange
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        double densityMa = sampleAir.getRho();
+        double densityDa = sampleAir.getRho_Da();
+        double humidRatio = sampleAir.getX();
+        double expectedVolFlow_Ma = INIT_MASS_FLOW_MA / densityMa;
+        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(humidRatio, INIT_MASS_FLOW_MA);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
 
-        //Act
-        FlowOfMoistAir flowAir = new FlowOfMoistAir(expectedName, initFlow, TypeOfAirFlow.MA_MASS_FLOW, air);
+        // Act
+        FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
         double actualMassFlowMa = flowAir.getMassFlow();
         double actualVolFlowMa = flowAir.getVolFlow();
         double actualMassFlowDa = flowAir.getMassFlowDa();
         double actualVolFlowDa = flowAir.getVolFlowDa();
 
-        //Assert
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getId(),expectedName);
-        Assertions.assertEquals(flowAir.getMoistAir(),air);
-
+        // Assert
+        assertThat(actualMassFlowMa).isEqualTo(INIT_MASS_FLOW_MA);
+        assertThat(actualVolFlowMa).isEqualTo(expectedVolFlow_Ma);
+        assertThat(actualMassFlowDa).isEqualTo(expectedMassFlow_Da);
+        assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
+        assertThat(flowAir.getId()).isEqualTo(SAMPLE_FLOW_NAME);
+        assertThat(flowAir.getMoistAir()).isEqualTo(sampleAir);
     }
 
     @Test
-    public void FlowOfMoistAirChangeOfFlowTests(){
-
+    @DisplayName("should correctly change all air flows state when new mass flow is given")
+    void flowOfMoistAirInstance_shouldCorrectlyChangeFlowState_whenNewMassFlowIsGiven() {
         // Arrange
-        double initFlow = 2.0;
-        MoistAir air = new MoistAir("newAir",45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
-        String expectedName = "Aążźć@#$12324 54 - 0";
-
-        // Before change
-        FlowOfMoistAir flowAir = new FlowOfMoistAir(expectedName, initFlow, TypeOfAirFlow.MA_MASS_FLOW, air);
-        double densityMa = air.getRho();
-        double densityDa = air.getRho_Da();
-        double expectedMassFlow_Ma = initFlow;
-        double expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
+        double densityMa = sampleAir.getRho();
+        double densityDa = sampleAir.getRho_Da();
+        double humidRatio = sampleAir.getX();
+        double newMassFlowMa = 0.124;
+        double expectedVolFlow_Ma = newMassFlowMa / densityMa;
+        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(humidRatio, newMassFlowMa);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
+
+        // Act
+        flowAir.setMassFlow(newMassFlowMa);
         double actualMassFlowMa = flowAir.getMassFlow();
         double actualVolFlowMa = flowAir.getVolFlow();
         double actualMassFlowDa = flowAir.getMassFlowDa();
         double actualVolFlowDa = flowAir.getVolFlowDa();
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getId(),expectedName);
-        Assertions.assertEquals(flowAir.getMoistAir(),air);
 
-        // MassFlowMa change
-        double newFlow = 0.124;
-        flowAir.setMassFlow(newFlow);
-        expectedMassFlow_Ma = newFlow;
-        expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
-        expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
-        actualMassFlowMa = flowAir.getMassFlow();
-        actualVolFlowMa = flowAir.getVolFlow();
-        actualMassFlowDa = flowAir.getMassFlowDa();
-        actualVolFlowDa = flowAir.getVolFlowDa();
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getId(),expectedName);
-        Assertions.assertEquals(flowAir.getMoistAir(),air);
-
-        //VolFlowMa change
-        newFlow = 3.56;
-        flowAir.setVolFlow(newFlow);
-        expectedVolFlow_Ma = newFlow;
-        expectedMassFlow_Ma = expectedVolFlow_Ma * densityMa;
-        expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),expectedMassFlow_Ma);
-        expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
-        actualMassFlowMa = flowAir.getMassFlow();
-        actualVolFlowMa = flowAir.getVolFlow();
-        actualMassFlowDa = flowAir.getMassFlowDa();
-        actualVolFlowDa = flowAir.getVolFlowDa();
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getId(),expectedName);
-        Assertions.assertEquals(flowAir.getMoistAir(),air);
-
-
-        // MassFlowDa change
-        newFlow = 5.3;
-        flowAir.setMassFlowDa(newFlow);
-        expectedMassFlow_Da = newFlow;
-        expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
-        expectedMassFlow_Ma = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air.getX(),expectedMassFlow_Da);
-        expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        actualMassFlowMa = flowAir.getMassFlow();
-        actualVolFlowMa = flowAir.getVolFlow();
-        actualMassFlowDa = flowAir.getMassFlowDa();
-        actualVolFlowDa = flowAir.getVolFlowDa();
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getId(),expectedName);
-        Assertions.assertEquals(flowAir.getMoistAir(),air);
-
-        // VolFlowDa change
-        newFlow = 2.38;
-        flowAir.setVolFlowDa(newFlow);
-        expectedVolFlow_Da = newFlow;
-        expectedMassFlow_Da = expectedVolFlow_Da * densityDa;
-        expectedMassFlow_Ma = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(air.getX(),expectedMassFlow_Da);
-        expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        actualMassFlowMa = flowAir.getMassFlow();
-        actualVolFlowMa = flowAir.getVolFlow();
-        actualMassFlowDa = flowAir.getMassFlowDa();
-        actualVolFlowDa = flowAir.getVolFlowDa();
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getId(),expectedName);
-        Assertions.assertEquals(flowAir.getMoistAir(),air);
-
+        // Assert
+        assertThat(actualMassFlowMa).isEqualTo(newMassFlowMa);
+        assertThat(actualVolFlowMa).isEqualTo(expectedVolFlow_Ma);
+        assertThat(actualMassFlowDa).isEqualTo(expectedMassFlow_Da);
+        assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
+        assertThat(flowAir.getId()).isEqualTo(SAMPLE_FLOW_NAME);
+        assertThat(flowAir.getMoistAir()).isEqualTo(sampleAir);
     }
 
     @Test
-    public void FlowOfMoistAirFluidAndNameChangeTest(){
-
+    @DisplayName("should correctly change all air flows state when new vol flow is given")
+    public void flowOfMoistAirInstance_shouldCorrectlyChangeFlowState_whenNewVolumetricFlowIsGiven() {
         // Arrange
-        double initFlow = 2.0;
-        MoistAir air = new MoistAir("newAir",45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
-        String expectedName = "Aążźć@#$12324 54 - 0";
-        FlowOfMoistAir flowAir = new FlowOfMoistAir(expectedName, initFlow, TypeOfAirFlow.MA_MASS_FLOW, air);
-
-        // Name change
-        String newName = "TestName";
-        flowAir.setId(newName);
-        Assertions.assertEquals(flowAir.getId(),newName);
-
-        // MoistAir instance change
-        MoistAir newAir = new MoistAir();
-        flowAir.setMoistAir(newAir);
-        double expectedMassFlow_Ma = initFlow;
-        double densityMa = newAir.getRho();
-        double densityDa = newAir.getRho_Da();
-        double expectedVolFlow_Ma = expectedMassFlow_Ma / densityMa;
-        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(newAir.getX(),expectedMassFlow_Ma);
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
+        double densityMa = sampleAir.getRho();
+        double densityDa = sampleAir.getRho_Da();
+        double humidRatio = sampleAir.getX();
+        double newVolFlowMa = 3.56;
+        double expectedMassFlow_Ma = newVolFlowMa * densityMa;
+        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(humidRatio, expectedMassFlow_Ma);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
+
+        // Act
+        flowAir.setVolFlow(newVolFlowMa);
         double actualMassFlowMa = flowAir.getMassFlow();
         double actualVolFlowMa = flowAir.getVolFlow();
         double actualMassFlowDa = flowAir.getMassFlowDa();
         double actualVolFlowDa = flowAir.getVolFlowDa();
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(flowAir.getId(),newName);
-        Assertions.assertEquals(flowAir.getMoistAir(),newAir);
 
+        // Assert
+        assertThat(actualMassFlowMa).isEqualTo(expectedMassFlow_Ma);
+        assertThat(actualVolFlowMa).isEqualTo(newVolFlowMa);
+        assertThat(actualMassFlowDa).isEqualTo(expectedMassFlow_Da);
+        assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
+        assertThat(flowAir.getId()).isEqualTo(SAMPLE_FLOW_NAME);
+        assertThat(flowAir.getMoistAir()).isEqualTo(sampleAir);
     }
 
     @Test
-    public void FlowOfMoistAirChangeOfLockedFlowTests(){
-
+    @DisplayName("should correctly change air flow state but keep newly set locked flow unchanged when air property affecting flow is changed")
+    public void flowOfMoistAirInstance_shouldCorrectlyChangeFlowStateAndKeepNewlySetLockedFlowUnchanged_whenAirPropertyChanges() {
         // Arrange
-        double initFlow = 2.0;
-        MoistAir air = new MoistAir("newAir",45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
-        String expectedName = "Aążźć@#$12324 54 - 0";
-        FlowOfMoistAir flowAir = new FlowOfMoistAir(expectedName, initFlow, TypeOfAirFlow.MA_MASS_FLOW, air);
-
-        // LockedFlow change
-        flowAir.setLockedFlowType(TypeOfAirFlow.MA_VOL_FLOW);
-        double expectedVolFlow_Ma = flowAir.getVolFlow();
-        air.setTx(70.5);
-        flowAir.updateFlows();
-        double actualVolFlowMa = flowAir.getVolFlow();
-        double expectedMassFlow_Ma = PhysicsOfFlow.calcMassFlowFromVolFlow(air.getRho(),actualVolFlowMa);
-        double actualMassFlowMa = flowAir.getMassFlow();
-        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(air.getX(),actualMassFlowMa);
-        double actualMassFlowDa = flowAir.getMassFlowDa();
-        double expectedVolFlow_Da = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(air.getRho_Da(),actualMassFlowDa);
-        double actualVolFlowDa = flowAir.getVolFlowDa();
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
         TypeOfAirFlow expectedLockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
+        double expectedVolFlow_Ma = flowAir.getVolFlow();
+
+        // Act
+        flowAir.setLockedFlowType(expectedLockedFlowType);
+        flowAir.setTx(70.1);
+        double actualVolFlowMa = flowAir.getVolFlow();
+        double actualMassFlowMa = flowAir.getMassFlow();
+        double actualMassFlowDa = flowAir.getMassFlowDa();
+        double actualVolFlowDa = flowAir.getVolFlowDa();
         TypeOfAirFlow actualLockedFlowType = flowAir.getLockedFlowType();
 
-        Assertions.assertEquals(actualMassFlowMa,expectedMassFlow_Ma);
-        Assertions.assertEquals(actualVolFlowMa,expectedVolFlow_Ma);
-        Assertions.assertEquals(actualMassFlowDa,expectedMassFlow_Da);
-        Assertions.assertEquals(actualVolFlowDa,expectedVolFlow_Da);
-        Assertions.assertEquals(actualLockedFlowType,expectedLockedFlowType);
-
+        // Assert
+        double expectedMassFlow_Ma = PhysicsOfFlow.calcMassFlowFromVolFlow(sampleAir.getRho(), actualVolFlowMa);
+        double expectedMassFlow_Da = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(sampleAir.getX(), actualMassFlowMa);
+        double expectedVolFlow_Da = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(sampleAir.getRho_Da(), actualMassFlowDa);
+        assertThat(actualMassFlowMa).isEqualTo(expectedMassFlow_Ma);
+        assertThat(actualVolFlowMa).isEqualTo(expectedVolFlow_Ma);
+        assertThat(actualMassFlowDa).isEqualTo(expectedMassFlow_Da);
+        assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
+        assertThat(actualLockedFlowType).isEqualTo(expectedLockedFlowType);
     }
-
 }
