@@ -20,7 +20,7 @@ public class LibPhysicsProcessExceptionsTests {
         FlowOfMoistAir inletFLow = null;
 
         // assert
-        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcHeatingOrDryCoolingOutTxFromInQ(inletFLow, inputHeat));
+        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcHeatingOrDryCoolingFromInputHeat(inletFLow, inputHeat));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class LibPhysicsProcessExceptionsTests {
         FlowOfMoistAir inletFLow = null;
 
         // Assert
-        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcHeatingOrDryCoolingInQFromOutTx(inletFLow, inputHeat));
+        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcHeatingOrDryCoolingFromOutputTx(inletFLow, inputHeat));
     }
 
     @Test
@@ -42,8 +42,8 @@ public class LibPhysicsProcessExceptionsTests {
         var outsideMaxLimitRH = 101;     // %
 
         // Assert
-        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcHeatingInQOutTxFromOutRH(SAMPLE_AIRFLOW, negativeRH));
-        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcHeatingInQOutTxFromOutRH(SAMPLE_AIRFLOW, outsideMaxLimitRH));
+        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcHeatingFromOutletRH(SAMPLE_AIRFLOW, negativeRH));
+        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcHeatingFromOutletRH(SAMPLE_AIRFLOW, outsideMaxLimitRH));
 
     }
 
@@ -55,7 +55,7 @@ public class LibPhysicsProcessExceptionsTests {
         FlowOfMoistAir inletFlow = null;
 
         // Assert
-        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcHeatingInQOutTxFromOutRH(inletFlow, 50));
+        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcHeatingFromOutletRH(inletFlow, 50));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class LibPhysicsProcessExceptionsTests {
         var greaterThanInitialRH = SAMPLE_AIRFLOW.getRH() + 0.000000001;  // oC
 
         // Assert
-        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcHeatingInQOutTxFromOutRH(SAMPLE_AIRFLOW, greaterThanInitialRH));
+        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcHeatingFromOutletRH(SAMPLE_AIRFLOW, greaterThanInitialRH));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class LibPhysicsProcessExceptionsTests {
         var graterThanInitialTemp = SAMPLE_AIRFLOW.getMoistAir().getTx() + 0.000000001;  // oC
 
         // Assert
-        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingInQFromOutTx(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, graterThanInitialTemp));
+        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingFromOutletTx(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, graterThanInitialTemp));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class LibPhysicsProcessExceptionsTests {
         var outletAirTemp = 13;   //  oC
 
         // Assert
-        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcCoolingInQFromOutTx(inletFlow, AVERAGE_WALL_TEMP, outletAirTemp));
+        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcCoolingFromOutletTx(inletFlow, AVERAGE_WALL_TEMP, outletAirTemp));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class LibPhysicsProcessExceptionsTests {
         double sampleRH = 50;   // %
 
         // Assert
-        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcCoolingInQFromOutRH(inletFlow, AVERAGE_WALL_TEMP, sampleRH));
+        assertThrows(NullPointerException.class, () -> PhysicsOfHeatingCooling.calcCoolingFromOutletRH(inletFlow, AVERAGE_WALL_TEMP, sampleRH));
     }
 
     @Test
@@ -110,8 +110,8 @@ public class LibPhysicsProcessExceptionsTests {
         var outsideMaxLimitRH = 101;  // %
 
         // Assert
-        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingInQFromOutRH(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, outsideMaxLimitRH));
-        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingInQFromOutRH(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, negativeRH));
+        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingFromOutletRH(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, outsideMaxLimitRH));
+        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingFromOutletRH(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, negativeRH));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class LibPhysicsProcessExceptionsTests {
         var graterThanInitialTemp = SAMPLE_AIRFLOW.getMoistAir().getTx() + 0.000000001; // oC
 
         // Assert
-        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingInQFromOutRH(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, graterThanInitialTemp));
+        assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingFromOutletRH(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, graterThanInitialTemp));
     }
 
 

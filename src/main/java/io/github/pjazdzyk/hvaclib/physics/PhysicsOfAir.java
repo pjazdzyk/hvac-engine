@@ -44,7 +44,6 @@ public final class PhysicsOfAir {
 
     private PhysicsOfAir() {
     }
-
     private static final double WG_RATIO = Constants.CST_WV_MM / Constants.CST_DA_MM;
     private static final double SOLVER_A_COEF = 0.8;
     private static final double SOLVER_B_COEF = 1.01;
