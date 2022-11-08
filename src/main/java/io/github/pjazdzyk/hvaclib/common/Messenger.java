@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.messaging;
+package io.github.pjazdzyk.hvaclib.common;
 
 public final class Messenger {
 

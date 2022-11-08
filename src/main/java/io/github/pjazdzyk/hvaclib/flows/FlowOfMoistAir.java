@@ -1,7 +1,7 @@
-package io.github.pjazdzyk.hvaclib.model.flows;
+package io.github.pjazdzyk.hvaclib.flows;
 
 import io.github.pjazdzyk.hvaclib.exceptions.FlowArgumentException;
-import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import java.io.Serializable;

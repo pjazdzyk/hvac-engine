@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.model.properties;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 public interface Fluid {
     void updateProperties();

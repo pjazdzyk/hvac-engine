@@ -1,8 +1,8 @@
-package io.github.pjazdzyk.hvaclib.model;
+package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfFluid;
-import io.github.pjazdzyk.hvaclib.model.flows.TypeOfFluidFlow;
-import io.github.pjazdzyk.hvaclib.model.properties.LiquidWater;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
+import io.github.pjazdzyk.hvaclib.flows.TypeOfFluidFlow;
+import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,8 @@
-package io.github.pjazdzyk.hvaclib.model.process;
+package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.model.flows.TypeOfAirFlow;
-import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
+import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAirMixing;
 import io.github.pjazdzyk.hvaclib.common.Validators;

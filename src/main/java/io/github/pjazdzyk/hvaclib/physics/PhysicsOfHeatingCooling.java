@@ -3,11 +3,11 @@ package io.github.pjazdzyk.hvaclib.physics;
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.messaging.Messenger;
+import io.github.pjazdzyk.hvaclib.common.Messenger;
 import io.github.pjazdzyk.hvaclib.exceptions.ProcessArgumentException;
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.common.Validators;
-import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 
 /**
  * PSYCHROMETRICS PROCESS EQUATIONS LIBRARY <br>

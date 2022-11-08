@@ -1,6 +1,6 @@
-package io.github.pjazdzyk.hvaclib.model;
+package io.github.pjazdzyk.hvaclib.fluid;
 
-import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

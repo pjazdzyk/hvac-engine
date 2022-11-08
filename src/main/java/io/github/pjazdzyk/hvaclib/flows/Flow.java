@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.model.flows;
+package io.github.pjazdzyk.hvaclib.flows;
 
 public interface Flow {
     void updateFlows();

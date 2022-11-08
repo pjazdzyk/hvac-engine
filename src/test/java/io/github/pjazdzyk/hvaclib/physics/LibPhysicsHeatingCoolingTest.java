@@ -1,7 +1,10 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfWater;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

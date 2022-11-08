@@ -1,8 +1,8 @@
-package io.github.pjazdzyk.hvaclib.model;
+package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.model.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.model.flows.TypeOfAirFlow;
-import io.github.pjazdzyk.hvaclib.model.properties.MoistAir;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
+import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import org.junit.jupiter.api.Assertions;
