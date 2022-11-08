@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FlowOfMoistAirTests {
+class FlowOfMoistAirTests {
 
-    public static final String SAMPLE_FLOW_NAME = "sample flow";
-    public static final TypeOfAirFlow SAMPLE_INIT_FLOW_TYPE = TypeOfAirFlow.MA_MASS_FLOW;
-    public static final double INIT_MASS_FLOW_MA = 2.0; // kg/s
+    static final String SAMPLE_FLOW_NAME = "sample flow";
+    static final TypeOfAirFlow SAMPLE_INIT_FLOW_TYPE = TypeOfAirFlow.MA_MASS_FLOW;
+    static final double INIT_MASS_FLOW_MA = 2.0; // kg/s
 
     @Test
     @DisplayName("should create FlowOfMoistAir instance with properly calculated flows when valid input is given")
@@ -74,7 +74,7 @@ public class FlowOfMoistAirTests {
 
     @Test
     @DisplayName("should correctly change all air flows state when new vol flow is given")
-    public void flowOfMoistAirInstance_shouldCorrectlyChangeFlowState_whenNewVolumetricFlowIsGiven() {
+    void flowOfMoistAirInstance_shouldCorrectlyChangeFlowState_whenNewVolumetricFlowIsGiven() {
         // Arrange
         MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
         FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
@@ -104,7 +104,7 @@ public class FlowOfMoistAirTests {
 
     @Test
     @DisplayName("should correctly change air flow state but keep newly set locked flow unchanged when air property affecting flow is changed")
-    public void flowOfMoistAirInstance_shouldCorrectlyChangeFlowStateAndKeepNewlySetLockedFlowUnchanged_whenAirPropertyChanges() {
+    void flowOfMoistAirInstance_shouldCorrectlyChangeFlowStateAndKeepNewlySetLockedFlowUnchanged_whenAirPropertyChanges() {
         // Arrange
         MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
         FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);

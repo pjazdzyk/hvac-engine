@@ -8,7 +8,7 @@ import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ProcessOfHeatingCoolingTests {
+class ProcessOfHeatingCoolingTests {
 
     static final double MATH_ACCURACY = Defaults.DEF_MATH_ACCURACY;
 

@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-public class LibPhysicsHeatingCoolingTest {
+class LibPhysicsHeatingCoolingTest {
 
-    public FlowOfMoistAir heatingInletAirFlow;
-    public FlowOfMoistAir coolingInletAirFlow;
-    public static final double PAT = 98700; // Pa
-    public static final double MATH_ACCURACY = 1E-8;
-    public static final double REL_HUM_ACCURACY = 1E-3;
-    public static final double TYPICAL_AVERAGE_COIL_WALL_TEMP = 11.5;
+    FlowOfMoistAir heatingInletAirFlow;
+    FlowOfMoistAir coolingInletAirFlow;
+    static final double PAT = 98700; // Pa
+    static final double MATH_ACCURACY = 1E-8;
+    static final double REL_HUM_ACCURACY = 1E-3;
+    static final double TYPICAL_AVERAGE_COIL_WALL_TEMP = 11.5;
 
     @BeforeEach
     void setUp() {

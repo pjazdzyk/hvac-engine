@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-public class PhysicsOfFlowTests {
+class PhysicsOfFlowTests {
 
     public static final double MATH_ACCURACY = 10E-15;
     static final Fluid SAMPLE_LIQ_WATER = new LiquidWater("water", 15);
@@ -20,7 +20,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate volumetric flow flows when mass flow and fluid density is given")
-    public void calcVolFlowFromMassFlow_shouldReturnVolumetricFlow_whenMassFlowAndFluidDensityIsGiven() {
+    void calcVolFlowFromMassFlow_shouldReturnVolumetricFlow_whenMassFlowAndFluidDensityIsGiven() {
         // Arrange
         // ACT
         var actualWaterVolFlow = PhysicsOfFlow.calcVolFlowFromMassFlow(SAMPLE_LIQ_WATER.getRho(), SAMPLE_MASS_FLOW);
@@ -31,7 +31,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate mass flow flows when volumetric flow and fluid density is given")
-    public void calcMassFlowFromVolFlow_shouldReturnMassFlow_whenVolumetricFlowAndFluidDensityIsGiven() {
+    void calcMassFlowFromVolFlow_shouldReturnMassFlow_whenVolumetricFlowAndFluidDensityIsGiven() {
         // Arrange
         // ACT
         var actualWaterMassFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(SAMPLE_LIQ_WATER.getRho(), SAMPLE_FLUID_VOL_FLOW);
@@ -44,7 +44,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate moist air mass flow when dry air mass flow and moist air density is given")
-    public void calcMaMassFlowFromDaMassFlow_shouldReturnMoistAirMassFlow_whenDryAirMassFlowAndMoistAirDensityIsGiven() {
+    void calcMaMassFlowFromDaMassFlow_shouldReturnMoistAirMassFlow_whenDryAirMassFlowAndMoistAirDensityIsGiven() {
         // Arrange
         var dryAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
 
@@ -57,7 +57,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate dry air mass flow when moist air mass flow and humidity ratio is given")
-    public void calcDaMassFlowFromMaMassFlow_shouldReturnDryAirMassFlow_whenMoistAirMassAndHumidityRatioIsGiven() {
+    void calcDaMassFlowFromMaMassFlow_shouldReturnDryAirMassFlow_whenMoistAirMassAndHumidityRatioIsGiven() {
         // Arrange
         // ACT
         var actualDaAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
@@ -68,7 +68,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate dry air mass flow when moist air volumetric flow, humidity ratio and moist air density is given")
-    public void calcDaMassFlowFromMaVolFlow_shouldReturnDryAirMassFlow_whenMoistAirVolFlowHumidityRatioAndMoistAirDensityIsGiven() {
+    void calcDaMassFlowFromMaVolFlow_shouldReturnDryAirMassFlow_whenMoistAirVolFlowHumidityRatioAndMoistAirDensityIsGiven() {
         // Arrange
         var volFlowMa = 0.8403259531006995;
 
@@ -81,7 +81,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate dry air mass flow when dry air volumetric flow and dry air density is given")
-    public void calcDaMassFlowFromDaVolFlow_shouldReturnDryAirMassFlow_whenDryAirVolFlowAndDryAirDensityIsGiven() {
+    void calcDaMassFlowFromDaVolFlow_shouldReturnDryAirMassFlow_whenDryAirVolFlowAndDryAirDensityIsGiven() {
         // Arrange
         var volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(SAMPLE_AIR.getRho_Da(), SAMPLE_AIR_DA_MASS_FLOW);
 
@@ -96,7 +96,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate dry air volumetric flow when dry air mass flow and dry air density is given")
-    public void calcDaVolFlowFromDaMassFlow_shouldReturnDryAirVolumetricFlow_whenDryAirMassFlowAndDryAirDensityIsGiven() {
+    void calcDaVolFlowFromDaMassFlow_shouldReturnDryAirVolumetricFlow_whenDryAirMassFlowAndDryAirDensityIsGiven() {
         // Arrange
         var dryAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
         var expectedDryAirVolFlow = 0.8245101441496746;
@@ -110,7 +110,7 @@ public class PhysicsOfFlowTests {
 
     @Test
     @DisplayName("should calculate moist air mass flow when dry air mass flow and moist air density is given")
-    public void calcMaVolFlowFromDaMassFlow_shouldReturnMoistAirVolumetricFlow_whenDryAirMassFlowAndHumidityRatioAndAndMoistAirDensityIsGiven() {
+    void calcMaVolFlowFromDaMassFlow_shouldReturnMoistAirVolumetricFlow_whenDryAirMassFlowAndHumidityRatioAndAndMoistAirDensityIsGiven() {
         // Arrange
         var dryAirMassFlow = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
         var expectedMaVolFLow = 0.8403259531006995;

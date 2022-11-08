@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
 
-public class ProcessOfMixingTests {
+class ProcessOfMixingTests {
 
-    public static double Pat = Defaults.DEF_PAT;
-    public static FlowOfMoistAir firstFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20,100);
-    public static FlowOfMoistAir secondFlow = FlowOfMoistAir.ofM3hVolFlow(5000,18,50);
+    static double Pat = Defaults.DEF_PAT;
+    static FlowOfMoistAir firstFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20,100);
+    static FlowOfMoistAir secondFlow = FlowOfMoistAir.ofM3hVolFlow(5000,18,50);
 
     @Test
-    public void ProcessOfMixingConstructorTests(){
+    void ProcessOfMixingConstructorTests(){
 
         //Arrange
         var outFlow = new FlowOfMoistAir();

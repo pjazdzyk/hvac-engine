@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PhysicsOfAirExceptionTests {
+class PhysicsOfAirExceptionTests {
 
     static final double Pat = 100_000.0;
 
     @Test
     @DisplayName("should throw an exception when temperature is lower than minimum limiter is given")
-    public void calcMaPs_shouldThrowException_whenTemperatureIsLowerThanMinimumLimitIsGiven() {
+    void calcMaPs_shouldThrowException_whenTemperatureIsLowerThanMinimumLimitIsGiven() {
         // Arrange
         var tempOutsideThreshold = Limiters.MIN_T - 1;
 
@@ -23,7 +23,7 @@ public class PhysicsOfAirExceptionTests {
 
     @Test
     @DisplayName("should thrown an exception when negative relative humidity is given")
-    public void calcMaTdp_shouldThrowException_whenNegativeRelativeHumidityIsGiven() {
+    void calcMaTdp_shouldThrowException_whenNegativeRelativeHumidityIsGiven() {
         // Arrange
         var airTemp = 20;
         var negativeRH = -20;
