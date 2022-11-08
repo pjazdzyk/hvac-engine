@@ -2,7 +2,6 @@ package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.process.ProcessOfHeatingCooling;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
@@ -158,7 +157,7 @@ public class ProcessOfHeatingCoolingTests {
        var expectedOutT = 11.0;
        var expectedMda = summerInletFlow.getMassFlowDa();
        var expectedTm = cooling.getAvrgWallTemp();
-       var result = PhysicsOfHeatingCooling.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
+       var result = PhysicsOfHeatingCooling.calcCoolingFromOutletTx(summerInletFlow,expectedTm,expectedOutT);
        var expectedHeatQ = result.heatQ();
        var expectedX = result.outX();
        var expectedCondTemp = result.condTx();
@@ -197,7 +196,7 @@ public class ProcessOfHeatingCoolingTests {
        var expectedOutT = 11.0;
        var expectedMda = summerInletFlow.getMassFlowDa();
        var expectedTm = cooling.getAvrgWallTemp();
-       var result = PhysicsOfHeatingCooling.calcCoolingInQFromOutTx(summerInletFlow,expectedTm,expectedOutT);
+       var result = PhysicsOfHeatingCooling.calcCoolingFromOutletTx(summerInletFlow,expectedTm,expectedOutT);
        var expectedHeatQ = result.heatQ();
        var expectedX = result.outX();
        var expectedCondTemp = result.condTx();
