@@ -85,7 +85,7 @@ public class ProcessOfMixing implements Process {
      * Calculates and sets outlet properties based on mixing result<br>
      */
     public void applyMixing() {
-        PhysicsOfAirMixing.MixingResultDTO result = calcMixing(inletFlow, recirculationFlow);
+        PhysicsOfAirMixing.MixingResult result = calcMixing(inletFlow, recirculationFlow);
         commitResults(result);
         lastMethod = this::applyMixing;
     }
@@ -105,7 +105,7 @@ public class ProcessOfMixing implements Process {
         this.lastMethod = method;
     }
 
-    private void commitResults(PhysicsOfAirMixing.MixingResultDTO result) {
+    private void commitResults(PhysicsOfAirMixing.MixingResult result) {
         Validators.validateForNotNull("Mixing result", result);
         inletFlow.setMassFlowDa(result.inMda());
         recirculationFlow.setMassFlowDa(result.recMda());
