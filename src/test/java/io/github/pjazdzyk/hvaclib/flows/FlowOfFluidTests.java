@@ -1,167 +1,104 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
-import io.github.pjazdzyk.hvaclib.flows.TypeOfFluidFlow;
+import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
-import io.github.pjazdzyk.hvaclib.common.Defaults;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FlowOfFluidTests {
 
+    public static final LiquidWater SAMPLE_WATER = new LiquidWater(98.6);
+    public static final String SAMPLE_NAME = "Aążźć@#$12324 54 - 0";
+    public static final double SAMPLE_INIT_MASS_FLOW_RATE = 4.68; // kg/s
+    public static final TypeOfFluidFlow SAMPLE_INIT_FLOW_TYPE = TypeOfFluidFlow.MASS_FLOW;
+
     @Test
-    public void FlowOfFluidDefaultConstructorTests(){
-        //Arrange
-        LiquidWater water = new LiquidWater(Defaults.DEF_WT_TW);
-        double density = water.getRho();
-        double expectedMassFlow = 0.124;
-        double expectedVolFlow = expectedMassFlow/density;
-        String expectedName = "FlowOfFluid";
+    @DisplayName("should create FlowOfFluid instance with properly calculated flows when valid input is given")
+    public void flowOfFluidInstance_shouldCreateValidFlowOfFluidInstance_whenValidSampleInputIsGiven() {
+        // Arrange
+        double waterDensity = SAMPLE_WATER.getRho();
+        double expectedVolFlow = SAMPLE_INIT_MASS_FLOW_RATE / waterDensity;
 
-        //Act
-        FlowOfFluid flow1 = new FlowOfFluid(expectedMassFlow);
-        double actualMassFlow = flow1.getMassFlow();
-        double actualVolFlow = flow1.getVolFlow();
-        String actualName = flow1.getId();
+        // Act
+        FlowOfFluid flowOfWater = new FlowOfFluid(SAMPLE_NAME, SAMPLE_INIT_MASS_FLOW_RATE, SAMPLE_INIT_FLOW_TYPE, SAMPLE_WATER);
+        double actualMassFlow = flowOfWater.getMassFlow();
+        double actualVolFlow = flowOfWater.getVolFlow();
+        TypeOfFluidFlow actualLockedFlowType = flowOfWater.getLockedFlowType();
 
-        //Assert
-        Assertions.assertEquals(actualMassFlow,expectedMassFlow);
-        Assertions.assertEquals(actualVolFlow,expectedVolFlow);
-        Assertions.assertEquals(actualName,expectedName);
+        // Assert
+        assertThat(actualMassFlow).isEqualTo(SAMPLE_INIT_MASS_FLOW_RATE);
+        assertThat(actualVolFlow).isEqualTo(expectedVolFlow);
+        assertThat(actualLockedFlowType).isEqualTo(SAMPLE_INIT_FLOW_TYPE);
     }
 
     @Test
-    public void FlowOfFluidConstructorTests(){
-        //Arrange
-        LiquidWater water = new LiquidWater(10.2);
-        double density = water.getRho();
-        double initFlow = 0.124;
-        double expectedVolFlow1 = initFlow / density;
-        double expectedMassFlow2 = initFlow * density;
+    @DisplayName("should correctly change all flows state when new mass flow is set")
+    public void flowOfFluidInstance_shouldCorrectlyChangeFlowState_whenMassNewMassFlowIsGiven() {
+        // Arrange
+        double waterDensity = SAMPLE_WATER.getRho();
+        FlowOfFluid flowOfWater = new FlowOfFluid(SAMPLE_NAME, SAMPLE_INIT_MASS_FLOW_RATE, SAMPLE_INIT_FLOW_TYPE, SAMPLE_WATER);
+        double expectedNewFlow = 0.124; // kg/s
+        double expectedVolFlow = expectedNewFlow / waterDensity;
 
-        String expectedName = "Aążźć@#$12324 54 - 0";
+        // Act
+        flowOfWater.setMassFlow(expectedNewFlow);
+        double actualMassFlow = flowOfWater.getMassFlow();
+        double actualVolFlow = flowOfWater.getVolFlow();
+        TypeOfFluidFlow actualLockedFlowType = flowOfWater.getLockedFlowType();
 
-        //Act
-        FlowOfFluid flow1 = new FlowOfFluid(expectedName, initFlow, TypeOfFluidFlow.MASS_FLOW, water);
-        FlowOfFluid flow2 = new FlowOfFluid(expectedName, initFlow, TypeOfFluidFlow.VOL_FLOW, water);
-
-        double actualMassFlow1 = flow1.getMassFlow();
-        double actualVolFlow1 = flow1.getVolFlow();
-        double actualMassFlow2 = flow2.getMassFlow();
-        double actualVolFlow2 = flow2.getVolFlow();
-        String actualName = flow1.getId();
-
-        //Assert
-        Assertions.assertEquals(actualMassFlow1, initFlow);
-        Assertions.assertEquals(actualVolFlow1,expectedVolFlow1);
-        Assertions.assertEquals(actualMassFlow2,expectedMassFlow2);
-        Assertions.assertEquals(actualVolFlow2, initFlow);
-        Assertions.assertEquals(actualName,expectedName);
-        Assertions.assertEquals(water, flow2.getFluid());
+        // Assert
+        assertThat(actualMassFlow).isEqualTo(expectedNewFlow);
+        assertThat(actualVolFlow).isEqualTo(expectedVolFlow);
+        assertThat(actualLockedFlowType).isEqualTo(SAMPLE_INIT_FLOW_TYPE);
     }
 
     @Test
-    public void FlowOfFluidChangeOdFlowTests(){
+    @DisplayName("should correctly change all flows state when new vol flow is set")
+    public void flowOfFluidInstance_shouldCorrectlyChangeFlowState_whenMassNewVolumetricFlowIsGiven() {
+        // Arrange
+        double waterDensity = SAMPLE_WATER.getRho();
+        FlowOfFluid flowOfWater = new FlowOfFluid(SAMPLE_NAME, SAMPLE_INIT_MASS_FLOW_RATE, SAMPLE_INIT_FLOW_TYPE, SAMPLE_WATER);
+        double newVolFlow = 2.0; // m3/s
+        double expectedMassFlow = newVolFlow * waterDensity;
+        TypeOfFluidFlow expectedLockedFlow = TypeOfFluidFlow.VOL_FLOW;
 
-        //Arrange
-        LiquidWater water = new LiquidWater(98.6);
-        double density = water.getRho();
-        String expectedName = "Aążźć@#$12324 54 - 0";
-        double initFlow = 4.68;
+        // Act
+        flowOfWater.setVolFlow(newVolFlow);
+        double actualMassFlow = flowOfWater.getMassFlow();
+        double actualVolFlow = flowOfWater.getVolFlow();
+        TypeOfFluidFlow actualLockedFlowType = flowOfWater.getLockedFlowType();
 
-        //Before change
-        FlowOfFluid flow = new FlowOfFluid(expectedName, initFlow, TypeOfFluidFlow.MASS_FLOW, water);
-        double expectedMassFlow = initFlow;
-        double expectedVolFlow = initFlow / density;
-        double actualMassFlow = flow.getMassFlow();
-        double actualVolFlow = flow.getVolFlow();
-        TypeOfFluidFlow expectedLockedFlowType = TypeOfFluidFlow.MASS_FLOW;
-        TypeOfFluidFlow actualLockedFlowType = flow.getLockedFlowType();
-        Assertions.assertEquals(actualMassFlow, expectedMassFlow);
-        Assertions.assertEquals(actualVolFlow, expectedVolFlow);
-        Assertions.assertEquals(actualLockedFlowType,expectedLockedFlowType);
-
-        //MassFlow change
-        double newFlow = 0.124;
-        flow.setMassFlow(newFlow);
-        expectedMassFlow = newFlow;
-        expectedVolFlow = newFlow / density;
-        actualMassFlow = flow.getMassFlow();
-        actualVolFlow = flow.getVolFlow();
-        expectedLockedFlowType = TypeOfFluidFlow.MASS_FLOW;
-        actualLockedFlowType = flow.getLockedFlowType();
-        Assertions.assertEquals(actualMassFlow, expectedMassFlow);
-        Assertions.assertEquals(actualVolFlow, expectedVolFlow);
-        Assertions.assertEquals(actualLockedFlowType,expectedLockedFlowType);
-
-        //VolFlow change
-        newFlow = 2.0;
-        flow.setVolFlow(newFlow);
-        expectedVolFlow = newFlow;
-        expectedMassFlow = newFlow * density;
-        actualMassFlow = flow.getMassFlow();
-        actualVolFlow = flow.getVolFlow();
-        expectedLockedFlowType = TypeOfFluidFlow.VOL_FLOW;
-        actualLockedFlowType = flow.getLockedFlowType();
-        Assertions.assertEquals(actualMassFlow, expectedMassFlow);
-        Assertions.assertEquals(actualVolFlow, expectedVolFlow);
-        Assertions.assertEquals(actualLockedFlowType,expectedLockedFlowType);
-
+        // Assert
+        assertThat(actualMassFlow).isEqualTo(expectedMassFlow);
+        assertThat(actualVolFlow).isEqualTo(newVolFlow);
+        assertThat(actualLockedFlowType).isEqualTo(expectedLockedFlow);
     }
 
     @Test
-    public void FlowOfFluidChangeOfFluidAndNameTests() {
-
+    @DisplayName("should correctly change flow state but keep newly set locked flow unchanged when fluid property affecting flow changes")
+    public void flowOfFluidInstance_shouldCorrectlyChangeFlowStateAndKeepNewlySetLockedFlowUnchanged_whenFluidPropertyChanges() {
         // Arrange
         double initFlow = 2.0;
-        LiquidWater water = new LiquidWater(95.1);
-        FlowOfFluid flow = new FlowOfFluid("OldName", initFlow, TypeOfFluidFlow.MASS_FLOW, water);
+        Fluid water = new LiquidWater(20);
+        FlowOfFluid flow = new FlowOfFluid("FlowName", initFlow, SAMPLE_INIT_FLOW_TYPE, water);
+        TypeOfFluidFlow expectedLockedFLow = TypeOfFluidFlow.VOL_FLOW;
 
-        // Name change
-        String newName = "TestName";
-        flow.setId(newName);
-        Assertions.assertEquals(flow.getId(),newName);
+        // Act
+        flow.setLockedFlowType(expectedLockedFLow);
+        flow.setTx(11);
 
-        // Fluid instance change
-        LiquidWater newWater = new LiquidWater("changedWater", 35.6);
-        flow.setFluid(newWater);
-        double density = newWater.getRho();
-        double expectedMassFlow = initFlow;
-        double expectedVolFlow = expectedMassFlow / density;
-        double actualMassFlow = flow.getMassFlow();
-        double actualVolFlow = flow.getVolFlow();
-        TypeOfFluidFlow expectedLockedFlowType = TypeOfFluidFlow.MASS_FLOW;
-        TypeOfFluidFlow actualLockedFlowType = flow.getLockedFlowType();
-        Assertions.assertEquals(actualMassFlow, expectedMassFlow);
-        Assertions.assertEquals(actualVolFlow, expectedVolFlow);
-        Assertions.assertEquals(actualLockedFlowType,expectedLockedFlowType);
-
-    }
-
-    @Test
-    public void FlowOfFluidChangeOfLockedFlowTests(){
-
-        // Arrange
-        double initFlow = 2.0;
-        LiquidWater water = new LiquidWater(95.1);
-        FlowOfFluid flow = new FlowOfFluid("FlowName", initFlow, TypeOfFluidFlow.MASS_FLOW, water);
-
-        // LockedFlow change
-        flow.setLockedFlowType(TypeOfFluidFlow.VOL_FLOW);
+        // Assert
         double expectedVolFlow = flow.getVolFlow();
-        water.setTx(11.1);
-        flow.updateFlows();
         double density = water.getRho();
         double expectedMassFlow = expectedVolFlow * density;
         double actualMassFlow = flow.getMassFlow();
         double actualVolFlow = flow.getVolFlow();
-
-        // Assert
-        TypeOfFluidFlow expectedLockedFlowType = TypeOfFluidFlow.VOL_FLOW;
         TypeOfFluidFlow actualLockedFlowType = flow.getLockedFlowType();
-        Assertions.assertEquals(actualMassFlow, expectedMassFlow);
-        Assertions.assertEquals(actualVolFlow, expectedVolFlow);
-        Assertions.assertEquals(actualLockedFlowType,expectedLockedFlowType);
+        assertThat(actualMassFlow).isEqualTo(expectedMassFlow);
+        assertThat(actualVolFlow).isEqualTo(expectedVolFlow);
+        assertThat(actualLockedFlowType).isEqualTo(expectedLockedFLow);
     }
 
 }
