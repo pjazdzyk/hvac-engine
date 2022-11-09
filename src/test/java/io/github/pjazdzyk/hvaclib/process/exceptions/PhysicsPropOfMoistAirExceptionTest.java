@@ -1,6 +1,6 @@
 package io.github.pjazdzyk.hvaclib.process.exceptions;
 
-import io.github.pjazdzyk.hvaclib.common.Limiters;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsLimiters;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfMoistAir;
 import io.github.pjazdzyk.hvaclib.physics.exceptions.AirPhysicsArgumentException;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,7 @@ class PhysicsPropOfMoistAirExceptionTest {
     @DisplayName("should throw an exception when temperature is lower than minimum limiter is given")
     void calcMaPs_shouldThrowException_whenTemperatureIsLowerThanMinimumLimitIsGiven() {
         // Arrange
-        var tempOutsideThreshold = Limiters.MIN_T - 1;
+        var tempOutsideThreshold = PhysicsLimiters.MIN_T - 1;
 
         // Assert
         assertThrows(AirPhysicsArgumentException.class, () -> PhysicsPropOfMoistAir.calcMaPs(tempOutsideThreshold));

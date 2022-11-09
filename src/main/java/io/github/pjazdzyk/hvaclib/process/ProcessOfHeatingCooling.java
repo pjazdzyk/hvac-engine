@@ -7,7 +7,7 @@ import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
-import io.github.pjazdzyk.hvaclib.common.MathUtils;
+import io.github.pjazdzyk.hvaclib.physics.MathUtils;
 import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
