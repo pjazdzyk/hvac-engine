@@ -12,63 +12,14 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsOfAirTest {
-
-    static final double P_ATM = 100_000.0;
-    static final double MATH_ACCURACY = 1.0E-11;
-    static final double LIMITED_MATH_ACCURACY = 1.0E-8;
-    static final double PS_LOW_TEMP_ACCURACY = 0.03;
-    static final double PS_MED_TEMP_ACCURACY = 0.20;
-    static final double PS_HIGH_TEMP_ACCURACY = 1.90;
-    static final double TDP_ACCURACY = 0.04;
-    static final double WBT_LOW_TEMP_ACCURACY = 0.007;
-    static final double WBT_HIGH_TEMP_ACCURACY = 0.05;
-    static final double DYN_VIS_ACCURACY = 0.00000007;
-    static final double RHO_ACCURACY = 0.004;
-    static final double CP_DA_ACCURACY = 0.00047;
-    static final double CP_WV_ACCURACY = 0.025;
-    static final double K_LOW_TEMP_ACCURACY = 0.0006;
-    static final double K_HIGH_TEMP_ACCURACY = 0.0013;
-    static final double TH_DIFF_ACCURACY = 0.021E-5;
-    static final double PRANDTL_ACCURACY = 0.009;
-
-    @Test
-    @DisplayName("should return atmospheric pressure when higher altitude is given")
-    void calcPatAltTest_shouldReturnLowerAtmPressure_whenHigherAltitudeIsGiven() {
-        //Arrange
-        var altitude = 2000;
-        var expectedPressure = 101.325 * Math.pow((1 - 2.25577 * Math.pow(10, -5) * altitude), 5.2559) * 1000;
-
-        //Act
-        double actualPressure = PhysicsOfAir.calcPatAlt(altitude);
-
-        //Assert
-        assertThat(actualPressure).isEqualTo(expectedPressure);
-        assertThat(actualPressure).isLessThan(P_ATM);
-    }
-
-    @Test
-    @DisplayName("should return lower temperature for higher altitudes")
-    void calcTxAltTest_shouldReturnLowerTemperature_whenHigherAltitudeIsGiven() {
-        // Arrange
-        var altitude = 2000;
-        var tempAtSea = 20.0;
-        var expectedTemp = tempAtSea - 0.0065 * altitude;
-
-        //Act
-        var actualTemp = PhysicsOfAir.calcTxAlt(tempAtSea, altitude);
-
-        // Assert
-        assertThat(actualTemp).isEqualTo(expectedTemp);
-        assertThat(actualTemp).isLessThan(tempAtSea);
-    }
+class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
 
     @ParameterizedTest
     @MethodSource("psInlineData")
     @DisplayName("should return saturation pressures as in ASHRAE tables when air temperature is given")
     void calcMaPsTest_shouldReturnSatPressureAsInAshraeTables_whenAirTempIsGiven(double ta, double expected) {
         //Act
-        var actual = PhysicsOfAir.calcMaPs(ta);
+        var actual = PhysicsPropOfMoistAir.calcMaPs(ta);
         double accuracy;
 
         if (ta < 0)
@@ -78,7 +29,7 @@ class PhysicsOfAirTest {
         else
             accuracy = PS_HIGH_TEMP_ACCURACY;
 
-        //Assert
+        // Assert
         assertThat(actual).isEqualTo(expected, withPrecision(accuracy));
     }
 
@@ -103,9 +54,9 @@ class PhysicsOfAirTest {
     @DisplayName("should return dew point temperature as in generated source set, when air temperature is given")
     void calcMaTdpTests_shouldReturnDewPointTempAsInSourceSet_whenAirTempIsGiven(double ta, double RH, double expected) {
         //Act
-        var actual = PhysicsOfAir.calcMaTdp(ta, RH, P_ATM);
+        var actual = PhysicsPropOfMoistAir.calcMaTdp(ta, RH, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actual).isEqualTo(expected, withPrecision(TDP_ACCURACY));
     }
 
@@ -124,13 +75,13 @@ class PhysicsOfAirTest {
     @MethodSource("wbtInlineData")
     @DisplayName("should return wet bulb temperature as in provided dataset when air temperature and RH is given")
     void calcMaWbtTests_shouldReturnWetBulbTempAsInDataSet_whenAirTempAndRHIsGiven(double ta, double RH, double expected) {
-        //Arrange
+        // Arrange
         var accuracy = ta < 60 ? WBT_LOW_TEMP_ACCURACY : WBT_HIGH_TEMP_ACCURACY;
 
         //Act
-        var actual = PhysicsOfAir.calcMaWbt(ta, RH, P_ATM);
+        var actual = PhysicsPropOfMoistAir.calcMaWbt(ta, RH, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actual).isEqualTo(expected, withPrecision(accuracy));
     }
 
@@ -160,15 +111,15 @@ class PhysicsOfAirTest {
     @Test
     @DisplayName("should return correct saturation pressure, when humidity ratio, RH and atm pressure is given")
     void calcMaPSTest_shouldReturnSatPressure_whenHumidityRatioRHandAtmPressureIsGiven() {
-        //Arrange
+        // Arrange
         var expected = 2338.880310914088;
         var RH = 50.0;
         var x = 0.007359483455449959;
 
         //Act
-        var actual = PhysicsOfAir.calcMaPs(x, RH, P_ATM);
+        var actual = PhysicsPropOfMoistAir.calcMaPs(x, RH, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actual).isEqualTo(expected, withPrecision(MATH_ACCURACY));
     }
 
@@ -177,9 +128,9 @@ class PhysicsOfAirTest {
     @DisplayName("should return RH as in provided data set for each dry bulb air temperature and dew point temperature")
     void calcMaRHTdpTest_shouldReturnRHasInDataSet_whenAirTempAndDwPointTempIsGiven(double ta, double tdp, double expected) {
         //Act
-        var actualRH = PhysicsOfAir.calcMaRH(tdp, ta);
+        var actualRH = PhysicsPropOfMoistAir.calcMaRH(tdp, ta);
 
-        //Assert
+        // Assert
         assertThat(actualRH).isEqualTo(expected, withPrecision(TDP_ACCURACY));
     }
 
@@ -197,351 +148,133 @@ class PhysicsOfAirTest {
     @Test
     @DisplayName("should return relative humidity when dry bulb air temperature and humidity ratio is given")
     void calcMaRHTest_shouldReturnRH_whenAirTempAndHumidityRatioIsGiven() {
-        //Arrange
+        // Arrange
         var ta = 20.0;
         var x = 0.006615487885540037;
         var expectedRH = 45.0;
 
         //Act
-        var actualRH = PhysicsOfAir.calcMaRH(ta, x, P_ATM);
+        var actualRH = PhysicsPropOfMoistAir.calcMaRH(ta, x, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actualRH).isEqualTo(expectedRH, withPrecision(MATH_ACCURACY));
     }
 
     @Test
     @DisplayName("should return humidity ratio when RH and saturation pressure is given")
     void calcMaXTest_shouldReturnHumidityRatio_whenRHAndSaturationPressureIsGiven() {
-        //Arrange
+        // Arrange
         var RH = 75.0;
         var Ps = 3169.2164701436063;
         var expectedHumRatio = 0.015143324009257978;
 
         //Act
-        var actualHumRatio = PhysicsOfAir.calcMaX(RH, Ps, P_ATM);
+        var actualHumRatio = PhysicsPropOfMoistAir.calcMaX(RH, Ps, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actualHumRatio).isEqualTo(expectedHumRatio, withPrecision(MATH_ACCURACY));
     }
 
     @Test
     @DisplayName("should return correct maximum humidity ratio when saturation pressure Ps and atmospheric pressure Pat is given")
     void calcMaXMaxTest_shouldReturnMaxHumidityRatio_WhenSaturationPressureAndAtmPressureIsGiven() {
-        //Arrange
+        // Arrange
         var Ps = 3169.2164701436063;
         var expectedHumidityRatio = 0.020356309472910922;
 
         //Act
-        var actualHumidityRatioX = PhysicsOfAir.calcMaXMax(Ps, P_ATM);
+        var actualHumidityRatioX = PhysicsPropOfMoistAir.calcMaXMax(Ps, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actualHumidityRatioX).isEqualTo(expectedHumidityRatio, withPrecision(MATH_ACCURACY));
-    }
-
-    @ParameterizedTest
-    @MethodSource("dynVisDaInlineData")
-    @DisplayName("should return dry air dynamic viscosity according to the physics tables for each temperature in dataset")
-    void calcDaDynVisTest_shouldReturnDryAirDynamicViscosity_whenAirTemperatureIsGiven(double ta, double expectedDynViscosityFromTables) {
-        //Act
-        var actualDynamicViscosity = PhysicsOfAir.calcDaDynVis(ta);
-
-        //Assert
-        assertThat(actualDynamicViscosity).isEqualTo(expectedDynViscosityFromTables, withPrecision(DYN_VIS_ACCURACY));
-    }
-
-    //INLINE DATA SEED -> based on: https://www.engineeringtoolbox.com/air-absolute-kinematic-viscosity-d_601.html
-    static Stream<Arguments> dynVisDaInlineData() {
-        return Stream.of(
-                Arguments.of(-75, 13.18 / 1000000), Arguments.of(-50, 14.56 / 1000000),
-                Arguments.of(-25, 15.88 / 1000000), Arguments.of(-5, 16.90 / 1000000),
-                Arguments.of(0, 17.15 / 1000000), Arguments.of(5, 17.40 / 1000000),
-                Arguments.of(15, 17.89 / 1000000), Arguments.of(20, 18.13 / 1000000),
-                Arguments.of(30, 18.60 / 1000000), Arguments.of(50, 19.53 / 1000000),
-                Arguments.of(80, 20.88 / 1000000), Arguments.of(100, 21.74 / 1000000),
-                Arguments.of(200, 25.73 / 1000000), Arguments.of(500, 35.47 / 1000000),
-                Arguments.of(600, 38.25 / 1000000)
-        );
-    }
-
-    @Test
-    @DisplayName("should return correct water vapour dynamic viscosity when input temperature is given")
-    void calcWvDynVisTest_shouldReturnDynamicWaterVapourDynamicViscosity_whenInputTemperatureIsGiven() {
-        //Arrange
-        var ta = 20.0;
-        var expectedDynViscosity = 9.731572271822231E-6;
-
-        //Act
-        var actualDynViscosity = PhysicsOfAir.calcWvDynVis(ta);
-
-        //Assert
-        assertThat(actualDynViscosity).isEqualTo(expectedDynViscosity, withPrecision(MATH_ACCURACY));
     }
 
     @Test
     @DisplayName("should return correct moist air dynamic viscosity when air temperature and humidity ratio is given")
     void calcMaDynVisTest_shouldReturnMoistAirDynamicViscosity_whenAirTemperatureAndHumidityRatioIsGiven() {
-        //Arrange
+        // Arrange
         var ta = 20.0;
         var x = 0.00648405507311303;
         var expectedDynamicViscosity = 1.7971489177670825E-5;
 
         //Act
-        var actualDynamicViscosity = PhysicsOfAir.calcMaDynVis(ta, x);
+        var actualDynamicViscosity = PhysicsPropOfMoistAir.calcMaDynVis(ta, x);
 
-        //Assert
+        // Assert
         assertThat(actualDynamicViscosity).isEqualTo(expectedDynamicViscosity, withPrecision(MATH_ACCURACY));
     }
 
     @ParameterizedTest
     @MethodSource("densityInlineData")
     @DisplayName("should return correct air density according to ASHRARE tables for given air temperature and humidity ratio ")
-    void calcRhoDaMaTest_shouldReturnAirDensityAccToASHRAETables_whenAirTempAndHumidityRatioIsGiven(double ta, double humRatio, double expectedDaDensity, double expectedMaDensity) {
+    void calcRhoMaTest_shouldReturnMoistAirDensityAccToASHRAETables_whenAirTempAndHumidityRatioIsGiven(double ta, double humRatio, double expectedMaDensity) {
         //Act
         var Pat = 101325;
-        var actualDaDensity = PhysicsOfAir.calcDaRho(ta, Pat);
-        var actualMaDensity = PhysicsOfAir.calcMaRho(ta, humRatio, Pat);
+        var actualMaDensity = PhysicsPropOfMoistAir.calcMaRho(ta, humRatio, Pat);
 
-        //Arrange
-        assertThat(actualDaDensity).isEqualTo(expectedDaDensity, withPrecision(RHO_ACCURACY));
+        // Arrange
         assertThat(actualMaDensity).isEqualTo(expectedMaDensity, withPrecision(RHO_ACCURACY));
     }
 
     //INLINE DATA SEED -> generated from: ASHRAE TABLES
     static Stream<Arguments> densityInlineData() {
         return Stream.of(
-                Arguments.of(-60, 0.0000067, 1.0 / 0.6027, 1.0 / 0.6027), Arguments.of(-50, 0.0000243, 1.0 / 0.6312, 1.0 / 0.6312),
-                Arguments.of(-30, 0.0000793, 1.0 / 0.6881, 1.0 / 0.6884), Arguments.of(-20, 0.0006373, 1.0 / 0.7165, 1.0 / 0.7173),
-                Arguments.of(-10, 0.0016062, 1.0 / 0.7450, 1.0 / 0.7469), Arguments.of(0, 0.003789, 1.0 / 0.7734, 1.0 / 0.7781),
-                Arguments.of(10, 0.007661, 1.0 / 0.8018, 1.0 / 0.8116), Arguments.of(20, 0.014758, 1.0 / 0.8302, 1.0 / 0.8498),
-                Arguments.of(30, 0.027329, 1.0 / 0.8586, 1.0 / 0.8962), Arguments.of(40, 0.049141, 1.0 / 0.8870, 1.0 / 0.9568),
-                Arguments.of(50, 0.086858, 1.0 / 0.9154, 1.0 / 1.0425), Arguments.of(60, 0.15354, 1.0 / 0.9438, 1.0 / 1.1752),
-                Arguments.of(80, 0.55295, 1.0 / 1.0005, 1.0 / 1.8810), Arguments.of(90, 1.42031, 1.0 / 1.0289, 1.0 / 3.3488)
+                Arguments.of(-60, 0.0000067, 1.0 / 0.6027), Arguments.of(-50, 0.0000243, 1.0 / 0.6312),
+                Arguments.of(-30, 0.0000793, 1.0 / 0.6884), Arguments.of(-20, 0.0006373, 1.0 / 0.7173),
+                Arguments.of(-10, 0.0016062, 1.0 / 0.7469), Arguments.of(0, 0.003789, 1.0 / 0.7781),
+                Arguments.of(10, 0.007661, 1.0 / 0.8116), Arguments.of(20, 0.014758, 1.0 / 0.8498),
+                Arguments.of(30, 0.027329, 1.0 / 0.8962), Arguments.of(40, 0.049141, 1.0 / 0.9568),
+                Arguments.of(50, 0.086858, 1.0 / 1.0425), Arguments.of(60, 0.15354, 1.0 / 1.1752),
+                Arguments.of(80, 0.55295, 1.0 / 1.8810), Arguments.of(90, 1.42031, 1.0 / 3.3488)
         );
-    }
-
-    @Test
-    @DisplayName("should return water vapour density when input temperature is given")
-    void calcWvRhoTest_shouldReturnWaterVapourDensity_whenAirTemperatureIsGiven() {
-        //Arrange
-        var ta = 20.0;
-        var RH = 50.0;
-        var expectedWvDensity = 0.8327494782009955;
-
-        //Act
-        var actualWvDensity = PhysicsOfAir.calcWvRho(ta, RH, P_ATM);
-
-        //Assert
-        assertThat(actualWvDensity).isEqualTo(expectedWvDensity, withPrecision(MATH_ACCURACY));
-    }
-
-    @Test
-    @DisplayName("should return dry air kinematic viscosity when air temperature and density are given")
-    void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
-        //Arrange
-        var ta = 20.0;
-        var rhoDa = PhysicsOfAir.calcDaRho(ta, P_ATM);
-        var expectedDaKinViscosity = 1.519954676200779E-5;
-
-        //Act
-        var actualDaKinViscosity = PhysicsOfAir.calcDaKinVis(ta, rhoDa);
-
-        //Assert
-        assertThat(actualDaKinViscosity).isEqualTo(expectedDaKinViscosity, withPrecision(MATH_ACCURACY));
-    }
-
-    @Test
-    @DisplayName("should return water vapour kinematic viscosity when air temperature and density are given")
-    void calcWvKinVisTest_shouldReturnWaterVapourKinematicViscosity_whenAirTempAndDensityIsGiven() {
-        //Arrange
-        var ta = 20.0;
-        var RH = 50.0;
-        var rhoWv = PhysicsOfAir.calcWvRho(ta, RH, P_ATM);
-        var expectedWvKinViscosity = 1.168607429553187E-5;
-
-        //Act
-        var actualWvKinViscosity = PhysicsOfAir.calcWvKinVis(ta, rhoWv);
-
-        //Assert
-        assertThat(actualWvKinViscosity).isEqualTo(expectedWvKinViscosity, withPrecision(MATH_ACCURACY));
     }
 
     @Test
     @DisplayName("should return moist air kinematic viscosity when air temperature, density and humidity ratio are given")
-    void calc_Ma_kinVisTest_shouldReturnMoistAirKinematicViscosity_whenAirTempDensityAndHumRatioIsGiven() {
-        //Arrange
+    void calcMaKinVisTest_shouldReturnMoistAirKinematicViscosity_whenAirTempDensityAndHumRatioIsGiven() {
+        // Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var Ps = PhysicsOfAir.calcMaPs(ta);
-        var x = PhysicsOfAir.calcMaX(RH, Ps, P_ATM);
-        var rhoMa = PhysicsOfAir.calcMaRho(ta, x, P_ATM);
+        var Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
+        var x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, P_ATM);
+        var rhoMa = PhysicsPropOfMoistAir.calcMaRho(ta, x, P_ATM);
         var expectedMaKinViscosity = 1.529406259567132E-5;
 
         //Act
-        var actualMaKinViscosity = PhysicsOfAir.calcMaKinVis(ta, x, rhoMa);
+        var actualMaKinViscosity = PhysicsPropOfMoistAir.calcMaKinVis(ta, x, rhoMa);
 
-        //Assert
+        // Assert
         assertThat(actualMaKinViscosity).isEqualTo(expectedMaKinViscosity, withPrecision(MATH_ACCURACY));
-    }
-
-    @ParameterizedTest
-    @MethodSource("kDaInlineData")
-    @DisplayName("should return dry air thermal conductivity according to tables when air temperature is given")
-    void calcDaKTest_shouldReturnDryAirThermalConductivity_WhenAirTemperatureIsGiven(double ta, double expectedDryAirThermalConductivity) {
-        //Act
-        var actualDryAirThermalConductivity = PhysicsOfAir.calcDaK(ta);
-        var accuracy = K_LOW_TEMP_ACCURACY;
-        if (ta > 200)
-            accuracy = K_HIGH_TEMP_ACCURACY;
-
-        //Assert
-        assertThat(actualDryAirThermalConductivity).isEqualTo(expectedDryAirThermalConductivity, withPrecision(accuracy));
-    }
-
-    //INLINE DATA SEED -> generated from: https://www.engineeringtoolbox.com/dry-air-properties-d_973.html
-    static Stream<Arguments> kDaInlineData() {
-        return Stream.of(
-                Arguments.of(-98.15, 0.01593),
-                Arguments.of(-73.15, 0.01809),
-                Arguments.of(-48.15, 0.0202),
-                Arguments.of(-23.15, 0.02227),
-                Arguments.of(1.85, 0.02428),
-                Arguments.of(26.85, 0.02624),
-                Arguments.of(51.85, 0.02816),
-                Arguments.of(76.85, 0.03003),
-                Arguments.of(101.85, 0.03186),
-                Arguments.of(126.85, 0.03365),
-                Arguments.of(176.85, 0.0371),
-                Arguments.of(226.85, 0.04041),
-                Arguments.of(276.85, 0.04357),
-                Arguments.of(326.85, 0.04661),
-                Arguments.of(376.85, 0.04954),
-                Arguments.of(426.85, 0.05236)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("cpDaInlineData")
-    @DisplayName("should return dry specific heat air according to tables when air temperature is given")
-    void calcDaCpTest_shouldReturnDryAirSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedDaSpecificHeat) {
-        //Act
-        var actualDaSpecificHeat = PhysicsOfAir.calcDaCp(ta);
-
-        //Assert
-        assertThat(actualDaSpecificHeat).isEqualTo(expectedDaSpecificHeat, withPrecision(CP_DA_ACCURACY));
-    }
-
-    //INLINE DATA SEED -> Based on E.W. Lemmon. Thermodynamic Properties of Air (..)" (2000)
-    static Stream<Arguments> cpDaInlineData() {
-        return Stream.of(
-                Arguments.of(-73.15, 1.002),
-                Arguments.of(-53.15, 1.003),
-                Arguments.of(-13.15, 1.003),
-                Arguments.of(6.85, 1.004),
-                Arguments.of(26.85, 1.005),
-                Arguments.of(46.85, 1.006),
-                Arguments.of(66.85, 1.007),
-                Arguments.of(86.85, 1.009),
-                Arguments.of(106.85, 1.011),
-                Arguments.of(206.85, 1.026),
-                Arguments.of(306.85, 1.046),
-                Arguments.of(406.85, 1.070),
-                Arguments.of(506.85, 1.094),
-                Arguments.of(866, 1.1650)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("cpWvInlineData")
-    @DisplayName("should return water vapour specific heat according to tables when air temperature is given")
-    void calcWvCpTest_shouldReturnWaterVapourSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedWvSpecificHeat) {
-        //Act
-        var actualWvSpecificHeat = PhysicsOfAir.calcWvCp(ta);
-
-        //Assert
-        assertThat(actualWvSpecificHeat).isEqualTo(expectedWvSpecificHeat, withPrecision(CP_WV_ACCURACY));
-    }
-
-    //INLINE DATA SEED -> Based on https://www.engineeringtoolbox.com/water-vapor-d_979.html
-    static Stream<Arguments> cpWvInlineData() {
-        return Stream.of(
-                Arguments.of(-98.15, 1.850),
-                Arguments.of(-73.15, 1.851),
-                Arguments.of(-48.15, 1.852),
-                Arguments.of(-23.15, 1.855),
-                Arguments.of(1.850, 1.859),
-                Arguments.of(26.85, 1.864),
-                Arguments.of(51.85, 1.871),
-                Arguments.of(76.85, 1.88),
-                Arguments.of(101.85, 1.89),
-                Arguments.of(126.85, 1.901),
-                Arguments.of(176.85, 1.926),
-                Arguments.of(226.85, 1.954),
-                Arguments.of(326.85, 2.015),
-                Arguments.of(526.85, 2.147),
-                Arguments.of(676.85, 2.252),
-                Arguments.of(976.85, 2.458),
-                Arguments.of(1126.85, 2.552),
-                Arguments.of(1426.85, 2.711),
-                Arguments.of(1726.85, 2.836)
-        );
     }
 
     @Test
     @DisplayName("should return moist air specific heat when air temperature is given")
     void calcMaCpTest_shouldReturnMoistAirSpecificHeat_whenAirTemperatureIsGiven() {
-        //Arrange
+        // Arrange
         var ta = 20.0;
         var humRatio = 0.007261881104670626;
         var expectedMoistAirSpecificHeat = 1.0181616347871336;
 
         //Act
-        var actualMoistAirSpecificHeat = PhysicsOfAir.calcMaCp(ta, humRatio);
+        var actualMoistAirSpecificHeat = PhysicsPropOfMoistAir.calcMaCp(ta, humRatio);
 
-        //Assert
+        // Assert
         assertThat(actualMoistAirSpecificHeat).isEqualTo(expectedMoistAirSpecificHeat, withPrecision(MATH_ACCURACY));
-    }
-
-    @Test
-    @DisplayName("should return dry air specific enthalpy when air temperature is given")
-    void calcDaITest_shouldReturnDryAirSpecificEnthalpy_whenAirTemperatureIsGiven() {
-        //Arrange
-        var ta = 20.0;
-        var expectedDaSpecificEnthalpy = 20.093833530674114;
-
-        //Act
-        var actualDaSpecificEnthalpy = PhysicsOfAir.calcDaI(ta);
-
-        //Assert
-        assertThat(actualDaSpecificEnthalpy).isEqualTo(expectedDaSpecificEnthalpy, withPrecision(MATH_ACCURACY));
-    }
-
-    @Test
-    @DisplayName("should return water vapour specific enthalpy when air temperature is given")
-    void calcWvITest_shouldReturnWaterVapourSpecificEnthalpy_whenAirTemperatureIsGiven() {
-        //Arrange
-        var ta = 20.0;
-        var expectedWvSpecificEnthalpy = 2537.997710797728;
-
-        //Act
-        var actualWvSpecificEnthalpy = PhysicsOfAir.calcWvI(ta);
-
-        //Assert
-        assertThat(expectedWvSpecificEnthalpy).isEqualTo(actualWvSpecificEnthalpy, withPrecision(MATH_ACCURACY));
     }
 
     @Test
     @DisplayName("should return water mist enthalpy when air temperature is given")
     void calcWtITest_shouldReturnWaterSpecificEnthalpy_whenAirTemperatureIsGiven() {
-        //Arrange
+        // Arrange
         var ta = 20.0;
         var expectedWtMistEnthalpyForPositiveTemp = 83.80000000000001;
         var expectedWtMistEnthalpyForNegativeTemp = 0.0;
 
         //Act
-        var actualWtMistEnthalpyForPositiveTemp = PhysicsOfAir.calcWtI(ta);
-        var actualWtMistEnthalpyForNegativeTemp = PhysicsOfAir.calcWtI(-ta);
+        var actualWtMistEnthalpyForPositiveTemp = PhysicsPropOfMoistAir.calcWtI(ta);
+        var actualWtMistEnthalpyForNegativeTemp = PhysicsPropOfMoistAir.calcWtI(-ta);
 
-        //Assert
+        // Assert
         assertThat(actualWtMistEnthalpyForPositiveTemp).isEqualTo(expectedWtMistEnthalpyForPositiveTemp, withPrecision(MATH_ACCURACY));
         assertThat(expectedWtMistEnthalpyForNegativeTemp).isEqualTo(actualWtMistEnthalpyForNegativeTemp, withPrecision(MATH_ACCURACY));
     }
@@ -549,16 +282,16 @@ class PhysicsOfAirTest {
     @Test
     @DisplayName("should return ice mist enthalpy when air temperature is given")
     void calcIceITest_shouldReturnIceMistSpecificEnthalpy_whenAirTemperatureIsGiven() {
-        //Arrange
+        // Arrange
         var ta = 20.0;
         var expectedIceMistEnthalpyForPositiveTemp = 0.0;
         var expectedIceMistEnthalpyForNegativeTemp = -375.90000000000003;
 
         //Act
-        var actualIceMistEnthalpyForPositiveTemp = PhysicsOfAir.calcIceI(ta);
-        var actualIceMistEnthalpyForNegativeTemp = PhysicsOfAir.calcIceI(-ta);
+        var actualIceMistEnthalpyForPositiveTemp = PhysicsPropOfMoistAir.calcIceI(ta);
+        var actualIceMistEnthalpyForNegativeTemp = PhysicsPropOfMoistAir.calcIceI(-ta);
 
-        //Assert
+        // Assert
         assertThat(actualIceMistEnthalpyForPositiveTemp).isEqualTo(expectedIceMistEnthalpyForPositiveTemp, withPrecision(MATH_ACCURACY));
         assertThat(actualIceMistEnthalpyForNegativeTemp).isEqualTo(expectedIceMistEnthalpyForNegativeTemp, withPrecision(MATH_ACCURACY));
     }
@@ -566,7 +299,7 @@ class PhysicsOfAirTest {
     @Test
     @DisplayName("should return moist air specific enthalpy when air temperature and humidity ratio is given")
     void calcMaIxTest_shouldReturnMoistAirSpecificEnthalpy_whenAirTemperatureAndHumidityRatioIsGiven() {
-        //Arrange
+        // Arrange
         var ta1 = 20.0;
         var x1 = 0.0072129;     //unsaturated for 20oC
         var x2 = 0.02;          //water mist or ice mist
@@ -579,64 +312,29 @@ class PhysicsOfAirTest {
         var expectedEnthalpyUnsaturatedNegative = -19.682530744707513;
 
         //Act
-        var actualEnthalpyUnsaturated = PhysicsOfAir.calcMaIx(ta1, x1, P_ATM);
-        var actualEnthalpyWithWaterMist = PhysicsOfAir.calcMaIx(ta1, x2, P_ATM);
-        var actualEnthalpyWithIceMist = PhysicsOfAir.calcMaIx(ta2, x2, P_ATM);
-        var actualEnthalpyUnsaturatedNegative = PhysicsOfAir.calcMaIx(ta2, x3, P_ATM);
+        var actualEnthalpyUnsaturated = PhysicsPropOfMoistAir.calcMaIx(ta1, x1, P_ATM);
+        var actualEnthalpyWithWaterMist = PhysicsPropOfMoistAir.calcMaIx(ta1, x2, P_ATM);
+        var actualEnthalpyWithIceMist = PhysicsPropOfMoistAir.calcMaIx(ta2, x2, P_ATM);
+        var actualEnthalpyUnsaturatedNegative = PhysicsPropOfMoistAir.calcMaIx(ta2, x3, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actualEnthalpyUnsaturated).isEqualTo(expectedEnthalpyUnsaturated, withPrecision(MATH_ACCURACY));
         assertThat(actualEnthalpyWithWaterMist).isEqualTo(expectedEnthalpyWithWaterMist, withPrecision(MATH_ACCURACY));
         assertThat(actualEnthalpyWithIceMist).isEqualTo(expectedEnthalpyWithIceMist, withPrecision(MATH_ACCURACY));
         assertThat(actualEnthalpyUnsaturatedNegative).isEqualTo(expectedEnthalpyUnsaturatedNegative, withPrecision(MATH_ACCURACY));
     }
 
-    @Test
-    @DisplayName("should return dry air thermal diffusivity when air temperature is given")
-    void calcThDiffTest_shouldReturnDryAirThermalDiffusivity_whenAirTemperatureIsGiven() {
-        //Arrange
-        var Pat = 101_300;
-        var ta = 26.85;
-        var rhoDa = PhysicsOfAir.calcDaRho(ta, Pat);
-        var kDa = PhysicsOfAir.calcDaK(ta);
-        var cpDa = PhysicsOfAir.calcDaCp(ta);
-        var expectedThermalDiffusivity = 2.218E-5;
-
-        //Act
-        var actualThermalDiffusivity = PhysicsOfAir.calcThDiff(rhoDa, kDa, cpDa);
-
-        //Assert
-        assertThat(actualThermalDiffusivity).isEqualTo(expectedThermalDiffusivity, withPrecision(TH_DIFF_ACCURACY));
-    }
-
-    @Test
-    @DisplayName("should return dry air Prandtl number when air temperature is given")
-    void calcPrandtlTest_shouldReturnDryAirPrandtlNumber_whenAirTemperatureIsGiven() {
-        //Arrange
-        var ta = 26.85;
-        var dynVis = PhysicsOfAir.calcDaDynVis(ta);
-        var kDa = PhysicsOfAir.calcDaK(ta);
-        var cpDa = PhysicsOfAir.calcDaCp(ta);
-        var expectedPrandtlNumber = 0.707;
-
-        //Act
-        var actualPrandtlNumber = PhysicsOfAir.calcPrandtl(dynVis, kDa, cpDa);
-
-        //Assert
-        assertThat(actualPrandtlNumber).isEqualTo(expectedPrandtlNumber, withPrecision(PRANDTL_ACCURACY));
-    }
-
     @ParameterizedTest
     @MethodSource("taTDPInlineData")
     @DisplayName("should return moist air temperature when dew point temperature and relative humidity is given")
     void calcMaTaTdpRHTest_shouldReturnMoistAirTemperature_whenAirDewPointTemperatureAndRelHumidityIsGiven(double expectedTa, double RH) {
-        //Arrange
-        var tdp = PhysicsOfAir.calcMaTdp(expectedTa, RH, P_ATM);
+        // Arrange
+        var tdp = PhysicsPropOfMoistAir.calcMaTdp(expectedTa, RH, P_ATM);
 
         //Act
-        var actualTa = PhysicsOfAir.calcMaTaTdpRH(tdp, RH, P_ATM);
+        var actualTa = PhysicsPropOfMoistAir.calcMaTaTdpRH(tdp, RH, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
     }
 
@@ -661,14 +359,14 @@ class PhysicsOfAirTest {
     @MethodSource("RHXInlineData")
     @DisplayName("should return moist air temperature when humidity ratio and relative humidity is given")
     void calcMaTaRHXTest_shouldReturnAirTemperature_whenHumidityRatioAndRelHumidityIsGiven(double expectedTa, double RH) {
-        //Arrange
-        var Ps = PhysicsOfAir.calcMaPs(expectedTa);
-        var x = PhysicsOfAir.calcMaX(RH, Ps, P_ATM);
+        // Arrange
+        var Ps = PhysicsPropOfMoistAir.calcMaPs(expectedTa);
+        var x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, P_ATM);
 
         //Act
-        var actualTa = PhysicsOfAir.calcMaTaRHX(x, RH, P_ATM);
+        var actualTa = PhysicsPropOfMoistAir.calcMaTaRHX(x, RH, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
     }
 
@@ -696,13 +394,13 @@ class PhysicsOfAirTest {
     @MethodSource("taIXInlineData")
     @DisplayName("should return moist air temperature when moist air enthalpy and humidity ratio is given")
     void calcMaTaIXTest_shouldReturnMoistAirTemperature_WhenMoistAirEnthalpyAndHumidityRatioIsGiven(double expectedTa, double x) {
-        //Arrange
-        var ix = PhysicsOfAir.calcMaIx(expectedTa, x, P_ATM);
+        // Arrange
+        var ix = PhysicsPropOfMoistAir.calcMaIx(expectedTa, x, P_ATM);
 
         //Act
-        var actualTa = PhysicsOfAir.calcMaTaIX(ix, x, P_ATM);
+        var actualTa = PhysicsPropOfMoistAir.calcMaTaIX(ix, x, P_ATM);
 
-        //Assert
+        // Assert
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
     }
 
@@ -731,11 +429,11 @@ class PhysicsOfAirTest {
     @DisplayName("should return maximum dry bulb air temperature for Ps<Pat condition, when saturation pressure and atm pressures are given")
     void calcMaTaMaxPatTest_shouldReturnMaxDryBulbAirTemperature_whenSaturationPressureAndAtmPressureAreGiven(double expectedPat) {
         //Act
-        var actualMaxTemperature = PhysicsOfAir.calcMaTaMaxPat(expectedPat);
-        var actualPs = PhysicsOfAir.calcMaPs(actualMaxTemperature);
+        var actualMaxTemperature = PhysicsPropOfMoistAir.calcMaTaMaxPat(expectedPat);
+        var actualPs = PhysicsPropOfMoistAir.calcMaPs(actualMaxTemperature);
 
         // We expect that if calcMaTaMaxPat() works correctly, resulting PS will be equals as Pat.
-        //Assert
+        // Assert
         Assertions.assertEquals(actualPs, expectedPat, LIMITED_MATH_ACCURACY);
     }
 
@@ -751,13 +449,13 @@ class PhysicsOfAirTest {
     @MethodSource("wbtTaInlineData")
     @DisplayName("should return dry bulb air temperature when wet bulb air temperature and relative humidity is given")
     void calcMaTaWbtTest_shouldReturnDryBulbAirTemperature_WhenWetBulbAirTemperatureAndRelativeHumidityIsGiven(double expectedTa, double RH) {
-        //Arrange
-        var wbt = PhysicsOfAir.calcMaWbt(expectedTa, RH, P_ATM);
+        // Arrange
+        var wbt = PhysicsPropOfMoistAir.calcMaWbt(expectedTa, RH, P_ATM);
 
         //Act
-        var actualTa = PhysicsOfAir.calcMaTaWbt(wbt, RH, P_ATM);
+        var actualTa = PhysicsPropOfMoistAir.calcMaTaWbt(wbt, RH, P_ATM);
 
-        //Assert
+        // Assert
         Assertions.assertEquals(expectedTa, actualTa, LIMITED_MATH_ACCURACY);
     }
 
