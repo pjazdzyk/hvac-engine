@@ -1,9 +1,6 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.common.Limiters;
-import io.github.pjazdzyk.hvaclib.common.UnitConverters;
-import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.physics.exceptions.AirPhysicsArgumentException;
 
 import java.util.function.DoubleFunction;
@@ -59,8 +56,8 @@ public final class PhysicsPropOfMoistAir {
      * @return temperature at provided altitude, oC
      */
     public static double calcMaPs(double ta) {
-        if (ta < Limiters.MIN_T)
-            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + Limiters.MIN_T);
+        if (ta < PhysicsLimiters.MIN_T)
+            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + PhysicsLimiters.MIN_T);
         if (ta < -130)
             return 0.0;
         double exactPs;
@@ -329,7 +326,7 @@ public final class PhysicsPropOfMoistAir {
             return k_Da;
         double sut_Da = PhysicsConstants.CST_DA_SUT;
         double sut_Wv = PhysicsConstants.CST_WV_SUT;
-        double tk = UnitConverters.convertCelsiusToKelvin(ta);
+        double tk = PhysicsUnitConverters.convertCelsiusToKelvin(ta);
         double sutAv = 0.733 * Math.sqrt(sut_Da * sut_Wv);
         double k_Wv = PhysicsPropOfWaterVapour.calcWvK(ta);
         double xm = 1.61 * x;
@@ -364,8 +361,8 @@ public final class PhysicsPropOfMoistAir {
     public static double calcMaIx(double ta, double x, double Pat) {
         if (x < 0.0)
             throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
-        if (Pat < Limiters.MIN_PAT)
-            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, Limiters.MIN_PAT));
+        if (Pat < PhysicsLimiters.MIN_PAT)
+            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, PhysicsLimiters.MIN_PAT));
         double i_Da = PhysicsPropOfDryAir.calcDaI(ta);
         //Case1: no humidity = dry air only
         if (x == 0.0)
