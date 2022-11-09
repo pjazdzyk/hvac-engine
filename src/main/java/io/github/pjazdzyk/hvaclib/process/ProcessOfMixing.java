@@ -249,13 +249,12 @@ public class ProcessOfMixing implements Process {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessOfMixing that = (ProcessOfMixing) o;
-        return id.equals(that.id) && inletFlow.equals(that.inletFlow) && recirculationFlow.equals(that.recirculationFlow) && outletFlow.equals(that.outletFlow);
+        if (!(o instanceof ProcessOfMixing that)) return false;
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, inletFlow, recirculationFlow, outletFlow);
+        return Objects.hash(id);
     }
 }

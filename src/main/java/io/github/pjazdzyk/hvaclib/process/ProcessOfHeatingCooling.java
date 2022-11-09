@@ -398,16 +398,16 @@ public class ProcessOfHeatingCooling implements Process {
     }
 
     // Equals & hashcode
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessOfHeatingCooling that = (ProcessOfHeatingCooling) o;
-        return id.equals(that.id) && inletFlow.equals(that.inletFlow) && outletFlow.equals(that.outletFlow) && condensateFlow.equals(that.condensateFlow);
+        if (!(o instanceof ProcessOfHeatingCooling that)) return false;
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, inletFlow, outletFlow, condensateFlow);
+        return Objects.hash(id);
     }
 }
