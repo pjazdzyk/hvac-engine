@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.exceptions;
+package io.github.pjazdzyk.hvaclib.flows.exceptions;
 
 public class FlowArgumentException extends RuntimeException {
 

@@ -1,13 +1,14 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.physics.exceptions;
 
-import io.github.pjazdzyk.hvaclib.exceptions.ProcessArgumentException;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
+import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class LibPhysicsProcessExceptionsTests {
+class LibPhysicsProcessExceptionsTest {
 
     static final FlowOfMoistAir SAMPLE_AIRFLOW = new FlowOfMoistAir();
     static final double AVERAGE_WALL_TEMP = 9.0; // oC
@@ -124,7 +125,6 @@ class LibPhysicsProcessExceptionsTests {
         // Assert
         assertThrows(ProcessArgumentException.class, () -> PhysicsOfHeatingCooling.calcCoolingFromOutletRH(SAMPLE_AIRFLOW, AVERAGE_WALL_TEMP, graterThanInitialTemp));
     }
-
 
     @Test
     @DisplayName("should throw exception for condensate discharge when dry air mass flow or input/output humidity ratio is given as negative value")

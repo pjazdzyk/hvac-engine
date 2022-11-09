@@ -1,13 +1,14 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.process.exceptions;
 
 import io.github.pjazdzyk.hvaclib.common.Limiters;
-import io.github.pjazdzyk.hvaclib.exceptions.AirPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfMoistAir;
+import io.github.pjazdzyk.hvaclib.physics.exceptions.AirPhysicsArgumentException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class PhysicsOfAirExceptionTests {
+class PhysicsPropOfMoistAirExceptionTest {
 
     static final double Pat = 100_000.0;
 
@@ -18,7 +19,7 @@ class PhysicsOfAirExceptionTests {
         var tempOutsideThreshold = Limiters.MIN_T - 1;
 
         // Assert
-        assertThrows(AirPhysicsArgumentException.class, () -> PhysicsOfAir.calcMaPs(tempOutsideThreshold));
+        assertThrows(AirPhysicsArgumentException.class, () -> PhysicsPropOfMoistAir.calcMaPs(tempOutsideThreshold));
     }
 
     @Test
@@ -29,7 +30,7 @@ class PhysicsOfAirExceptionTests {
         var negativeRH = -20;
 
         // Assert
-        assertThrows(AirPhysicsArgumentException.class, () -> PhysicsOfAir.calcMaTdp(airTemp, negativeRH, Pat));
+        assertThrows(AirPhysicsArgumentException.class, () -> PhysicsPropOfMoistAir.calcMaTdp(airTemp, negativeRH, Pat));
     }
 
 }

@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.exceptions;
+package io.github.pjazdzyk.hvaclib.physics.exceptions;
 
 public class AirPhysicsArgumentException extends RuntimeException {
 
