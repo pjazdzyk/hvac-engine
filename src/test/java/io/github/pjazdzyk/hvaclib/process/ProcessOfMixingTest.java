@@ -1,15 +1,14 @@
 package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.process.ProcessOfMixing;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import io.github.pjazdzyk.hvaclib.common.Defaults;
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfMoistAir;
 
-class ProcessOfMixingTests {
+class ProcessOfMixingTest {
 
-    static double Pat = Defaults.DEF_PAT;
+    static double Pat = PhysicsDefaults.DEF_PAT;
     static FlowOfMoistAir firstFlow = FlowOfMoistAir.ofM3hVolFlow(5000,-20,100);
     static FlowOfMoistAir secondFlow = FlowOfMoistAir.ofM3hVolFlow(5000,18,50);
 
@@ -23,7 +22,7 @@ class ProcessOfMixingTests {
         var expectedMda3 = expectedMda1 + expectedMda2;
         var expectedOutX = (expectedMda1 * firstFlow.getX() + expectedMda2 * secondFlow.getX()) / expectedMda3;
         var expectedOutI = (expectedMda1 * firstFlow.getMoistAir().getIx() + expectedMda2 * secondFlow.getMoistAir().getIx()) / expectedMda3;
-        var expectedOutTx = PhysicsOfAir.calcMaTaIX(expectedOutI, expectedOutX, Pat);
+        var expectedOutTx = PhysicsPropOfMoistAir.calcMaTaIX(expectedOutI, expectedOutX, Pat);
 
         //Act (this will be already mixed)
         var mixingPlenum = new ProcessOfMixing("FLOW",firstFlow,secondFlow,outFlow);

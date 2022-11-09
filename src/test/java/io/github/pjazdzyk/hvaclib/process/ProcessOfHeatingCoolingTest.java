@@ -1,14 +1,15 @@
 package io.github.pjazdzyk.hvaclib.process;
 
+import io.github.pjazdzyk.hvaclib.common.Defaults;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.common.Defaults;
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfMoistAir;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ProcessOfHeatingCoolingTests {
+class ProcessOfHeatingCoolingTest {
 
     static final double MATH_ACCURACY = Defaults.DEF_MATH_ACCURACY;
 
@@ -42,13 +43,13 @@ class ProcessOfHeatingCoolingTests {
    void applyHeatingOutTxFromInQTest(){
 
         // ARRANGE
-        var winterInletFlow = FlowOfMoistAir.ofM3hVolFlow("InletWinter",5000,-20,100, Defaults.DEF_PAT);
+        var winterInletFlow = FlowOfMoistAir.ofM3hVolFlow("InletWinter",5000,-20,100, PhysicsDefaults.DEF_PAT);
         var heating = new ProcessOfHeatingCooling.Builder().withName("heater").withInletFlow(winterInletFlow).build();
         var expectedTout = 24.0;
         var expectedX = winterInletFlow.getMoistAir().getX();
         var expectedMda = winterInletFlow.getMassFlowDa();
         var i1 = winterInletFlow.getMoistAir().getIx();
-        var i2 = PhysicsOfAir.calcMaIx(expectedTout,expectedX, Defaults.DEF_PAT);
+        var i2 = PhysicsPropOfMoistAir.calcMaIx(expectedTout,expectedX, PhysicsDefaults.DEF_PAT);
         var expectedQ = (i2-i1)*expectedMda * 1000.0; //W
 
         // ACT
@@ -70,7 +71,7 @@ class ProcessOfHeatingCoolingTests {
    void applyHeatingInQFromOutTxTest(){
 
        // ARRANGE
-       var winterInletFlow = FlowOfMoistAir.ofM3hVolFlow("InletWinter",5000,-20,100, Defaults.DEF_PAT);
+       var winterInletFlow = FlowOfMoistAir.ofM3hVolFlow("InletWinter",5000,-20,100, PhysicsDefaults.DEF_PAT);
        var heating = new ProcessOfHeatingCooling.Builder().withName("heater").withInletFlow(winterInletFlow).build();
        var expectedTout = 24.0;
        var expectedX = winterInletFlow.getMoistAir().getX();
@@ -92,15 +93,15 @@ class ProcessOfHeatingCoolingTests {
    void applyHeatingInQOutTxFromOutRHTest(){
 
         // ARRANGE
-        var winterInletFlow = FlowOfMoistAir.ofM3hVolFlow("InletWinter",5000,-20,100, Defaults.DEF_PAT);
+        var winterInletFlow = FlowOfMoistAir.ofM3hVolFlow("InletWinter",5000,-20,100, PhysicsDefaults.DEF_PAT);
         var heating = new ProcessOfHeatingCooling.Builder().withName("heater").withInletFlow(winterInletFlow).build();
         var expectedTout = 24.0;
         var expectedX = winterInletFlow.getMoistAir().getX();
         var expectedMda = winterInletFlow.getMassFlowDa();
         var i1 = winterInletFlow.getMoistAir().getIx();
-        var i2 = PhysicsOfAir.calcMaIx(expectedTout,expectedX, Defaults.DEF_PAT);
+        var i2 = PhysicsPropOfMoistAir.calcMaIx(expectedTout,expectedX, PhysicsDefaults.DEF_PAT);
         var expectedQ = (i2-i1)*expectedMda * 1000.0; //W
-        var expectedRH = PhysicsOfAir.calcMaRH(expectedTout,expectedX, Defaults.DEF_PAT);
+        var expectedRH = PhysicsPropOfMoistAir.calcMaRH(expectedTout,expectedX, PhysicsDefaults.DEF_PAT);
 
         // ACT
         heating.applyHeatingInQOutTxFromOutRH(expectedRH);
@@ -124,7 +125,7 @@ class ProcessOfHeatingCoolingTests {
    void applyCoolingInQFromOutTxTest(){
 
         // ARRANGE
-        var summerInletFlow = FlowOfMoistAir.ofM3hVolFlow("SummerWinter",5000,35,45, Defaults.DEF_PAT);
+        var summerInletFlow = FlowOfMoistAir.ofM3hVolFlow("SummerWinter",5000,35,45, PhysicsDefaults.DEF_PAT);
         var cooling = new ProcessOfHeatingCooling.Builder().withName("cooler").withInletFlow(summerInletFlow).build();
         var expectedTout = 16.0;
         var inletX = summerInletFlow.getMoistAir().getX();
@@ -137,7 +138,7 @@ class ProcessOfHeatingCoolingTests {
         var actualMda = cooling.getOutletFlow().getMassFlowDa();
         var condMFlow = PhysicsOfHeatingCooling.calcCondensateDischarge(actualMda,inletX,actualX);
         var expectedX = inletX - condMFlow/actualMda;
-        var expectedRH = PhysicsOfAir.calcMaRH(actualTout,expectedX, Defaults.DEF_PAT);
+        var expectedRH = PhysicsPropOfMoistAir.calcMaRH(actualTout,expectedX, PhysicsDefaults.DEF_PAT);
         var actualRH = cooling.getOutletFlow().getRH();
 
         // ASSERT
@@ -152,7 +153,7 @@ class ProcessOfHeatingCoolingTests {
    void applyCoolingOutTxFromInQTest(){
 
        // ARRANGE
-       var summerInletFlow = FlowOfMoistAir.ofM3hVolFlow("SummerWinter",5000,35,45, Defaults.DEF_PAT);
+       var summerInletFlow = FlowOfMoistAir.ofM3hVolFlow("SummerWinter",5000,35,45, PhysicsDefaults.DEF_PAT);
        var cooling = new ProcessOfHeatingCooling.Builder().withName("cooler").withInletFlow(summerInletFlow).withCoolantTemps(3,6).build();
        var expectedOutT = 11.0;
        var expectedMda = summerInletFlow.getMassFlowDa();
@@ -162,7 +163,7 @@ class ProcessOfHeatingCoolingTests {
        var expectedX = result.outX();
        var expectedCondTemp = result.condTx();
        var expectedCondMassFlow = result.condMassFlow();
-       var expectedRH = PhysicsOfAir.calcMaRH(expectedOutT,expectedX, Defaults.DEF_PAT);
+       var expectedRH = PhysicsPropOfMoistAir.calcMaRH(expectedOutT,expectedX, PhysicsDefaults.DEF_PAT);
 
        // ACT
        cooling.applyCoolingOutTxFromInQ(expectedHeatQ);
@@ -191,7 +192,7 @@ class ProcessOfHeatingCoolingTests {
    @Test
    void applyCoolingInQFromOutRHTest(){
        // ARRANGE
-       var summerInletFlow = FlowOfMoistAir.ofM3hVolFlow("SummerWinter",5000,35,45, Defaults.DEF_PAT);
+       var summerInletFlow = FlowOfMoistAir.ofM3hVolFlow("SummerWinter",5000,35,45, PhysicsDefaults.DEF_PAT);
        var cooling = new ProcessOfHeatingCooling.Builder().withName("cooler").withInletFlow(summerInletFlow).withCoolantTemps(3,6).build();
        var expectedOutT = 11.0;
        var expectedMda = summerInletFlow.getMassFlowDa();
@@ -201,7 +202,7 @@ class ProcessOfHeatingCoolingTests {
        var expectedX = result.outX();
        var expectedCondTemp = result.condTx();
        var expectedCondMassFlow = result.condMassFlow();
-       var expectedRH = PhysicsOfAir.calcMaRH(expectedOutT,expectedX, Defaults.DEF_PAT);
+       var expectedRH = PhysicsPropOfMoistAir.calcMaRH(expectedOutT,expectedX, PhysicsDefaults.DEF_PAT);
 
        // ACT
        cooling.applyCoolingInQFromOutRH(expectedRH);

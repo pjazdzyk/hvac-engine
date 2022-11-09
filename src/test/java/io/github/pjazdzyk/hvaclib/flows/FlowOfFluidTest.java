@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FlowOfFluidTests {
+class FlowOfFluidTest {
 
     static final LiquidWater SAMPLE_WATER = new LiquidWater(98.6);
     static final String SAMPLE_FLOW_NAME = "sample flow";

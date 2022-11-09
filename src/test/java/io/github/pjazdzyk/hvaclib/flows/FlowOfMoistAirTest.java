@@ -1,14 +1,14 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
-import io.github.pjazdzyk.hvaclib.common.Defaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FlowOfMoistAirTests {
+class FlowOfMoistAirTest {
 
     static final String SAMPLE_FLOW_NAME = "sample flow";
     static final TypeOfAirFlow SAMPLE_INIT_FLOW_TYPE = TypeOfAirFlow.MA_MASS_FLOW;
@@ -18,7 +18,7 @@ class FlowOfMoistAirTests {
     @DisplayName("should create FlowOfMoistAir instance with properly calculated flows when valid input is given")
     void flowOfMoistAirInstance_shouldCreateValidFlowOfMoistAirInstance_whenValidSampleInputIsGiven() {
         // Arrange
-        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, PhysicsDefaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
         double densityMa = sampleAir.getRho();
         double densityDa = sampleAir.getRho_Da();
         double humidRatio = sampleAir.getX();
@@ -46,7 +46,7 @@ class FlowOfMoistAirTests {
     @DisplayName("should correctly change all air flows state when new mass flow is given")
     void flowOfMoistAirInstance_shouldCorrectlyChangeFlowState_whenNewMassFlowIsGiven() {
         // Arrange
-        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, PhysicsDefaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
         FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
         double densityMa = sampleAir.getRho();
         double densityDa = sampleAir.getRho_Da();
@@ -76,7 +76,7 @@ class FlowOfMoistAirTests {
     @DisplayName("should correctly change all air flows state when new vol flow is given")
     void flowOfMoistAirInstance_shouldCorrectlyChangeFlowState_whenNewVolumetricFlowIsGiven() {
         // Arrange
-        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, PhysicsDefaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
         FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
         double densityMa = sampleAir.getRho();
         double densityDa = sampleAir.getRho_Da();
@@ -106,7 +106,7 @@ class FlowOfMoistAirTests {
     @DisplayName("should correctly change air flow state but keep newly set locked flow unchanged when air property affecting flow is changed")
     void flowOfMoistAirInstance_shouldCorrectlyChangeFlowStateAndKeepNewlySetLockedFlowUnchanged_whenAirPropertyChanges() {
         // Arrange
-        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, Defaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
+        MoistAir sampleAir = new MoistAir("sample air", 45.0, 60.1, PhysicsDefaults.DEF_PAT, MoistAir.HumidityType.REL_HUMID);
         FlowOfMoistAir flowAir = new FlowOfMoistAir(SAMPLE_FLOW_NAME, INIT_MASS_FLOW_MA, SAMPLE_INIT_FLOW_TYPE, sampleAir);
         TypeOfAirFlow expectedLockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
         double expectedVolFlow_Ma = flowAir.getVolFlow();

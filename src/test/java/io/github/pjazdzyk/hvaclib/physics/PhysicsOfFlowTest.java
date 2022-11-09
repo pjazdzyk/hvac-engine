@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsOfFlowTests {
+class PhysicsOfFlowTest {
 
     public static final double MATH_ACCURACY = 10E-15;
     static final Fluid SAMPLE_LIQ_WATER = new LiquidWater("water", 15);
