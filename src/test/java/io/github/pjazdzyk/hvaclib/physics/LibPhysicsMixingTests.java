@@ -1,7 +1,6 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.common.Defaults;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,7 @@ class LibPhysicsMixingTests {
     @DisplayName("should return results for mixing of two different moist air flows")
     void calcMixing_shouldReturnResultsForMixingOfTwoDifferentMoistAirFlows() {
         //Arrange
-        var Pat = Defaults.DEF_PAT;
+        var Pat = PhysicsDefaults.DEF_PAT;
         var firstFlowAirTemp = -20.0; //oC
         var firstFlowRH = 100.0; // %
         var firstDryAirFlow = 5000; //m3/h
@@ -29,7 +28,7 @@ class LibPhysicsMixingTests {
         var expectedOutDryAirMassFlow = expectedFirstFlowDryAirMassFlow + expectedSecondFlowDryAirMassFlow;
         var expectedOutHumidityRatio = (expectedFirstFlowDryAirMassFlow * firstFlowOfAir.getX() + expectedSecondFlowDryAirMassFlow * secondFlowOfAir.getX()) / expectedOutDryAirMassFlow;
         var expectedOutEnthalpy = (expectedFirstFlowDryAirMassFlow * firstFlowOfAir.getMoistAir().getIx() + expectedSecondFlowDryAirMassFlow * secondFlowOfAir.getMoistAir().getIx()) / expectedOutDryAirMassFlow;
-        var expectedOutAirTemp = PhysicsOfAir.calcMaTaIX(expectedOutEnthalpy, expectedOutHumidityRatio, Pat);
+        var expectedOutAirTemp = PhysicsPropOfMoistAir.calcMaTaIX(expectedOutEnthalpy, expectedOutHumidityRatio, Pat);
 
         //Act
         var mixingResults = calcMixing(firstFlowOfAir, secondFlowOfAir);

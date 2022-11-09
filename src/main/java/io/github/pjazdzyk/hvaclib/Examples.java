@@ -5,7 +5,7 @@ import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
 import io.github.pjazdzyk.hvaclib.flows.TypeOfFluidFlow;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfMoistAir;
 import io.github.pjazdzyk.hvaclib.process.ProcessOfHeatingCooling;
 import io.github.pjazdzyk.hvaclib.process.ProcessOfMixing;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
@@ -33,7 +33,7 @@ public class Examples {
 
     public static void runUserGuideMethods() {
         // Using LibClass for single value calculation
-        var saturationPressure = PhysicsOfAir.calcMaPs(20);
+        var saturationPressure = PhysicsPropOfMoistAir.calcMaPs(20);
         System.out.println(saturationPressure); //Outputs 2338.80 Pa
 
         // Creating and using MoistAir class

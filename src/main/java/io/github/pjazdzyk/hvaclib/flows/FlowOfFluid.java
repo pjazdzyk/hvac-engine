@@ -1,9 +1,10 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.exceptions.FlowArgumentException;
+import io.github.pjazdzyk.hvaclib.flows.exceptions.FlowArgumentException;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import io.github.pjazdzyk.hvaclib.common.Validators;
 import java.io.Serializable;
@@ -197,7 +198,7 @@ public class FlowOfFluid implements Flow, Serializable {
     public static class Builder<K extends Fluid> {
         private String flowName = Defaults.DEF_FLOW_NAME;
         private String fluidName = "Fluid of: " + flowName;
-        private double tx = Defaults.DEF_WT_TW;
+        private double tx = PhysicsDefaults.DEF_WT_TW;
         private double flowRate = Defaults.DEF_FLUID_FLOW;
         private TypeOfFluidFlow lockedFlowType = TypeOfFluidFlow.VOL_FLOW;
         private TypeOfFluidFlow overrideLockedFlowType;

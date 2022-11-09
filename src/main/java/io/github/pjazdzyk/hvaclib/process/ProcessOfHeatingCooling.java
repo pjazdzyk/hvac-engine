@@ -1,10 +1,11 @@
 package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.exceptions.ProcessSolutionNotConvergedException;
+import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessSolutionNotConvergedException;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfHeatingCooling;
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
 import io.github.pjazdzyk.hvaclib.common.Validators;
@@ -186,7 +187,7 @@ public class ProcessOfHeatingCooling implements Process {
         outletFlow.setTx(inletFlow.getMoistAir().getTx());
         outletFlow.setX(inletFlow.getMoistAir().getX());
         outletFlow.setMassFlowDa(inletFlow.getMassFlowDa());
-        condensateFlow.setTx(Defaults.DEF_WT_TW);
+        condensateFlow.setTx(PhysicsDefaults.DEF_WT_TW);
         condensateFlow.setMassFlow(0.0);
         heatQ = 0.0;
         tmWall = PhysicsOfHeatingCooling.calcAverageWallTemp(tsHydr, trHydr);
