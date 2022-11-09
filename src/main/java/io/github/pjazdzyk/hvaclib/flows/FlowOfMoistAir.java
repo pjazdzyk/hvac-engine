@@ -1,8 +1,9 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.exceptions.FlowArgumentException;
+import io.github.pjazdzyk.hvaclib.flows.exceptions.FlowArgumentException;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 import java.io.Serializable;
 import java.util.Objects;
@@ -354,7 +355,7 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
      * @return FlowOfMoistAir instance with default ID and pressure
      */
     public static FlowOfMoistAir ofM3hVolFlow(double volFlowMaM3h, double tx, double RH) {
-        return FlowOfMoistAir.ofM3hVolFlow(Defaults.DEF_FLOW_NAME, volFlowMaM3h, tx, RH, Defaults.DEF_PAT);
+        return FlowOfMoistAir.ofM3hVolFlow(Defaults.DEF_FLOW_NAME, volFlowMaM3h, tx, RH, PhysicsDefaults.DEF_PAT);
     }
 
     /**
@@ -414,9 +415,9 @@ public class FlowOfMoistAir implements Flow, Serializable, Cloneable {
     public static class Builder {
         private String flowName = Defaults.DEF_FLOW_NAME;
         private String airName = "Air of: " + flowName;
-        private double Pat = Defaults.DEF_PAT;
-        private double tx = Defaults.DEF_AIR_TEMP;
-        private double xRH = Defaults.DEF_AIR_RH;
+        private double Pat = PhysicsDefaults.DEF_PAT;
+        private double tx = PhysicsDefaults.DEF_AIR_TEMP;
+        private double xRH = PhysicsDefaults.DEF_AIR_RH;
         private double flowRate = Defaults.DEF_AIR_FLOW;
         private MoistAir.HumidityType humidType = MoistAir.HumidityType.REL_HUMID;
         private TypeOfAirFlow lockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;

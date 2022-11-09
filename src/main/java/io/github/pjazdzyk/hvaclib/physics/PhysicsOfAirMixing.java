@@ -1,12 +1,10 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.common.Defaults;
-import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 
-public abstract class PhysicsOfAirMixing {
+public final class PhysicsOfAirMixing {
 
     private PhysicsOfAirMixing() {
     }
@@ -23,10 +21,10 @@ public abstract class PhysicsOfAirMixing {
      * @return [first inlet dry air mass flow (kg/s), second inlet dry air mass flow (kg/s), outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
     public static MixingResult calcMixing(MoistAir inFirstAir, double firstInDryAirFlow, MoistAir inSecondAir, double secondInDryAirFlow) {
-        Validators.validateForNotNull("Inlet air", inFirstAir);
-        Validators.validateForNotNull("Second air", inSecondAir);
-        Validators.validateForPositiveValue("Inlet dry air flow", firstInDryAirFlow);
-        Validators.validateForPositiveValue("Second dry air flow", secondInDryAirFlow);
+        PhysicsValidators.validateForNotNull("Inlet air", inFirstAir);
+        PhysicsValidators.validateForNotNull("Second air", inSecondAir);
+        PhysicsValidators.validateForPositiveValue("Inlet dry air flow", firstInDryAirFlow);
+        PhysicsValidators.validateForPositiveValue("Second dry air flow", secondInDryAirFlow);
         double outDryAirFlow = firstInDryAirFlow + secondInDryAirFlow;
         double x1 = inFirstAir.getX();
         double x2 = inSecondAir.getX();
@@ -39,7 +37,7 @@ public abstract class PhysicsOfAirMixing {
         double x3 = (firstInDryAirFlow * x1 + secondInDryAirFlow * x2) / outDryAirFlow;
         double i3 = (firstInDryAirFlow * i1 + secondInDryAirFlow * i2) / outDryAirFlow;
         double Pat = inFirstAir.getPat();
-        double t3 = PhysicsOfAir.calcMaTaIX(i3, x3, Pat);
+        double t3 = PhysicsPropOfMoistAir.calcMaTaIX(i3, x3, Pat);
         return new MixingResult(firstInDryAirFlow, secondInDryAirFlow, outDryAirFlow, t3, x3);
     }
 
@@ -51,8 +49,8 @@ public abstract class PhysicsOfAirMixing {
      * @return [first inlet dry air mass flow (kg/s), second inlet dry air mass flow (kg/s), outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
     public static MixingResult calcMixing(FlowOfMoistAir firstFlow, FlowOfMoistAir secondFlow) {
-        Validators.validateForNotNull("First flow", firstFlow);
-        Validators.validateForNotNull("Second flow", secondFlow);
+        PhysicsValidators.validateForNotNull("First flow", firstFlow);
+        PhysicsValidators.validateForNotNull("Second flow", secondFlow);
         return calcMixing(firstFlow.getMoistAir(), firstFlow.getMassFlowDa(), secondFlow.getMoistAir(), secondFlow.getMassFlowDa());
     }
 
@@ -63,7 +61,7 @@ public abstract class PhysicsOfAirMixing {
      * @return [outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
     public static MixingMultiResult calcMixingFromMultipleFlows(FlowOfMoistAir... flows) {
-        Validators.validateArrayForNull("Flows array", flows);
+        PhysicsValidators.validateArrayForNull("Flows array", flows);
         double mda3 = 0.0;
         double xMda = 0.0;
         double iMda = 0.0;
@@ -77,10 +75,10 @@ public abstract class PhysicsOfAirMixing {
         if (mda3 == 0.0)
             return new MixingMultiResult(mda3, flows[0].getTx(), flows[0].getX());
         if (Pat == 0.0)
-            Pat = Defaults.DEF_PAT;
+            Pat = PhysicsDefaults.DEF_PAT;
         double x3 = xMda / mda3;
         double i3 = iMda / mda3;
-        double t3 = PhysicsOfAir.calcMaTaIX(i3, x3, Pat);
+        double t3 = PhysicsPropOfMoistAir.calcMaTaIX(i3, x3, Pat);
         return new MixingMultiResult(mda3, t3, x3);
     }
 
@@ -100,9 +98,9 @@ public abstract class PhysicsOfAirMixing {
         //Objects validation stage
         double firstMinFixedDryMassFlow = firstFlow.getMinFlow();
         double secondMinFixedDryMassFlow = secondFlow.getMinFlow();
-        Validators.validateForNotNull("First flow", firstFlow);
-        Validators.validateForNotNull("Second flow", secondFlow);
-        Validators.validateForPositiveValue("Out dry air flow", outDryAirFlow);
+        PhysicsValidators.validateForNotNull("First flow", firstFlow);
+        PhysicsValidators.validateForNotNull("Second flow", secondFlow);
+        PhysicsValidators.validateForPositiveValue("Out dry air flow", outDryAirFlow);
         MoistAir air1 = firstFlow.getMoistAir();
         MoistAir air2 = secondFlow.getMoistAir();
 

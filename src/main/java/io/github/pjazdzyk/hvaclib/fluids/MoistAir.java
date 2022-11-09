@@ -1,9 +1,13 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
-import io.github.pjazdzyk.hvaclib.exceptions.MoistAirArgumentException;
+import io.github.pjazdzyk.hvaclib.fluids.exeptions.MoistAirArgumentException;
 import io.github.pjazdzyk.hvaclib.common.Defaults;
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfAir;
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfWater;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropCommon;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfMoistAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfDryAir;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfWater;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfWaterVapour;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,7 +17,7 @@ import java.util.Objects;
  * <p>
  * This class represents a model of two-phase air mixture with water vapour, water mist or ice mist. All properties are automatically
  * updated if any core property is changed (pressure, temperature, humidity). All properties are calculated based on functions specified
- * in {@link PhysicsOfAir} and {@link PhysicsOfWater} classes.
+ * in {@link PhysicsPropOfMoistAir} and {@link PhysicsPropOfWater} classes.
  * </p><br>
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
  * </p><br>
@@ -73,7 +77,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
      */
     public MoistAir() {
 
-        this(Defaults.DEF_AIR_NAME, Defaults.DEF_AIR_TEMP, Defaults.DEF_AIR_RH);
+        this(Defaults.DEF_AIR_NAME, PhysicsDefaults.DEF_AIR_TEMP, PhysicsDefaults.DEF_AIR_RH);
 
     }
 
@@ -93,7 +97,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
      */
     public MoistAir(String id, double ta, double RH) {
 
-        this(id, ta, RH, Defaults.DEF_PAT, HumidityType.REL_HUMID);
+        this(id, ta, RH, PhysicsDefaults.DEF_PAT, HumidityType.REL_HUMID);
 
     }
 
@@ -111,17 +115,17 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         this.id = id;
         this.pat = Pat;
         this.tx = ta;
-        this.Ps = PhysicsOfAir.calcMaPs(ta);
+        this.Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
 
         switch (humidType) {
             case REL_HUMID -> {
                 this.RH = xRH;
-                this.x = PhysicsOfAir.calcMaX(RH, Ps, Pat);
+                this.x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, Pat);
                 updateProperties();
             }
             case HUM_RATIO -> {
                 this.x = xRH;
-                this.RH = PhysicsOfAir.calcMaRH(ta, xRH, Pat);
+                this.RH = PhysicsPropOfMoistAir.calcMaRH(ta, xRH, Pat);
                 updateProperties();
             }
             default -> throw new MoistAirArgumentException("Wrong humidity argument value. Instance was not created.");
@@ -134,43 +138,43 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
     @Override
     public void updateProperties() {
 
-        this.xMax = PhysicsOfAir.calcMaXMax(Ps, pat);
-        this.rho_Da = PhysicsOfAir.calcDaRho(tx, pat);
-        this.rho_Wv = PhysicsOfAir.calcWvRho(tx, RH, pat);
-        this.rho = PhysicsOfAir.calcMaRho(tx, x, pat);
+        this.xMax = PhysicsPropOfMoistAir.calcMaXMax(Ps, pat);
+        this.rho_Da = PhysicsPropOfDryAir.calcDaRho(tx, pat);
+        this.rho_Wv = PhysicsPropOfWaterVapour.calcWvRho(tx, RH, pat);
+        this.rho = PhysicsPropOfMoistAir.calcMaRho(tx, x, pat);
 
-        this.cp_Da = PhysicsOfAir.calcDaCp(tx);
-        this.cp_Wv = PhysicsOfAir.calcWvCp(tx);
-        this.cp = PhysicsOfAir.calcMaCp(tx, x);
+        this.cp_Da = PhysicsPropOfDryAir.calcDaCp(tx);
+        this.cp_Wv = PhysicsPropOfWaterVapour.calcWvCp(tx);
+        this.cp = PhysicsPropOfMoistAir.calcMaCp(tx, x);
 
-        this.dynVis_Da = PhysicsOfAir.calcDaDynVis(tx);
-        this.dynVis_Wv = PhysicsOfAir.calcWvDynVis(tx);
-        this.dynVis = PhysicsOfAir.calcMaDynVis(tx, x);
+        this.dynVis_Da = PhysicsPropOfDryAir.calcDaDynVis(tx);
+        this.dynVis_Wv = PhysicsPropOfWaterVapour.calcWvDynVis(tx);
+        this.dynVis = PhysicsPropOfMoistAir.calcMaDynVis(tx, x);
 
-        this.kinVis_Da = PhysicsOfAir.calcDaKinVis(tx, rho_Da);
-        this.kinVis_Wv = PhysicsOfAir.calcWvKinVis(tx, rho_Wv);
-        this.kinVis = PhysicsOfAir.calcMaKinVis(tx, x, rho);
+        this.kinVis_Da = PhysicsPropOfDryAir.calcDaKinVis(tx, rho_Da);
+        this.kinVis_Wv = PhysicsPropOfWaterVapour.calcWvKinVis(tx, rho_Wv);
+        this.kinVis = PhysicsPropOfMoistAir.calcMaKinVis(tx, x, rho);
 
-        this.k_Da = PhysicsOfAir.calcDaK(tx);
-        this.k_Wv = PhysicsOfAir.calcWvK(tx);
-        this.k = PhysicsOfAir.calcMaK(tx, x, dynVis, dynVis_Wv);
+        this.k_Da = PhysicsPropOfDryAir.calcDaK(tx);
+        this.k_Wv = PhysicsPropOfWaterVapour.calcWvK(tx);
+        this.k = PhysicsPropOfMoistAir.calcMaK(tx, x, dynVis, dynVis_Wv);
 
-        this.thDiff_Da = PhysicsOfAir.calcThDiff(rho_Da, k_Da, cp_Da);
-        this.thDiff_Wv = PhysicsOfAir.calcThDiff(rho_Wv, k_Wv, cp_Wv);
-        this.thDiff = PhysicsOfAir.calcThDiff(rho, k, cp);
+        this.thDiff_Da = PhysicsPropCommon.calcThDiff(rho_Da, k_Da, cp_Da);
+        this.thDiff_Wv = PhysicsPropCommon.calcThDiff(rho_Wv, k_Wv, cp_Wv);
+        this.thDiff = PhysicsPropCommon.calcThDiff(rho, k, cp);
 
-        this.Pr_Da = PhysicsOfAir.calcPrandtl(dynVis_Da, k_Da, cp_Da);
-        this.Pr_Wv = PhysicsOfAir.calcPrandtl(dynVis_Wv, k_Wv, cp_Wv);
-        this.Pr = PhysicsOfAir.calcPrandtl(dynVis, k, cp);
+        this.Pr_Da = PhysicsPropCommon.calcPrandtl(dynVis_Da, k_Da, cp_Da);
+        this.Pr_Wv = PhysicsPropCommon.calcPrandtl(dynVis_Wv, k_Wv, cp_Wv);
+        this.Pr = PhysicsPropCommon.calcPrandtl(dynVis, k, cp);
 
-        this.ix = PhysicsOfAir.calcMaIx(tx, x, pat);
-        this.i_Da = PhysicsOfAir.calcDaI(tx);
-        this.i_Wv = PhysicsOfAir.calcWvI(tx);
-        this.i_Wt = PhysicsOfAir.calcWtI(tx);
-        this.i_Ice = PhysicsOfAir.calcIceI(tx);
+        this.ix = PhysicsPropOfMoistAir.calcMaIx(tx, x, pat);
+        this.i_Da = PhysicsPropOfDryAir.calcDaI(tx);
+        this.i_Wv = PhysicsPropOfWaterVapour.calcWvI(tx);
+        this.i_Wt = PhysicsPropOfMoistAir.calcWtI(tx);
+        this.i_Ice = PhysicsPropOfMoistAir.calcIceI(tx);
 
-        this.Wbt = PhysicsOfAir.calcMaWbt(tx, RH, pat);
-        this.Tdp = PhysicsOfAir.calcMaTdp(tx, RH, pat);
+        this.Wbt = PhysicsPropOfMoistAir.calcMaWbt(tx, RH, pat);
+        this.Tdp = PhysicsPropOfMoistAir.calcMaTdp(tx, RH, pat);
 
         checkStatus();
 
@@ -378,20 +382,20 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
     public final void setPat(double inPat) {
         this.pat = inPat;
-        this.RH = PhysicsOfAir.calcMaRH(tx, x, inPat);
+        this.RH = PhysicsPropOfMoistAir.calcMaRH(tx, x, inPat);
         updateProperties();
     }
 
     public final void setPatKeepRH(double inPat) {
         this.pat = inPat;
-        this.x = PhysicsOfAir.calcMaX(RH, Ps, pat);
+        this.x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, pat);
         updateProperties();
     }
 
     public final void setTx(double inTx) {
         this.tx = inTx;
-        this.Ps = PhysicsOfAir.calcMaPs(inTx);
-        this.RH = PhysicsOfAir.calcMaRH(inTx, x, pat);
+        this.Ps = PhysicsPropOfMoistAir.calcMaPs(inTx);
+        this.RH = PhysicsPropOfMoistAir.calcMaRH(inTx, x, pat);
         updateProperties();
     }
 
@@ -400,39 +404,39 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
         if (inX <= 0)
             throw new MoistAirArgumentException(id + " [setX] -> X cannot be 0 or negative value.");
         this.x = inX;
-        this.RH = PhysicsOfAir.calcMaRH(tx, inX, pat);
-        this.Ps = PhysicsOfAir.calcMaPs(tx);
+        this.RH = PhysicsPropOfMoistAir.calcMaRH(tx, inX, pat);
+        this.Ps = PhysicsPropOfMoistAir.calcMaPs(tx);
         updateProperties();
     }
 
     public final void setRH(double inRH) {
         this.RH = inRH;
-        this.Ps = PhysicsOfAir.calcMaPs(tx);
-        this.x = PhysicsOfAir.calcMaX(inRH, Ps, pat);
+        this.Ps = PhysicsPropOfMoistAir.calcMaPs(tx);
+        this.x = PhysicsPropOfMoistAir.calcMaX(inRH, Ps, pat);
         updateProperties();
     }
 
     public final void setTdp_RH(double tdp) {
 
-        this.tx = PhysicsOfAir.calcMaTaTdpRH(tdp, RH, pat);
-        this.Ps = PhysicsOfAir.calcMaPs(tx);
-        this.x = PhysicsOfAir.calcMaX(RH, Ps, pat);
+        this.tx = PhysicsPropOfMoistAir.calcMaTaTdpRH(tdp, RH, pat);
+        this.Ps = PhysicsPropOfMoistAir.calcMaPs(tx);
+        this.x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, pat);
         updateProperties();
 
     }
 
     public final void setWbt_RH(double wbt) {
 
-        this.tx = PhysicsOfAir.calcMaTaWbt(wbt, RH, pat);
-        this.Ps = PhysicsOfAir.calcMaPs(tx);
-        this.x = PhysicsOfAir.calcMaX(RH, Ps, pat);
+        this.tx = PhysicsPropOfMoistAir.calcMaTaWbt(wbt, RH, pat);
+        this.Ps = PhysicsPropOfMoistAir.calcMaPs(tx);
+        this.x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, pat);
         updateProperties();
 
     }
 
     public final void setElevationASL(double zElev) {
         this.zElev = zElev;
-        this.pat = PhysicsOfAir.calcPatAlt(zElev);
+        this.pat = PhysicsPropCommon.calcPatAlt(zElev);
         updateProperties();
     }
 
@@ -450,7 +454,7 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
 
     //QUICK INSTANCE
     public static MoistAir ofAir(double tx, double RH) {
-        return new MoistAir(Defaults.DEF_AIR_NAME, tx, RH, Defaults.DEF_PAT, HumidityType.REL_HUMID);
+        return new MoistAir(Defaults.DEF_AIR_NAME, tx, RH, PhysicsDefaults.DEF_PAT, HumidityType.REL_HUMID);
     }
 
     public static MoistAir ofAir(double tx, double RH, double Pat) {
@@ -479,10 +483,10 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
     public static class Builder {
 
         private String name = Defaults.DEF_AIR_NAME;
-        private double ta = Defaults.DEF_AIR_TEMP;
-        private double xRH = Defaults.DEF_AIR_RH;
-        private double Pat = Defaults.DEF_PAT;
-        private double zElev = Defaults.DEF_ASL_ELEV;
+        private double ta = PhysicsDefaults.DEF_AIR_TEMP;
+        private double xRH = PhysicsDefaults.DEF_AIR_RH;
+        private double Pat = PhysicsDefaults.DEF_PAT;
+        private double zElev = PhysicsDefaults.DEF_ASL_ELEV;
         private HumidityType humidType = HumidityType.REL_HUMID;
 
         public Builder withName(final String name) {

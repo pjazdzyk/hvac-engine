@@ -1,7 +1,8 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.hvaclib.common.Defaults;
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfWater;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsDefaults;
+import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfWater;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import java.util.Objects;
  * <h3>LIQUID WATER</h3>
  * <p>
  * This class represents a model of liquid water for a typical air conditioning low near atmospheric pressure appliances.
- * Properties are calculated based on equations in {@link PhysicsOfWater}.<br>
+ * Properties are calculated based on equations in {@link PhysicsPropOfWater}.<br>
  * <span><b>IMPORTANT: </b></span> Please note that at this stage of development, this model is not dedicated for
  * high pressure applications. Usage limit is <100oC and  >0oC.
  * </p><br>
@@ -30,7 +31,7 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
      * DEFAULT CONSTRUCTOR: Creates new liquid water instance with default temperature of 10oC.
      */
     public LiquidWater() {
-        this(Defaults.DEF_WT_NAME, Defaults.DEF_WT_TW);
+        this(Defaults.DEF_WT_NAME, PhysicsDefaults.DEF_WT_TW);
     }
 
     /**
@@ -71,9 +72,9 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
      */
     @Override
     public void updateProperties() {
-        cp = PhysicsOfWater.calcCp(tx);
-        rho = PhysicsOfWater.calcRho(tx);
-        ix = PhysicsOfWater.calcIx(tx);
+        cp = PhysicsPropOfWater.calcCp(tx);
+        rho = PhysicsPropOfWater.calcRho(tx);
+        ix = PhysicsPropOfWater.calcIx(tx);
     }
 
     // GETTERS
@@ -144,7 +145,7 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
     public static class Builder {
 
         private String name = Defaults.DEF_WT_NAME;
-        private double tx = Defaults.DEF_WT_TW;
+        private double tx = PhysicsDefaults.DEF_WT_TW;
 
         public Builder withName(final String name) {
             this.name = name;
