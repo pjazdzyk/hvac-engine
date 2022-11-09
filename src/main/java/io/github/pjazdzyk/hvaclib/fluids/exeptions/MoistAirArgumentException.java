@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.exceptions;
+package io.github.pjazdzyk.hvaclib.fluids.exeptions;
 
 public class MoistAirArgumentException extends RuntimeException {
 
