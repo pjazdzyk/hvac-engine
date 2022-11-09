@@ -267,7 +267,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     void calcWtITest_shouldReturnWaterSpecificEnthalpy_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
-        var expectedWtMistEnthalpyForPositiveTemp = 83.80000000000001;
+        var expectedWtMistEnthalpyForPositiveTemp = 83.68654489595968;
         var expectedWtMistEnthalpyForNegativeTemp = 0.0;
 
         //Act
@@ -307,7 +307,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var x3 = 0.0001532;     // unsaturated for -20oC
 
         var expectedEnthalpyUnsaturated = 38.400157218887045;
-        var expectedEnthalpyWithWaterMist = 58.324419189772705;
+        var expectedEnthalpyWithWaterMist = 58.323839969603554;
         var expectedEnthalpyWithIceMist = -25.75229537444951;
         var expectedEnthalpyUnsaturatedNegative = -19.682530744707513;
 
