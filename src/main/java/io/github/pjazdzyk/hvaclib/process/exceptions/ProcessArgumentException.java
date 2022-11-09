@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.exceptions;
+package io.github.pjazdzyk.hvaclib.process.exceptions;
 
 public class ProcessArgumentException extends RuntimeException {
 
