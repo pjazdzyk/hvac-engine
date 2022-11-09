@@ -1,6 +1,6 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
-import io.github.pjazdzyk.hvaclib.exceptions.WaterPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.physics.exceptions.WaterPhysicsArgumentException;
 
 /**
  * LIQUID WATER EQUATIONS LIBRARY (PSYCHROMETRICS) <br>
@@ -18,9 +18,9 @@ import io.github.pjazdzyk.hvaclib.exceptions.WaterPhysicsArgumentException;
  * @author  Piotr Jażdżyk, MScEng
  */
 
-public final class PhysicsOfWater {
+public final class PhysicsPropOfWater {
 
-    private PhysicsOfWater() {}
+    private PhysicsPropOfWater() {}
 
     /**
      * Returns water enthalpy at provided temperature in kJ/kg<br>
