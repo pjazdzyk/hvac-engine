@@ -168,14 +168,13 @@ public class LiquidWater implements Fluid, Serializable, Cloneable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LiquidWater that = (LiquidWater) o;
-        return Double.compare(that.tx, tx) == 0 && id.equals(that.id);
+        if (!(o instanceof LiquidWater that)) return false;
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tx);
+        return Objects.hash(id);
     }
 }
 

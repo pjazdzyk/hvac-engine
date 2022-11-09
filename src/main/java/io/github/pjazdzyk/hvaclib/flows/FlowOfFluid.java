@@ -283,16 +283,16 @@ public class FlowOfFluid implements Flow, Serializable {
     }
 
     // Equals & hashcode
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FlowOfFluid that = (FlowOfFluid) o;
-        return Double.compare(that.massFlow, massFlow) == 0 && id.equals(that.id) && fluid.equals(that.fluid);
+        if (!(o instanceof FlowOfFluid that)) return false;
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fluid, massFlow);
+        return Objects.hash(id);
     }
 }

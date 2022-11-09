@@ -466,17 +466,17 @@ public class MoistAir implements Serializable, Cloneable, Fluid {
     }
 
     // Equals & hashcode
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MoistAir moistAir = (MoistAir) o;
-        return Double.compare(moistAir.pat, pat) == 0 && Double.compare(moistAir.tx, tx) == 0 && Double.compare(moistAir.x, x) == 0 && id.equals(moistAir.id);
+        if (!(o instanceof MoistAir moistAir)) return false;
+        return id.equals(moistAir.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pat, tx, x);
+        return Objects.hash(id);
     }
 
     //BUILDER PATTERN
