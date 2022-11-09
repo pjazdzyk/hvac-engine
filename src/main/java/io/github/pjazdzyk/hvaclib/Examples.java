@@ -15,20 +15,7 @@ import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 public class Examples {
 
     public static void main(String[] args) {
-
-        final double MATH_ACCURACY = 10E-15;
-        final Fluid SAMPLE_LIQ_WATER = new LiquidWater("water", 15);
-        final MoistAir SAMPLE_AIR = new MoistAir("air", 20, 50);
-        final double SAMPLE_MASS_FLOW = 1.0;  // kg/s
-        final double SAMPLE_FLUID_VOL_FLOW = 0.00100111684564597; // m3/s
-        final double SAMPLE_AIR_DA_MASS_FLOW = 0.992790473618731;  // kg/s
-        final double SAMPLE_AIR_MA_VOL_FLOW = 0.824510144149681; // kg/s
-
-        double dryAir = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(SAMPLE_AIR.getX(), SAMPLE_MASS_FLOW);
-        var actualMaAirMassFlow = PhysicsOfFlow.calcMaVolFlowFromDaMassFlow(SAMPLE_AIR.getRho(), SAMPLE_AIR.getX(), dryAir);
-        System.out.println(actualMaAirMassFlow);
-        //runUserGuideMethods();
-
+        runUserGuideMethods();
     }
 
     public static void runUserGuideMethods() {
