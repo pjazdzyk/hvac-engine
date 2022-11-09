@@ -4,13 +4,11 @@ import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.flows.TypeOfAirFlow;
 import io.github.pjazdzyk.hvaclib.flows.TypeOfFluidFlow;
-import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.physics.PhysicsPropOfMoistAir;
 import io.github.pjazdzyk.hvaclib.process.ProcessOfHeatingCooling;
 import io.github.pjazdzyk.hvaclib.process.ProcessOfMixing;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
-import io.github.pjazdzyk.hvaclib.physics.PhysicsOfFlow;
 
 public class Examples {
 
