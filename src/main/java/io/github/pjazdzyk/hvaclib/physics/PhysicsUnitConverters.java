@@ -1,6 +1,6 @@
-package io.github.pjazdzyk.hvaclib.common;
+package io.github.pjazdzyk.hvaclib.physics;
 
-public class UnitConverters {
+public class PhysicsUnitConverters {
     // Unit convert
     public final static double CST_KLV = 237.15;               // [K]                  - Celsius to Kelvin conversion additive
 

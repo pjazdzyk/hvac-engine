@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.common;
+package io.github.pjazdzyk.hvaclib.physics;
 
 import java.util.Arrays;
 import java.util.OptionalDouble;
@@ -16,16 +16,6 @@ public final class MathUtils {
         if (optionalDouble.isPresent())
             return optionalDouble.getAsDouble();
         throw new NullPointerException("No values are provided.");
-    }
-
-    public static double maxDoubleInArray(double... values) {
-        OptionalDouble optional = Arrays.stream(values).max();
-        return optional.orElseThrow();
-    }
-
-    public static double minDoubleInArray(double... values) {
-        OptionalDouble optional = Arrays.stream(values).min();
-        return optional.orElseThrow();
     }
 
 }
