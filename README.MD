@@ -6,7 +6,7 @@
 
 ---
 
-<span style="font-weight:700;font-size:15px">[USER GUIDE](README_GUIDE.MD) | [FUNCTIONALITY](#functionality) | [LEGAL DISCLAIMER](#legal-disclaimer) | [UPCOMING](#upcoming-functionality) | [RESOURCES](#reference-sources)</span>
+### [USER GUIDE](README_GUIDE.MD) &nbsp;|&nbsp; [FUNCTIONALITY](#functionality) &nbsp;|&nbsp; [LEGAL DISCLAIMER](#legal-disclaimer) &nbsp;|&nbsp; [UPCOMING](#upcoming-functionality) &nbsp;|&nbsp; [RESOURCES](#reference-sources)
 
 ---
 
