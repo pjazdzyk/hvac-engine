@@ -1,8 +1,6 @@
 package io.github.pjazdzyk.hvaclib.physics;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.common.Messenger;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
@@ -186,16 +184,19 @@ public final class PhysicsOfHeatingCooling {
         PhysicsValidators.validateForNotNull("Inlet flow", inletFlow);
         MoistAir inletAirProp = inletFlow.getMoistAir();
         double Pat = inletAirProp.getPat();
-        if (outRH > 100 || outRH < 0.0)
+        if (outRH > 100 || outRH < 0.0) {
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
-        if (outRH < inletAirProp.getRH())
-            throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
-        if (outRH == inletAirProp.getRH())
-            return new HeatCoolResult(0.0, inletAirProp.getTx(), inletAirProp.getX(), PhysicsDefaults.DEF_WT_TW, 0.0);
-        if (outRH > 99.0) {
-            Messenger.printLine("Non-physical process. The area of the exchanger would have to be infinite."); //TODO change to logger
-            return calcCoolingFromOutletTx(inletFlow, tm_Wall, tm_Wall);
         }
+        if (outRH < inletAirProp.getRH()) {
+            throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
+        }
+        if (outRH == inletAirProp.getRH()) {
+            return new HeatCoolResult(0.0, inletAirProp.getTx(), inletAirProp.getX(), PhysicsDefaults.DEF_WT_TW, 0.0);
+        }
+        if (outRH > 99.0) {
+            throw new ProcessArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
+        }
+
         //Iterative loop to determine which outlet temperature will result in expected RH.
         HeatCoolResult[] result = new HeatCoolResult[1]; // Array is needed here to work-around issue of updating result variable from the inside of inner class.
         BrentSolver solver = new BrentSolver("CoolingFromOutRH SOLVER");
