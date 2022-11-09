@@ -3,6 +3,7 @@ package io.github.pjazdzyk.hvaclib.physics;
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.Limiters;
 import io.github.pjazdzyk.hvaclib.common.UnitConverters;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.physics.exceptions.AirPhysicsArgumentException;
 
 import java.util.function.DoubleFunction;
@@ -390,7 +391,7 @@ public final class PhysicsPropOfMoistAir {
      * @return water mist specific enthalpy, kJ/kg
      */
     public static double calcWtI(double ta) {
-        return ta < 0.0 ? 0.0 : (PhysicsDefaults.DEF_WT_CP) * ta;
+        return ta < 0.0 ? 0.0 : PhysicsPropOfWater.calcIx(ta);
     }
 
     /**
