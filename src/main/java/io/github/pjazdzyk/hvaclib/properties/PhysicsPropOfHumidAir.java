@@ -2,7 +2,6 @@ package io.github.pjazdzyk.hvaclib.properties;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
-import io.github.pjazdzyk.hvaclib.common.PhysicsDefaults;
 import io.github.pjazdzyk.hvaclib.common.PhysicsLimiters;
 import io.github.pjazdzyk.hvaclib.common.PhysicsUnitConverters;
 import io.github.pjazdzyk.hvaclib.properties.exceptions.PropertyPhysicsArgumentException;
@@ -403,7 +402,7 @@ public final class PhysicsPropOfHumidAir {
      * @return ice mist specific enthalpy, kJ/kg
      */
     public static double calcIceI(double ta) {
-        return ta > 0.0 ? 0.0 : PhysicsDefaults.DEF_ICE_CP * ta - PhysicsConstants.CST_ICE_R;
+        return ta > 0.0 ? 0.0 : PropertyDefaults.DEF_ICE_CP * ta - PhysicsConstants.CST_ICE_R;
     }
 
     /*SPECIFIC HEAT CALCULATION*/

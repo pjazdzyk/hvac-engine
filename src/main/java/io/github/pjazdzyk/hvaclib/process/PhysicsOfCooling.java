@@ -2,7 +2,7 @@ package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.common.PhysicsDefaults;
+import io.github.pjazdzyk.hvaclib.properties.PropertyDefaults;
 import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
@@ -173,7 +173,7 @@ public final class PhysicsOfCooling {
             throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
         }
         if (outRH == inletAirProp.getRH()) {
-            return new CoolingResultDto(0.0, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), PhysicsDefaults.DEF_WT_TW, 0.0);
+            return new CoolingResultDto(0.0, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), PropertyDefaults.DEF_WT_TW, 0.0);
         }
         if (outRH > 99.0) {
             throw new ProcessArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
@@ -210,7 +210,7 @@ public final class PhysicsOfCooling {
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
         if (inQ == 0.0)
-            new CoolingResultDto(inQ, t1, x1, PhysicsDefaults.DEF_WT_TW, 0.0);
+            new CoolingResultDto(inQ, t1, x1, PropertyDefaults.DEF_WT_TW, 0.0);
         CoolingResultDto[] result = new CoolingResultDto[1];
         double tMin = inletAirProp.getTemp();
 
