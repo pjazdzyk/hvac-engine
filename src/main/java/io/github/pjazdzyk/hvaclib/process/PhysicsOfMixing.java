@@ -4,8 +4,8 @@ import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.inputdata.MixingProcessInputData;
-import io.github.pjazdzyk.hvaclib.properties.HumidGas;
-import io.github.pjazdzyk.hvaclib.properties.PhysicsPropOfHumidAir;
+import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
 
 public final class PhysicsOfMixing {
 

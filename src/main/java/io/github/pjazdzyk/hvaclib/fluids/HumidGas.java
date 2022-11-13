@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.properties;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 public interface HumidGas extends Fluid {
     double getRH();
