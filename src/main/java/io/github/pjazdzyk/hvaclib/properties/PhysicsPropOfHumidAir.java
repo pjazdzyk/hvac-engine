@@ -1,7 +1,11 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.properties;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.physics.exceptions.AirPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
+import io.github.pjazdzyk.hvaclib.common.PhysicsDefaults;
+import io.github.pjazdzyk.hvaclib.common.PhysicsLimiters;
+import io.github.pjazdzyk.hvaclib.common.PhysicsUnitConverters;
+import io.github.pjazdzyk.hvaclib.properties.exceptions.PropertyPhysicsArgumentException;
 
 import java.util.function.DoubleFunction;
 
@@ -37,9 +41,9 @@ import java.util.function.DoubleFunction;
  * @author Piotr Jażdżyk, MScEng
  */
 
-public final class PhysicsPropOfMoistAir {
+public final class PhysicsPropOfHumidAir {
 
-    private PhysicsPropOfMoistAir() {
+    private PhysicsPropOfHumidAir() {
     }
     private static final double WG_RATIO = PhysicsConstants.CST_WV_MM / PhysicsConstants.CST_DA_MM;
     private static final double SOLVER_A_COEF = 0.8;
@@ -57,7 +61,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaPs(double ta) {
         if (ta < PhysicsLimiters.MIN_T)
-            throw new AirPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + PhysicsLimiters.MIN_T);
+            throw new PropertyPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + PhysicsLimiters.MIN_T);
         if (ta < -130)
             return 0.0;
         double exactPs;
@@ -105,7 +109,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaPs(double x, double RH, double Pat) {
         if (x <= 0.0 || RH <= 0.0)
-            throw new AirPhysicsArgumentException("ERROR. Value of x or RH is smaller than or equal 0." + String.format(" x= %.2f, RH=%.2f ", x, RH));
+            throw new PropertyPhysicsArgumentException("ERROR. Value of x or RH is smaller than or equal 0." + String.format(" x= %.2f, RH=%.2f ", x, RH));
         return x * Pat / ((WG_RATIO * RH / 100.0) + x * RH / 100.0);
     }
 
@@ -122,7 +126,7 @@ public final class PhysicsPropOfMoistAir {
         if (RH >= 100)
             return ta;
         if (RH < 0)
-            throw new AirPhysicsArgumentException("ERROR. RH id smaller than 0." + String.format(" RH=%.2f ", RH));
+            throw new PropertyPhysicsArgumentException("ERROR. RH id smaller than 0." + String.format(" RH=%.2f ", RH));
         if (RH == 0)
             return Double.NEGATIVE_INFINITY;
         //Arden-Buck procedure tdP estimation (used for RH>25)
@@ -173,7 +177,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaWbt(double ta, double RH, double Pat) {
         if (RH < 0)
-            throw new AirPhysicsArgumentException("ERROR. Value of RH is smaller than or equal 0." + String.format("RH=%.2f ", RH));
+            throw new PropertyPhysicsArgumentException("ERROR. Value of RH is smaller than or equal 0." + String.format("RH=%.2f ", RH));
         if (RH >= 100)
             return ta;
         double estimatedWbt = ta * Math.atan(0.151977 * Math.pow(RH + 8.313659, 0.5))
@@ -222,10 +226,10 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaRH(double ta, double x, double Pat) {
         if (x < 0)
-            throw new AirPhysicsArgumentException("Error. Value of x is smaller than or equal 0." + String.format("x= %.3f", x));
+            throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than or equal 0." + String.format("x= %.3f", x));
         if (x == 0.0)
             return 0.0;
-        double Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
+        double Ps = PhysicsPropOfHumidAir.calcMaPs(ta);
         double RH = x * Pat / (WG_RATIO * Ps + x * Ps);
         return RH > 1 ? 100 : RH * 100;
     }
@@ -241,9 +245,9 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaX(double RH, double Ps, double Pat) {
         if (Ps < 0 || RH < 0)
-            throw new AirPhysicsArgumentException("ERROR. Ps or RH lower than 0.0." + String.format(" Ps= %.2f, RH=%.2f ", Ps, RH));
+            throw new PropertyPhysicsArgumentException("ERROR. Ps or RH lower than 0.0." + String.format(" Ps= %.2f, RH=%.2f ", Ps, RH));
         if (Ps >= Pat)
-            throw new AirPhysicsArgumentException("ERROR. Ps greater than Pat." + String.format(" Pat= %.2f, RH= %.2f, Ps= %.2f ", Pat, RH, Ps));
+            throw new PropertyPhysicsArgumentException("ERROR. Ps greater than Pat." + String.format(" Pat= %.2f, RH= %.2f, Ps= %.2f ", Pat, RH, Ps));
         if (RH == 0)
             return 0.0;
         return WG_RATIO * (RH / 100.0 * Ps) / (Pat - (RH / 100.0) * Ps);
@@ -274,7 +278,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaDynVis(double ta, double x) {
         if (x < 0)
-            throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
+            throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
         double dynVis_Da = PhysicsPropOfDryAir.calcDaDynVis(ta);
         if (x == 0)
             return dynVis_Da;
@@ -297,9 +301,9 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaKinVis(double ta, double x, double rho_Ma) {
         if (rho_Ma <= 0.0)
-            throw new AirPhysicsArgumentException("Error. Value of rho_Ma is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Ma));
+            throw new PropertyPhysicsArgumentException("Error. Value of rho_Ma is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Ma));
         if (x < 0.0)
-            throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
+            throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
         return x == 0.0
                 ? PhysicsPropOfDryAir.calcDaDynVis(ta) / rho_Ma
                 : calcMaDynVis(ta, x) / rho_Ma;
@@ -320,7 +324,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaK(double ta, double x, double dynVis_Da, double dynVis_Wv) {
         if (x < 0)
-            throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0.." + String.format("x= %.3f", x));
+            throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than 0.." + String.format("x= %.3f", x));
         double k_Da = PhysicsPropOfDryAir.calcDaK(ta);
         if (x == 0)
             return k_Da;
@@ -360,15 +364,15 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaIx(double ta, double x, double Pat) {
         if (x < 0.0)
-            throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
+            throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
         if (Pat < PhysicsLimiters.MIN_PAT)
-            throw new AirPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, PhysicsLimiters.MIN_PAT));
+            throw new PropertyPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, PhysicsLimiters.MIN_PAT));
         double i_Da = PhysicsPropOfDryAir.calcDaI(ta);
         //Case1: no humidity = dry air only
         if (x == 0.0)
             return i_Da;
         //Case2: x <= xMax, unsaturated air
-        double Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
+        double Ps = PhysicsPropOfHumidAir.calcMaPs(ta);
         double xMax = calcMaXMax(Ps, Pat);
         double i_Wv = PhysicsPropOfWaterVapour.calcWvI(ta) * x;
         if (x <= xMax)
@@ -415,7 +419,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaCp(double ta, double x) {
         if (x < 0.0)
-            throw new AirPhysicsArgumentException("Error. Value of x is smaller than or equal 0." + String.format(" x= %.3f", x));
+            throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than or equal 0." + String.format(" x= %.3f", x));
         return PhysicsPropOfDryAir.calcDaCp(ta) + x * PhysicsPropOfWaterVapour.calcWvCp(ta);
     }
 
@@ -433,7 +437,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaRho(double ta, double x, double Pat) {
         if (x < 0.0)
-            throw new AirPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
+            throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
         if (x == 0.0)
             return PhysicsPropOfDryAir.calcDaRho(ta, Pat);
         double PatKpa = Pat / 1000.0;
@@ -453,7 +457,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaTaTdpRH(double tdp, double RH, double Pat) {
         if (RH < 0.0)
-            throw new AirPhysicsArgumentException("ERROR. RH id smaller than 0." + String.format(" RH=%.2f ", RH));
+            throw new PropertyPhysicsArgumentException("ERROR. RH id smaller than 0." + String.format(" RH=%.2f ", RH));
         if (RH == 0.0)
             return Double.POSITIVE_INFINITY;
         double taEstimated = (tdp - 112 * Math.pow(RH / 100, 1.0 / 8.0) + 112) / (0.9 * Math.pow(RH / 100, 1.0 / 8.0) + 0.1);
@@ -488,7 +492,7 @@ public final class PhysicsPropOfMoistAir {
      */
     public static double calcMaTaIX(double ix, double x, double Pat) {
         BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
-        return solver.calcForFunction(tx -> ix - PhysicsPropOfMoistAir.calcMaIx(tx, x, Pat));
+        return solver.calcForFunction(tx -> ix - PhysicsPropOfHumidAir.calcMaIx(tx, x, Pat));
     }
 
     /**

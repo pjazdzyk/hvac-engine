@@ -1,5 +1,6 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.properties;
 
+import io.github.pjazdzyk.hvaclib.PhysicsTestConstants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsPropOfDryAirTest implements PhysicsTestConstants{
+class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
 
     @ParameterizedTest
     @MethodSource("dynVisDaInlineData")

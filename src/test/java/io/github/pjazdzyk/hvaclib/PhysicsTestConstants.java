@@ -1,6 +1,6 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib;
 
-interface PhysicsTestConstants {
+public interface PhysicsTestConstants {
     double LIMITED_MATH_ACCURACY = 1.0E-8;
     double PS_LOW_TEMP_ACCURACY = 0.03;
     double PS_MED_TEMP_ACCURACY = 0.20;
