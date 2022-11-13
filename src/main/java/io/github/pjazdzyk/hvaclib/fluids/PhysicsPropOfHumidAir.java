@@ -1,10 +1,10 @@
-package io.github.pjazdzyk.hvaclib.properties;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
 import io.github.pjazdzyk.hvaclib.common.PhysicsLimiters;
 import io.github.pjazdzyk.hvaclib.common.PhysicsUnitConverters;
-import io.github.pjazdzyk.hvaclib.properties.exceptions.PropertyPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
 
 import java.util.function.DoubleFunction;
 

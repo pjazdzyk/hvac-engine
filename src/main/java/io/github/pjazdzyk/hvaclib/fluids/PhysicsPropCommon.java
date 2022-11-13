@@ -1,6 +1,6 @@
-package io.github.pjazdzyk.hvaclib.properties;
+package io.github.pjazdzyk.hvaclib.fluids;
 
-import io.github.pjazdzyk.hvaclib.properties.exceptions.PropertyPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
 
 public final class PhysicsPropCommon {
 

@@ -2,15 +2,14 @@ package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.properties.PropertyDefaults;
 import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvaclib.process.resultsdto.CoolingResultDto;
 import io.github.pjazdzyk.hvaclib.process.resultsdto.HeatingResultDto;
-import io.github.pjazdzyk.hvaclib.properties.HumidGas;
-import io.github.pjazdzyk.hvaclib.properties.PhysicsPropOfHumidAir;
-import io.github.pjazdzyk.hvaclib.properties.PhysicsPropOfWater;
+import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfWater;
 
 /**
  * PSYCHROMETRICS PROCESS EQUATIONS LIBRARY <br>

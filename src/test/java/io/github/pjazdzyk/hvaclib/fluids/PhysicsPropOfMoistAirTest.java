@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.properties;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.hvaclib.PhysicsTestConstants;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsPropOfHumidAirTest implements PhysicsTestConstants {
+class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
 
     @ParameterizedTest
     @MethodSource("psInlineData")

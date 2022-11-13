@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.properties;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 /**
  * <h3>LIQUID WATER</h3>
