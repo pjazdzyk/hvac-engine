@@ -1,7 +1,5 @@
 package io.github.pjazdzyk.hvaclib.properties;
 
-import java.io.Serializable;
-
 /**
  * <h3>LIQUID WATER</h3>
  * <p>
@@ -14,7 +12,7 @@ import java.io.Serializable;
  * </p><br>
  */
 
-public class LiquidWater implements Fluid, Serializable {
+public class LiquidWater implements Fluid {
 
     private static final String DEF_NAME = "New water";
     private static final double DEF_TEMP = 10;                                     // [oC]             - Default water temperature
