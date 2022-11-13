@@ -1,7 +1,6 @@
 package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.common.PhysicsDefaults;
 import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.inputdata.MixingProcessInputData;
@@ -81,9 +80,6 @@ public final class PhysicsOfMixing {
         }
         if (mda3 == 0.0) {
             return new MixingMultiResult(mda3, flows[0].getTemp(), flows[0].getHumRatioX());
-        }
-        if (Pat == 0.0) {
-            Pat = PhysicsDefaults.DEF_PAT;
         }
         double x3 = xMda / mda3;
         double i3 = iMda / mda3;
