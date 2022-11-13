@@ -1,9 +1,8 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
 import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
-import io.github.pjazdzyk.hvaclib.properties.Fluid;
+import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -19,7 +18,7 @@ import java.util.Objects;
  * </p><br>
  */
 
-public class SinglePhaseFlow<F extends Fluid> implements FlowOfFluid<F>, Serializable {
+public class SinglePhaseFlow<F extends Fluid> implements FlowOfFluid<F> {
     private final String name;
     private final F fluid;
     private final TypeOfFluidFlow typeOfFlow;
