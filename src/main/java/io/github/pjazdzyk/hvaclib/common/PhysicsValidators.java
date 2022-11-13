@@ -10,22 +10,30 @@ public final class PhysicsValidators {
     private PhysicsValidators() {
     }
 
-    public static void validateForNotNull(String variableName, Object object) {
-        Objects.requireNonNull(object, variableName + " must not be null.");
+    public static void requireNotNull(String message, Object object) {
+        Objects.requireNonNull(object, message + " must not be null.");
     }
 
-    public static void validateForPositiveValue(String variableName, double value) {
-        if (value < 0.0) throw new FlowPhysicsArgumentException(variableName + "= " + value + " must not be negative");
+    public static void requirePositiveValue(String message, double value) {
+        if (value < 0.0) throw new FlowPhysicsArgumentException(message + "= " + value + " must not be negative");
     }
 
-    public static void validateForPositiveAndNonZeroValue(String variableName, double value) {
+    public static void requireNegativeValue(String message, double value) {
+        if (value > 0.0) throw new FlowPhysicsArgumentException(message + "= " + value + " must be negative value.");
+    }
+
+    public static void requireFirstValueAsGreaterThanSecond(String message, double firstValue, double secondValue){
+        if (firstValue < secondValue) throw new FlowPhysicsArgumentException(message + " First value of: " + firstValue + " is not greater than " + secondValue);
+    }
+
+    public static void requirePositiveAndNonZeroValue(String message, double value) {
         if (value <= 0.0)
-            throw new FlowPhysicsArgumentException(variableName + "= " + value + " must not be zero or negative");
+            throw new FlowPhysicsArgumentException(message + "= " + value + " must not be zero or negative");
     }
 
-    public static void validateArrayForNull(String variableName, Object[] objects) {
+    public static void requireArrayNotContainsNull(String message, Object[] objects) {
         if (Arrays.stream(objects).anyMatch(Objects::isNull)) {
-            throw new NullPointerException("Null value detected in the array of " + variableName + ".");
+            throw new NullPointerException("Null value detected in the array of " + message + ".");
         }
     }
 }
