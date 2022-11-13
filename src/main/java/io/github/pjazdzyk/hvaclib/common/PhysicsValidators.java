@@ -1,6 +1,6 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.common;
 
-import io.github.pjazdzyk.hvaclib.physics.exceptions.FlowPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.flows.exceptions.FlowPhysicsArgumentException;
 
 import java.util.Arrays;
 import java.util.Objects;

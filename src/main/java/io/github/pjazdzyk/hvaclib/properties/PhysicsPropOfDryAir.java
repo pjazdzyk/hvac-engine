@@ -1,7 +1,8 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.properties;
 
-import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.physics.exceptions.AirPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.common.MathUtils;
+import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
+import io.github.pjazdzyk.hvaclib.properties.exceptions.PropertyPhysicsArgumentException;
 
 public final class PhysicsPropOfDryAir {
 
@@ -32,7 +33,7 @@ public final class PhysicsPropOfDryAir {
      */
     public static double calcDaKinVis(double ta, double rho_Da) {
         if (rho_Da <= 0)
-            throw new AirPhysicsArgumentException("Error. Value of rho_Da is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Da));
+            throw new PropertyPhysicsArgumentException("Error. Value of rho_Da is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Da));
         return calcDaDynVis(ta) / rho_Da;
     }
 
@@ -78,7 +79,7 @@ public final class PhysicsPropOfDryAir {
         if (ta <= -73.15)
             return 1.002;
         if (ta > -73.15 && ta <= -53.15)
-            return BrentSolver.linearInterpolation(-73.15, 1.002, -53.15, 1.003, ta);
+            return MathUtils.linearInterpolation(-73.15, 1.002, -53.15, 1.003, ta);
         if (ta > -53.15 && ta <= -13.15)
             return 1.003;
         if (ta > -13.15 && ta <= 86.85) {

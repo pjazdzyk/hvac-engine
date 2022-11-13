@@ -1,4 +1,6 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.flows;
+
+import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
 
 /**
  * PHYSICS OF FLOW, CALCULATION AND CONVERSION LIBRARY <br>

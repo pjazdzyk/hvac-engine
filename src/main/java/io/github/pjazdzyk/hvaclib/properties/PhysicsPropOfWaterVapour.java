@@ -1,6 +1,8 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.properties;
 
-import io.github.pjazdzyk.hvaclib.physics.exceptions.AirPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
+import io.github.pjazdzyk.hvaclib.common.PhysicsUnitConverters;
+import io.github.pjazdzyk.hvaclib.properties.exceptions.PropertyPhysicsArgumentException;
 
 public final class PhysicsPropOfWaterVapour {
 
@@ -90,7 +92,7 @@ public final class PhysicsPropOfWaterVapour {
      */
     public static double calcWvRho(double ta, double RH, double Pat) {
         double tk = PhysicsUnitConverters.convertCelsiusToKelvin(ta);
-        double P_Da = RH / 100 * PhysicsPropOfMoistAir.calcMaPs(ta);
+        double P_Da = RH / 100 * PhysicsPropOfHumidAir.calcMaPs(ta);
         double P_Wv = Pat - P_Da;
         return P_Wv / (PhysicsConstants.CST_WV_RG * tk);
     }
@@ -104,7 +106,7 @@ public final class PhysicsPropOfWaterVapour {
      */
     public static double calcWvKinVis(double ta, double rho_Wv) {
         if (rho_Wv <= 0)
-            throw new AirPhysicsArgumentException("Error. Value of rho_Wv is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Wv));
+            throw new PropertyPhysicsArgumentException("Error. Value of rho_Wv is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Wv));
         return calcWvDynVis(ta) / rho_Wv;
     }
 }

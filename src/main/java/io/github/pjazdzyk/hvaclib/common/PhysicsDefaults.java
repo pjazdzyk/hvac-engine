@@ -1,9 +1,8 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.common;
 
-public class PhysicsDefaults {
+public final class PhysicsDefaults {
 
-    private PhysicsDefaults() {
-    }
+    private PhysicsDefaults() {}
 
     public final static double DEF_PAT = 101_325;                   // [Pa]                 - Standard atmospheric pressure (physical atmosphere)
     public final static double DEF_AIR_TEMP = 20.0;                 // [oC]                 - default air temperature oC

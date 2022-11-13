@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.physics;
+package io.github.pjazdzyk.hvaclib.common;
 
 /**
  * List of calculation control limiters to prevent unphysical results or to ensure solver convergence.<br>
