@@ -3,7 +3,7 @@ package io.github.pjazdzyk.hvaclib.fluids;
 public interface Fluid {
     String getName();
 
-    double getPressure();
+    double getAbsPressure();
 
     double getTemp();
 
