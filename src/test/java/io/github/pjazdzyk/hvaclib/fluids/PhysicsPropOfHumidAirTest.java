@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
+class PhysicsPropOfHumidAirTest implements PhysicsTestConstants {
 
     @ParameterizedTest
     @MethodSource("psInlineData")

@@ -62,7 +62,7 @@ public class LiquidWater implements Fluid {
     }
 
     @Override
-    public double getPressure() {
+    public double getAbsPressure() {
         return this.waterPressure;
     }
 

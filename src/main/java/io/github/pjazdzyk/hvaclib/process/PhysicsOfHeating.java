@@ -30,7 +30,7 @@ public class PhysicsOfHeating {
         if (inputHeatQ == 0.0 || inletFlow.getMassFlow() == 0.0) {
             return new HeatingResultDto(0.0, t1);
         }
-        double Pat = inletAirProp.getPressure();
+        double Pat = inletAirProp.getAbsPressure();
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double i2 = (m1 * i1 + inputHeatQ / 1000) / m1;
@@ -52,7 +52,7 @@ public class PhysicsOfHeating {
         PhysicsValidators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletFlow.getTemp());
         PhysicsValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getHumidGas();
-        double Pat = inletAirProp.getPressure();
+        double Pat = inletAirProp.getAbsPressure();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
         double heatQ = 0.0;
@@ -80,7 +80,7 @@ public class PhysicsOfHeating {
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         }
         HumidGas inletAirProp = inletFlow.getHumidGas();
-        double RH1 = inletAirProp.getRH();
+        double RH1 = inletAirProp.getRelativeHumidityRH();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
         double heatQ = 0.0;
@@ -90,7 +90,7 @@ public class PhysicsOfHeating {
         if (outRH > RH1) {
             throw new ProcessArgumentException("Expected RH must be smaller than initial value. If this was intended - use methods dedicated for cooling.");
         }
-        double Pat = inletAirProp.getPressure();
+        double Pat = inletAirProp.getAbsPressure();
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double t2 = PhysicsPropOfHumidAir.calcMaTaRHX(x1, outRH, Pat);
