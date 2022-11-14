@@ -41,7 +41,7 @@ public final class PhysicsOfMixing {
         double i2 = inSecondAir.getSpecEnthalpy();
         double x3 = (firstInDryAirFlow * x1 + secondInDryAirFlow * x2) / outDryAirFlow;
         double i3 = (firstInDryAirFlow * i1 + secondInDryAirFlow * i2) / outDryAirFlow;
-        double Pat = inFirstAir.getPressure();
+        double Pat = inFirstAir.getAbsPressure();
         double t3 = PhysicsPropOfHumidAir.calcMaTaIX(i3, x3, Pat);
         return new MixingResult(firstInDryAirFlow, secondInDryAirFlow, outDryAirFlow, t3, x3);
     }
@@ -76,7 +76,7 @@ public final class PhysicsOfMixing {
             mda3 += flow.getMassFlowDa();
             xMda += flow.getMassFlowDa() * flow.getHumRatioX();
             iMda += flow.getMassFlowDa() * flow.getSpecEnthalpy();
-            Pat = Double.max(Pat, flow.getPressure());
+            Pat = Double.max(Pat, flow.getAbsPressure());
         }
         if (mda3 == 0.0) {
             return new MixingMultiResult(mda3, flows[0].getTemp(), flows[0].getHumRatioX());

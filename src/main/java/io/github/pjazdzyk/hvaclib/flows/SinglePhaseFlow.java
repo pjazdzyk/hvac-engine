@@ -69,8 +69,8 @@ public class SinglePhaseFlow<F extends Fluid> implements FlowOfFluid<F> {
     }
 
     @Override
-    public double getPressure() {
-        return this.fluid.getPressure();
+    public double getAbsPressure() {
+        return this.fluid.getAbsPressure();
     }
 
     @Override

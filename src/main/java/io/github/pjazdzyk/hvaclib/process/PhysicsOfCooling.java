@@ -130,7 +130,7 @@ public final class PhysicsOfCooling {
         double mDa_Bypassing = mDa_Inlet - mDa_DirectContact;
 
         // Determining direct near-wall air properties
-        double Pat = inletAirProp.getPressure();
+        double Pat = inletAirProp.getAbsPressure();
         double tdp_Inlet = inletAirProp.getDewPointTemp();
         double Ps_Tm = PhysicsPropOfHumidAir.calcMaPs(tm_Wall);
         double x_Tm = tm_Wall >= tdp_Inlet ? inletAirProp.getHumRatioX() : PhysicsPropOfHumidAir.calcMaXMax(Ps_Tm, Pat);
@@ -164,14 +164,14 @@ public final class PhysicsOfCooling {
     public static CoolingResultDto calcCoolingFromOutletRH(FlowOfHumidGas inletFlow, double tm_Wall, double outRH) {
         PhysicsValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getHumidGas();
-        double Pat = inletAirProp.getPressure();
+        double Pat = inletAirProp.getAbsPressure();
         if (outRH > 100 || outRH < 0.0) {
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         }
-        if (outRH < inletAirProp.getRH()) {
+        if (outRH < inletAirProp.getRelativeHumidityRH()) {
             throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
         }
-        if (outRH == inletAirProp.getRH()) {
+        if (outRH == inletAirProp.getRelativeHumidityRH()) {
             return new CoolingResultDto(0.0, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), tm_Wall, 0.0);
         }
         if (outRH > 99.0) {
