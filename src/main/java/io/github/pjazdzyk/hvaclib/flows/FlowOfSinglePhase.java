@@ -18,14 +18,14 @@ import java.util.Objects;
  * </p><br>
  */
 
-public class SinglePhaseFlow<F extends Fluid> implements FlowOfFluid<F> {
+public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
     private final String name;
     private final F fluid;
     private final TypeOfFluidFlow typeOfFlow;
     private double massFlow;
     private double volFlow;
 
-    private SinglePhaseFlow(Builder<F> builder) {
+    private FlowOfSinglePhase(Builder<F> builder) {
         this(builder.flowName, builder.fluid, builder.flowRate, builder.lockedFlowType);
     }
 
@@ -35,7 +35,7 @@ public class SinglePhaseFlow<F extends Fluid> implements FlowOfFluid<F> {
      * @param fluid      type of Fluid
      * @param typeOfFlow - type of Flow (selected from FluidFlowType enum).
      */
-    public SinglePhaseFlow(String name, F fluid, double flowRate, TypeOfFluidFlow typeOfFlow) {
+    public FlowOfSinglePhase(String name, F fluid, double flowRate, TypeOfFluidFlow typeOfFlow) {
         PhysicsValidators.requirePositiveValue("Flow ", flowRate);
         PhysicsValidators.requireNotNull("Fluid", fluid);
         PhysicsValidators.requireNotNull("Locked flow", typeOfFlow);
@@ -106,7 +106,7 @@ public class SinglePhaseFlow<F extends Fluid> implements FlowOfFluid<F> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SinglePhaseFlow<?> that)) return false;
+        if (!(o instanceof FlowOfSinglePhase<?> that)) return false;
         return Double.compare(that.massFlow, massFlow) == 0
                 && name.equals(that.name)
                 && fluid.equals(that.fluid)
@@ -177,12 +177,12 @@ public class SinglePhaseFlow<F extends Fluid> implements FlowOfFluid<F> {
             return this;
         }
 
-        public SinglePhaseFlow<F> build() {
+        public FlowOfSinglePhase<F> build() {
             TypeOfFluidFlow typeOfFlow = lockedFlowType;
             if (overrideLockedFlowType != null) {
                 typeOfFlow = overrideLockedFlowType;
             }
-            return new SinglePhaseFlow<>(flowName, fluid, flowRate, typeOfFlow);
+            return new FlowOfSinglePhase<>(flowName, fluid, flowRate, typeOfFlow);
         }
 
     }
