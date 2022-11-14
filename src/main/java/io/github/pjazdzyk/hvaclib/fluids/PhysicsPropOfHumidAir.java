@@ -317,11 +317,11 @@ public final class PhysicsPropOfHumidAir {
      *
      * @param ta        air temperature, oC
      * @param x         air humidity ratio, kg.wv/kg.da
-     * @param dynVis_Da dry air dynamic viscosity, kg/(m*s)
-     * @param dynVis_Wv water vapour dynamic viscosity, kg/(m*s)
      * @return air thermal conductivity, W/(m*K)
      */
-    public static double calcMaK(double ta, double x, double dynVis_Da, double dynVis_Wv) {
+    public static double calcMaK(double ta, double x) {
+        double dynVisDa = PhysicsPropOfDryAir.calcDaDynVis(ta);
+        double dynVisWv = PhysicsPropOfWaterVapour.calcWvDynVis(ta);
         if (x < 0)
             throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than 0.." + String.format("x= %.3f", x));
         double k_Da = PhysicsPropOfDryAir.calcDaK(ta);
@@ -339,8 +339,8 @@ public final class PhysicsPropOfHumidAir {
         double beta_VA;
         double A_AV;
         double A_VA;
-        alfa_AV = (dynVis_Da / dynVis_Wv) * Math.pow(WG_RATIO, 0.75) * ((1 + sut_Da / tk) / (1 + sut_Wv / tk));
-        alfa_VA = (dynVis_Wv / dynVis_Da) * Math.pow(WG_RATIO, 0.75) * ((1 + sut_Wv / tk) / (1 + sut_Da / tk));
+        alfa_AV = (dynVisDa / dynVisWv) * Math.pow(WG_RATIO, 0.75) * ((1 + sut_Da / tk) / (1 + sut_Wv / tk));
+        alfa_VA = (dynVisWv / dynVisDa) * Math.pow(WG_RATIO, 0.75) * ((1 + sut_Wv / tk) / (1 + sut_Da / tk));
         beta_AV = (1 + sutAv / tk) / (1 + sut_Da / tk);
         beta_VA = (1 + sutAv / tk) / (1 + sut_Wv / tk);
         A_AV = 0.25 * Math.pow(1 + alfa_AV, 2) * beta_AV;
