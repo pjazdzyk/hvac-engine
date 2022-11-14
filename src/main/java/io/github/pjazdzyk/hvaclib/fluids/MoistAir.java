@@ -34,7 +34,7 @@ public class MoistAir implements HumidGas {
     private double maxHumidityRatioX;        // [kg.wv/kg.da]    - moist air maximum water content under given air temperature ta
     private double density;                  // [kg/m3]          - moist air density at temperature tx
     private double thermalConductivity;      // [W/(m*K)]        - moist air thermal conductivity
-    private double specificHeat;             // [kJ/kg*K]        - moist air isobaric specific heat
+    private double specHeat;             // [kJ/kg*K]        - moist air isobaric specific heat
     private double thermalDiffusivity;       // [m^2/s]          - moist air thermal diffusivity
     private double dynamicViscosity;         // [kg/(m*s)]       - moist air dynamic viscosity
     private double kinematicViscosity;       // [m^2/s]          - moist air kinematic viscosity
@@ -107,12 +107,12 @@ public class MoistAir implements HumidGas {
         this.density = PhysicsPropOfHumidAir.calcMaRho(temperature, humidityRatioX, absPressure);
         this.specHeatDa = PhysicsPropOfDryAir.calcDaCp(temperature);
         this.specHeatWv = PhysicsPropOfWaterVapour.calcWvCp(temperature);
-        this.specificHeat = PhysicsPropOfHumidAir.calcMaCp(temperature, humidityRatioX);
+        this.specHeat = PhysicsPropOfHumidAir.calcMaCp(temperature, humidityRatioX);
         this.dynamicViscosity = PhysicsPropOfHumidAir.calcMaDynVis(temperature, humidityRatioX);
         this.kinematicViscosity = PhysicsPropOfHumidAir.calcMaKinVis(temperature, humidityRatioX, density);
         this.thermalConductivity = PhysicsPropOfHumidAir.calcMaK(temperature, humidityRatioX);
-        this.thermalDiffusivity = PhysicsPropCommon.calcThDiff(density, thermalConductivity, specificHeat);
-        this.prandtlNumber = PhysicsPropCommon.calcPrandtl(dynamicViscosity, thermalConductivity, specificHeat);
+        this.thermalDiffusivity = PhysicsPropCommon.calcThDiff(density, thermalConductivity, specHeat);
+        this.prandtlNumber = PhysicsPropCommon.calcPrandtl(dynamicViscosity, thermalConductivity, specHeat);
         this.specEnthalpy = PhysicsPropOfHumidAir.calcMaIx(temperature, humidityRatioX, absPressure);
         this.specEnthalpyDa = PhysicsPropOfDryAir.calcDaI(temperature);
         this.specEnthalpyWv = PhysicsPropOfWaterVapour.calcWvI(temperature);
@@ -137,137 +137,136 @@ public class MoistAir implements HumidGas {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public double getAbsPressure() {
-        return 0;
+        return absPressure;
     }
 
     @Override
     public double getTemp() {
-        return 0;
+        return temperature;
     }
 
     @Override
     public double getDensity() {
-        return 0;
+        return density;
     }
 
     @Override
     public double getSpecHeatCP() {
-        return 0;
+        return specHeat;
     }
 
     @Override
     public double getSpecEnthalpy() {
-        return 0;
+        return specEnthalpy;
     }
 
     @Override
     public double getRelativeHumidityRH() {
-        return 0;
+        return relativeHumidity;
     }
 
     @Override
     public double getHumRatioX() {
-        return 0;
+        return humidityRatioX;
     }
 
     @Override
     public double getMaxHumidRatioX() {
-        return 0;
+        return maxHumidityRatioX;
     }
 
     @Override
     public double getDewPointTemp() {
-        return 0;
+        return dewPointTemperature;
     }
 
     @Override
     public double getWetBulbTemp() {
-        return 0;
+        return wetBulbTemperature;
     }
 
     @Override
-    public double getThermalConductivityK() {
-        return 0;
+    public double getThermalConductivity() {
+        return thermalConductivity;
     }
 
     @Override
     public double getThermalDiffusivity() {
-        return 0;
+        return thermalDiffusivity;
     }
 
     @Override
     public double getDynamicViscosity() {
-        return 0;
+        return dynamicViscosity;
     }
 
     @Override
     public double getKinematicViscosity() {
-        return 0;
+        return kinematicViscosity;
     }
 
     @Override
     public double getPrandtlNumber() {
-        return 0;
+        return prandtlNumber;
     }
 
     @Override
     public VapourState getVapourState() {
-        return null;
+        return vapourStatus;
     }
 
     @Override
     public double getDensityDa() {
-        return 0;
+        return densityDa;
     }
 
     @Override
     public double getSpecificHeatDa() {
-        return 0;
+        return specHeatDa;
     }
 
     @Override
     public double getSpecEnthalpyDa() {
-        return 0;
+        return specEnthalpyDa;
     }
 
     @Override
     public double getDensityWv() {
-        return 0;
+        return densityWv;
     }
 
     @Override
     public double getSpecHeatWv() {
-        return 0;
+        return specHeatWv;
     }
 
     @Override
     public double getSaturationPressureWv() {
-        return 0;
+        return saturationPressureWv;
     }
 
     @Override
     public double getSpecEnthalpyWv() {
-        return 0;
+        return specEnthalpyWv;
     }
 
     @Override
     public double getSpecEnthalpyWt() {
-        return 0;
+        return specEnthalpyWt;
     }
 
     @Override
     public double getSpecEnthalpyIce() {
-        return 0;
+        return specEnthalpyIce;
     }
 
     @Override
     public final String toString() {
-
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("Instance name \t : ").append(name).append("\n");
         strBuilder.append(String.format("Core parameters  : Pat=%.0f Pa | ta=%.3f degC | RH_Ma= %.3f %% | Wbt_Ma=%.3f degC | Tdp_Ma=%.3f degC | Ps= %.2f Pa | x_Ma= %.6f kg/kg | xMax= %.6f kg/kg \n",
@@ -277,9 +276,8 @@ public class MoistAir implements HumidGas {
         strBuilder.append(String.format("Water vapour     : rho_Wv= %.3f kg/m3 | cp_Wv= %.4f kJ/kgK | i_Wv= %.2f kJ/kg.da | i_Wt= %.2f kJ/kg.da | i_Ice= %.2f kJ/kg.da \n",
                 densityWv, specHeatWv, specEnthalpyWv, specEnthalpyWt, specEnthalpyIce));
         strBuilder.append(String.format("Moist air        : rho_Ma= %.3f kg/m3 | cp_Ma= %.4f kJ/kgK | k_Ma= %.4f W/(m*K) | thDiff_Ma= %.8f m2/s | dynVis_Ma = %.8f kg/(m*s) | kinVis_Ma=%.7f m2/s | Pr_Ma=%.2f | i_Ma= %.2f kJ/kg.da \n",
-                density, specificHeat, thermalConductivity, thermalDiffusivity, dynamicViscosity, kinematicViscosity, prandtlNumber, specEnthalpy));
+                density, specHeat, thermalConductivity, thermalDiffusivity, dynamicViscosity, kinematicViscosity, prandtlNumber, specEnthalpy));
         return strBuilder.toString();
-
     }
 
     public enum HumidityInputType {
