@@ -13,7 +13,7 @@ import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentExcep
  * </p><br>
  */
 
-public class HumidAir implements HumidGas {
+public class MoistAir implements HumidGas {
 
     // Default parameters
 
@@ -59,11 +59,11 @@ public class HumidAir implements HumidGas {
     private double specEnthalpyIce;          // [kJ/kg]          - ice mist enthalpy
 
 
-    public HumidAir() {
+    public MoistAir() {
         this(DEF_NAME, DEF_TEMP, DEF_RH, DEF_PAT, HumidityInputType.REL_HUMID);
     }
 
-    private HumidAir(Builder builder) {
+    private MoistAir(Builder builder) {
         this(builder.name, builder.airTemp, builder.humidityXorRH, builder.atmPressure, builder.humidityInputType);
     }
 
@@ -76,7 +76,7 @@ public class HumidAir implements HumidGas {
      * @param absPressure - atmospheric pressure in Pa,
      * @param humidType   - provide REL_HUMID if RH is provided or HUM_RATIO if humidity ratio is provided.
      */
-    public HumidAir(String name, double temperature, double xRH, double absPressure, HumidityInputType humidType) {
+    public MoistAir(String name, double temperature, double xRH, double absPressure, HumidityInputType humidType) {
         this.name = name;
         this.absPressure = absPressure;
         this.temperature = temperature;
@@ -288,16 +288,16 @@ public class HumidAir implements HumidGas {
     }
 
     // STATIC FACTORY METHOD PATTERN
-    public static HumidAir ofAir(double tx, double RH) {
-        return new HumidAir(DEF_NAME, tx, RH, DEF_PAT, HumidityInputType.REL_HUMID);
+    public static MoistAir ofAir(double tx, double RH) {
+        return new MoistAir(DEF_NAME, tx, RH, DEF_PAT, HumidityInputType.REL_HUMID);
     }
 
-    public static HumidAir ofAir(double tx, double RH, double Pat) {
-        return new HumidAir(DEF_NAME, tx, RH, Pat, HumidityInputType.REL_HUMID);
+    public static MoistAir ofAir(double tx, double RH, double Pat) {
+        return new MoistAir(DEF_NAME, tx, RH, Pat, HumidityInputType.REL_HUMID);
     }
 
-    public static HumidAir ofAir(String ID, double tx, double RH, double Pat) {
-        return new HumidAir(ID, tx, RH, Pat, HumidityInputType.REL_HUMID);
+    public static MoistAir ofAir(String ID, double tx, double RH, double Pat) {
+        return new MoistAir(ID, tx, RH, Pat, HumidityInputType.REL_HUMID);
     }
 
     // BUILDER PATTERN
@@ -345,8 +345,8 @@ public class HumidAir implements HumidGas {
             return this;
         }
 
-        public HumidAir build() {
-            return new HumidAir(this);
+        public MoistAir build() {
+            return new MoistAir(this);
         }
 
     }
