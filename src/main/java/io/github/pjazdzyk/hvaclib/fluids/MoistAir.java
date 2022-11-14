@@ -34,7 +34,7 @@ public class MoistAir implements HumidGas {
     private double maxHumidityRatioX;        // [kg.wv/kg.da]    - moist air maximum water content under given air temperature ta
     private double density;                  // [kg/m3]          - moist air density at temperature tx
     private double thermalConductivity;      // [W/(m*K)]        - moist air thermal conductivity
-    private double specHeat;             // [kJ/kg*K]        - moist air isobaric specific heat
+    private double specHeat;                 // [kJ/kg*K]        - moist air isobaric specific heat
     private double thermalDiffusivity;       // [m^2/s]          - moist air thermal diffusivity
     private double dynamicViscosity;         // [kg/(m*s)]       - moist air dynamic viscosity
     private double kinematicViscosity;       // [m^2/s]          - moist air kinematic viscosity
