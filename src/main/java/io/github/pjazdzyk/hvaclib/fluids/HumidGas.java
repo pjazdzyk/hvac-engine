@@ -12,7 +12,7 @@ public interface HumidGas extends Fluid {
 
     double getWetBulbTemp();
 
-    double getThermalConductivityK();
+    double getThermalConductivity();
 
     double getThermalDiffusivity();
 
