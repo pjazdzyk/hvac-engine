@@ -34,7 +34,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var expectedWvDensity = 0.8327494782009955;
+        var expectedWvDensity = 0.7304844902588641;
 
         //Act
         var actualWvDensity = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_ATM);
@@ -50,7 +50,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         var ta = 20.0;
         var RH = 50.0;
         var rhoWv = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_ATM);
-        var expectedWvKinViscosity = 1.168607429553187E-5;
+        var expectedWvKinViscosity = 1.3322079252324198E-5;
 
         //Act
         var actualWvKinViscosity = PhysicsPropOfWaterVapour.calcWvKinVis(ta, rhoWv);
@@ -100,7 +100,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
     void calcWvITest_shouldReturnWaterVapourSpecificEnthalpy_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
-        var expectedWvSpecificEnthalpy = 2537.997710797728;
+        var expectedWvSpecificEnthalpy = 2538.155121040328;
 
         //Act
         var actualWvSpecificEnthalpy = PhysicsPropOfWaterVapour.calcWvI(ta);

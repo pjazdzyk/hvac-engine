@@ -5,7 +5,7 @@ import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.inputdata.MixingProcessInputData;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
-import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 
 public final class PhysicsOfMixing {
 
@@ -40,7 +40,7 @@ public final class PhysicsOfMixing {
         double x3 = (firstInDryAirFlow * x1 + secondInDryAirFlow * x2) / outDryAirFlow;
         double i3 = (firstInDryAirFlow * i1 + secondInDryAirFlow * i2) / outDryAirFlow;
         double Pat = inFirstAir.getAbsPressure();
-        double t3 = PhysicsPropOfHumidAir.calcMaTaIX(i3, x3, Pat);
+        double t3 = PhysicsPropOfMoistAir.calcMaTaIX(i3, x3, Pat);
         return new MixingResult(firstInDryAirFlow, secondInDryAirFlow, outDryAirFlow, t3, x3);
     }
 
@@ -87,7 +87,7 @@ public final class PhysicsOfMixing {
         }
         double x3 = xMda / mda3;
         double i3 = iMda / mda3;
-        double t3 = PhysicsPropOfHumidAir.calcMaTaIX(i3, x3, Pat);
+        double t3 = PhysicsPropOfMoistAir.calcMaTaIX(i3, x3, Pat);
         return new MixingMultiResult(mda3, t3, x3);
     }
 

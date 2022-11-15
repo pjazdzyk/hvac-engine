@@ -4,12 +4,11 @@ import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
 import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
-import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvaclib.process.resultsdto.CoolingResultDto;
 import io.github.pjazdzyk.hvaclib.process.resultsdto.HeatingResultDto;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
-import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfWater;
 
 /**
@@ -135,9 +134,9 @@ public final class PhysicsOfCooling {
         // Determining direct near-wall air properties
         double Pat = inletAir.getAbsPressure();
         double tdp_Inlet = inletAir.getDewPointTemp();
-        double Ps_Tm = PhysicsPropOfHumidAir.calcMaPs(tm_Wall);
-        double x_Tm = tm_Wall >= tdp_Inlet ? inletAir.getHumRatioX() : PhysicsPropOfHumidAir.calcMaXMax(Ps_Tm, Pat);
-        double i_Tm = PhysicsPropOfHumidAir.calcMaIx(tm_Wall, x_Tm, Pat);
+        double Ps_Tm = PhysicsPropOfMoistAir.calcMaPs(tm_Wall);
+        double x_Tm = tm_Wall >= tdp_Inlet ? inletAir.getHumRatioX() : PhysicsPropOfMoistAir.calcMaXMax(Ps_Tm, Pat);
+        double i_Tm = PhysicsPropOfMoistAir.calcMaIx(tm_Wall, x_Tm, Pat);
 
         // Determining condensate discharge and properties
         double x1 = inletAir.getHumRatioX();
@@ -189,7 +188,7 @@ public final class PhysicsOfCooling {
             result[0] = calcCoolingFromOutletTx(inletFlow, tm_Wall, testOutTx);
             double outTx = result[0].outTemperature();
             double outX = result[0].outHumidityRatio();
-            double actualRH = PhysicsPropOfHumidAir.calcMaRH(outTx, outX, Pat);
+            double actualRH = PhysicsPropOfMoistAir.calcMaRH(outTx, outX, Pat);
             return outRH - actualRH;
         });
         solver.resetSolverRunFlags();
