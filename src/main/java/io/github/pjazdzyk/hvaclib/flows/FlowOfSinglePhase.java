@@ -69,31 +69,6 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
     }
 
     @Override
-    public double getAbsPressure() {
-        return this.fluid.getAbsPressure();
-    }
-
-    @Override
-    public double getTemp() {
-        return this.fluid.getTemp();
-    }
-
-    @Override
-    public double getDensity() {
-        return this.fluid.getDensity();
-    }
-
-    @Override
-    public double getSpecHeatCP() {
-        return this.fluid.getSpecHeatCP();
-    }
-
-    @Override
-    public double getSpecEnthalpy() {
-        return this.fluid.getSpecEnthalpy();
-    }
-
-    @Override
     public double getMassFlow() {
         return massFlow;
     }
