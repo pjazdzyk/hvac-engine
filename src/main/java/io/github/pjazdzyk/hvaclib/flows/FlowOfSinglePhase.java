@@ -19,6 +19,9 @@ import java.util.Objects;
  */
 
 public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
+
+    public static final String DEF_FLOW_NAME = "Generic flow";       // -                    - Default flow name
+    public static final double DEF_MASS_FLOW = 0.1;                  // kg/s                 - Default mass flow
     private final String name;
     private final F fluid;
     private final TypeOfFluidFlow typeOfFlow;
@@ -116,10 +119,9 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
      */
     public static class Builder<F extends Fluid> {
         private final F fluid;
-        private String flowName = FlowDefaults.DEF_FLOW_NAME;
-        private double flowRate = FlowDefaults.DEF_MASS_FLOW;
+        private String flowName = DEF_FLOW_NAME;
+        private double flowRate = DEF_MASS_FLOW;
         private TypeOfFluidFlow lockedFlowType = TypeOfFluidFlow.VOL_FLOW;
-        private TypeOfFluidFlow overrideLockedFlowType;
 
         /**
          * Constructor. Creates generic Builder instance. Requires a supplier as a reference to constructor of a given Fluid class type.
@@ -148,16 +150,12 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
         }
 
         public Builder<F> withLockedFlow(TypeOfFluidFlow lockedFlowType) {
-            this.overrideLockedFlowType = lockedFlowType;
+            this.lockedFlowType = lockedFlowType;
             return this;
         }
 
         public FlowOfSinglePhase<F> build() {
-            TypeOfFluidFlow typeOfFlow = lockedFlowType;
-            if (overrideLockedFlowType != null) {
-                typeOfFlow = overrideLockedFlowType;
-            }
-            return new FlowOfSinglePhase<>(flowName, fluid, flowRate, typeOfFlow);
+            return new FlowOfSinglePhase<>(this);
         }
 
     }
