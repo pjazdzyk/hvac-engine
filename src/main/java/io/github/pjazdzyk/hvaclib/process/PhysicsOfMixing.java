@@ -46,6 +46,12 @@ public final class PhysicsOfMixing {
         return new MixingResult(firstInDryAirFlow, secondInDryAirFlow, outDryAirFlow, t3, x3);
     }
 
+    public static MixingResult mixTwoHumidGasFlows(FlowOfHumidGas firstFlow, FlowOfHumidGas secondFlow) {
+        Validators.requireNotNull("Inlet flow", firstFlow);
+        Validators.requireNotNull("Second flow", secondFlow);
+        return mixTwoHumidGasFlows(firstFlow.getFluid(), firstFlow.getMassFlowDa(), secondFlow.getFluid(), secondFlow.getMassFlowDa());
+    }
+
     /**
      * Returns result of two moist air flow mixing.
      *
