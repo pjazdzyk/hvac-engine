@@ -12,8 +12,6 @@ public final class PhysicsOfMixing {
     private PhysicsOfMixing() {
     }
 
-    // AIR MIXING
-
     /**
      * Returns resul of two moist air flow mixing.
      *

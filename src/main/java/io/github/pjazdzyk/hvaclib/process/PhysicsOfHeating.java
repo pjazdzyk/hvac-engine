@@ -7,9 +7,8 @@ import io.github.pjazdzyk.hvaclib.process.resultsdto.HeatingResultDto;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
 
-public class PhysicsOfHeating {
-
-    // HEATING & COOLING PROCESS
+public final class PhysicsOfHeating {
+    private PhysicsOfHeating() {}
 
     /**
      * Calculates outlet temperature for heating case based on input heat of process.<br>
