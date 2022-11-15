@@ -1,9 +1,9 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
-import io.github.pjazdzyk.hvaclib.common.PhysicsLimiters;
-import io.github.pjazdzyk.hvaclib.common.PhysicsUnitConverters;
+import io.github.pjazdzyk.hvaclib.common.Constants;
+import io.github.pjazdzyk.hvaclib.common.Limiters;
+import io.github.pjazdzyk.hvaclib.common.UnitConverters;
 import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
 
 import java.util.function.DoubleFunction;
@@ -44,7 +44,7 @@ public final class PhysicsPropOfHumidAir {
 
     private PhysicsPropOfHumidAir() {
     }
-    private static final double WG_RATIO = PhysicsConstants.CST_WV_MM / PhysicsConstants.CST_DA_MM;
+    private static final double WG_RATIO = Constants.CST_WV_MM / Constants.CST_DA_MM;
     private static final double SOLVER_A_COEF = 0.8;
     private static final double SOLVER_B_COEF = 1.01;
 
@@ -59,8 +59,8 @@ public final class PhysicsPropOfHumidAir {
      * @return temperature at provided altitude, oC
      */
     public static double calcMaPs(double ta) {
-        if (ta < PhysicsLimiters.MIN_T)
-            throw new PropertyPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + PhysicsLimiters.MIN_T);
+        if (ta < Limiters.MIN_T)
+            throw new PropertyPhysicsArgumentException("Minimum temperature exceeded tx=" + String.format("%.2foC", ta) + " t.min= " + Limiters.MIN_T);
         if (ta < -130)
             return 0.0;
         double exactPs;
@@ -283,8 +283,8 @@ public final class PhysicsPropOfHumidAir {
             return dynVis_Da;
         double xm = x * 1.61;
         double dynVis_Wv = PhysicsPropOfWaterVapour.calcWvDynVis(ta);
-        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(PhysicsConstants.CST_WV_MM / PhysicsConstants.CST_DA_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsConstants.CST_DA_MM / PhysicsConstants.CST_WV_MM), 0.5));
-        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(PhysicsConstants.CST_DA_MM / PhysicsConstants.CST_WV_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsConstants.CST_WV_MM / PhysicsConstants.CST_DA_MM), 0.5));
+        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(Constants.CST_WV_MM / Constants.CST_DA_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (Constants.CST_DA_MM / Constants.CST_WV_MM), 0.5));
+        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(Constants.CST_DA_MM / Constants.CST_WV_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (Constants.CST_WV_MM / Constants.CST_DA_MM), 0.5));
         return (dynVis_Da / (1 + fi_AV * xm)) + (dynVis_Wv / (1 + fi_VA / xm));
     }
 
@@ -327,9 +327,9 @@ public final class PhysicsPropOfHumidAir {
         double k_Da = PhysicsPropOfDryAir.calcDaK(ta);
         if (x == 0)
             return k_Da;
-        double sut_Da = PhysicsConstants.CST_DA_SUT;
-        double sut_Wv = PhysicsConstants.CST_WV_SUT;
-        double tk = PhysicsUnitConverters.convertCelsiusToKelvin(ta);
+        double sut_Da = Constants.CST_DA_SUT;
+        double sut_Wv = Constants.CST_WV_SUT;
+        double tk = UnitConverters.convertCelsiusToKelvin(ta);
         double sutAv = 0.733 * Math.sqrt(sut_Da * sut_Wv);
         double k_Wv = PhysicsPropOfWaterVapour.calcWvK(ta);
         double xm = 1.61 * x;
@@ -364,8 +364,8 @@ public final class PhysicsPropOfHumidAir {
     public static double calcMaIx(double ta, double x, double Pat) {
         if (x < 0.0)
             throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than 0." + String.format("x= %.3f", x));
-        if (Pat < PhysicsLimiters.MIN_PAT)
-            throw new PropertyPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, PhysicsLimiters.MIN_PAT));
+        if (Pat < Limiters.MIN_PAT)
+            throw new PropertyPhysicsArgumentException("Error. Value of Pat is smaller than acceptable MIN value." + String.format("Pat= %.3f, minPat=%.3f", Pat, Limiters.MIN_PAT));
         double i_Da = PhysicsPropOfDryAir.calcDaI(ta);
         //Case1: no humidity = dry air only
         if (x == 0.0)
@@ -402,7 +402,7 @@ public final class PhysicsPropOfHumidAir {
      * @return ice mist specific enthalpy, kJ/kg
      */
     public static double calcIceI(double ta) {
-        return ta > 0.0 ? 0.0 : PropertyDefaults.DEF_ICE_CP * ta - PhysicsConstants.CST_ICE_R;
+        return ta > 0.0 ? 0.0 : PropertyDefaults.DEF_ICE_CP * ta - Constants.CST_ICE_R;
     }
 
     /*SPECIFIC HEAT CALCULATION*/

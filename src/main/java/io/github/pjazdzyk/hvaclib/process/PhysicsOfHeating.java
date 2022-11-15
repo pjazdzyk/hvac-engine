@@ -1,6 +1,6 @@
 package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
+import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvaclib.process.resultsdto.HeatingResultDto;
@@ -22,8 +22,8 @@ public class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForInputHeat(FlowOfHumidGas inletFlow, double inputHeatQ) {
-        PhysicsValidators.requirePositiveValue("Dry cooling inputHeatQ", inputHeatQ);
-        PhysicsValidators.requireNotNull("Inlet flow", inletFlow);
+        Validators.requirePositiveValue("Dry cooling inputHeatQ", inputHeatQ);
+        Validators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getHumidGas();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
@@ -49,8 +49,8 @@ public class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForTargetTemp(FlowOfHumidGas inletFlow, double targetOutTemp) {
-        PhysicsValidators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletFlow.getTemp());
-        PhysicsValidators.requireNotNull("Inlet flow", inletFlow);
+        Validators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletFlow.getTemp());
+        Validators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getHumidGas();
         double Pat = inletAirProp.getAbsPressure();
         double t1 = inletAirProp.getTemp();
@@ -75,7 +75,7 @@ public class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForTargetRH(FlowOfHumidGas inletFlow, double outRH) {
-        PhysicsValidators.requireNotNull("Inlet flow", inletFlow);
+        Validators.requireNotNull("Inlet flow", inletFlow);
         if (outRH > 100.0 || outRH <= 0.0) {
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         }

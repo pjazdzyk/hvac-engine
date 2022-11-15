@@ -1,7 +1,7 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
-import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
-import io.github.pjazdzyk.hvaclib.common.PhysicsUnitConverters;
+import io.github.pjazdzyk.hvaclib.common.Constants;
+import io.github.pjazdzyk.hvaclib.common.UnitConverters;
 import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
 
 public final class PhysicsPropOfWaterVapour {
@@ -48,7 +48,7 @@ public final class PhysicsPropOfWaterVapour {
      */
     public static double calcWvI(double ta) {
         double cp_Wv = calcWvCp(ta);
-        return cp_Wv * ta + PhysicsConstants.CST_WT_R;
+        return cp_Wv * ta + Constants.CST_WT_R;
     }
 
     /**
@@ -60,7 +60,7 @@ public final class PhysicsPropOfWaterVapour {
      * @return dry air specific heat, kJ/(kg*K)
      */
     public static double calcWvCp(double ta) {
-        double tk = PhysicsUnitConverters.convertCelsiusToKelvin(ta);
+        double tk = UnitConverters.convertCelsiusToKelvin(ta);
         double c0, c1, c2, c3, c4, c5, c6;
         if (ta <= -48.15) {
             c0 = 1.8429999999889115e+000;
@@ -91,10 +91,10 @@ public final class PhysicsPropOfWaterVapour {
      * @return water vapour density, kg/m3
      */
     public static double calcWvRho(double ta, double RH, double Pat) {
-        double tk = PhysicsUnitConverters.convertCelsiusToKelvin(ta);
+        double tk = UnitConverters.convertCelsiusToKelvin(ta);
         double P_Da = RH / 100 * PhysicsPropOfHumidAir.calcMaPs(ta);
         double P_Wv = Pat - P_Da;
-        return P_Wv / (PhysicsConstants.CST_WV_RG * tk);
+        return P_Wv / (Constants.CST_WV_RG * tk);
     }
 
     /**

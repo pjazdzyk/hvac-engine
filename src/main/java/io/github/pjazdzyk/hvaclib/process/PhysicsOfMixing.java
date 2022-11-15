@@ -1,7 +1,7 @@
 package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.brentsolver.BrentSolver;
-import io.github.pjazdzyk.hvaclib.common.PhysicsValidators;
+import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.inputdata.MixingProcessInputData;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
@@ -24,10 +24,10 @@ public final class PhysicsOfMixing {
      * @return [first inlet dry air mass flow (kg/s), second inlet dry air mass flow (kg/s), outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
     public static MixingResult mixTwoHumidGasFlows(HumidGas inFirstAir, double firstInDryAirFlow, HumidGas inSecondAir, double secondInDryAirFlow) {
-        PhysicsValidators.requireNotNull("Inlet air", inFirstAir);
-        PhysicsValidators.requireNotNull("Second air", inSecondAir);
-        PhysicsValidators.requirePositiveValue("Inlet dry air flow", firstInDryAirFlow);
-        PhysicsValidators.requirePositiveValue("Second dry air flow", secondInDryAirFlow);
+        Validators.requireNotNull("Inlet air", inFirstAir);
+        Validators.requireNotNull("Second air", inSecondAir);
+        Validators.requirePositiveValue("Inlet dry air flow", firstInDryAirFlow);
+        Validators.requirePositiveValue("Second dry air flow", secondInDryAirFlow);
         double outDryAirFlow = firstInDryAirFlow + secondInDryAirFlow;
         double x1 = inFirstAir.getHumRatioX();
         double x2 = inSecondAir.getHumRatioX();
@@ -55,8 +55,8 @@ public final class PhysicsOfMixing {
     public static MixingResult mixTwoHumidGasFlows(MixingProcessInputData mixingInputFlows) {
         FlowOfHumidGas inletFlow = mixingInputFlows.getInletFlow();
         FlowOfHumidGas recirculationFlow = mixingInputFlows.getRecirculationFlow();
-        PhysicsValidators.requireNotNull("First flow", inletFlow);
-        PhysicsValidators.requireNotNull("Second flow", recirculationFlow);
+        Validators.requireNotNull("First flow", inletFlow);
+        Validators.requireNotNull("Second flow", recirculationFlow);
         return mixTwoHumidGasFlows(inletFlow.getHumidGas(), inletFlow.getMassFlowDa(), recirculationFlow.getHumidGas(), recirculationFlow.getMassFlowDa());
     }
 
@@ -67,7 +67,7 @@ public final class PhysicsOfMixing {
      * @return [outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
     public static MixingMultiResult mixMultipleHumidGasFlows(FlowOfHumidGas... flows) {
-        PhysicsValidators.requireArrayNotContainsNull("Flows array", flows);
+        Validators.requireArrayNotContainsNull("Flows array", flows);
         double mda3 = 0.0;
         double xMda = 0.0;
         double iMda = 0.0;
@@ -104,9 +104,9 @@ public final class PhysicsOfMixing {
         FlowOfHumidGas recirculationFlow = mixingInputFlows.getRecirculationFlow();
         double firstMinFixedDryMassFlow = mixingInputFlows.getInletMinDryMassFlow();
         double secondMinFixedDryMassFlow = mixingInputFlows.getRecirculationMinDryMassFlow();
-        PhysicsValidators.requireNotNull("First flow", inletFlow);
-        PhysicsValidators.requireNotNull("Second flow", recirculationFlow);
-        PhysicsValidators.requirePositiveValue("Out dry air flow", targetOutDryMassFlow);
+        Validators.requireNotNull("First flow", inletFlow);
+        Validators.requireNotNull("Second flow", recirculationFlow);
+        Validators.requirePositiveValue("Out dry air flow", targetOutDryMassFlow);
         HumidGas air1 = inletFlow.getHumidGas();
         HumidGas air2 = recirculationFlow.getHumidGas();
 
