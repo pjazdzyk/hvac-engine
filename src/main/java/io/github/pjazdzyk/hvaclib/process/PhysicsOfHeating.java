@@ -22,7 +22,6 @@ public class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForInputHeat(FlowOfHumidGas inletFlow, double inputHeatQ) {
-        Validators.requirePositiveValue("Dry cooling inputHeatQ", inputHeatQ);
         Validators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
         double t1 = inletAirProp.getTemp();
