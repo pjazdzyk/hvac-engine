@@ -1,9 +1,8 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
+import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
-
-import java.util.Objects;
 
 /**
  * <h3>FLOW OF MOIST AIR</h3>
@@ -30,18 +29,10 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
     private double massFlowDa;
     private double volFlowDa;
 
-    /**
-     * Default constructor. Create FlowOfFluid instance with default FlowOfMoistAir instance and default mass flow as 0.1kg/s
-     */
     public FlowOfMoistAir() {
         this(DEF_NAME, new MoistAir(), DEF_AIR_FLOW, TypeOfAirFlow.MA_MASS_FLOW);
     }
 
-    /**
-     * Constructor. Creates FlowOfMoistAir instance using Builder pattern.
-     *
-     * @param builder instance of Builder interior nested class
-     */
     private FlowOfMoistAir(Builder builder) {
         this(builder.flowName, builder.moistAir, builder.flowRate, builder.lockedFlowType);
     }
@@ -55,37 +46,67 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
      * @param flowType - type of Flow (selected from FluidFlowType enum).
      */
     public FlowOfMoistAir(String name, HumidGas moistAir, double flowRate, TypeOfAirFlow flowType) {
-        Objects.requireNonNull(moistAir, "Error. MoistAir instance does not exist.");
-        Objects.requireNonNull(flowType, "FluidFlowType has not been specified");
+        Validators.requireNotNull("MoistAir instance does not exist.", moistAir);
+        Validators.requireNotNull("FluidFlowType has not been specified", flowType);
+        Validators.requirePositiveValue("FlowRate must not be negative", flowRate);
         this.name = name;
         this.moistAir = moistAir;
-        initializeFlows();
+        initializeFlows(flowRate, flowType);
     }
 
     private void initializeFlows(double inputFlow, TypeOfAirFlow typeOfAirFlow) {
-        Objects.requireNonNull(lockedFlowType, "FluidFlowType has not been specified");
         switch (typeOfAirFlow) {
             case MA_MASS_FLOW -> {
-                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getDensity(), massFlowMa);
-                massFlowDa = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getHumRatioX(), massFlowMa);
+                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getDensity(), inputFlow);
+                massFlowDa = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getHumRatioX(), inputFlow);
                 volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getDensityDa(), massFlowDa);
             }
             case MA_VOL_FLOW -> {
-                massFlowMa = PhysicsOfFlow.calcMassFlowFromVolFlow(moistAir.getDensity(), volFlowMa);
+                massFlowMa = PhysicsOfFlow.calcMassFlowFromVolFlow(moistAir.getDensity(), inputFlow);
                 massFlowDa = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getHumRatioX(), massFlowMa);
                 volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getDensityDa(), massFlowDa);
             }
             case DA_MASS_FLOW -> {
-                massFlowMa = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getHumRatioX(), massFlowDa);
+                massFlowMa = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getHumRatioX(), inputFlow);
                 volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getDensity(), massFlowMa);
-                volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getDensityDa(), massFlowDa);
+                volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getDensityDa(), inputFlow);
             }
             case DA_VOL_FLOW -> {
-                massFlowDa = PhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir.getDensityDa(), volFlowDa);
+                massFlowDa = PhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir.getDensityDa(), inputFlow);
                 massFlowMa = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getHumRatioX(), massFlowDa);
                 volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getDensity(), massFlowMa);
             }
         }
+    }
+
+    @Override
+    public HumidGas getFluid() {
+        return moistAir;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public double getMassFlow() {
+        return massFlowMa;
+    }
+
+    @Override
+    public double getVolFlow() {
+        return volFlowMa;
+    }
+
+    @Override
+    public double getMassFlowDa() {
+        return massFlowDa;
+    }
+
+    @Override
+    public double getVolFlowDa() {
+        return volFlowDa;
     }
 
     @Override
@@ -107,24 +128,13 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
         return builder.toString();
     }
 
-
     //BUILDER PATTERN
 
-    /**
-     * This class provides simple implementation of Builder Pattern for creating FlowOfMoistAir object with properties provided by user.
-     * The order of using configuration methods is not relevant. Please mind of following behaviour:<>br</>
-     * a) If apart from the key air parameters, also the MoistAir instance is provided, then the parameters of this instance will be replaced with those provided by the user to build this flow.<>br</>
-     * b) If RH is provided by use of withRH() method, and afterwards X with use of withX() method, the last specified humidity type will be passed to build final FlowOFMoistAir object. In this case X.<>br</>
-     * c) If nothing is provided, build() method will create FlowOfMoistAir instance based on default values specified in LibDefaults class.
-     */
     public static class Builder {
         private final HumidGas moistAir;
         private String flowName = DEF_NAME;
         private double flowRate = DEF_AIR_FLOW;
         private TypeOfAirFlow lockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
-        private TypeOfAirFlow overriddenLockedFlowType;
-        private double minFlow;
-        private TypeOfAirFlow typeOfMinFlow;
 
         public Builder(HumidGas moistAir) {
             this.moistAir = moistAir;
@@ -159,8 +169,8 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
             return this;
         }
 
-        public Builder withLockedFlow(TypeOfAirFlow lockedFlowType) {
-            this.overriddenLockedFlowType = lockedFlowType;
+        public Builder withTypeOfFLow(TypeOfAirFlow lockedFlowType) {
+            this.lockedFlowType = lockedFlowType;
             return this;
         }
 
