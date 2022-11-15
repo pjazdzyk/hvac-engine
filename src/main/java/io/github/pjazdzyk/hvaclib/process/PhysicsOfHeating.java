@@ -24,7 +24,7 @@ public class PhysicsOfHeating {
     public static HeatingResultDto calcHeatingForInputHeat(FlowOfHumidGas inletFlow, double inputHeatQ) {
         Validators.requirePositiveValue("Dry cooling inputHeatQ", inputHeatQ);
         Validators.requireNotNull("Inlet flow", inletFlow);
-        HumidGas inletAirProp = inletFlow.getHumidGas();
+        HumidGas inletAirProp = inletFlow.getFluid();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
         if (inputHeatQ == 0.0 || inletFlow.getMassFlow() == 0.0) {
@@ -49,9 +49,9 @@ public class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForTargetTemp(FlowOfHumidGas inletFlow, double targetOutTemp) {
-        Validators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletFlow.getTemp());
         Validators.requireNotNull("Inlet flow", inletFlow);
-        HumidGas inletAirProp = inletFlow.getHumidGas();
+        HumidGas inletAirProp = inletFlow.getFluid();
+        Validators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletAirProp.getTemp());
         double Pat = inletAirProp.getAbsPressure();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
@@ -79,7 +79,7 @@ public class PhysicsOfHeating {
         if (outRH > 100.0 || outRH <= 0.0) {
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         }
-        HumidGas inletAirProp = inletFlow.getHumidGas();
+        HumidGas inletAirProp = inletFlow.getFluid();
         double RH1 = inletAirProp.getRelativeHumidityRH();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();

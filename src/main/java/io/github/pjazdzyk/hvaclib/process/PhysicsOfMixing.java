@@ -57,7 +57,7 @@ public final class PhysicsOfMixing {
         FlowOfHumidGas recirculationFlow = mixingInputFlows.getRecirculationFlow();
         Validators.requireNotNull("First flow", inletFlow);
         Validators.requireNotNull("Second flow", recirculationFlow);
-        return mixTwoHumidGasFlows(inletFlow.getHumidGas(), inletFlow.getMassFlowDa(), recirculationFlow.getHumidGas(), recirculationFlow.getMassFlowDa());
+        return mixTwoHumidGasFlows(inletFlow.getFluid(), inletFlow.getMassFlowDa(), recirculationFlow.getFluid(), recirculationFlow.getMassFlowDa());
     }
 
     /**
@@ -68,18 +68,18 @@ public final class PhysicsOfMixing {
      */
     public static MixingMultiResult mixMultipleHumidGasFlows(FlowOfHumidGas... flows) {
         Validators.requireArrayNotContainsNull("Flows array", flows);
-        double mda3 = 0.0;
+                double mda3 = 0.0;
         double xMda = 0.0;
         double iMda = 0.0;
         double Pat = 0.0;
         for (FlowOfHumidGas flow : flows) {
             mda3 += flow.getMassFlowDa();
-            xMda += flow.getMassFlowDa() * flow.getHumRatioX();
-            iMda += flow.getMassFlowDa() * flow.getSpecEnthalpy();
-            Pat = Double.max(Pat, flow.getAbsPressure());
+            xMda += flow.getMassFlowDa() * flow.getFluid().getHumRatioX();
+            iMda += flow.getMassFlowDa() * flow.getFluid().getSpecEnthalpy();
+            Pat = Double.max(Pat, flow.getFluid().getAbsPressure());
         }
         if (mda3 == 0.0) {
-            return new MixingMultiResult(mda3, flows[0].getTemp(), flows[0].getHumRatioX());
+            return new MixingMultiResult(mda3, flows[0].getFluid().getTemp(), flows[0].getFluid().getHumRatioX());
         }
         double x3 = xMda / mda3;
         double i3 = iMda / mda3;
@@ -107,8 +107,8 @@ public final class PhysicsOfMixing {
         Validators.requireNotNull("First flow", inletFlow);
         Validators.requireNotNull("Second flow", recirculationFlow);
         Validators.requirePositiveValue("Out dry air flow", targetOutDryMassFlow);
-        HumidGas air1 = inletFlow.getHumidGas();
-        HumidGas air2 = recirculationFlow.getHumidGas();
+        HumidGas air1 = inletFlow.getFluid();
+        HumidGas air2 = recirculationFlow.getFluid();
 
         // In case specified outflow is lower than sum of minimal inlet fixed values
         double minFlowSum = firstMinFixedDryMassFlow + secondMinFixedDryMassFlow;
