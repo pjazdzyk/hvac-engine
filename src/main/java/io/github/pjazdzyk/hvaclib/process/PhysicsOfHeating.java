@@ -5,7 +5,7 @@ import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvaclib.process.resultsdto.HeatingResultDto;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
-import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 
 public final class PhysicsOfHeating {
     private PhysicsOfHeating() {}
@@ -32,7 +32,7 @@ public final class PhysicsOfHeating {
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double i2 = (m1 * i1 + inputHeatQ / 1000) / m1;
-        double t2 = PhysicsPropOfHumidAir.calcMaTaIX(i2, x1, Pat);
+        double t2 = PhysicsPropOfMoistAir.calcMaTaIX(i2, x1, Pat);
         return new HeatingResultDto(inputHeatQ, t2);
     }
 
@@ -59,7 +59,7 @@ public final class PhysicsOfHeating {
         }
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
-        double i2 = PhysicsPropOfHumidAir.calcMaIx(targetOutTemp, x1, Pat);
+        double i2 = PhysicsPropOfMoistAir.calcMaIx(targetOutTemp, x1, Pat);
         heatQ = (m1 * i2 - m1 * i1) * 1000d;
         return new HeatingResultDto(heatQ, targetOutTemp);
     }
@@ -91,8 +91,8 @@ public final class PhysicsOfHeating {
         double Pat = inletAirProp.getAbsPressure();
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
-        double t2 = PhysicsPropOfHumidAir.calcMaTaRHX(x1, outRH, Pat);
-        double i2 = PhysicsPropOfHumidAir.calcMaIx(t2, x1, Pat);
+        double t2 = PhysicsPropOfMoistAir.calcMaTaRHX(x1, outRH, Pat);
+        double i2 = PhysicsPropOfMoistAir.calcMaIx(t2, x1, Pat);
         heatQ = (m1 * i2 - m1 * i1) * 1000d;
         return new HeatingResultDto(heatQ, t2);
     }

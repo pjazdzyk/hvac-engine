@@ -1,18 +1,17 @@
 package io.github.pjazdzyk.hvaclib.process;
 
+import io.github.pjazdzyk.hvaclib.PhysicsTestConstants;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
-import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PhysicsOfMixingTests {
-
-    static final double PAT = 101_325; // Pa
+class PhysicsOfMixingTests implements PhysicsTestConstants {
 
     @Test
     @DisplayName("should return results for mixing of two different moist air flows")
@@ -41,7 +40,7 @@ class PhysicsOfMixingTests {
         var outMda = mda1 + mda2;
         var expectedOutHumRatioX = (mda1 * air1.getHumRatioX() + mda2 * air2.getHumRatioX()) / outMda;
         var expectedOutEnthalpy = (mda1 * air1.getSpecEnthalpy() + mda2 * air2.getSpecEnthalpy()) / outMda;
-        var expectedOutAirTemp = PhysicsPropOfHumidAir.calcMaTaIX(expectedOutEnthalpy, expectedOutHumRatioX, PAT);
+        var expectedOutAirTemp = PhysicsPropOfMoistAir.calcMaTaIX(expectedOutEnthalpy, expectedOutHumRatioX, PAT);
 
         // Act
         var mixingResults = PhysicsOfMixing.mixTwoHumidGasFlows(airFlow1, airFlow2);

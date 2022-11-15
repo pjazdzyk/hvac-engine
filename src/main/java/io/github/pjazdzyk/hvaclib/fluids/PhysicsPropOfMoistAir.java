@@ -3,7 +3,6 @@ package io.github.pjazdzyk.hvaclib.fluids;
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.Constants;
 import io.github.pjazdzyk.hvaclib.common.Limiters;
-import io.github.pjazdzyk.hvaclib.common.UnitConverters;
 import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
 
 import java.util.function.DoubleFunction;
@@ -40,9 +39,9 @@ import java.util.function.DoubleFunction;
  * @author Piotr Jażdżyk, MScEng
  */
 
-public final class PhysicsPropOfHumidAir {
+public final class PhysicsPropOfMoistAir {
 
-    private PhysicsPropOfHumidAir() {
+    private PhysicsPropOfMoistAir() {
     }
     private static final double WG_RATIO = Constants.CST_WV_MM / Constants.CST_DA_MM;
     private static final double SOLVER_A_COEF = 0.8;
@@ -228,7 +227,7 @@ public final class PhysicsPropOfHumidAir {
             throw new PropertyPhysicsArgumentException("Error. Value of x is smaller than or equal 0." + String.format("x= %.3f", x));
         if (x == 0.0)
             return 0.0;
-        double Ps = PhysicsPropOfHumidAir.calcMaPs(ta);
+        double Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
         double RH = x * Pat / (WG_RATIO * Ps + x * Ps);
         return RH > 1 ? 100 : RH * 100;
     }
@@ -329,7 +328,7 @@ public final class PhysicsPropOfHumidAir {
             return k_Da;
         double sut_Da = Constants.CST_DA_SUT;
         double sut_Wv = Constants.CST_WV_SUT;
-        double tk = UnitConverters.convertCelsiusToKelvin(ta);
+        double tk = ta + 273.15;
         double sutAv = 0.733 * Math.sqrt(sut_Da * sut_Wv);
         double k_Wv = PhysicsPropOfWaterVapour.calcWvK(ta);
         double xm = 1.61 * x;
@@ -371,7 +370,7 @@ public final class PhysicsPropOfHumidAir {
         if (x == 0.0)
             return i_Da;
         //Case2: x <= xMax, unsaturated air
-        double Ps = PhysicsPropOfHumidAir.calcMaPs(ta);
+        double Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
         double xMax = calcMaXMax(Ps, Pat);
         double i_Wv = PhysicsPropOfWaterVapour.calcWvI(ta) * x;
         if (x <= xMax)
@@ -491,7 +490,7 @@ public final class PhysicsPropOfHumidAir {
      */
     public static double calcMaTaIX(double ix, double x, double Pat) {
         BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
-        return solver.calcForFunction(tx -> ix - PhysicsPropOfHumidAir.calcMaIx(tx, x, Pat));
+        return solver.calcForFunction(tx -> ix - PhysicsPropOfMoistAir.calcMaIx(tx, x, Pat));
     }
 
     /**

@@ -4,7 +4,7 @@ import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
-import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfHumidAir;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfWater;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,9 +45,9 @@ class PhysicsOfCoolingTest {
         var directContactFlow = (1.0 - expectedByPassFactor) * inletHumidGasMassFlow;
         var inletHumRatio = coolingCaseInletAir.getHumRatioX();
         var inletSpecificEnthalpy = coolingCaseInletAir.getSpecEnthalpy();
-        var saturationPressureAtArvWallTemp = PhysicsPropOfHumidAir.calcMaPs(TYPICAL_AVERAGE_COIL_WALL_TEMP);
-        var humRatioAtAvrWallTemp = PhysicsPropOfHumidAir.calcMaXMax(saturationPressureAtArvWallTemp, PAT);
-        var specificEnthalpyAtAvrWallTemp = PhysicsPropOfHumidAir.calcMaIx(TYPICAL_AVERAGE_COIL_WALL_TEMP, humRatioAtAvrWallTemp, PAT);
+        var saturationPressureAtArvWallTemp = PhysicsPropOfMoistAir.calcMaPs(TYPICAL_AVERAGE_COIL_WALL_TEMP);
+        var humRatioAtAvrWallTemp = PhysicsPropOfMoistAir.calcMaXMax(saturationPressureAtArvWallTemp, PAT);
+        var specificEnthalpyAtAvrWallTemp = PhysicsPropOfMoistAir.calcMaIx(TYPICAL_AVERAGE_COIL_WALL_TEMP, humRatioAtAvrWallTemp, PAT);
         var expectedCondensateTemp = TYPICAL_AVERAGE_COIL_WALL_TEMP;
 
         // Act
@@ -81,9 +81,9 @@ class PhysicsOfCoolingTest {
         var directContactFlow = (1.0 - expectedByPassFactor) * inletHumidGasMassFlow;
         var inletHumRatio = coolingCaseInletAir.getHumRatioX();
         var inletSpecificEnthalpy = coolingCaseInletAir.getSpecEnthalpy();
-        var saturationPressureAtArvWallTemp = PhysicsPropOfHumidAir.calcMaPs(TYPICAL_AVERAGE_COIL_WALL_TEMP);
-        var humRatioAtAvrWallTemp = PhysicsPropOfHumidAir.calcMaXMax(saturationPressureAtArvWallTemp, PAT);
-        var specificEnthalpyAtAvrWallTemp = PhysicsPropOfHumidAir.calcMaIx(TYPICAL_AVERAGE_COIL_WALL_TEMP, humRatioAtAvrWallTemp, PAT);
+        var saturationPressureAtArvWallTemp = PhysicsPropOfMoistAir.calcMaPs(TYPICAL_AVERAGE_COIL_WALL_TEMP);
+        var humRatioAtAvrWallTemp = PhysicsPropOfMoistAir.calcMaXMax(saturationPressureAtArvWallTemp, PAT);
+        var specificEnthalpyAtAvrWallTemp = PhysicsPropOfMoistAir.calcMaIx(TYPICAL_AVERAGE_COIL_WALL_TEMP, humRatioAtAvrWallTemp, PAT);
         var expectedCondTemp = TYPICAL_AVERAGE_COIL_WALL_TEMP;
 
         // Act
@@ -94,7 +94,7 @@ class PhysicsOfCoolingTest {
         var actualCondensateTemp = coolingResult.condensateTemperature();
         var actualCondensateFlow = coolingResult.condensateMassFlow();
         var actualCondensateSpecificEnthalpy = PhysicsPropOfWater.calcIx(actualCondensateTemp);
-        var actualRH = PhysicsPropOfHumidAir.calcMaRH(actualOutAirTemp, actualHumRatio, PAT);
+        var actualRH = PhysicsPropOfMoistAir.calcMaRH(actualOutAirTemp, actualHumRatio, PAT);
 
         // Assert
         var expectedHeatOfProcess = (directContactFlow * (specificEnthalpyAtAvrWallTemp - inletSpecificEnthalpy) + actualCondensateFlow * actualCondensateSpecificEnthalpy) * 1000d;
@@ -112,14 +112,14 @@ class PhysicsOfCoolingTest {
     void calcCoolingFromInputHeat_shouldCoolDownInletAir_whenHeatOfProcessIsGiven() {
         // Arrange
         var inputHeat = -26600.447840124318; // W
-        var expectedOutAirTemp = 17.0; //oC
-        var expectedOutHumRatio = 0.009903615645455723; // kg.wv/kg.da
+        var expectedOutAirTemp = 17.001670695113486; //oC
+        var expectedOutHumRatio = 0.00990399024996491; // kg.wv/kg.da
         var inletHumidGasMassFlow = coolingInletAirFlow.getMassFlowDa();
         var expectedByPassFactor = PhysicsOfCooling.calcCoolingCoilBypassFactor(TYPICAL_AVERAGE_COIL_WALL_TEMP, coolingCaseInletAir.getTemp(), expectedOutAirTemp);
         var mDa_DirectContact = (1.0 - expectedByPassFactor) * inletHumidGasMassFlow;
         var inletHumRatio = coolingCaseInletAir.getHumRatioX();
-        var saturationPressureAtArvWallTemp = PhysicsPropOfHumidAir.calcMaPs(TYPICAL_AVERAGE_COIL_WALL_TEMP);
-        var humRatioAtAvrWallTemp = PhysicsPropOfHumidAir.calcMaX(100, saturationPressureAtArvWallTemp, PAT);
+        var saturationPressureAtArvWallTemp = PhysicsPropOfMoistAir.calcMaPs(TYPICAL_AVERAGE_COIL_WALL_TEMP);
+        var humRatioAtAvrWallTemp = PhysicsPropOfMoistAir.calcMaX(100, saturationPressureAtArvWallTemp, PAT);
         var expectedCondTemp = TYPICAL_AVERAGE_COIL_WALL_TEMP;
 
         // Act

@@ -7,7 +7,7 @@ import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentExcep
  * <p>
  * This class represents a model of two-phase air mixture with water vapour, water mist or ice mist. All properties are automatically
  * updated if any core property is changed (pressure, temperature, humidity). All properties are calculated based on functions specified
- * in {@link PhysicsPropOfHumidAir} and {@link PhysicsPropOfWater} classes.
+ * in {@link PhysicsPropOfMoistAir} and {@link PhysicsPropOfWater} classes.
  * </p><br>
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
  * </p><br>
@@ -80,7 +80,7 @@ public class MoistAir implements HumidGas {
         this.name = name;
         this.absPressure = absPressure;
         this.temperature = temperature;
-        this.saturationPressureWv = PhysicsPropOfHumidAir.calcMaPs(temperature);
+        this.saturationPressureWv = PhysicsPropOfMoistAir.calcMaPs(temperature);
         initializeHumidity(xRH, humidType);
         initializeRemainingProperties();
     }
@@ -89,11 +89,11 @@ public class MoistAir implements HumidGas {
         switch (humidType) {
             case REL_HUMID -> {
                 this.relativeHumidity = xRH;
-                this.humidityRatioX = PhysicsPropOfHumidAir.calcMaX(relativeHumidity, saturationPressureWv, absPressure);
+                this.humidityRatioX = PhysicsPropOfMoistAir.calcMaX(relativeHumidity, saturationPressureWv, absPressure);
             }
             case HUM_RATIO -> {
                 this.humidityRatioX = xRH;
-                this.relativeHumidity = PhysicsPropOfHumidAir.calcMaRH(temperature, xRH, absPressure);
+                this.relativeHumidity = PhysicsPropOfMoistAir.calcMaRH(temperature, xRH, absPressure);
             }
             default ->
                     throw new PropertyPhysicsArgumentException("Wrong humidity argument value. Instance was not created.");
@@ -101,25 +101,25 @@ public class MoistAir implements HumidGas {
     }
 
     private void initializeRemainingProperties() {
-        this.maxHumidityRatioX = PhysicsPropOfHumidAir.calcMaXMax(saturationPressureWv, absPressure);
+        this.maxHumidityRatioX = PhysicsPropOfMoistAir.calcMaXMax(saturationPressureWv, absPressure);
         this.densityDa = PhysicsPropOfDryAir.calcDaRho(temperature, absPressure);
         this.densityWv = PhysicsPropOfWaterVapour.calcWvRho(temperature, relativeHumidity, absPressure);
-        this.density = PhysicsPropOfHumidAir.calcMaRho(temperature, humidityRatioX, absPressure);
+        this.density = PhysicsPropOfMoistAir.calcMaRho(temperature, humidityRatioX, absPressure);
         this.specHeatDa = PhysicsPropOfDryAir.calcDaCp(temperature);
         this.specHeatWv = PhysicsPropOfWaterVapour.calcWvCp(temperature);
-        this.specHeat = PhysicsPropOfHumidAir.calcMaCp(temperature, humidityRatioX);
-        this.dynamicViscosity = PhysicsPropOfHumidAir.calcMaDynVis(temperature, humidityRatioX);
-        this.kinematicViscosity = PhysicsPropOfHumidAir.calcMaKinVis(temperature, humidityRatioX, density);
-        this.thermalConductivity = PhysicsPropOfHumidAir.calcMaK(temperature, humidityRatioX);
+        this.specHeat = PhysicsPropOfMoistAir.calcMaCp(temperature, humidityRatioX);
+        this.dynamicViscosity = PhysicsPropOfMoistAir.calcMaDynVis(temperature, humidityRatioX);
+        this.kinematicViscosity = PhysicsPropOfMoistAir.calcMaKinVis(temperature, humidityRatioX, density);
+        this.thermalConductivity = PhysicsPropOfMoistAir.calcMaK(temperature, humidityRatioX);
         this.thermalDiffusivity = PhysicsPropCommon.calcThDiff(density, thermalConductivity, specHeat);
         this.prandtlNumber = PhysicsPropCommon.calcPrandtl(dynamicViscosity, thermalConductivity, specHeat);
-        this.specEnthalpy = PhysicsPropOfHumidAir.calcMaIx(temperature, humidityRatioX, absPressure);
+        this.specEnthalpy = PhysicsPropOfMoistAir.calcMaIx(temperature, humidityRatioX, absPressure);
         this.specEnthalpyDa = PhysicsPropOfDryAir.calcDaI(temperature);
         this.specEnthalpyWv = PhysicsPropOfWaterVapour.calcWvI(temperature);
-        this.specEnthalpyWt = PhysicsPropOfHumidAir.calcWtI(temperature);
-        this.specEnthalpyIce = PhysicsPropOfHumidAir.calcIceI(temperature);
-        this.wetBulbTemperature = PhysicsPropOfHumidAir.calcMaWbt(temperature, relativeHumidity, absPressure);
-        this.dewPointTemperature = PhysicsPropOfHumidAir.calcMaTdp(temperature, relativeHumidity, absPressure);
+        this.specEnthalpyWt = PhysicsPropOfMoistAir.calcWtI(temperature);
+        this.specEnthalpyIce = PhysicsPropOfMoistAir.calcIceI(temperature);
+        this.wetBulbTemperature = PhysicsPropOfMoistAir.calcMaWbt(temperature, relativeHumidity, absPressure);
+        this.dewPointTemperature = PhysicsPropOfMoistAir.calcMaTdp(temperature, relativeHumidity, absPressure);
         checkVapourStatus();
     }
 

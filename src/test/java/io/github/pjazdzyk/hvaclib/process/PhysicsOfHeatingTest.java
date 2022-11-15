@@ -4,6 +4,7 @@ import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
+import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ class PhysicsOfHeatingTest {
     @DisplayName("should heat up an inlet air when positive heat of process is given")
     void calcHeatingFromInputHeat_shouldHeatUpInletAir_whenHeatOfProcessIsGiven() {
         // Arrange
-        var inputHeat = 56355.90267781379;  // W
+        var inputHeat = 56358.392203075746;  // W
         var expectedOutTemp = 30d; // oC
 
         // Act
@@ -42,7 +43,7 @@ class PhysicsOfHeatingTest {
         var actualOutAirTemp = heatingResult.outTemperature();
 
         // Asser
-        assertThat(actualOutAirTemp).isEqualTo(expectedOutTemp);
+        assertThat(actualOutAirTemp).isEqualTo(expectedOutTemp, withPrecision(MATH_ACCURACY));
         assertThat(actualProcessHeat).isEqualTo(inputHeat);
     }
 
@@ -51,7 +52,7 @@ class PhysicsOfHeatingTest {
     void calcHeatingFromOutputTx_shouldHeatUpInletAir_whenTargetOutletTempIsGiven() {
         // Arrange
         var expectedOutTemp = 30d;
-        var expectedResultingHeat = 56355.90267781379;
+        var expectedResultingHeat = 56358.392203075746;
 
         // Act
         var heatingResult = PhysicsOfHeating.calcHeatingForTargetTemp(heatingInletAirFlow, 30.0);
@@ -68,7 +69,7 @@ class PhysicsOfHeatingTest {
     void calcHeatingFromOutletRH_shouldHeatUpInletAir_whenTargetRelativeHumidityIsGiven() {
         // Arrange
         var expectedOutRH = 17.35261227534389;
-        var expectedHeatOfProcess = 56355.90267781379;
+        var expectedHeatOfProcess = 56358.392203075746;
         var expectedOutTemp = 30.0;
 
         // Act
