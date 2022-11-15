@@ -11,9 +11,9 @@ package io.github.pjazdzyk.hvaclib.common;
  * @author Piotr Jażdżyk, MScEng
 */
 
-public final class PhysicsLimiters {
+public final class Limiters {
 
-    private PhysicsLimiters() {}
+    private Limiters() {}
 
     // Air property limiters
     public final static double MIN_PAT = 50_000.0;              // [Pa]                - Minimum allowable atmospheric pressure

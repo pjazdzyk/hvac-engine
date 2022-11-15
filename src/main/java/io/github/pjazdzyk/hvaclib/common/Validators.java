@@ -5,9 +5,9 @@ import io.github.pjazdzyk.hvaclib.flows.exceptions.FlowArgumentException;
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class PhysicsValidators {
+public final class Validators {
 
-    private PhysicsValidators() {
+    private Validators() {
     }
 
     public static void requireNotNull(String message, Object object) {

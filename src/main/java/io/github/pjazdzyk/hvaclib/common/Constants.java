@@ -13,9 +13,9 @@ package io.github.pjazdzyk.hvaclib.common;
  * @author Piotr Jażdżyk, MScEng
  */
 
-public final class PhysicsConstants {
+public final class Constants {
 
-    private PhysicsConstants() {}
+    private Constants() {}
 
     // Physical constants
     public final static double CST_R = 8.3144598;              // [J/(mol*K)           - Universal gas constant

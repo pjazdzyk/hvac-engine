@@ -1,7 +1,7 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.common.PhysicsConstants;
+import io.github.pjazdzyk.hvaclib.common.Constants;
 import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
 
 public final class PhysicsPropOfDryAir {
@@ -107,6 +107,6 @@ public final class PhysicsPropOfDryAir {
      */
     public static double calcDaRho(double ta, double Pat) {
         double tk = ta + 273.15;
-        return Pat / (PhysicsConstants.CST_DA_RG * tk);
+        return Pat / (Constants.CST_DA_RG * tk);
     }
 }
