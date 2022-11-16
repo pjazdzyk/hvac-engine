@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.common;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 /**
  * List of calculation control limiters to prevent unphysical results or to ensure solver convergence.<br>
@@ -11,12 +11,13 @@ package io.github.pjazdzyk.hvaclib.common;
  * @author Piotr Jażdżyk, MScEng
 */
 
-public final class Limiters {
+public final class FluidLimiters {
 
-    private Limiters() {}
+    private FluidLimiters() {}
 
     // Air property limiters
     public final static double MIN_PAT = 50_000.0;              // [Pa]                - Minimum allowable atmospheric pressure
     public final static double MIN_T = -260.0;                  // [oC]                - Minimum allowable air temperature
+    public final static double MIN_T_FOR_PS = -130;                    // [oc]                - Minimum temperature below which Ps is assumed as 0.
 
 }
