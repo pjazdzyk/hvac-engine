@@ -12,7 +12,6 @@ class FlowOfFluidTest {
     static final Fluid SAMPLE_WATER = new LiquidWater.Builder()
             .withTemperature(98.6)
             .build();
-    static final String SAMPLE_FLOW_NAME = "sample flow";
     static final double SAMPLE_MASS_FLOW_RATE = 4.68; // kg/s
 
     @Test
@@ -24,7 +23,6 @@ class FlowOfFluidTest {
 
         // Act
         FlowOfFluid<Fluid> flowOfWater = new FlowOfSinglePhase.Builder<>(SAMPLE_WATER)
-                .withFlowName(SAMPLE_FLOW_NAME)
                 .withMassFlow(SAMPLE_MASS_FLOW_RATE)
                 .build();
         double actualMassFlow = flowOfWater.getMassFlow();
