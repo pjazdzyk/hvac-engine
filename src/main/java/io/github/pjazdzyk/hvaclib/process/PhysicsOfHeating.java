@@ -1,6 +1,5 @@
 package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 import io.github.pjazdzyk.hvaclib.process.resultsdto.HeatingResultDto;
@@ -22,20 +21,20 @@ public final class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForInputHeat(FlowOfHumidGas inletFlow, double inputHeatQ) {
-        Validators.requireNotNull("Inlet flow", inletFlow);
+        ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
         double pressure = inletAirProp.getAbsPressure();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
+        double m1 = inletFlow.getMassFlowDa();
         if (inputHeatQ == 0.0 || inletFlow.getMassFlow() == 0.0) {
-            return new HeatingResultDto(pressure, t1, x1, inputHeatQ);
+            return new HeatingResultDto(pressure, t1, x1, m1, inputHeatQ);
         }
         double Pat = inletAirProp.getAbsPressure();
-        double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double i2 = (m1 * i1 + inputHeatQ / 1000) / m1;
         double t2 = PhysicsPropOfMoistAir.calcMaTaIX(i2, x1, Pat);
-        return new HeatingResultDto(pressure, t2, x1, inputHeatQ);
+        return new HeatingResultDto(pressure, t2, x1, m1, inputHeatQ);
     }
 
     /**
@@ -49,21 +48,21 @@ public final class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForTargetTemp(FlowOfHumidGas inletFlow, double targetOutTemp) {
-        Validators.requireNotNull("Inlet flow", inletFlow);
+        ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
-        Validators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletAirProp.getTemp());
+        ProcessValidators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletAirProp.getTemp());
         double pressure = inletAirProp.getAbsPressure();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
+        double m1 = inletFlow.getMassFlowDa();
         double inputHeat = 0.0;
         if (targetOutTemp == t1) {
-            return new HeatingResultDto(pressure, t1, x1, inputHeat);
+            return new HeatingResultDto(pressure, t1, x1, m1, inputHeat);
         }
-        double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double i2 = PhysicsPropOfMoistAir.calcMaIx(targetOutTemp, x1, pressure);
         inputHeat = (m1 * i2 - m1 * i1) * 1000d;
-        return new HeatingResultDto(pressure, targetOutTemp, x1, inputHeat);
+        return new HeatingResultDto(pressure, targetOutTemp, x1, m1, inputHeat);
     }
 
     /**
@@ -75,7 +74,7 @@ public final class PhysicsOfHeating {
      * @return [heat in (W), outlet air temperature (oC)]
      */
     public static HeatingResultDto calcHeatingForTargetRH(FlowOfHumidGas inletFlow, double outRH) {
-        Validators.requireNotNull("Inlet flow", inletFlow);
+        ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         if (outRH > 100.0 || outRH <= 0.0) {
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         }
@@ -84,20 +83,20 @@ public final class PhysicsOfHeating {
         double RH1 = inletAirProp.getRelativeHumidityRH();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
-        double heatQ = 0.0;
+        double m1 = inletFlow.getMassFlowDa();
+        double heatOfProcess = 0.0;
         if (outRH == RH1) {
-            return new HeatingResultDto(pressure, t1, x1, heatQ);
+            return new HeatingResultDto(pressure, t1, x1, m1, heatOfProcess);
         }
         if (outRH > RH1) {
             throw new ProcessArgumentException("Expected RH must be smaller than initial value. If this was intended - use methods dedicated for cooling.");
         }
         double Pat = inletAirProp.getAbsPressure();
-        double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double t2 = PhysicsPropOfMoistAir.calcMaTaRHX(x1, outRH, Pat);
         double i2 = PhysicsPropOfMoistAir.calcMaIx(t2, x1, Pat);
-        heatQ = (m1 * i2 - m1 * i1) * 1000d;
-        return new HeatingResultDto(pressure, t2, x1, heatQ);
+        heatOfProcess = (m1 * i2 - m1 * i1) * 1000d;
+        return new HeatingResultDto(pressure, t2, x1, m1, heatOfProcess);
     }
 
 }

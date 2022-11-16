@@ -1,6 +1,6 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
-import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.fluids.exceptions.FluidArgumentException;
 
 /**
  * LIQUID WATER EQUATIONS LIBRARY (PSYCHROMETRICS) <br>
@@ -45,9 +45,9 @@ public final class PhysicsPropOfWater {
      */
     public static double calcRho(double tx) {
         if (tx <= 0) {
-            throw new PropertyPhysicsArgumentException("[calcWtRho] ERROR: Temperature equals or lower than 0 oC");
+            throw new FluidArgumentException("[calcWtRho] ERROR: Temperature equals or lower than 0 oC");
         } else if (tx > 150) {
-            throw new PropertyPhysicsArgumentException("[calcWtRho] WARNING: Temperature exceeds formula threshold tw>150 oC ");
+            throw new FluidArgumentException("[calcWtRho] WARNING: Temperature exceeds formula threshold tw>150 oC ");
         }
         return (999.83952 + 16.945176 * tx
                 - 7.9870401 * Math.pow(10, -3) * Math.pow(tx, 2)

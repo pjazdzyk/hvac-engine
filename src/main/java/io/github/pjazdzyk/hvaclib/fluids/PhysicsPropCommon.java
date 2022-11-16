@@ -1,7 +1,5 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
-import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
-
 public final class PhysicsPropCommon {
 
     private PhysicsPropCommon() {
@@ -43,9 +41,10 @@ public final class PhysicsPropCommon {
      * @return air thermal diffusivity, m2/s
      */
     public static double calcThDiff(double rho, double k, double cp) {
-        if (rho <= 0.0 || cp <= 0.0 || k <= 0.0)
-            throw new PropertyPhysicsArgumentException("Error. Value of Rho, Cp or k is smaller than or equal 0." + String.format("rho= %.3f, cp= %.3f, k=%.3f", rho, cp, k));
-        return k / (rho * cp * 1000);
+        FluidValidators.requirePositiveAndNonZeroValue("Density", rho);
+        FluidValidators.requirePositiveAndNonZeroValue("Thermal conductivity", k);
+        FluidValidators.requirePositiveAndNonZeroValue("Specific heat", cp);
+        return k / (rho * cp * 1000d);
     }
 
     /**
@@ -58,8 +57,9 @@ public final class PhysicsPropCommon {
      * @return Prandtl number, -
      */
     public static double calcPrandtl(double dynVis, double k, double cp) {
-        if (k <= 0)
-            throw new PropertyPhysicsArgumentException("Error. Value of k is smaller than or equal 0." + String.format("rho= %.3f", k));
-        return dynVis * cp * 1000 / k;
+        FluidValidators.requirePositiveAndNonZeroValue("Dynamic viscosity", dynVis);
+        FluidValidators.requirePositiveAndNonZeroValue("Thermal conductivity", k);
+        FluidValidators.requirePositiveAndNonZeroValue("Specific heat", cp);
+        return dynVis * cp * 1000d / k;
     }
 }

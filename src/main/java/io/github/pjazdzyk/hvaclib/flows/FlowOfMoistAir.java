@@ -1,6 +1,5 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
 
@@ -45,9 +44,9 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
      * @param flowType - type of Flow (selected from FluidFlowType enum).
      */
     public FlowOfMoistAir(String name, HumidGas moistAir, double flowRate, TypeOfAirFlow flowType) {
-        Validators.requireNotNull("MoistAir instance does not exist.", moistAir);
-        Validators.requireNotNull("FluidFlowType has not been specified", flowType);
-        Validators.requirePositiveValue("FlowRate must not be negative", flowRate);
+        FlowValidators.requireNotNull("MoistAir instance does not exist.", moistAir);
+        FlowValidators.requireNotNull("FluidFlowType has not been specified", flowType);
+        FlowValidators.requirePositiveValue("FlowRate must not be negative", flowRate);
         this.name = name;
         this.moistAir = moistAir;
         initializeFlows(flowRate, flowType);
