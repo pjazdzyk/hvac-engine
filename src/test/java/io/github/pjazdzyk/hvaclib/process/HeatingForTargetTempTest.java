@@ -17,11 +17,10 @@ class HeatingForTargetTempTest implements PhysicsTestConstants {
     @DisplayName("should heat up inlet air when target outlet temperature is given")
     void runProcess_shouldHeatUpInletAir_whenTargetOutTemperatureIsGiven() {
         // Arrange
-        var pressure = 98700; // Pa
         var expectedOutTemp = 30d;
         var expectedHeatOfProcess = 56358.392203075746; // W
         HumidGas heatingCaseInletAir = new MoistAir.Builder()
-                .withAtmPressure(pressure)
+                .withAtmPressure(P_TEST)
                 .withAirTemperature(10.0)
                 .withRelativeHumidity(60.0)
                 .build();

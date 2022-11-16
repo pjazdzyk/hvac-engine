@@ -17,12 +17,11 @@ class HeatingForTargetRHTest implements PhysicsTestConstants {
     @DisplayName("should heat up inlet air when target relative humidity RH is given")
     void runProcess_shouldHeatUpInletAir_whenTargetRHIsGiven() {
         // Arrange
-        var pressure = 98700d; // Pa
         var expectedOutRH = 17.35261227534389d; // %
         var expectedHeatOfProcess = 56358.392203075746d; // W
         var expectedOutTemp = 30.0d; // oC
         HumidGas heatingCaseInletAir = new MoistAir.Builder()
-                .withAtmPressure(pressure)
+                .withAtmPressure(P_TEST)
                 .withAirTemperature(10.0)
                 .withRelativeHumidity(60.0)
                 .build();
