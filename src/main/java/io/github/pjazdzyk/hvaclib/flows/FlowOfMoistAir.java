@@ -87,11 +87,6 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public double getMassFlow() {
         return massFlowMa;
     }
