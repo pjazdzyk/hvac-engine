@@ -1,6 +1,6 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
-import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.fluids.exceptions.FluidArgumentException;
 
 /**
  * <h3>MOIST AIR</h3>
@@ -96,7 +96,7 @@ public class MoistAir implements HumidGas {
                 this.relativeHumidity = PhysicsPropOfMoistAir.calcMaRH(temperature, xRH, absPressure);
             }
             default ->
-                    throw new PropertyPhysicsArgumentException("Wrong humidity argument value. Instance was not created.");
+                    throw new FluidArgumentException("Wrong humidity argument value. Instance was not created.");
         }
     }
 

@@ -1,7 +1,5 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.common.Validators;
-
 /**
  * PHYSICS OF FLOW, CALCULATION AND CONVERSION LIBRARY <br>
  * Set of static methods for calculating fluid flow and moist air flow. Based on provided arguments, mass flow or volumetric flow
@@ -24,8 +22,8 @@ public final class PhysicsOfFlow {
      * @return volumetric flow rate in m3/s
      */
     public static double calcVolFlowFromMassFlow(double density, double massFlow) {
-        Validators.requirePositiveAndNonZeroValue("Density", density);
-        Validators.requirePositiveValue("Mass flow", massFlow);
+        FlowValidators.requirePositiveAndNonZeroValue("Density", density);
+        FlowValidators.requirePositiveValue("Mass flow", massFlow);
         return massFlow / density;
     }
 
@@ -37,8 +35,8 @@ public final class PhysicsOfFlow {
      * @return mass flow rate in kg/s
      */
     public static double calcMassFlowFromVolFlow(double density, double volFlow) {
-        Validators.requirePositiveAndNonZeroValue("Density", density);
-        Validators.requirePositiveValue("Volumetric flow", volFlow);
+        FlowValidators.requirePositiveAndNonZeroValue("Density", density);
+        FlowValidators.requirePositiveValue("Volumetric flow", volFlow);
         return volFlow * density;
     }
 
@@ -53,8 +51,8 @@ public final class PhysicsOfFlow {
      * @return dry air flow in kg/s
      */
     public static double calcDaMassFlowFromMaMassFlow(double humidityRatio, double massFlowMa) {
-        Validators.requirePositiveValue("Humidity ratio", humidityRatio);
-        Validators.requirePositiveValue("Moist air mass flow", massFlowMa);
+        FlowValidators.requirePositiveValue("Humidity ratio", humidityRatio);
+        FlowValidators.requirePositiveValue("Moist air mass flow", massFlowMa);
         return massFlowMa / (1.0 + humidityRatio);
     }
 
@@ -66,8 +64,8 @@ public final class PhysicsOfFlow {
      * @return dry air mass flow in kg/s
      */
     public static double calcDaMassFlowFromDaVolFlow(double densityOfDryAir, double volFlowDa) {
-        Validators.requirePositiveValue("Density of dry air", densityOfDryAir);
-        Validators.requirePositiveValue("Volumetric flow", volFlowDa);
+        FlowValidators.requirePositiveValue("Density of dry air", densityOfDryAir);
+        FlowValidators.requirePositiveValue("Volumetric flow", volFlowDa);
         return volFlowDa * densityOfDryAir;
     }
 
@@ -80,8 +78,8 @@ public final class PhysicsOfFlow {
      * @return moist air mass flow in kg/s
      */
     public static double calcMaMassFlowFromDaMassFlow(double humidityRatio, double massFlowDa) {
-        Validators.requirePositiveValue("Humidity ratio", humidityRatio);
-        Validators.requirePositiveValue("Dry air mass flow", massFlowDa);
+        FlowValidators.requirePositiveValue("Humidity ratio", humidityRatio);
+        FlowValidators.requirePositiveValue("Dry air mass flow", massFlowDa);
         return massFlowDa * (1.0 + humidityRatio);
     }
 
@@ -93,7 +91,7 @@ public final class PhysicsOfFlow {
      * @return dry air volumetric flow in m3/s
      */
     public static double calcDaVolFlowFromDaMassFlow(double densityOfDryAir, double massFlowDa) {
-        Validators.requirePositiveAndNonZeroValue("Density of dry air", densityOfDryAir);
+        FlowValidators.requirePositiveAndNonZeroValue("Density of dry air", densityOfDryAir);
         return massFlowDa / densityOfDryAir;
     }
 

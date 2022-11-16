@@ -1,8 +1,6 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.common.Constants;
-import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
 
 public final class PhysicsPropOfDryAir {
 
@@ -32,8 +30,7 @@ public final class PhysicsPropOfDryAir {
      * @return kinematic viscosity, m^2/s
      */
     public static double calcDaKinVis(double ta, double rho_Da) {
-        if (rho_Da <= 0)
-            throw new PropertyPhysicsArgumentException("Error. Value of rho_Da is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Da));
+        FluidValidators.requirePositiveAndNonZeroValue("Dry air density", rho_Da);
         return calcDaDynVis(ta) / rho_Da;
     }
 
@@ -106,7 +103,8 @@ public final class PhysicsPropOfDryAir {
      * @return dry air density, kg/m3
      */
     public static double calcDaRho(double ta, double Pat) {
+        FluidValidators.requireFirstValueAsGreaterThanSecond("Pressure must be > than limiter.", Pat, FluidLimiters.MIN_PAT);
         double tk = ta + 273.15;
-        return Pat / (Constants.CST_DA_RG * tk);
+        return Pat / (PhysicsConstants.CST_DA_RG * tk);
     }
 }

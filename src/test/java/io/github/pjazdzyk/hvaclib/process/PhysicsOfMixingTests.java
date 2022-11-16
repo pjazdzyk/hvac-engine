@@ -44,11 +44,11 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
 
         // Act
         var mixingResults = PhysicsOfMixing.mixTwoHumidGasFlows(airFlow1, airFlow2);
-        var actualFirstDryAirMassFlow = mixingResults.inMda();
-        var actualSecondDryAirMassFlow = mixingResults.recMda();
-        var actualOutDryAirMassFlow = mixingResults.outMda();
-        var actualOutAirTemp = mixingResults.outTx();
-        var actualOutHumidityRatio = mixingResults.outX();
+        var actualFirstDryAirMassFlow = mixingResults.inDryAirMassFlow();
+        var actualSecondDryAirMassFlow = mixingResults.recDryAirMassFlow();
+        var actualOutDryAirMassFlow = mixingResults.outDryAirMassFlow();
+        var actualOutAirTemp = mixingResults.outTemperature();
+        var actualOutHumidityRatio = mixingResults.outHumidityRatio();
 
         // Assert
         assertThat(actualFirstDryAirMassFlow).isEqualTo(mda1);

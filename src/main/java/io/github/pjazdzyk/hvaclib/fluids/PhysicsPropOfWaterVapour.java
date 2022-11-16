@@ -1,7 +1,6 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
-import io.github.pjazdzyk.hvaclib.common.Constants;
-import io.github.pjazdzyk.hvaclib.fluids.exceptions.PropertyPhysicsArgumentException;
+import io.github.pjazdzyk.hvaclib.fluids.exceptions.FluidArgumentException;
 
 public final class PhysicsPropOfWaterVapour {
 
@@ -47,7 +46,7 @@ public final class PhysicsPropOfWaterVapour {
      */
     public static double calcWvI(double ta) {
         double cp_Wv = calcWvCp(ta);
-        return cp_Wv * ta + Constants.CST_WT_R;
+        return cp_Wv * ta + PhysicsConstants.CST_WT_R;
     }
 
     /**
@@ -93,7 +92,7 @@ public final class PhysicsPropOfWaterVapour {
         double tk = ta + 273.15;
         double P_Da = RH / 100 * PhysicsPropOfMoistAir.calcMaPs(ta);
         double P_Wv = Pat - P_Da;
-        return P_Wv / (Constants.CST_WV_RG * tk);
+        return P_Wv / (PhysicsConstants.CST_WV_RG * tk);
     }
 
     /**
@@ -105,7 +104,7 @@ public final class PhysicsPropOfWaterVapour {
      */
     public static double calcWvKinVis(double ta, double rho_Wv) {
         if (rho_Wv <= 0)
-            throw new PropertyPhysicsArgumentException("Error. Value of rho_Wv is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Wv));
+            throw new FluidArgumentException("Error. Value of rho_Wv is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Wv));
         return calcWvDynVis(ta) / rho_Wv;
     }
 }

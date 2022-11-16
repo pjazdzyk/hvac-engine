@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib.common;
+package io.github.pjazdzyk.hvaclib.fluids;
 
 /**
  * Set of most relevant physical constants used in calculations.<br>
@@ -13,9 +13,9 @@ package io.github.pjazdzyk.hvaclib.common;
  * @author Piotr Jażdżyk, MScEng
  */
 
-public final class Constants {
+public final class PhysicsConstants {
 
-    private Constants() {}
+    private PhysicsConstants() {}
 
     // Physical constants
     public final static double CST_R = 8.3144598;              // [J/(mol*K)           - Universal gas constant

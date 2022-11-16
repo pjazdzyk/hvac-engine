@@ -1,6 +1,5 @@
 package io.github.pjazdzyk.hvaclib.flows;
 
-import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 
 import java.util.Objects;
@@ -39,9 +38,9 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
      * @param typeOfFlow - type of Flow (selected from FluidFlowType enum).
      */
     public FlowOfSinglePhase(String name, F fluid, double flowRate, TypeOfFluidFlow typeOfFlow) {
-        Validators.requirePositiveValue("Flow ", flowRate);
-        Validators.requireNotNull("Fluid", fluid);
-        Validators.requireNotNull("Locked flow", typeOfFlow);
+        FlowValidators.requirePositiveValue("Flow ", flowRate);
+        FlowValidators.requireNotNull("Fluid", fluid);
+        FlowValidators.requireNotNull("Locked flow", typeOfFlow);
         this.name = name;
         this.fluid = fluid;
         this.typeOfFlow = typeOfFlow;
