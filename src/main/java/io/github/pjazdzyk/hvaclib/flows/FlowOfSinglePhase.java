@@ -19,29 +19,25 @@ import java.util.Objects;
 
 public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
 
-    public static final String DEF_FLOW_NAME = "Generic flow";       // -                    - Default flow name
     public static final double DEF_MASS_FLOW = 0.1;                  // kg/s                 - Default mass flow
-    private final String name;
     private final F fluid;
     private final TypeOfFluidFlow typeOfFlow;
     private double massFlow;
     private double volFlow;
 
     private FlowOfSinglePhase(Builder<F> builder) {
-        this(builder.flowName, builder.fluid, builder.flowRate, builder.lockedFlowType);
+        this(builder.fluid, builder.flowRate, builder.lockedFlowType);
     }
 
     /**
-     * @param name       flow name or tag,
      * @param flowRate   flow rate of specified type of flow in kg/s or m3/s
      * @param fluid      type of Fluid
      * @param typeOfFlow - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfSinglePhase(String name, F fluid, double flowRate, TypeOfFluidFlow typeOfFlow) {
+    public FlowOfSinglePhase(F fluid, double flowRate, TypeOfFluidFlow typeOfFlow) {
         FlowValidators.requirePositiveValue("Flow ", flowRate);
         FlowValidators.requireNotNull("Fluid", fluid);
         FlowValidators.requireNotNull("Locked flow", typeOfFlow);
-        this.name = name;
         this.fluid = fluid;
         this.typeOfFlow = typeOfFlow;
         initializeFLows(flowRate);
@@ -66,11 +62,6 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
     }
 
     @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
     public double getMassFlow() {
         return massFlow;
     }
@@ -81,24 +72,8 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FlowOfSinglePhase<?> that)) return false;
-        return Double.compare(that.massFlow, massFlow) == 0
-                && name.equals(that.name)
-                && fluid.equals(that.fluid)
-                && typeOfFlow == that.typeOfFlow;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, fluid, typeOfFlow, massFlow);
-    }
-
-    @Override
     public String toString() {
         StringBuilder bld = new StringBuilder();
-        bld.append("Flow name: \t\t").append(name).append("\n");
         bld.append("Locked flow: \t").append(typeOfFlow).append("\n");
         bld.append("m_Con = ").append(String.format("%.3f", massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
                 .append("v_Con = ").append(String.format("%.6f", volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
@@ -118,7 +93,6 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
      */
     public static class Builder<F extends Fluid> {
         private final F fluid;
-        private String flowName = DEF_FLOW_NAME;
         private double flowRate = DEF_MASS_FLOW;
         private TypeOfFluidFlow lockedFlowType = TypeOfFluidFlow.VOL_FLOW;
 
@@ -131,11 +105,6 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
             this.fluid = fluid;
         }
 
-        public Builder<F> withFlowName(String name) {
-            this.flowName = name;
-            return this;
-        }
-
         public Builder<F> withMassFlow(double massFlow) {
             this.flowRate = massFlow;
             this.lockedFlowType = TypeOfFluidFlow.MASS_FLOW;
@@ -145,11 +114,6 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
         public Builder<F> withVolFlow(double volFlow) {
             this.flowRate = volFlow;
             this.lockedFlowType = TypeOfFluidFlow.VOL_FLOW;
-            return this;
-        }
-
-        public Builder<F> withLockedFlow(TypeOfFluidFlow lockedFlowType) {
-            this.lockedFlowType = lockedFlowType;
             return this;
         }
 
