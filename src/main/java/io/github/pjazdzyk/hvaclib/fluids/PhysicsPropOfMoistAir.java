@@ -21,7 +21,7 @@ import java.util.function.DoubleFunction;
  * <p><br>
  * REFERENCE SOURCE: <br>
  * [1] ASHRAE Fundamentals 2002, CHAPTER 6 <br>
- * [2] Buck, Arden L. "New Equations for Computing Vapour Pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981) <br>
+ * [2] Buck, Arden L. "New Equations for Computing Vapour pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981) <br>
  * [3] Buck Research Instruments L.L.C. "MODEL CR-1A HYGROMETER WITH AUTO FILL OPERATING MANUAL" (May 2012). <br>
  * [4] Stull R. "Wet-Bulb Temperature from Relative Humidity and Air Temperature". Manuscript received 14 July 2011, in final form 28 August 2011 <br>
  * [5] Morvay Z.K, Gvozdenac D.D. "Fundamentals for analysis and calculation of energy and environmental performance". Applied Industrial Energy And Environmental Management. <br>
