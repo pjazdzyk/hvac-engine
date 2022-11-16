@@ -4,7 +4,7 @@ import io.github.pjazdzyk.hvaclib.flows.exceptions.FlowArgumentException;
 
 import java.util.Objects;
 
-public class FlowValidators {
+public final class FlowValidators {
 
     public static void requireNotNull(String message, Object object) {
         if(Objects.isNull(object)) throw new FlowArgumentException(message + " must not be null.");

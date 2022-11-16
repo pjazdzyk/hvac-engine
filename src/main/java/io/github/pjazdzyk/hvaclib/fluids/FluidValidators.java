@@ -4,7 +4,7 @@ import io.github.pjazdzyk.hvaclib.fluids.exceptions.FluidArgumentException;
 
 import java.util.Objects;
 
-class FluidValidators {
+final class FluidValidators {
 
     public static void requireNotNull(String message, Object object) {
         if (Objects.isNull(object)) throw new FluidArgumentException(message + " must not be null.");
