@@ -18,6 +18,6 @@ final class FluidLimiters {
     // Air property limiters
     public final static double MIN_PAT = 50_000.0;              // [Pa]                - Minimum allowable atmospheric pressure
     public final static double MIN_T = -260.0;                  // [oC]                - Minimum allowable air temperature
-    public final static double MIN_T_FOR_PS = -130;                    // [oc]                - Minimum temperature below which Ps is assumed as 0.
+    public final static double MIN_T_FOR_PS = -130;             // [oc]                - Minimum temperature below which Ps is assumed as 0.
 
 }

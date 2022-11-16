@@ -37,7 +37,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         var expectedWvDensity = 0.7304844902588641;
 
         //Act
-        var actualWvDensity = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_ATM);
+        var actualWvDensity = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_PHYS);
 
         // Assert
         assertThat(actualWvDensity).isEqualTo(expectedWvDensity, withPrecision(MATH_ACCURACY));
@@ -49,7 +49,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var rhoWv = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_ATM);
+        var rhoWv = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_PHYS);
         var expectedWvKinViscosity = 1.3322079252324198E-5;
 
         //Act

@@ -18,7 +18,7 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
     void calcMixing_shouldReturnResultsForMixingOfTwoDifferentMoistAirFlows() {
         // Arrange
         HumidGas air1 = new MoistAir.Builder()
-                .withAtmPressure(PAT)
+                .withAtmPressure(P_ATM)
                 .withAirTemperature(-20.0)
                 .withRelativeHumidity(100.0)
                 .build();
@@ -27,7 +27,7 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
                 .build();
 
         HumidGas air2 = new MoistAir.Builder()
-                .withAtmPressure(PAT)
+                .withAtmPressure(P_ATM)
                 .withAirTemperature(18.0)
                 .withRelativeHumidity(55.0)
                 .build();
@@ -40,7 +40,7 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
         var outMda = mda1 + mda2;
         var expectedOutHumRatioX = (mda1 * air1.getHumRatioX() + mda2 * air2.getHumRatioX()) / outMda;
         var expectedOutEnthalpy = (mda1 * air1.getSpecEnthalpy() + mda2 * air2.getSpecEnthalpy()) / outMda;
-        var expectedOutAirTemp = PhysicsPropOfMoistAir.calcMaTaIX(expectedOutEnthalpy, expectedOutHumRatioX, PAT);
+        var expectedOutAirTemp = PhysicsPropOfMoistAir.calcMaTaIX(expectedOutEnthalpy, expectedOutHumRatioX, P_ATM);
 
         // Act
         var mixingResults = PhysicsOfMixing.mixTwoHumidGasFlows(airFlow1, airFlow2);

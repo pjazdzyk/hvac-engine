@@ -21,7 +21,7 @@ class PhysicsPropCommonTest implements PhysicsTestConstants {
 
         // Assert
         assertThat(actualPressure).isEqualTo(expectedPressure);
-        assertThat(actualPressure).isLessThan(P_ATM);
+        assertThat(actualPressure).isLessThan(P_PHYS);
     }
 
     @Test
