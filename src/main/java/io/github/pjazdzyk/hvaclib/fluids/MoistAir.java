@@ -17,16 +17,12 @@ public class MoistAir implements HumidGas {
 
     // Default parameters
 
-    private static final String DEF_NAME = "New water";
     private static final double DEF_TEMP = 20;                                     // [oC]             - Default water temperature
     private static final double DEF_RH = 50;                                       // [%]              - Default relative humidity
     private static final double DEF_PAT = 101_325;                                 // [Pa]             - Standard atmospheric pressure (physical atmosphere)
 
-    // General parameters
-    private final String name;               // -                - air instance name
-    private VapourState vapourStatus;        // -                - vapor status: unsaturated, saturated, water fog, ice fog
-
     // Moist air parameters
+    private VapourState vapourStatus;        // -                - vapor status: unsaturated, saturated, water fog, ice fog
     private final double absPressure;        // [Pa]             - moist air barometric pressure (ambient)
     private final double temperature;        // [oC]             - moist air dry bulb temperature
     private double relativeHumidity;         // [%]              - moist air relative humidity (in ta, moist air)
@@ -60,11 +56,11 @@ public class MoistAir implements HumidGas {
 
 
     public MoistAir() {
-        this(DEF_NAME, DEF_TEMP, DEF_RH, DEF_PAT, HumidityInputType.REL_HUMID);
+        this(DEF_TEMP, DEF_RH, DEF_PAT, HumidityInputType.REL_HUMID);
     }
 
     private MoistAir(Builder builder) {
-        this(builder.name, builder.airTemp, builder.humidityXorRH, builder.atmPressure, builder.humidityInputType);
+        this(builder.airTemp, builder.humidityXorRH, builder.atmPressure, builder.humidityInputType);
     }
 
     /**
@@ -76,8 +72,7 @@ public class MoistAir implements HumidGas {
      * @param absPressure - atmospheric pressure in Pa,
      * @param humidType   - provide REL_HUMID if RH is provided or HUM_RATIO if humidity ratio is provided.
      */
-    public MoistAir(String name, double temperature, double xRH, double absPressure, HumidityInputType humidType) {
-        this.name = name;
+    public MoistAir(double temperature, double xRH, double absPressure, HumidityInputType humidType) {
         this.absPressure = absPressure;
         this.temperature = temperature;
         this.saturationPressureWv = PhysicsPropOfMoistAir.calcMaPs(temperature);
@@ -133,11 +128,6 @@ public class MoistAir implements HumidGas {
             vapourStatus = VapourState.SOLID_FOG;
         else
             vapourStatus = VapourState.UNSATURATED;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -268,7 +258,6 @@ public class MoistAir implements HumidGas {
     @Override
     public final String toString() {
         StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append("Instance name \t : ").append(name).append("\n");
         strBuilder.append(String.format("Core parameters  : Pat=%.0f Pa | ta=%.3f degC | RH_Ma= %.3f %% | Wbt_Ma=%.3f degC | Tdp_Ma=%.3f degC | Ps= %.2f Pa | x_Ma= %.6f kg/kg | xMax= %.6f kg/kg \n",
                 absPressure, temperature, relativeHumidity, wetBulbTemperature, dewPointTemperature, saturationPressureWv, humidityRatioX, maxHumidityRatioX));
         strBuilder.append(String.format("Dry air          : rho_Da= %.3f kg/m3 | cp_Da= %.4f kJ/kgK | i_Da= %.2f kJ/kg.da \n",
@@ -287,29 +276,19 @@ public class MoistAir implements HumidGas {
 
     // STATIC FACTORY METHOD PATTERN
     public static MoistAir ofAir(double tx, double RH) {
-        return new MoistAir(DEF_NAME, tx, RH, DEF_PAT, HumidityInputType.REL_HUMID);
+        return new MoistAir(tx, RH, DEF_PAT, HumidityInputType.REL_HUMID);
     }
 
     public static MoistAir ofAir(double tx, double RH, double Pat) {
-        return new MoistAir(DEF_NAME, tx, RH, Pat, HumidityInputType.REL_HUMID);
-    }
-
-    public static MoistAir ofAir(String ID, double tx, double RH, double Pat) {
-        return new MoistAir(ID, tx, RH, Pat, HumidityInputType.REL_HUMID);
+        return new MoistAir(tx, RH, Pat, HumidityInputType.REL_HUMID);
     }
 
     // BUILDER PATTERN
     public static class Builder {
-        private String name = DEF_NAME;
         private double airTemp = DEF_TEMP;
         private double humidityXorRH = DEF_RH;
         private double atmPressure = DEF_PAT;
         private HumidityInputType humidityInputType = HumidityInputType.REL_HUMID;
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
 
         public Builder withAirTemperature(double ta) {
             this.airTemp = ta;

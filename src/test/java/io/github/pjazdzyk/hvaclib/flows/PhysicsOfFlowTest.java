@@ -14,11 +14,9 @@ class PhysicsOfFlowTest {
 
     public static final double MATH_ACCURACY = 10E-15;
     static final Fluid SAMPLE_LIQ_WATER = new LiquidWater.Builder()
-            .withName("water")
             .withTemperature(15.0)
             .build();
     HumidGas SAMPLE_AIR = new MoistAir.Builder()
-            .withName("air")
             .withAirTemperature(20.0)
             .withRelativeHumidity(50.0)
             .build();
