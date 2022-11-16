@@ -69,7 +69,7 @@ class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
     void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
         // Arrange
         var ta = 20.0;
-        var rhoDa = PhysicsPropOfDryAir.calcDaRho(ta, P_ATM);
+        var rhoDa = PhysicsPropOfDryAir.calcDaRho(ta, P_PHYS);
         var expectedDaKinViscosity = 1.519954676200779E-5;
 
         //Act

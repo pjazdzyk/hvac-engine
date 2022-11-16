@@ -1,10 +1,10 @@
 package io.github.pjazdzyk.hvaclib.process;
 
+import io.github.pjazdzyk.hvaclib.PhysicsTestConstants;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
-import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,16 +12,14 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsOfHeatingTest {
+class PhysicsOfHeatingTest implements PhysicsTestConstants {
 
     private FlowOfHumidGas heatingInletAirFlow;
-    static final double PAT = 98700; // Pa
-    static final double MATH_ACCURACY = 1E-8;
 
     @BeforeEach
     void setUp() {
         HumidGas heatingCaseInletAir = new MoistAir.Builder()
-                .withAtmPressure(PAT)
+                .withAtmPressure(P_TEST)
                 .withAirTemperature(10.0)
                 .withRelativeHumidity(60.0)
                 .build();
@@ -70,7 +68,7 @@ class PhysicsOfHeatingTest {
         // Arrange
         var expectedOutRH = 17.35261227534389;
         var expectedHeatOfProcess = 56358.392203075746;
-        var expectedOutTemp = 30.0;
+        var expectedOutTemp = 30.0d;
 
         // Act
         var heatingResult = PhysicsOfHeating.calcHeatingForTargetRH(heatingInletAirFlow, expectedOutRH);
@@ -78,7 +76,7 @@ class PhysicsOfHeatingTest {
         var actualOutAirTemp = heatingResult.outTemperature();
 
         // Assert
-        assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess, withPrecision(MATH_ACCURACY));
+        assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess, withPrecision(MEDIUM_MATH_ACCURACY));
         assertThat(actualOutAirTemp).isEqualTo(expectedOutTemp, withPrecision(MATH_ACCURACY));
     }
 
@@ -88,7 +86,7 @@ class PhysicsOfHeatingTest {
         // Arrange
         var designWinterExternalTemp = -20.0; //oC
         HumidGas winterAir = new MoistAir.Builder()
-                .withAtmPressure(PAT)
+                .withAtmPressure(P_TEST)
                 .withAirTemperature(designWinterExternalTemp)
                 .withRelativeHumidity(100.0)
                 .build();
