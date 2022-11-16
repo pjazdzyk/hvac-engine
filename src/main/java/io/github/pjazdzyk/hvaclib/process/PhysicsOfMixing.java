@@ -3,7 +3,7 @@ package io.github.pjazdzyk.hvaclib.process;
 import io.github.pjazdzyk.brentsolver.BrentSolver;
 import io.github.pjazdzyk.hvaclib.common.Validators;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
-import io.github.pjazdzyk.hvaclib.process.inputdata.MixingProcessInputData;
+import io.github.pjazdzyk.hvaclib.process.inputdata.MixingInputDataDto;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.PhysicsPropOfMoistAir;
 
@@ -56,7 +56,7 @@ public final class PhysicsOfMixing {
      * @param mixingInputFlows input data aggregate object containing input flow and recirculation flow
      * @return [first inlet dry air mass flow (kg/s), second inlet dry air mass flow (kg/s), outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static MixingResult mixTwoHumidGasFlows(MixingProcessInputData mixingInputFlows) {
+    public static MixingResult mixTwoHumidGasFlows(MixingInputDataDto mixingInputFlows) {
         FlowOfHumidGas inletFlow = mixingInputFlows.getInletFlow();
         FlowOfHumidGas recirculationFlow = mixingInputFlows.getRecirculationFlow();
         Validators.requireNotNull("First flow", inletFlow);
@@ -102,7 +102,7 @@ public final class PhysicsOfMixing {
      * @param targetOutTemp            expected outlet air temperature, as a target for air mixing ratio
      * @return [first dry air mass flow (kg/s), second air dry air mass flow (kg/s), mixed dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static MixingResult calcMixingFromOutTxOutMda(MixingProcessInputData mixingInputFlows, double targetOutDryMassFlow, double targetOutTemp) {
+    public static MixingResult calcMixingFromOutTxOutMda(MixingInputDataDto mixingInputFlows, double targetOutDryMassFlow, double targetOutTemp) {
         //Objects validation stage
         FlowOfHumidGas inletFlow = mixingInputFlows.getInletFlow();
         FlowOfHumidGas recirculationFlow = mixingInputFlows.getRecirculationFlow();
