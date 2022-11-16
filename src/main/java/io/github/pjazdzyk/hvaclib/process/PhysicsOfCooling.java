@@ -55,9 +55,9 @@ public final class PhysicsOfCooling {
         double condensateMassFlow = 0.0;
         return new CoolingResultDto(
                 inletFlow.getFluid().getAbsPressure(),
-                dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
                 inletFlow.getFluid().getHumRatioX(),
+                dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
                 condensateMassFlow);
     }
@@ -91,13 +91,12 @@ public final class PhysicsOfCooling {
         double condensateMassFlow = 0.0;
         return new CoolingResultDto(
                 pressure,
-                dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
                 inletAir.getHumRatioX(),
+                dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
                 condensateMassFlow);
     }
-
 
     // REAL COOLING COIL
 
@@ -118,17 +117,17 @@ public final class PhysicsOfCooling {
         // Determining Bypass Factor and direct near-wall contact airflow and bypassing airflow
         Validators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAir = inletFlow.getFluid();
-        double inTx = inletAir.getTemp();
-        double inX = inletAir.getHumRatioX();
-        double pressure = inletAir.getAbsPressure();
-        double heatQ = 0.0;
-        double t_Cond = tm_Wall;
-        double m_Cond = 0.0;
+        double inTx = inletAir.getTemp(); // oC
+        double inX = inletAir.getHumRatioX(); // kg.wv/kg.da
+        double pressure = inletAir.getAbsPressure(); // Pa
+        double heatOfProcess = 0.0; // W
+        double t_Cond = tm_Wall; // oC
+        double m_Cond = 0.0; // kg/s
         if (outTx > inTx) {
             throw new ProcessArgumentException("Expected outlet temperature must be lover than inlet for cooling process. Use heating process method instead");
         }
         if (outTx == inTx) {
-            return new CoolingResultDto(pressure, heatQ, outTx, inX, tm_Wall, m_Cond);
+            return new CoolingResultDto(pressure, outTx, inX, heatOfProcess, tm_Wall, m_Cond);
         }
         double BF = calcCoolingCoilBypassFactor(tm_Wall, inTx, outTx);
         double mDa_Inlet = inletFlow.getMassFlowDa();
@@ -149,12 +148,12 @@ public final class PhysicsOfCooling {
         // Determining required cooling performance
         double i_Cond = PhysicsPropOfWater.calcIx(t_Cond);
         double i_Inlet = inletAir.getSpecEnthalpy();
-        heatQ = (mDa_DirectContact * (i_Tm - i_Inlet) + m_Cond * i_Cond) * 1000d;
+        heatOfProcess = (mDa_DirectContact * (i_Tm - i_Inlet) + m_Cond * i_Cond) * 1000d;
 
         // Determining outlet humidity ratio
         double outX = (x_Tm * mDa_DirectContact + x1 * mDa_Bypassing) / mDa_Inlet;
 
-        return new CoolingResultDto(pressure, heatQ, outTx, outX, t_Cond, m_Cond);
+        return new CoolingResultDto(pressure, outTx, outX, heatOfProcess, t_Cond, m_Cond);
     }
 
     /**
@@ -178,7 +177,9 @@ public final class PhysicsOfCooling {
             throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
         }
         if (outRH == inletAirProp.getRelativeHumidityRH()) {
-            return new CoolingResultDto(pressure, 0.0, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), tm_Wall, 0.0);
+            double heatOfProcess = 0.0; // W
+            double condensateFlow = 0.0; // kg/s
+            return new CoolingResultDto(pressure, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), heatOfProcess, tm_Wall, condensateFlow);
         }
         if (outRH > 99.0) {
             throw new ProcessArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
@@ -206,33 +207,34 @@ public final class PhysicsOfCooling {
      *
      * @param inletFlow initial flow of moist air before the process [FLowOfMoistAir],
      * @param tm_Wall   average coil wall temperature in oC,
-     * @param inQ       cooling power in W (must be negative),
+     * @param inputHeat cooling power in W (must be negative),
      * @return [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
      */
-    public static CoolingResultDto calcCoolingFromInputHeat(FlowOfHumidGas inletFlow, double tm_Wall, double inQ) {
+    public static CoolingResultDto calcCoolingFromInputHeat(FlowOfHumidGas inletFlow, double tm_Wall, double inputHeat) {
         Validators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
         double pressure = inletAirProp.getAbsPressure();
-        if (inQ == 0.0)
-            new CoolingResultDto(pressure, inQ, t1, x1, tm_Wall, 0.0);
+        if (inputHeat == 0.0) {
+            double condensateFlow = 0.0;
+            new CoolingResultDto(pressure, t1, x1, inputHeat, tm_Wall, condensateFlow);
+        }
         CoolingResultDto[] result = new CoolingResultDto[1];
         double tMin = inletAirProp.getTemp();
 
-        //For the provided inQ, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
-        double tMax = calcDryCoolingFromInputHeat(inletFlow, inQ).outTemperature();
+        //For the provided inputHeat, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
+        double tMax = calcDryCoolingFromInputHeat(inletFlow, inputHeat).outTemperature();
         BrentSolver solver = new BrentSolver("calcCoolingFromInputHeat SOLVER");
         solver.setCounterpartPoints(tMin, tMax);
         solver.calcForFunction(outTemp -> {
             result[0] = calcCoolingFromOutletTx(inletFlow, tm_Wall, outTemp);
             double calculatedQ = result[0].heatOfProcess();
-            return calculatedQ - inQ;
+            return calculatedQ - inputHeat;
         });
         solver.resetSolverRunFlags();
         return result[0];
     }
-
 
     //SECONDARY PROPERTIES - COOLING
 
