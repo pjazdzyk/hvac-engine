@@ -60,7 +60,7 @@ public final class PhysicsOfMixing {
      * @param mixingInputFlows input data aggregate object containing input flow and recirculation flow
      * @return [first inlet dry air mass flow (kg/s), second inlet dry air mass flow (kg/s), outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static MixingResultDto mixTwoHumidGasFlows(MixingInputDataDto mixingInputFlows) {
+    public static MixingResultDto mixTwoHumidGasFlowsForTargetOutFlowAndTemp(MixingInputDataDto mixingInputFlows) {
         FlowOfHumidGas inletFlow = mixingInputFlows.getInletFlow();
         FlowOfHumidGas recirculationFlow = mixingInputFlows.getRecirculationFlow();
         ProcessValidators.requireNotNull("First flow", inletFlow);
@@ -69,25 +69,26 @@ public final class PhysicsOfMixing {
     }
 
     /**
-     * Returns result of any number specified flows mixed together.
+     * Returns result of any number specified recirculationFlows mixed together.
      *
-     * @param flows array of any number of moist air flows,
+     * @param recirculationFlows array of any number of moist air recirculationFlows,
      * @return [outlet dry air mass flow (kg/s), outlet air temperature oC, outlet humidity ratio x (kgWv/kgDa)]
      */
-    public static BasicResults mixMultipleHumidGasFlows(FlowOfHumidGas... flows) {
-        ProcessValidators.requireArrayNotContainsNull("Flows array", flows);
-        double mda3 = 0.0;
-        double xMda = 0.0;
-        double iMda = 0.0;
-        double pressure = 0.0;
-        for (FlowOfHumidGas flow : flows) {
+    public static BasicResults mixMultipleHumidGasFlows(FlowOfHumidGas inletFlow, FlowOfHumidGas... recirculationFlows) {
+        ProcessValidators.requireArrayNotContainsNull("Recirculation flows", recirculationFlows);
+        HumidGas inletAir = inletFlow.getFluid();
+        double mda3 = inletFlow.getMassFlowDa();
+        double xMda = mda3 * inletAir.getHumRatioX();
+        double iMda = mda3 * inletAir.getSpecEnthalpy();
+        double pressure = inletAir.getAbsPressure();
+        for (FlowOfHumidGas flow : recirculationFlows) {
             mda3 += flow.getMassFlowDa();
             xMda += flow.getMassFlowDa() * flow.getFluid().getHumRatioX();
             iMda += flow.getMassFlowDa() * flow.getFluid().getSpecEnthalpy();
             pressure = Double.max(pressure, flow.getFluid().getAbsPressure());
         }
         if (mda3 == 0.0) {
-            ProcessValidators.requirePositiveAndNonZeroValue("Sum of all dry air mass flows", mda3);
+            ProcessValidators.requirePositiveAndNonZeroValue("Sum of all dry air mass recirculationFlows", mda3);
         }
         double x3 = xMda / mda3;
         double i3 = iMda / mda3;
