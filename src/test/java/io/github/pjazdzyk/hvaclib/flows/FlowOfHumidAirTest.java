@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class FlowOfHumidAirTest {
 
-    static final String SAMPLE_FLOW_NAME = "sample flow";
     static final double INIT_MASS_FLOW_MA = 2.0; // kg/s
 
     @Test
@@ -16,7 +15,6 @@ class FlowOfHumidAirTest {
     void flowOfMoistAirInstance_shouldCreateValidFlowOfMoistAirInstance_whenValidSampleInputIsGiven() {
         // Arrange
         MoistAir sampleAir = new MoistAir.Builder()
-                .withName("sample air")
                 .withAirTemperature(45.0)
                 .withRelativeHumidity(60.1)
                 .build();
@@ -29,7 +27,6 @@ class FlowOfHumidAirTest {
 
         // Act
         FlowOfMoistAir flowAir = new FlowOfMoistAir.Builder(sampleAir)
-                .withFlowName(SAMPLE_FLOW_NAME)
                 .withMassFlowMa(INIT_MASS_FLOW_MA)
                 .build();
         double actualMassFlowMa = flowAir.getMassFlow();
@@ -42,7 +39,6 @@ class FlowOfHumidAirTest {
         assertThat(actualVolFlowMa).isEqualTo(expectedVolFlow_Ma);
         assertThat(actualMassFlowDa).isEqualTo(expectedMassFlow_Da);
         assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
-        assertThat(flowAir.getName()).isEqualTo(SAMPLE_FLOW_NAME);
         assertThat(flowAir.getFluid()).isEqualTo(sampleAir);
     }
 }

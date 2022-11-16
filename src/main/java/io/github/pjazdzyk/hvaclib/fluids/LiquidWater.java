@@ -14,10 +14,8 @@ package io.github.pjazdzyk.hvaclib.fluids;
 
 public class LiquidWater implements Fluid {
 
-    private static final String DEF_NAME = "New water";
     private static final double DEF_TEMP = 10;                                     // [oC]             - Default water temperature
     private static final double DEF_PAT = 101_325;                                 // [Pa]             - Standard atmospheric pressure (physical atmosphere)
-    private final String name;                                                     // -                - water instance name
     private final double waterPressure;                                            // Pa               - water pressure
     private final double waterTemperature;                                         // [oC]             - water temperature
     private final double waterSpecificHeatCP;                                      // [kJ/kg*K]        - water isobaric specific heat
@@ -29,7 +27,7 @@ public class LiquidWater implements Fluid {
      */
 
     public LiquidWater() {
-        this(DEF_NAME, DEF_PAT, DEF_TEMP);
+        this(DEF_PAT, DEF_TEMP);
     }
 
     /**
@@ -38,27 +36,20 @@ public class LiquidWater implements Fluid {
      * @param builder Builder instance
      */
     private LiquidWater(Builder builder) {
-        this(builder.name, builder.waterPressure, builder.waterTemperature);
+        this(builder.waterPressure, builder.waterTemperature);
     }
 
     /**
      * Creates new liquid water instance with provided name and water temperature.
      *
-     * @param name             - instance name or tag
      * @param waterTemperature - water temperature in oC
      */
-    public LiquidWater(String name, double pressure, double waterTemperature) {
-        this.name = name;
+    public LiquidWater(double pressure, double waterTemperature) {
         this.waterTemperature = waterTemperature;
         this.waterPressure = pressure;
         waterSpecificHeatCP = PhysicsPropOfWater.calcCp(waterTemperature);
         waterDensity = PhysicsPropOfWater.calcRho(waterTemperature);
         waterSpecificEnthalpy = PhysicsPropOfWater.calcIx(waterTemperature);
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
     }
 
     @Override
@@ -90,10 +81,7 @@ public class LiquidWater implements Fluid {
     public final String toString() {
 
         StringBuilder strb = new StringBuilder();
-        strb.append("Fluid name: ")
-                .append(name)
-                .append("\n")
-                .append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n",
+        strb.append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n",
                         waterTemperature,
                         waterSpecificHeatCP,
                         waterDensity,
@@ -103,14 +91,8 @@ public class LiquidWater implements Fluid {
 
     //BUILDER PATTERN
     public static class Builder {
-        private String name = DEF_NAME;
         private double waterTemperature = DEF_TEMP;
         private double waterPressure = DEF_PAT;
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
 
         public Builder withTemperature(double waterTemperature) {
             this.waterTemperature = waterTemperature;
