@@ -11,7 +11,7 @@ package io.github.pjazdzyk.hvaclib.fluids;
  * @author Piotr Jażdżyk, MScEng
 */
 
-public final class FluidLimiters {
+final class FluidLimiters {
 
     private FluidLimiters() {}
 

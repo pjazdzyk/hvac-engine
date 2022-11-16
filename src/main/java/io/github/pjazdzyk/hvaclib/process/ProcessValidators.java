@@ -1,12 +1,11 @@
 package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.fluids.exceptions.FluidArgumentException;
 import io.github.pjazdzyk.hvaclib.process.exceptions.ProcessArgumentException;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ProcessValidators {
+class ProcessValidators {
 
     public static void requirePositiveValue(String message, double value) {
         if (value < 0.0) throw new ProcessArgumentException(message + "= " + value + " must not be negative");

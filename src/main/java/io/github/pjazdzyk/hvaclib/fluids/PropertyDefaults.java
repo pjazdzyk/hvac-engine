@@ -1,6 +1,6 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
-public final class PropertyDefaults {
+final class PropertyDefaults {
 
     private PropertyDefaults() {}
 
