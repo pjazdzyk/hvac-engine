@@ -18,8 +18,6 @@ class PhysicsOfCoolingTest implements PhysicsTestConstants {
 
     private FlowOfHumidGas coolingInletAirFlow;
     private HumidGas coolingCaseInletAir;
-    static final double REL_HUM_ACCURACY = 1E-3;
-    static final double TYPICAL_AVERAGE_COIL_WALL_TEMP = 11.5;
 
     @BeforeEach
     void setUp() {
@@ -70,7 +68,7 @@ class PhysicsOfCoolingTest implements PhysicsTestConstants {
 
     @Test
     @DisplayName("should cool down inlet air when target relative humidity and average wall temperature of cooling coil is given")
-    void calcCoolingFromOutletRH_shouldCoolDownInletAir_whenTargetOutletRelativeHumidityAndAverageCoilWallTempAreGiven() {
+    void calcCoolingFromOutletRH_shouldCoolDownInletAir_whenTargetOutletRHAndAverageCoilWallTempAreGiven() {
         // Arrange
         var expectedOutAirRH = 80.0; // %
         var expectedOutAirTemp = 16.947199382239905;  // oC
@@ -101,9 +99,9 @@ class PhysicsOfCoolingTest implements PhysicsTestConstants {
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
         assertThat(actualRH).isEqualTo(expectedOutAirRH, withPrecision(MEDIUM_MATH_ACCURACY));
         assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
-        assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio, withPrecision(REL_HUM_ACCURACY));
+        assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio, withPrecision(LOW_MATH_ACCURACY));
         assertThat(actualCondensateTemp).isEqualTo(expectedCondTemp);
-        assertThat(actualCondensateFlow).isEqualTo(expectedCondensateFlow, withPrecision(REL_HUM_ACCURACY));
+        assertThat(actualCondensateFlow).isEqualTo(expectedCondensateFlow, withPrecision(MEDIUM_MATH_ACCURACY));
     }
 
     @Test

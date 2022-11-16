@@ -402,7 +402,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var actualTa = PhysicsPropOfMoistAir.calcMaTaIX(ix, x, P_PHYS);
 
         // Assert
-        assertThat(actualTa).isEqualTo(expectedTa, withPrecision(LOW_MATH_ACCURACY));
+        assertThat(actualTa).isEqualTo(expectedTa, withPrecision(LIMITED_MATH_ACCURACY));
     }
 
     static Stream<Arguments> taIXInlineData() {
@@ -435,7 +435,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
 
         // We expect that if calcMaTaMaxPat() works correctly, resulting PS will be equals as Pat.
         // Assert
-        Assertions.assertEquals(actualPs, expectedPat, LOW_MATH_ACCURACY);
+        Assertions.assertEquals(actualPs, expectedPat, LIMITED_MATH_ACCURACY);
     }
 
     static Stream<Arguments> tmaxPatInlineData() {
@@ -457,7 +457,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var actualTa = PhysicsPropOfMoistAir.calcMaTaWbt(wbt, RH, P_PHYS);
 
         // Assert
-        Assertions.assertEquals(expectedTa, actualTa, LOW_MATH_ACCURACY);
+        Assertions.assertEquals(expectedTa, actualTa, LIMITED_MATH_ACCURACY);
     }
 
     static Stream<Arguments> wbtTaInlineData() {
