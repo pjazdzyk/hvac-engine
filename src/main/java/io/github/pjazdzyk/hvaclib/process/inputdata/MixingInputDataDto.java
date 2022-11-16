@@ -2,14 +2,14 @@ package io.github.pjazdzyk.hvaclib.process.inputdata;
 
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 
-public class MixingProcessInputData {
+public class MixingInputDataDto {
 
     private final FlowOfHumidGas inletFlow;
     private final double inletMinDryMassFlow;
     private final FlowOfHumidGas recirculationFlow;
     private final double recirculationMinDryMassFlow;
 
-    private MixingProcessInputData(Builder builder) {
+    private MixingInputDataDto(Builder builder) {
         this.inletFlow = builder.inletFlow;
         this.recirculationFlow = builder.recirculationFlow;
         this.inletMinDryMassFlow = builder.inletMinDryMassFlow;
@@ -37,8 +37,8 @@ public class MixingProcessInputData {
             return this;
         }
 
-        MixingProcessInputData build(){
-            return new MixingProcessInputData(this);
+        MixingInputDataDto build(){
+            return new MixingInputDataDto(this);
         }
 
     }
