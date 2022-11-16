@@ -28,14 +28,14 @@ public final class PhysicsOfHeating {
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
         if (inputHeatQ == 0.0 || inletFlow.getMassFlow() == 0.0) {
-            return new HeatingResultDto(pressure, 0.0, t1, x1);
+            return new HeatingResultDto(pressure, t1, x1, inputHeatQ);
         }
         double Pat = inletAirProp.getAbsPressure();
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double i2 = (m1 * i1 + inputHeatQ / 1000) / m1;
         double t2 = PhysicsPropOfMoistAir.calcMaTaIX(i2, x1, Pat);
-        return new HeatingResultDto(pressure, inputHeatQ, t2, x1);
+        return new HeatingResultDto(pressure, t2, x1, inputHeatQ);
     }
 
     /**
@@ -55,15 +55,15 @@ public final class PhysicsOfHeating {
         double pressure = inletAirProp.getAbsPressure();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
-        double heatQ = 0.0;
+        double inputHeat = 0.0;
         if (targetOutTemp == t1) {
-            return new HeatingResultDto(pressure, heatQ, t1, x1);
+            return new HeatingResultDto(pressure, t1, x1, inputHeat);
         }
         double m1 = inletFlow.getMassFlowDa();
         double i1 = inletAirProp.getSpecEnthalpy();
         double i2 = PhysicsPropOfMoistAir.calcMaIx(targetOutTemp, x1, pressure);
-        heatQ = (m1 * i2 - m1 * i1) * 1000d;
-        return new HeatingResultDto(pressure, heatQ, targetOutTemp, x1);
+        inputHeat = (m1 * i2 - m1 * i1) * 1000d;
+        return new HeatingResultDto(pressure, targetOutTemp, x1, inputHeat);
     }
 
     /**
@@ -86,7 +86,7 @@ public final class PhysicsOfHeating {
         double x1 = inletAirProp.getHumRatioX();
         double heatQ = 0.0;
         if (outRH == RH1) {
-            return new HeatingResultDto(pressure, heatQ, t1, x1);
+            return new HeatingResultDto(pressure, t1, x1, heatQ);
         }
         if (outRH > RH1) {
             throw new ProcessArgumentException("Expected RH must be smaller than initial value. If this was intended - use methods dedicated for cooling.");
@@ -97,7 +97,7 @@ public final class PhysicsOfHeating {
         double t2 = PhysicsPropOfMoistAir.calcMaTaRHX(x1, outRH, Pat);
         double i2 = PhysicsPropOfMoistAir.calcMaIx(t2, x1, Pat);
         heatQ = (m1 * i2 - m1 * i1) * 1000d;
-        return new HeatingResultDto(pressure, heatQ, t2, x1);
+        return new HeatingResultDto(pressure, t2, x1, heatQ);
     }
 
 }
