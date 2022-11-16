@@ -54,6 +54,7 @@ public final class PhysicsOfCooling {
         // Dry cooling does not produce humidity change therefore no condensate is discharged.
         double condensateMassFlow = 0.0;
         return new CoolingResultDto(
+                inletFlow.getFluid().getAbsPressure(),
                 dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
                 inletFlow.getFluid().getHumRatioX(),
@@ -77,6 +78,7 @@ public final class PhysicsOfCooling {
         // Target temperature must be lower than inlet temperature for valid cooling case.
         Validators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAir = inletFlow.getFluid();
+        double pressure = inletAir.getAbsPressure();
         Validators.requireFirstValueAsGreaterThanSecond("Dry cooling temps validation. ", inletAir.getTemp(), targetOutTemp);
         // If target temperature is below dew point temperature it is certain that this is no longer dry cooling
         double tdp = inletAir.getDewPointTemp();
@@ -88,6 +90,7 @@ public final class PhysicsOfCooling {
         // Dry cooling does not produce humidity change therefore no condensate is discharged.
         double condensateMassFlow = 0.0;
         return new CoolingResultDto(
+                pressure,
                 dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
                 inletAir.getHumRatioX(),
@@ -117,6 +120,7 @@ public final class PhysicsOfCooling {
         HumidGas inletAir = inletFlow.getFluid();
         double inTx = inletAir.getTemp();
         double inX = inletAir.getHumRatioX();
+        double pressure = inletAir.getAbsPressure();
         double heatQ = 0.0;
         double t_Cond = tm_Wall;
         double m_Cond = 0.0;
@@ -124,7 +128,7 @@ public final class PhysicsOfCooling {
             throw new ProcessArgumentException("Expected outlet temperature must be lover than inlet for cooling process. Use heating process method instead");
         }
         if (outTx == inTx) {
-            return new CoolingResultDto(heatQ, outTx, inX, tm_Wall, m_Cond);
+            return new CoolingResultDto(pressure, heatQ, outTx, inX, tm_Wall, m_Cond);
         }
         double BF = calcCoolingCoilBypassFactor(tm_Wall, inTx, outTx);
         double mDa_Inlet = inletFlow.getMassFlowDa();
@@ -150,7 +154,7 @@ public final class PhysicsOfCooling {
         // Determining outlet humidity ratio
         double outX = (x_Tm * mDa_DirectContact + x1 * mDa_Bypassing) / mDa_Inlet;
 
-        return new CoolingResultDto(heatQ, outTx, outX, t_Cond, m_Cond);
+        return new CoolingResultDto(pressure, heatQ, outTx, outX, t_Cond, m_Cond);
     }
 
     /**
@@ -166,7 +170,7 @@ public final class PhysicsOfCooling {
     public static CoolingResultDto calcCoolingFromOutletRH(FlowOfHumidGas inletFlow, double tm_Wall, double outRH) {
         Validators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
-        double Pat = inletAirProp.getAbsPressure();
+        double pressure = inletAirProp.getAbsPressure();
         if (outRH > 100 || outRH < 0.0) {
             throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
         }
@@ -174,7 +178,7 @@ public final class PhysicsOfCooling {
             throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
         }
         if (outRH == inletAirProp.getRelativeHumidityRH()) {
-            return new CoolingResultDto(0.0, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), tm_Wall, 0.0);
+            return new CoolingResultDto(pressure, 0.0, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), tm_Wall, 0.0);
         }
         if (outRH > 99.0) {
             throw new ProcessArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
@@ -188,7 +192,7 @@ public final class PhysicsOfCooling {
             result[0] = calcCoolingFromOutletTx(inletFlow, tm_Wall, testOutTx);
             double outTx = result[0].outTemperature();
             double outX = result[0].outHumidityRatio();
-            double actualRH = PhysicsPropOfMoistAir.calcMaRH(outTx, outX, Pat);
+            double actualRH = PhysicsPropOfMoistAir.calcMaRH(outTx, outX, pressure);
             return outRH - actualRH;
         });
         solver.resetSolverRunFlags();
@@ -210,8 +214,9 @@ public final class PhysicsOfCooling {
         HumidGas inletAirProp = inletFlow.getFluid();
         double t1 = inletAirProp.getTemp();
         double x1 = inletAirProp.getHumRatioX();
+        double pressure = inletAirProp.getAbsPressure();
         if (inQ == 0.0)
-            new CoolingResultDto(inQ, t1, x1, tm_Wall, 0.0);
+            new CoolingResultDto(pressure, inQ, t1, x1, tm_Wall, 0.0);
         CoolingResultDto[] result = new CoolingResultDto[1];
         double tMin = inletAirProp.getTemp();
 
