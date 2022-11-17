@@ -232,7 +232,7 @@ temperature as +24oC, volumetric flow = 5000m3/h. Coolant parameters: 8/14oC.
 double targetCoolingTemp = 24.0; // OC
 double averageCoilWallTemp = MathUtils.calcArithmeticAverage(8, 14); // oC
 // Step 1: Creating moist air instance
-HumidGas summerAmbientAir = MoistAir.ofAir(32 50, 90000);
+HumidGas summerAmbientAir = MoistAir.ofAir(32, 50, 90000);
 // Step 3: creating humid air flow
 FlowOfHumidGas summerAirFlow = FlowOfMoistAir.ofM3hVolFlow(summerAmbientAir, 5000);
 // Step 4: creating heating process
