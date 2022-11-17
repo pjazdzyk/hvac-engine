@@ -10,9 +10,10 @@
 
 ---
 
-HVAC-LIB is a set of libraries for moist air properties calculations including typical air thermodynamic processes in HVAC industry. The aim of this project is to create easy to use psychrometrics library, to be further 
-used as an engine for any type of HVAC software development.
-All output values are return as in basic SI units, with small exception to specific heat (kJ/kgK) instead of (J/kgK) and specific enthalpy is in (kJ/kg) instead of (J/kg). 
+HVAC-LIB is a set of libraries for moist air properties calculations including typical air thermodynamic processes in HVAC industry. 
+The aim of this project is to create easy to use psychrometrics library, to be further used as an engine for any type of HVAC software development.
+All output and input values within this library are in basic SI units, with small exception to specific heat (kJ/kgK) instead of (J/kgK) and specific enthalpy is in (kJ/kg) instead of (J/kg). 
+Temperature is used in Celsius (oC) as this for simplicity, as this library is dedicated mainly for MEP engineers.
 
 LAST CHANGES (2022.11.16):<br>
 * all fluids, flows and processes classes are immutable for now on,
