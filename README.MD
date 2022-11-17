@@ -20,15 +20,13 @@ LAST CHANGES (2022.12.11):<br>
 
 The library is organized into following modules:
 * _fluids module_ - includes classes dedicated to fluid property representation and calculation
-* _flows module_ - includes classes representing fluid or humid gas flow handling
+* _flows module_ - includes classes representing fluid or humid gas flow handling<br>
 
-The diagram below presents Fluid and Flow modules structure:<br>
-<a href=""><img src="architecture/ARCH_1_FluidAndFlow.png" width="650"/><br></a>
+<a href="https://github.com/pjazdzyk/hvac-lib/blob/main/architecture/ARCH_1_FluidAndFlow.png"><img src="architecture/ARCH_1_FluidAndFlow.png" width="850"/><br></a>
 
-* _process module_ - includes classes representing each thermodynamic process implemented so far in the library
+* _process module_ - includes classes representing each thermodynamic process implemented so far in the library<br>
 
-The diagram below presents Fluid and Flow modules structure:<br>
-  <a href=""><img src="architecture/ARCH_2_Process.png" width="650"/><br></a>
+<a href="https://github.com/pjazdzyk/hvac-lib/blob/main/architecture/ARCH_2_Process.png"><img src="architecture/ARCH_2_Process.png" width="850"/><br></a>
 
 * _tests_ - includes all tests representing how to properly use each of library components
 
