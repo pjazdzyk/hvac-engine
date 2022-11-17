@@ -5,7 +5,7 @@ import io.github.pjazdzyk.hvaclib.process.resultsdto.BasicResults;
 
 public class MixingOfMoistAir extends GenericMixingProcess {
 
-    protected MixingOfMoistAir(FlowOfHumidGas inletFlow, FlowOfHumidGas... recirculationFlows) {
+    public MixingOfMoistAir(FlowOfHumidGas inletFlow, FlowOfHumidGas... recirculationFlows) {
         super(inletFlow, recirculationFlows);
     }
 
