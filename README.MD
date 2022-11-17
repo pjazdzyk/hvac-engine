@@ -12,8 +12,8 @@
 
 HVAC-LIB is a set of libraries for moist air properties calculations including typical air thermodynamic processes in HVAC industry. 
 The aim of this project is to create easy to use psychrometrics library, to be further used as an engine for any type of HVAC software development.
-All output and input values within this library are in basic SI units, with small exception to specific heat (kJ/kgK) instead of (J/kgK) and specific enthalpy is in (kJ/kg) instead of (J/kg). 
-Temperature is used in Celsius (oC) as this for simplicity, as this library is dedicated mainly for MEP engineers.
+All output and input values within this library are in SI units, with small exception to specific heat (kJ/kgK) instead of (J/kgK) and specific enthalpy is in (kJ/kg) instead of (J/kg). 
+Temperature is used in Celsius (oC) for simplicity, as this library is dedicated mainly for MEP engineers.
 
 LAST CHANGES (2022.12.11):<br>
 * provided Spring-Boot service (hvac-api) module,
@@ -23,11 +23,11 @@ The library is organized into following modules:
 * _fluids module_ - includes classes dedicated to fluid property representation and calculation
 * _flows module_ - includes classes representing fluid or humid gas flow handling<br>
 
-<a href="https://github.com/pjazdzyk/hvac-lib/blob/main/architecture/ARCH_1_FluidAndFlow.png"><img src="architecture/ARCH_1_FluidAndFlow.png" width="850"/><br></a>
+<a href="https://raw.githubusercontent.com/pjazdzyk/hvac-lib/main/architecture/ARCH_1_FluidAndFlow.png"><img src="architecture/ARCH_1_FluidAndFlow.png" width="850"/><br></a>
 
 * _process module_ - includes classes representing each thermodynamic process implemented so far in the library<br>
 
-<a href="https://github.com/pjazdzyk/hvac-lib/blob/main/architecture/ARCH_2_Process.png"><img src="architecture/ARCH_2_Process.png" width="850"/><br></a>
+<a href="https://raw.githubusercontent.com/pjazdzyk/hvac-lib/main/architecture/ARCH_2_Process.png"><img src="architecture/ARCH_2_Process.png" width="850"/><br></a>
 
 * _tests_ - includes all tests representing how to properly use each of library components
 
