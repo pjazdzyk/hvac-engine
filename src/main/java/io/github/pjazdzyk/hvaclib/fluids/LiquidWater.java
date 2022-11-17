@@ -1,5 +1,7 @@
 package io.github.pjazdzyk.hvaclib.fluids;
 
+import java.util.Objects;
+
 /**
  * <h3>LIQUID WATER</h3>
  * <p>
@@ -87,6 +89,18 @@ public class LiquidWater implements Fluid {
                         waterDensity,
                         waterSpecificEnthalpy));
         return strb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LiquidWater that)) return false;
+        return Double.compare(that.waterPressure, waterPressure) == 0 && Double.compare(that.waterTemperature, waterTemperature) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(waterPressure, waterTemperature);
     }
 
     //BUILDER PATTERN

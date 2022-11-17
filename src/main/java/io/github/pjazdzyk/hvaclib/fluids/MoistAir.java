@@ -2,6 +2,8 @@ package io.github.pjazdzyk.hvaclib.fluids;
 
 import io.github.pjazdzyk.hvaclib.fluids.exceptions.FluidArgumentException;
 
+import java.util.Objects;
+
 /**
  * <h3>MOIST AIR</h3>
  * <p>
@@ -272,6 +274,18 @@ public class MoistAir implements HumidGas {
     public enum HumidityInputType {
         REL_HUMID,
         HUM_RATIO
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MoistAir moistAir)) return false;
+        return Double.compare(moistAir.absPressure, absPressure) == 0 && Double.compare(moistAir.temperature, temperature) == 0 && Double.compare(moistAir.humidityRatioX, humidityRatioX) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(absPressure, temperature, humidityRatioX);
     }
 
     // STATIC FACTORY METHOD PATTERN
