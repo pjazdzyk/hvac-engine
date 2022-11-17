@@ -6,4 +6,6 @@ import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
 public interface ProcessWithCondensate extends ProcessHeatDriven {
     FlowOfFluid<LiquidWater> getCondensateFlow();
     double getAverageCoilWallTemp();
+    double getCoilByPassFactor();
+
 }
