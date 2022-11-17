@@ -19,6 +19,7 @@ public class CoolingForTargetTemp extends GenericCoolingProcess implements Proce
         FlowOfHumidGas resultingAirFlow = ProcessResultsMapper.toFlowOfMoistAir(coolingResultDto);
         this.outletFlow = resultingAirFlow;
         this.heatOfProcess = coolingResultDto.heatOfProcess();
+        this.coilByPassFactor = calculateCoilByPassFactor();
         return resultingAirFlow;
     }
 

@@ -16,6 +16,7 @@ public class CoolingForInputHeat extends GenericCoolingProcess implements Proces
         this.condensateFlow = ProcessResultsMapper.toCondensateFlow(coolingResultDto);
         FlowOfHumidGas resultingAirFlow = ProcessResultsMapper.toFlowOfMoistAir(coolingResultDto);
         this.outletFlow = resultingAirFlow;
+        this.coilByPassFactor = calculateCoilByPassFactor();
         return resultingAirFlow;
     }
 
