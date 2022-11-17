@@ -1,6 +1,6 @@
 ## HVAC-LIB - Psychrometrics Analysis Library <br> Thermodynamics of humid air for MEP/HVAC engineers
 
-> VERSION: 1.0 - SNAPSHOT <br>
+> VERSION: 1.1 - SNAPSHOT <br>
 > AUTHOR: <b>Piotr Jażdżyk</b> <br>
 > LINKEDIN: https://www.linkedin.com/in/pjazdzyk <br>
 
@@ -12,11 +12,31 @@
 
 HVAC-LIB is a set of libraries for moist air properties calculations including typical air thermodynamic processes in HVAC industry. The aim of this project is to create easy to use psychrometrics library, to be further 
 used as an engine for any type of HVAC software development.
+All output values are return as in basic SI units, with small exception to specific heat (kJ/kgK) instead of (J/kgK) and specific enthalpy is in (kJ/kg) instead of (J/kg). 
 
-At the present state of development following modules are finalized ready for use:
-1. Moist Air thermophysical properties (MoistAir) including simplified liquid water properties for condensate handling (LiquidWater)
-2. Flow of moist air and liquid water (FlowOfMoistAir, FlowOfFluid)
-3. Heating and cooling of moist air, including real cooling coil and its condensate discharge (ProcAirHeatCool)
+LAST CHANGES (2022.11.16):<br>
+* all fluids, flows and processes classes are immutable for now on,
+* all modules were heavily reworked and refactored implementing clean code rules where I managed to do it,
+* Builder Pattern implemented in all key classes,
+* changed packaging style to group all classes by domain, not by type,
+* decoupled many dependencies by use of interfaces,
+* split large classes into smaller pieces, to enforce SRP where possible,
+* replaced many short physical property abbreviations with full names, for ie: "density" instead of "rho", with exception to Physics classes.
+* added diagrams for better understanding all dependencies and key components
+
+The library is organized into following modules:
+* _fluids module_ - includes classes dedicated to fluid property representation and calculation
+* _flows module_ - includes classes representing fluid or humid gas flow handling
+
+The diagram below presents Fluid and Flow modules structure:<br>
+<a href=""><img src="architecture/ARCH_1_FluidAndFlow.png" width="650"/><br></a>
+
+* _process module_ - includes classes representing each thermodynamic process implemented so far in the library
+
+The diagram below presents Fluid and Flow modules structure:<br>
+  <a href=""><img src="architecture/ARCH_2_Process.png" width="650"/><br></a>
+
+* _tests_ - includes all tests representing how to properly use each of library components
 
 ## TECH
 ![image](https://img.shields.io/badge/16-Java-orange?style=for-the-badge) &nbsp;
@@ -28,7 +48,7 @@ At the present state of development following modules are finalized ready for us
 #### Moist air thermophysical properties:
 * atmospheric pressure based on height above sea level,
 * temperature change based on height above sea level,
-* saturation vapor pressure,
+* water vapour saturation pressure,
 * dew point temperature and wet bulb temperature,
 * air relative humidity,
 * humidity ratio and maximum humidity ratio,
@@ -51,18 +71,23 @@ At the present state of development following modules are finalized ready for us
 * option to lock one selected flow type
 * setting value one type of flow will automatically recalculate others, based on provided input value and current properties of the moist air
 
-#### Heating and cooling with condensate discharge:
-* moist air heating or dry cooling,
-* moist air cooling based on real cooling coil average wall temperature,
-* condensate discharge is calculated for the cooling process,
-* different methods for most typical cases: determining resulting air state based on expected outlet temperature, outlet RH or available heat of the process.
+#### Air heating and cooling with condensate discharge:
+* heating & cooling process driven by heat input / output,
+* heating & cooling process driven by target outlet temperature,
+* heating & cooling process driven by target relative humidity,
+
+#### Air stream mixing:
+* simple mixing of two flows with humidity content,
+* mixing of multiple flows with humidity content,
+* mixing algorithm which will try to adjust inlet and recirculation flow accordingly, to meet target output dry air mass flow and target outlet temperature.
 
 ## LEGAL DISCLAIMER
 This code is my intellectual property. Please have respect for this. You can use it freely in any academic or non-commercial use if you
 properly include the source and author in your references or documentation. For commercial use, please contact me first to discuss the license fee.
 
-## NAMING CONVENTION
-Physics method names meets following convention:
+## PHYSICS NAMING CONVENTION
+Naming style in Physics classes is shortened. Typical property abbreviations are used, matching this popular occurrence in technical scripts or literature.
+Please find the example below:
 ```
 calcMaTaTdpRH(){}
 ```
@@ -75,9 +100,15 @@ The approach presented above, which probably may cause a serious headache to any
 structure, where corresponding methods are sorting themselves while writing a code using this library.
 
 ## UPCOMING FUNCTIONALITY
-1. Module for water spray air humidification
-2. Module for superheated steam air humidification
-3. Module for simplified heat and humid recovery exchanger
+1. Service layer for easier objects creation and for increased module encapsulation,
+2. REST API for humid air properties,
+3. CSV Table generators for creating user-custom tables with requested properties value range
+4. Module for water spray air humidification
+5. Module for superheated steam air humidification
+6. Module for simplified heat and humid recovery exchanger
+7. Unit conversion system
+
+Do you have a special request what this library should do to help you in your calculations? Just let me know!
 
 ## REFERENCE SOURCES
 
