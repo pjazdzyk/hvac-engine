@@ -19,9 +19,8 @@ import java.util.Objects;
 
 public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
 
-    public static final double DEF_MASS_FLOW = 0.1;                  // kg/s                 - Default mass flow
+    public static final double DEF_MASS_FLOW = 0.1; // kg/s
     private final F fluid;
-    private final TypeOfFluidFlow typeOfFlow;
     private double massFlow;
     private double volFlow;
 
@@ -39,11 +38,10 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
         FlowValidators.requireNotNull("Fluid", fluid);
         FlowValidators.requireNotNull("Locked flow", typeOfFlow);
         this.fluid = fluid;
-        this.typeOfFlow = typeOfFlow;
-        initializeFLows(flowRate);
+        initializeFLows(flowRate, typeOfFlow);
     }
 
-    private void initializeFLows(double flowRate) {
+    private void initializeFLows(double flowRate, TypeOfFluidFlow typeOfFlow) {
         switch (typeOfFlow) {
             case MASS_FLOW -> {
                 this.massFlow = flowRate;
@@ -73,12 +71,28 @@ public class FlowOfSinglePhase<F extends Fluid> implements FlowOfFluid<F> {
 
     @Override
     public String toString() {
-        StringBuilder bld = new StringBuilder();
-        bld.append("Locked flow: \t").append(typeOfFlow).append("\n");
-        bld.append("m_Con = ").append(String.format("%.3f", massFlow)).append(" kg/s ").append("\t").append("condensate mass flow\t | ")
-                .append("v_Con = ").append(String.format("%.6f", volFlow)).append(" m3/s ").append("\t").append("condensate vol flow\t |  ")
-                .append("v_Con = ").append(String.format("%.3f", volFlow * 3600)).append(" m3/h ").append("\t").append("condensate vol flow\n");
-        return bld.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("Fluid properties: \n");
+        builder.append(String.format("ta = %.2f oC | ", fluid.getTemp()))
+                .append(String.format("rho = %.2f kg/m3 | ", fluid.getDensity()))
+                .append(String.format("fluid class = %s \n", fluid.getClass().getSimpleName()));
+        builder.append("Flow properties: \n");
+        builder.append(String.format("m = %.5f kg/s (fluid mass flow) | ", massFlow))
+                .append(String.format("v = %.8f m3/s (fluid vol flow) | ", volFlow))
+                .append(String.format("v = %.3f m3/h (fluid vol flow) \n", volFlow * 3600d));
+        return builder.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FlowOfSinglePhase<?> that)) return false;
+        return Double.compare(that.massFlow, massFlow) == 0 && fluid.equals(that.fluid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fluid, massFlow);
     }
 
     //BUILDER PATTERN
