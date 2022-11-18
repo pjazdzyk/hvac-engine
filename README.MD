@@ -65,10 +65,11 @@ The library is organized into following modules:
 * specific enthalpy.
 
 #### Physics of flow:
-* each FlowOfMoistAir instance stores moist air volumetric flow, moist air mass flow, dry air volumetric flow, and dry air mass flow.
-* each flow type depends on aggregated MoistAir instance and flows are adjusted if the temperature or humidity changes,
-* option to lock one selected flow type
-* setting value one type of flow will automatically recalculate others, based on provided input value and current properties of the moist air
+* mass flow,
+* volumetric flow,
+* mass flow of dry air component,
+* volumetric flow of dry air component,
+* based on flow type specified during instance creation, other flows will be recalculated accordingly for specified Fluid properties,
 
 #### Air heating and cooling with condensate discharge:
 * heating & cooling process driven by heat input / output,
