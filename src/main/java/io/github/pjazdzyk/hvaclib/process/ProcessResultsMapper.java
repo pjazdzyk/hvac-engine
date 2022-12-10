@@ -1,9 +1,9 @@
 package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfSinglePhase;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfSingleFluid;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
@@ -35,9 +35,9 @@ class ProcessResultsMapper {
                 .build();
     }
 
-    public static FlowOfFluid<LiquidWater> toCondensateFlow(CoolingResultDto coolingResultDto) {
+    public static FlowOfSinglePhase toCondensateFlow(CoolingResultDto coolingResultDto) {
         LiquidWater condensate = (LiquidWater) toCondensate(coolingResultDto);
-        return new FlowOfSinglePhase.Builder<>(condensate)
+        return new FlowOfSingleFluid.Builder(condensate)
                 .withMassFlow(coolingResultDto.condensateMassFlow())
                 .build();
     }

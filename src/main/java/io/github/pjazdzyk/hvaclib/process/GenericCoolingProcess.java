@@ -1,15 +1,14 @@
 package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfSinglePhase;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
-import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
 
 import java.util.Objects;
 
 abstract class GenericCoolingProcess extends GenericHeatingProcess implements ProcessWithCondensate {
 
-    protected FlowOfFluid<LiquidWater> condensateFlow;
+    protected FlowOfSinglePhase condensateFlow;
     protected double averageCoilWallTemp;
     protected double coilByPassFactor;
 
@@ -19,7 +18,7 @@ abstract class GenericCoolingProcess extends GenericHeatingProcess implements Pr
     }
 
     @Override
-    public FlowOfFluid<LiquidWater> getCondensateFlow(){
+    public FlowOfSinglePhase getCondensateFlow(){
            return condensateFlow;
     }
 

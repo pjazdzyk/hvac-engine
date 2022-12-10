@@ -1,10 +1,10 @@
 package io.github.pjazdzyk.hvaclib;
 
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
+import io.github.pjazdzyk.hvaclib.flows.Flow;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
-import io.github.pjazdzyk.hvaclib.flows.FlowOfSinglePhase;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfSingleFluid;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
@@ -69,7 +69,7 @@ public class Examples {
                 .withTemperature(10)
                 .build();
         // We did not specify pressure, so the builder will assume default value.
-        FlowOfFluid<LiquidWater> condensateFlow = new FlowOfSinglePhase.Builder<>(waterExample)
+        Flow<Fluid> condensateFlow = new FlowOfSingleFluid.Builder(waterExample)
                 .withVolFlow(volFlow)
                 .build();
 
@@ -81,6 +81,7 @@ public class Examples {
         FlowOfHumidGas winterAirflow = FlowOfMoistAir.ofM3hVolFlow(winterAmbientAir, 5000);
         // Step 4: creating heating process
         ProcessHeatDriven heating = new HeatingForTargetTemp(winterAirflow, targetHeatingTemp);
+        // Step 5: run process
         heating.runProcess();
 
         // Cooling process example
@@ -92,6 +93,7 @@ public class Examples {
         FlowOfHumidGas summerAirFlow = FlowOfMoistAir.ofM3hVolFlow(summerAmbientAir, 5000);
         // Step 4: creating heating process
         ProcessHeatDriven cooling = new CoolingForTargetTemp(summerAirFlow, averageCoilWallTemp, targetCoolingTemp);
+        // Step 5: run process
         cooling.runProcess();
 
         // Mixing process example
@@ -107,6 +109,7 @@ public class Examples {
         FlowOfHumidGas returnFlow3 = FlowOfMoistAir.ofM3hVolFlow(returnAir3, 1000);
         // Step 3: Creating air mixing process
         ProcessWithMixing mixing = new MixingOfMoistAir(inletAirFlow, returnFlow1, returnFlow2, returnFlow3);
+        // Step 4: run process
         mixing.runProcess();
 
     }
