@@ -118,7 +118,7 @@ public class LiquidWater implements Fluid {
             return this;
         }
 
-        public LiquidWater build() {
+        public Fluid build() {
             return new LiquidWater(this);
         }
     }

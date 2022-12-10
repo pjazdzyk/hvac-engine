@@ -1,10 +1,10 @@
 package io.github.pjazdzyk.hvaclib;
 
 import io.github.pjazdzyk.hvaclib.common.MathUtils;
-import io.github.pjazdzyk.hvaclib.flows.Flow;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfSingleFluid;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfSinglePhase;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
@@ -65,11 +65,11 @@ public class Examples {
         // 1. Creating moist air and flow instances representing process inlet flow:
         double temp = 10.0; // oC
         double volFlow = 0.01; // m3/s
-        LiquidWater waterExample = new LiquidWater.Builder()
+        Fluid waterExample = new LiquidWater.Builder()
                 .withTemperature(10)
                 .build();
         // We did not specify pressure, so the builder will assume default value.
-        Flow<Fluid> condensateFlow = new FlowOfSingleFluid.Builder(waterExample)
+        FlowOfSinglePhase condensateFlow = new FlowOfSingleFluid.Builder(waterExample)
                 .withVolFlow(volFlow)
                 .build();
 
