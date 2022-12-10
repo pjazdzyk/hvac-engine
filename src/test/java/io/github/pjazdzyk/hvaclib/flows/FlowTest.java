@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FlowOfFluidTest {
+class FlowTest {
 
     static final Fluid SAMPLE_WATER = new LiquidWater.Builder()
             .withTemperature(98.6)
@@ -22,7 +22,7 @@ class FlowOfFluidTest {
         double expectedVolFlow = SAMPLE_MASS_FLOW_RATE / waterDensity;
 
         // Act
-        FlowOfFluid<Fluid> flowOfWater = new FlowOfSinglePhase.Builder<>(SAMPLE_WATER)
+        FlowOfSinglePhase flowOfWater = new FlowOfSingleFluid.Builder(SAMPLE_WATER)
                 .withMassFlow(SAMPLE_MASS_FLOW_RATE)
                 .build();
         double actualMassFlow = flowOfWater.getMassFlow();

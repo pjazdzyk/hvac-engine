@@ -18,8 +18,8 @@ public final class PhysicsPropOfWaterVapour {
         double T = ta + 273.15;
         double aNum = Math.sqrt(T / 647.27);
         double bAux = 647.27 / T;
-        double cDenum = 0.0181583 + 0.0177624 * bAux + 0.0105287 * Math.pow(bAux, 2) - 0.0036744 * Math.pow(bAux, 3);
-        return (aNum / cDenum) * Math.pow(10, -6);
+        double cDnum = 0.0181583 + 0.0177624 * bAux + 0.0105287 * Math.pow(bAux, 2) - 0.0036744 * Math.pow(bAux, 3);
+        return (aNum / cDnum) * Math.pow(10, -6);
     }
 
     /**

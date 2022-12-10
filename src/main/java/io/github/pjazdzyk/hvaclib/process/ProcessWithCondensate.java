@@ -1,10 +1,9 @@
 package io.github.pjazdzyk.hvaclib.process;
 
-import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
-import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfSinglePhase;
 
 public interface ProcessWithCondensate extends ProcessHeatDriven {
-    FlowOfFluid<LiquidWater> getCondensateFlow();
+    FlowOfSinglePhase getCondensateFlow();
     double getAverageCoilWallTemp();
     double getCoilByPassFactor();
 

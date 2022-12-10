@@ -1,9 +1,10 @@
 package io.github.pjazdzyk.hvaclib.process;
 
 import io.github.pjazdzyk.hvaclib.PhysicsTestConstants;
-import io.github.pjazdzyk.hvaclib.flows.FlowOfFluid;
+import io.github.pjazdzyk.hvaclib.flows.Flow;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfHumidGas;
 import io.github.pjazdzyk.hvaclib.flows.FlowOfMoistAir;
+import io.github.pjazdzyk.hvaclib.flows.FlowOfSinglePhase;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
 import io.github.pjazdzyk.hvaclib.fluids.LiquidWater;
 import io.github.pjazdzyk.hvaclib.fluids.MoistAir;
@@ -46,7 +47,7 @@ class CoolingForTargetTempTest implements PhysicsTestConstants {
         var resultingAirState = actualResultingFlow.getFluid();
         var actualOutTemp = resultingAirState.getTemp();
         var actualHumRatio = resultingAirState.getHumRatioX();
-        FlowOfFluid<LiquidWater> condensateFlow = coolingProcess.getCondensateFlow();
+        FlowOfSinglePhase condensateFlow = coolingProcess.getCondensateFlow();
         var actualCondensateTemp = condensateFlow.getFluid().getTemp();
         var actualCondensateFlow = condensateFlow.getMassFlow();
         var actualHeatOfProcess = coolingProcess.getHeatOfProcess();
