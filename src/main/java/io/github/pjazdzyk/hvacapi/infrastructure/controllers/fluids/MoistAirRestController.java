@@ -14,11 +14,11 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/air/properties")
-public class HumidAirRestController {
+public class MoistAirRestController {
 
     private final FluidService fluidService;
 
-    public HumidAirRestController(FluidService fluidService) {
+    public MoistAirRestController(FluidService fluidService) {
         this.fluidService = fluidService;
     }
 
