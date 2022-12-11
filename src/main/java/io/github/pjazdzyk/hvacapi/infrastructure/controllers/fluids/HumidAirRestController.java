@@ -1,8 +1,7 @@
 package io.github.pjazdzyk.hvacapi.infrastructure.controllers.fluids;
 
-import io.github.pjazdzyk.hvacapi.fluids.Defaults;
-import io.github.pjazdzyk.hvacapi.fluids.HumidityConverter;
-import io.github.pjazdzyk.hvacapi.fluids.MoistAirService;
+import io.github.pjazdzyk.hvacapi.fluids.FluidsDefaults;
+import io.github.pjazdzyk.hvacapi.fluids.FluidService;
 import io.github.pjazdzyk.hvacapi.fluids.dto.MoistAirResponseDto;
 import io.github.pjazdzyk.hvacapi.infrastructure.controllers.fluids.exeptions.InvalidPropertyArgumentException;
 import org.springframework.http.ResponseEntity;
@@ -17,33 +16,25 @@ import java.util.Objects;
 @RequestMapping("/api/v1/air/properties")
 public class HumidAirRestController {
 
-    private final MoistAirService moistAirService;
-    private final HumidityConverter humidityConverter;
+    private final FluidService fluidService;
 
-    public HumidAirRestController(MoistAirService moistAirService, HumidityConverter humidityConverter) {
-        this.moistAirService = moistAirService;
-        this.humidityConverter = humidityConverter;
+    public HumidAirRestController(FluidService fluidService) {
+        this.fluidService = fluidService;
     }
 
     @GetMapping()
     public ResponseEntity<MoistAirResponseDto> getMoistAirProperties(@RequestParam double dryBulbTemp,
                                                                      @RequestParam(required = false) Double relativeHumidity,
                                                                      @RequestParam(required = false) Double humidityRatio,
-                                                                     @RequestParam(required = false, defaultValue = Defaults.DEF_PAT + "") Double absPressure) {
+                                                                     @RequestParam(required = false, defaultValue = FluidsDefaults.DEF_PAT + "") Double absPressure) {
 
         if (Objects.isNull(relativeHumidity) && Objects.isNull(humidityRatio)) {
             throw new InvalidPropertyArgumentException("You have to specify at least one type of humidity");
         }
-
         double humidity = Objects.isNull(humidityRatio)
-                ? humidityConverter.convertRHtoHumRatio(absPressure, dryBulbTemp, relativeHumidity)
+                ? fluidService.convertRHtoHumRatio(absPressure, dryBulbTemp, relativeHumidity)
                 : humidityRatio;
-
-       MoistAirResponseDto moistAirResponseDto =  moistAirService.createMoistAirProperty(absPressure, dryBulbTemp, humidity);
-
+       MoistAirResponseDto moistAirResponseDto =  fluidService.createMoistAirProperty(absPressure, dryBulbTemp, humidity);
        return ResponseEntity.ok(moistAirResponseDto);
-
     }
-
-
 }
