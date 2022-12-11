@@ -1,4 +1,4 @@
-package io.github.pjazdzyk.hvaclib;
+package io.github.pjazdzyk.hvacapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
