@@ -6,7 +6,7 @@
 
 ---
 
-### [USER GUIDE](README_GUIDE.MD) &nbsp;|&nbsp; [FUNCTIONALITY](#functionality) &nbsp;|&nbsp; [LEGAL DISCLAIMER](#legal-disclaimer) &nbsp;|&nbsp; [UPCOMING](#upcoming-functionality) &nbsp;|&nbsp; [RESOURCES](#reference-sources)
+### [USER GUIDE](README_GUIDE.MD) &nbsp;|&nbsp; [FUNCTIONALITY](#functionality) &nbsp;|&nbsp; [REST-API](#rest-api-endpoints) &nbsp;|&nbsp;  [LEGAL DISCLAIMER](#legal-disclaimer) &nbsp;|&nbsp; [UPCOMING](#upcoming-functionality) &nbsp;|&nbsp; [RESOURCES](#reference-sources)
 
 ---
 
@@ -14,15 +14,9 @@ HVAC-LIB is a set of libraries for moist air properties calculations including t
 used as an engine for any type of HVAC software development.
 All output values are return as in basic SI units, with small exception to specific heat (kJ/kgK) instead of (J/kgK) and specific enthalpy is in (kJ/kg) instead of (J/kg). 
 
-LAST CHANGES (2022.11.16):<br>
-* all fluids, flows and processes classes are immutable for now on,
-* all modules were heavily reworked and refactored implementing clean code rules where I managed to do it,
-* Builder Pattern implemented in all key classes,
-* changed packaging style to group all classes by domain, not by type,
-* decoupled many dependencies by use of interfaces,
-* split large classes into smaller pieces, to enforce SRP where possible,
-* replaced many short physical property abbreviations with full names, for ie: "density" instead of "rho", with exception to Physics classes.
-* added diagrams for better understanding all dependencies and key components
+LAST CHANGES (2022.12.11):<br>
+* provided Spring-Boot service (hvac-api) module,
+* provided first simple REST-API for retrieving water and moist air physical properties
 
 The library is organized into following modules:
 * _fluids module_ - includes classes dedicated to fluid property representation and calculation
@@ -39,7 +33,8 @@ The diagram below presents Fluid and Flow modules structure:<br>
 * _tests_ - includes all tests representing how to properly use each of library components
 
 ## TECH
-![image](https://img.shields.io/badge/16-Java-orange?style=for-the-badge) &nbsp;
+![image](https://img.shields.io/badge/17-Java-orange?style=for-the-badge) &nbsp;
+![image](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring) &nbsp;
 ![image](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white) &nbsp;
 ![image](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white) &nbsp;
 
@@ -98,6 +93,29 @@ calcMaTaTdpRH(){}
 
 The approach presented above, which probably may cause a serious headache to any professional programmer, helps me organize all methods into a clear
 structure, where corresponding methods are sorting themselves while writing a code using this library.
+
+## Rest-API Endpoints
+
+The separate Spring-Boot module has been provided to create an API as the example of service, which is using this library.
+Below are REST-API endpoints provided for future online deployment and UI integration:
+
+Service url: Service is currently in offline mode. Launch ETA is January 2023r.
+
+|        ENDPOINT         | METHOD | REQUEST | RESPONSE |        FUNCTION         |
+|:-----------------------:|:------:|:-------:|:--------:|:-----------------------:|
+| api/v1/water/properties |  GET   | Params  |   JSON   | liquid water properties |
+|  api/v1/air/properties  |  GET   | Params  |   JSON   |  moist air properties   |
+
+WATER PARAMS:
+* temperature - water temperature in oC [required]
+
+MOIST AIR PARAMS:
+* dryBulbTemp - dry bulb moist air temperature in oC [required]
+* absPressure - absolute atmospheric pressure in Pa [optional]
+* relativeHumidity - relative humidity (RH) in % [optional] OR
+* humidityRatio - humidity ratio (x) in kg.wv/kg.da [optional]
+
+IMPORTANT: At least one humidity type must be provided, relative humidity or humidity ratio. If none are specified or both - response will not be provided.
 
 ## UPCOMING FUNCTIONALITY
 1. Service layer for easier objects creation and for increased module encapsulation,
