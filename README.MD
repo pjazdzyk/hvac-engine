@@ -119,7 +119,7 @@ IMPORTANT: At least one humidity type must be provided, relative humidity or hum
 
 ## UPCOMING FUNCTIONALITY
 1. Service layer for easier objects creation and for increased module encapsulation,
-2. REST API for humid air properties,
+2. REST API for flow handling
 3. CSV Table generators for creating user-custom tables with requested properties value range
 4. Module for water spray air humidification
 5. Module for superheated steam air humidification
