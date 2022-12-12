@@ -118,7 +118,7 @@ MOIST AIR PARAMS:
 IMPORTANT: At least one humidity type must be provided, relative humidity or humidity ratio. If none are specified or both - response will not be provided.
 
 RESPONSE EXAMPLES<br>
-Response example for water of +10oc:
+Response example for water of +10oc:<br>
 _/api/v1/water/properties?temperature=10_
 ```json
 {
@@ -131,7 +131,7 @@ _/api/v1/water/properties?temperature=10_
 }
 ```
 
-Response example for moist air, with ta=+30oc and RH=45%:
+Response example for moist air, with ta=+30oc and RH=45%:<br>
 _/api/v1/air/properties?dryBulbTemp=30&relativeHumidity=45_
 ```json
 {
