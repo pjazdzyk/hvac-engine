@@ -117,6 +117,44 @@ MOIST AIR PARAMS:
 
 IMPORTANT: At least one humidity type must be provided, relative humidity or humidity ratio. If none are specified or both - response will not be provided.
 
+RESPONSE EXAMPLES<br>
+Response example for water of +10oc:
+_/api/v1/water/properties?temperature=10_
+```json
+{
+"pressure": 101325,
+"temp": 10,
+"density": 999.5457000320766,
+"specHeatCp": 4.195546277425652,
+"specEnthalpy": 41.95546277425652,
+"classOfFluid": "LiquidWater"
+}
+```
+
+Response example for moist air, with ta=+30oc and RH=45%:
+_/api/v1/air/properties?dryBulbTemp=30&relativeHumidity=45_
+```json
+{
+"vapourStatus": "UNSATURATED",
+"absPressure": 101325, 
+"temperature": 30,
+"dewPointTemperature": 16.7763897453498,
+"wetBulbTemperature": 21.05330590356866,
+"relativeHumidity": 45,
+"humidityRatioX": 0.011953838501226322,
+"maxHumidityRatioX": 0.027203107078866213,
+"density": 1.1422421279927155,
+"specHeat": 1.0274922513226121,
+"specEnthalpy": 60.720122247395274,
+"thermalConductivity": 0.027093375624451826,
+"thermalDiffusivity": 0.000023084814496746698,
+"dynamicViscosity": 0.000018370927240723787,
+"kinematicViscosity": 0.000016083216325602852,
+"prandtlNumber": 0.6967011291283901,
+"classOfFluid": "MoistAir"
+}
+```
+
 ## UPCOMING FUNCTIONALITY
 1. Service layer for easier objects creation and for increased module encapsulation,
 2. REST API for flow handling
