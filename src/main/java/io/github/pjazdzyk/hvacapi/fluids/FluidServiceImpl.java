@@ -1,6 +1,7 @@
 package io.github.pjazdzyk.hvacapi.fluids;
 
 import io.github.pjazdzyk.hvacapi.fluids.dto.FluidResponseDto;
+import io.github.pjazdzyk.hvacapi.fluids.dto.MoistAirDto;
 import io.github.pjazdzyk.hvacapi.fluids.dto.MoistAirResponseDto;
 import io.github.pjazdzyk.hvaclib.fluids.Fluid;
 import io.github.pjazdzyk.hvaclib.fluids.HumidGas;
@@ -24,11 +25,11 @@ class FluidServiceImpl implements FluidService{
     }
 
     @Override
-    public MoistAirResponseDto createMoistAirProperty(Double absPressure, double dryBulbTemp, double humidityRatio) {
+    public MoistAirResponseDto createMoistAirProperty(MoistAirDto moistAirDto) {
         HumidGas moistAir = new MoistAir.Builder()
-                .withAtmPressure(absPressure)
-                .withAirTemperature(dryBulbTemp)
-                .withHumidityRatioX(humidityRatio)
+                .withAtmPressure(moistAirDto.absPressure())
+                .withAirTemperature(moistAirDto.dryBulbTemp())
+                .withHumidityRatioX(moistAirDto.humidityRatio())
                 .build();
 
         return FluidMappers.toDto(moistAir);
