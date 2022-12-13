@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/v1/air/properties")
+@RequestMapping("/api/v1/properties")
 public class MoistAirRestController {
 
     private final FluidService fluidService;
@@ -23,7 +23,7 @@ public class MoistAirRestController {
         this.fluidService = fluidService;
     }
 
-    @GetMapping()
+    @GetMapping("/air")
     public ResponseEntity<MoistAirResponseDto> getMoistAirProperties(@RequestParam double dryBulbTemp,
                                                                      @RequestParam(required = false) Double relativeHumidity,
                                                                      @RequestParam(required = false) Double humidityRatio,

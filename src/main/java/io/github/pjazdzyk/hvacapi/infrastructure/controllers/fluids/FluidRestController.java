@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/water/properties")
+@RequestMapping("/api/v1/properties")
 public class FluidRestController {
 
     private final FluidService fluidService;
@@ -18,7 +18,7 @@ public class FluidRestController {
         this.fluidService = fluidService;
     }
 
-    @GetMapping()
+    @GetMapping("/water")
     public ResponseEntity<FluidResponseDto> getLiquidWaterProperties(@RequestParam double temperature){
         FluidResponseDto fluidResponseDto = fluidService.createWaterProperties(temperature);
         return ResponseEntity.ok(fluidResponseDto);
