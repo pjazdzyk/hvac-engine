@@ -103,8 +103,8 @@ Service url: Service is currently in offline mode. Launch ETA is January 2023r.
 
 |        ENDPOINT         | METHOD | REQUEST | RESPONSE |        FUNCTION         |
 |:-----------------------:|:------:|:-------:|:--------:|:-----------------------:|
-| api/v1/water/properties |  GET   | Params  |   JSON   | liquid water properties |
-|  api/v1/air/properties  |  GET   | Params  |   JSON   |  moist air properties   |
+| api/v1/properties/water |  GET   | Params  |   JSON   | liquid water properties |
+|  api/v1/properties/air  |  GET   | Params  |   JSON   |  moist air properties   |
 
 WATER PARAMS:
 * temperature - water temperature in oC [required]
@@ -119,7 +119,7 @@ IMPORTANT: At least one humidity type must be provided, relative humidity or hum
 
 RESPONSE EXAMPLES<br>
 Response example for water of +10oc:<br>
-_/api/v1/water/properties?temperature=10_
+_/api/v1/properties/water?temperature=10_
 ```json
 {
 "pressure": 101325,
@@ -132,7 +132,7 @@ _/api/v1/water/properties?temperature=10_
 ```
 
 Response example for moist air, with ta=+30oc and RH=45%:<br>
-_/api/v1/air/properties?dryBulbTemp=30&relativeHumidity=45_
+_/api/v1/properties/air?dryBulbTemp=30&relativeHumidity=45_
 ```json
 {
 "vapourStatus": "UNSATURATED",
