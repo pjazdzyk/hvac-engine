@@ -2,6 +2,7 @@ package io.github.pjazdzyk.hvacapi.infrastructure.controllers.fluids;
 
 import io.github.pjazdzyk.hvacapi.fluids.FluidsDefaults;
 import io.github.pjazdzyk.hvacapi.fluids.FluidService;
+import io.github.pjazdzyk.hvacapi.fluids.dto.MoistAirDto;
 import io.github.pjazdzyk.hvacapi.fluids.dto.MoistAirResponseDto;
 import io.github.pjazdzyk.hvacapi.infrastructure.controllers.fluids.exeptions.InvalidPropertyArgumentException;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,8 @@ public class MoistAirRestController {
         double humidity = Objects.isNull(humidityRatio)
                 ? fluidService.convertRHtoHumRatio(absPressure, dryBulbTemp, relativeHumidity)
                 : humidityRatio;
-       MoistAirResponseDto moistAirResponseDto =  fluidService.createMoistAirProperty(absPressure, dryBulbTemp, humidity);
-       return ResponseEntity.ok(moistAirResponseDto);
+        MoistAirDto moistAirDto = new MoistAirDto(absPressure, dryBulbTemp, humidity);
+        MoistAirResponseDto moistAirResponseDto = fluidService.createMoistAirProperty(moistAirDto);
+        return ResponseEntity.ok(moistAirResponseDto);
     }
 }
