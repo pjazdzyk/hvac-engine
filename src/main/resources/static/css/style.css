@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+:root {
+  --drk-blue: rgb(3, 147, 208);
+  --med-blue: rgb(19, 173, 243);
+  --lgt-blue: rgb(88, 208, 255);
+  --drk-green: rgb(80, 125, 20);
+  --med-green: rgb(113, 171, 35);
+  --lgt-green: rgb(138, 201, 52);
+  --sns-gray: rgb(91, 91, 91);
+  --sns-wihte: rgb(245, 245, 245);
+  --sns-font-family: 'Roboto', sans-serif;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+body {
+  box-sizing: border-box;
+  margin: auto;
+  padding: 20px 30px 30px 30px;
+  font-family: var(--sns-font-family);
+  font-style: var(--sns-gray);
+  font-size: 17px;
+}
+
+.navbar {
+  background: var(--sns-wihte);
+  color: var(--sns-gray);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 1px 7px 0 rgb(0 0 0 / 25%);
+  
+}
+
+/* Logo setup */
+.logo-container img {
+  max-height: 3.5rem;
+  padding: 5px;
+  margin: 0.2rem;
+  font-weight: 900;
+  font-size: 1.8rem;
+  letter-spacing: 10px;
+}
+
+.logo-container img:hover {
+  transform: scale(1.1);
+  transition: transform 0.7s;
+}
+
+#logo-sm {
+  display: none;
+}
+
+/* Nav list items */
+.nav-list {
+  list-style-type: none;
+  text-align: center;
+}
+
+.list-item {
+  display: inline-block;
+  padding: 1.2rem;
+}
+
+.list-item:hover {
+  transform: translateY(-0.2rem);
+  transition: transform 0.3s;
+}
+
+.list-item a {
+  color: var(--sns-gray);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+}
+
+.list-item:hover a{
+  color: var(--med-blue)
+}
+
+/* Burger menu setup */
+.menu-line {
+  width: 25px;
+  height: 3px;
+  margin: 5px;
+  background-color: var(--sns-gray);
+}
+
+.menu-container {
+  display: none;
+}
+
+.menu-container:hover {
+  transform: scaleY(1.2);
+  transition: transform 0.3s;
+}
+
+.menu-container:hover .menu-line{
+  background-color: var(--med-green);
+}
+
+
+@media all and (max-width: 850px) {
+
+  #logo-lg {
+    display: none;
+  }
+
+  #logo-sm {
+    display: block;
+  }
+
+  .list-item {
+    padding: 0.8rem;
+  }
+
+}
+
+@media all and (max-width: 650px) {
+
+  #logo-lg {
+    display: block;
+  }
+
+  #logo-sm {
+    display: none;
+  }
+
+  .navbar {
+    flex-direction: column;
+    position: relative;
+  }
+
+  .menu-container {
+    display: block;
+    position: absolute;
+    right: 1rem;
+    top: 1.1rem;
+  }
+
+  .nav-list {
+    display: none;
+    width: 100%;
+  }
+
+  .list-item {
+    display: block;
+    border-top: 1px solid;
+    text-align: center;
+    padding: 0.8rem;
+  }
+
+}
+
+@media all and (max-width: 450px) {
+
+  #logo-lg {
+    display: none;
+  }
+
+  #logo-sm {
+    display: block;
+  }
+
+  .logo-container {
+    position: relative;
+  }
+
+}
+
+.active {
+  display: block;
+}
