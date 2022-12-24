@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVAC-LIB - Psychrometrics</title>
+  <!-- Window icon -->
+  <link rel="shortcut icon" href="../static/images/sns-ico-logo.png">
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="../static/css/landing.css" th:href="@{css/landing.css">
+</head>
+
+<body>
+
+  <!-- Bacground video -->
+  <video id="video-bg" autoplay muted loop>
+    <source src="../static/movies/test.mov" type="video/mp4">
+  </video>
+
+  <section class="title-container blend">
+    <!-- Left SNS logo pane -->
+    <a href="" class="title-anchor">
+      <div class="title-content pl-3r">
+        <img id="sns-logo" src="../static/images/sns-lg-logo.png"></img>
+      </div>
+      <div class="title-cap mvr-skew" div></div>
+    </a>
+
+    <!-- Middle title pane -->
+    <a href="" class="title-anchor">
+      <div class="title-cap mvl-skew" div></div>
+      <div class="title-content">
+        <h2>HVAC-LIB</h2>
+        <h3>PHYSICS OF AIR WITH WATER VAPOUR</h3>
+        <p>Author: Piotr Jażdżyk</p>
+      </div>
+      <div class="title-cap mvr-skew" div></div>
+    </a>
+
+    <!-- Right Harvard logo pane -->
+    <a href="" class="title-anchor">
+      <div class="title-cap mvl-skew" div></div>
+      <div class="title-content pr-3r">
+        <h5>Harvard University CS50x Final Project</h5>
+        <img id="hrv-logo" src="../static/images/hrv-logo.png"></img>
+      </div>
+    </a>
+  </section>
+
+  <section class="info-container blend">
+
+    <!-- Functionality right pane -->
+    <div class="info-card">
+      <div class="info-header">
+        <p>FUNCTIONALITY</p>
+      </div>
+      <div class="info-content function-pane">
+        <ul>
+          <h5>HUMID AIR PROPERTIES</h5>
+          <li>water vapour saturation pressure</li>
+          <li>dew point temperature</li>
+          <li>wet bulb temperature</li>
+          <li>air relative humidity</li>
+          <li>humidity ratio and maximum humidity ratio</li>
+          <li>kinematic and dynamic viscosity</li>
+          <li>thermal conductivity</li>
+          <li>specific enthalpy with water and ice mist</li>
+          <li>specific heat</li>
+          <li>density</li>
+          <li>thermal diffusivity</li>
+          <li>Prandtl number</li>
+          <br>
+          <h5>HEATING AND COOLING</h5>
+          <li>driven by heat input / output</li>
+          <li>driven by target outlet temperature</li>
+          <li>driven by target relative humidity</li>
+          <br>
+        </ul>
+        <ul>
+          <h5>LIQUID WATER PROPERTIES</h5>
+          <li>specific heat</li>
+          <li>density</li>
+          <li>specific enthalpy</li>
+          <br>
+          <h5>PHYSICS OF FLOW</h5>
+          <li>mass flow</li>
+          <li>volumetric flow</li>
+          <li>mass flow of dry air component</li>
+          <li>volumetric flow of dry air component</li>
+          <br>
+          <h5>AIR MIXING</h5>
+          <li>simple mixing of two flows with humidity</li>
+          <li>mixing of multiple flows with humidity</li>
+          <br>
+          <h5>IN DEVELOPMENT:</h5>
+          <li>public REST API</li>
+          <li>unit conversion system</li>
+          <li>air humidification process</li>
+          <li>air heat recovery process</li>
+          <br>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Start button middle pane -->
+    <div class="start-btn-container">
+      <h2>[HVAC-LIB]</h2>
+      <a href="">
+        <div class="start-btn blend">
+          <h5>START</h5>
+          <p>v1.1-alpha</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Technologies left pane -->
+    <div class="info-card">
+      <div class="info-header">
+        <p>TECHNOLOGIES</p>
+      </div>
+      <div class="info-content tech-pane p-1r">
+        <h5>Backend:</h5>
+        <div class="tech-pane-row">
+          <img src="https://img.shields.io/badge/17-Java-orange?style=for-the-badge" alt="JAVA-Logo">
+          <img src="https://img.shields.io/badge/Spring-F2F4F9?style=for-the-badge&logo=spring" alt="SPRING-Logo">
+          <img src="https://img.shields.io/badge/Apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="MAVEN-Logo">
+        </div>
+        <br>
+        <h5>Testing:</h5>
+        <div class="tech-pane-row">
+          <img src="https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="Junit-Logo"> 
+        </div>
+        <br>
+        <h5>Frontend:</h5>
+        <div class="tech-pane-row">
+          <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML-Logo">
+          <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS-Logo">
+          <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E" alt="JavaScript-Logo">
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</body>
+
+</html>

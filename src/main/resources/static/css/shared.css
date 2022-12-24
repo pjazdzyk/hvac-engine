@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+:root {
+  --drk-blue: rgb(3, 147, 208);
+  --med-blue: rgb(19, 173, 243);
+  --lgt-blue: rgb(88, 208, 255);
+  --drk-green: rgb(80, 125, 20);
+  --med-green: rgb(113, 171, 35);
+  --lgt-green: rgb(138, 201, 52);
+  --sns-gray: rgb(91, 91, 91);
+  --sns-white: rgb(245, 245, 245);
+  --sns-font-family: 'Roboto', sans-serif;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+html{
+  font-size: 12px;
+  font-family: var(--sns-font-family);
+}
+
+body {
+  box-sizing: border-box;
+}
+
+/* Layouts */
+.flex-centered{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Margin presets */
+.m-0{
+  margin: 0;
+}
+
+.m-1r{
+  margin: 1rem;
+}
+
+.m-3r{
+  margin: 3rem;
+}
+
+.ml-1r{
+  margin-left: 1rem;
+}
+
+.mr-1r{
+  margin-right: 1rem;
+}
+
+.mt-1r{
+  margin-top: 1rem;
+}
+
+.mt-3r{
+  margin-top: 3rem;
+}
+
+
+.mb-1r{
+  margin-bottom: 1rem;
+}
+
+/* Padding presets */
+.p-0{
+  padding: 0;
+}
+
+.p-1r{
+  padding: 1rem;
+}
+
+.pl-1r{
+  padding-left: 1rem;
+}
+
+.pl-3r{
+  padding-left: 3rem;
+}
+
+.pr-1r{
+  padding-right: 1rem;
+}
+
+.pr-3r{
+  padding-right: 3rem;
+}
+
+.pt-1r{
+  padding-top: 1rem;
+}
+
+.pb-1r{
+  padding-bottom: 1rem;
+}
