@@ -1,39 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
-
-:root {
-  --drk-blue: rgb(3, 147, 208);
-  --med-blue: rgb(19, 173, 243);
-  --lgt-blue: rgb(88, 208, 255);
-  --drk-green: rgb(80, 125, 20);
-  --med-green: rgb(113, 171, 35);
-  --lgt-green: rgb(138, 201, 52);
-  --sns-gray: rgb(91, 91, 91);
-  --sns-wihte: rgb(245, 245, 245);
-  --sns-font-family: 'Roboto', sans-serif;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-* {
-  padding: 0;
-  margin: 0;
-  text-decoration: none;
-  list-style: none;
-  box-sizing: border-box;
-}
-
-body {
-  box-sizing: border-box;
-  margin: auto;
-  padding: 20px 30px 30px 30px;
-  font-family: var(--sns-font-family);
-  font-style: var(--sns-gray);
-  font-size: 17px;
-}
+@import "shared.css";
 
 .navbar {
   background: var(--sns-wihte);
@@ -42,7 +7,6 @@ body {
   justify-content: space-around;
   align-items: center;
   box-shadow: 0 1px 7px 0 rgb(0 0 0 / 25%);
-  
 }
 
 /* Logo setup */
@@ -88,7 +52,7 @@ body {
 }
 
 .list-item:hover a{
-  color: var(--med-blue)
+  color: var(--drk-blue)
 }
 
 /* Burger menu setup */
