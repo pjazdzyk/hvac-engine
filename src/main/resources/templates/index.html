@@ -1,10 +1,111 @@
 <!DOCTYPE html>
-<html lang="pl" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVAC-LIB - Psychrometrics</title>
+  <!-- Window icon -->
+  <link rel="shortcut icon" href="../static/images/sns-ico-logo.png">
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="../static/css/index.css" th:href="@{css/index.css}">
+</head>
 
 <body>
-  <main layout:fragment="content">
-    //TODO
+
+  <!-- Bacground video -->
+  <video id="video-bg" autoplay muted loop>
+    <source src="../static/clips/air-bg-clip.mov" type="video/mp4" th:src="@{clips/air-bg-clip.mov}">
+  </video>
+
+  <section class="title-container flex-row blend">
+    <!-- Left SNS logo pane -->
+    <a href="https://synerset.com/" class="title-anchor" target="_blank">
+      <div class="title-content title-sns-pane">
+        <img class="sns-logo" id="sns-logo-lg" src="../static/images/sns-lg-logo.png" th:src="@{images/sns-lg-logo.png}"></img>
+        <img class="sns-logo" id="sns-logo-sm" src="../static/images/sns-sm-logo.png" th:src="@{images/sns-sm-logo.png}"></img>
+      </div>
+      <div class="title-cap mvr-skew" div></div>
+    </a>
+
+    <!-- Middle title pane -->
+    <a href="/" class="title-anchor">
+      <div class="title-cap mvl-skew" div></div>
+      <div class="title-content middle-title">
+        <h2>HVAC-LIB</h2>
+        <h3>PHYSICS OF AIR WITH WATER VAPOUR</h3>
+        <p>Author: Piotr Jażdżyk</p>
+      </div>
+      <div class="title-cap mvr-skew" div></div>
+    </a>
+
+    <!-- Right Harvard logo pane -->
+    <a href="https://cs50.harvard.edu/x/2022/" class="title-anchor" target="_blank">
+      <div class="title-cap mvl-skew" div></div>
+      <div class="title-content hrv-title">
+        <h5>Harvard University CS50x Final Project</h5>
+        <img id="hrv-logo" src="../static/images/hrv-logo.png" th:src="@{images/hrv-logo.png}"></img>
+      </div>
+    </a>
+  </section>
+
+  <main class="main-container flex-column flex-center">
+
+    <!-- Start button middle pane -->
+    <div class="start-btn-container flex-column flex-center">
+      <h2>[HVAC-LIB]</h2>
+      <a href="">
+        <div class="start-btn flex-column flex-center blend">
+          <h5>START</h5>
+          <p>v1.1-alpha</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Technologies bar -->
+    <section class="tech-bar flex-center">
+      
+      <!-- Tech bar container header -->
+      <div class="tech-header blend m-1r">
+        <h2>TECHNOLOGIES</h2>
+      </div>
+
+      <!-- Tech bar content container -->
+      <section class="flex-row mt-1r">
+
+        <!-- Backend - tech row line -->
+        <div class="flex-column blend">
+          <h5>BACKEND:</h5>
+          <div class="tech-group-line mr-1r">
+            <img src="https://img.shields.io/badge/17-Java-orange?style=for-the-badge" alt="JAVA-Logo">
+            <img src="https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring" alt="SPRING-Logo">
+            <img src="https://img.shields.io/badge/Apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="MAVEN-Logo">
+          </div>
+        </div>
+
+        <!-- Testing - tech row line -->
+        <div class="flex-column blend">
+          <h5>TESTING:</h5>
+          <div class="tech-group-line mr-1r">
+            <img src="https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="Junit-Logo">
+          </div>
+        </div>
+
+        <!-- Frontend - tech row line -->
+        <div class="flex-column blend">
+          <h5>FRONTEND:</h5>
+          <div class="tech-group-line">
+            <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML-Logo">
+            <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS-Logo">
+            <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E" alt="JavaScript-Logo">
+          </div>
+        </div>
+
+      </section>
+
+    </section>
+
   </main>
 
 </body>
