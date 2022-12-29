@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="../static/css/modules.css" th:href="@{css/modules.css}">
+    <!-- Custom scripts -->
+    <script src="../static/js/modules.js" th:src="@{js/modules.js}" type="module"></script>
+    <title>HVAC|LIB - Modules</title>
+</head>
+
+<body>
+    <!-- LAYOUT NAVBAR PLACEHOLDER -->
+    <main layout:fragment="navbar"><br>
+
+        <!-- Main body of this page -->
+        <section class="main-container">
+
+            <!-- Humid air properties card -->
+            <div class="card">
+                <h3 class="card-header">HUMID AIR PROPERTIES:</h3>
+                <form id="air-prop-form" class="card-content">
+                    <!--Options selection-->
+                    <div class="form-line-group">
+                        <label for="absPressure" class="form-label">Selected calculation option</label>
+                        <select id="air-prop-options" class="form-input form-choicebox">
+                            <option value="RH" selected>Pat, DBT, RH</option>
+                            <option value="x">Pat, DBT, X</option>
+                        </select>
+                    </div>
+                    <!--Patm-->
+                    <div class="form-line-group">
+                        <label for="absPressure" class="form-label">Absolute atm. pressure (P<sub>atm</sub>)</label>
+                        <input id="absPressure" type="number" class="form-input form-textfield" value="101300.2" min="50000" max="150000" step="0.1">
+                        <label for="absPressure" class="form-unit">Pa</label>
+                    </div>
+                    <!--DBT-->
+                    <div class="form-line-group">
+                        <label for="dryBulbTemperature" class="form-label">Dry bulb temperature (DBT)</label>
+                        <input id="dryBulbTemperature" type="number" class="form-input form-textfield" value="20.5"min="-130" max="150" step="0.01" >
+                        <label for="dryBulbTemperature" class="form-unit"><sup>o</sup>C</label>
+                    </div>
+                    <!--RH-->
+                    <div class="form-line-group">
+                        <label for="relativeHumidity" class="form-label">Relative humidity (RH)</label>
+                        <input id="relativeHumidity" type="number" class="form-input form-textfield" value="50.5" min="0" max="100" step="0.1">
+                        <label for="relativeHumidity" class="form-unit">%</label>
+                    </div>
+                    <!--X-->
+                    <div class="form-line-group">
+                        <label for="humidityRatioX" class="form-label">Humidity ratio (X)</label>
+                        <input id="humidityRatioX" type="number" class="form-input form-textfield" value="0.0001"min="0" max="2" step="0.0000001" disabled>
+                        <label for="humidityRatioX" class="form-unit">kg<sub>vw</sub>/kg<sub>da</sub></label>
+                    </div>
+                    <!--XMax-->
+                    <div class="form-line-group">
+                        <label for="maxHumidityRatioX" class="form-label">Maximum humidity ratio (X")</label>
+                        <input id="maxHumidityRatioX" type="number" class="form-input form-textfield" value="0.0001" min="0" max="2" step="0.0000001" readonly>
+                        <label for="maxHumidityRatioX" class="form-unit">kg<sub>vw</sub>/kg<sub>da</sub></label>
+                    </div>
+                    <!--DP-->
+                    <div class="form-line-group">
+                        <label for="dewPointTemperature" class="form-label">Dew point temperature (DP)</label>
+                        <input id="dewPointTemperature" type="number" class="form-input form-textfield" value="20.5" min="-130" max="150" step="0.1" readonly>
+                        <label for="dewPointTemperature" class="form-unit"><sup>o</sup>C</label>
+                    </div>
+                    <!--WBT-->
+                    <div class="form-line-group">
+                        <label for="wetBulbTemperature" class="form-label">Wet bulb temperature (WBT)</label>
+                        <input id="wetBulbTemperature" type="number" class="form-input form-textfield" value="20.5" min="-130" max="150" step="any" readonly>
+                        <label for="wetBulbTemperature" class="form-unit"><sup>o</sup>C</label>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="form-button-container">
+                        <button type="submit" class="form-button calc-button">CALCULATE</button>
+                        <button type="reset" class="form-button reset-button">RESET</button>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+
+</html>
