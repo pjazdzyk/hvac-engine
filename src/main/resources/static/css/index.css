@@ -84,11 +84,11 @@ img:hover {
   z-index: -1;
 }
 
-.mvl-skew {
+.move-l-skew {
   transform: translateX(-50%) skew(-26deg);
 }
 
-.mvr-skew {
+.move-r-skew {
   transform: translateX(50%) skew(-26deg);
 }
 
@@ -129,7 +129,6 @@ img:hover {
   flex-direction: column;
 }
 
-
 .function-pane {
   width: 35.5rem;
 }
@@ -138,9 +137,26 @@ img:hover {
   width: 39.5rem;
 }
 
+/* MAIN CONTENT*/
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 60vh;
+  margin: 5rem;
+}
+
 /* START PANE */
+.start-btn-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .start-btn-container h2 {
-  font-size: 3rem;
+  font-size: 2rem;
   color: var(--title-pane-bg-color);
   letter-spacing: 0.5rem;
 }
@@ -151,6 +167,9 @@ img:hover {
 }
 
 .start-btn {
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
   border: solid 2px;
   color: var(--title-pane-bg-color);
   font-size: 2.5rem;
@@ -172,27 +191,24 @@ img:hover {
   transition: background-color 0.7s;
 }
 
-/* MAIN CONTENT*/
-.tech-bar {
+/* TECHNOLOGIES BAR */
+.tech-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: fit-content;
 }
 
-.main-container {
-  justify-content: space-around;
-  height: 60vh;
-  margin: 5rem;
-}
-
-/* TECHNOLOGIES BAR */
-.tech-header {
+.tech-bar-header {
   display: block;
-  margin: 0;
+  margin: 1rem;
   background-color: var(--info-header-bg-color);
   text-align: center;
   color: var(--sns-gray);
+  width: 100%;
 }
 
-.tech-bar h5 {
+.tech-bar-container h5 {
   color: rgb(230, 230, 230);
   font-weight: 400;
   font-size: 1.2rem;
@@ -200,9 +216,21 @@ img:hover {
   margin-bottom: 0.3rem;
 }
 
-.tech-bar img:not(:last-child) {
+.tech-bar-content{
+  display: flex;
+  margin-top: 0.5rem;;
+}
+
+.tech-group-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.tech-group-line img:not(:last-child),
+.tech-group-container:not(:last-child) {
   margin-right: 1rem;
 }
+
 
 @media all and (max-width: 980px) {
 
@@ -223,7 +251,7 @@ img:hover {
     background-color: rgba(255, 255, 255, 0);
   }
 
-  .tech-bar {
+  .tech-bar-container {
     text-align: center;
   }
 
@@ -260,7 +288,7 @@ img:hover {
     display: block;
   }
 
-  .middle-title p {
+  .title-content p {
     display: none;
   }
 
@@ -272,7 +300,7 @@ img:hover {
 
 @media all and (max-width: 450px) {
 
-  .tech-bar {
+  .tech-bar-container {
     display: none;
   }
 
