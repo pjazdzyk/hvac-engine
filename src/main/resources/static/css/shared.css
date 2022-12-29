@@ -12,12 +12,6 @@
   --sns-font-family: 'Roboto', sans-serif;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
 * {
   padding: 0;
   margin: 0;
@@ -33,87 +27,4 @@ html{
 
 body {
   box-sizing: border-box;
-}
-
-/* Layouts */
-.flex-row{
-  display: flex;
-  flex-direction: row;
-}
-
-.flex-column{
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-center{
-  justify-content: center;
-  align-items: center;
-}
-
-/* Margin presets */
-.m-0{
-  margin: 0;
-}
-
-.m-1r{
-  margin: 1rem;
-}
-
-.m-3r{
-  margin: 3rem;
-}
-
-.ml-1r{
-  margin-left: 1rem;
-}
-
-.mr-1r{
-  margin-right: 1rem;
-}
-
-.mt-1r{
-  margin-top: 1rem;
-}
-
-.mt-3r{
-  margin-top: 3rem;
-}
-
-
-.mb-1r{
-  margin-bottom: 1rem;
-}
-
-/* Padding presets */
-.p-0{
-  padding: 0;
-}
-
-.p-1r{
-  padding: 1rem;
-}
-
-.pl-1r{
-  padding-left: 1rem;
-}
-
-.pl-3r{
-  padding-left: 3rem;
-}
-
-.pr-1r{
-  padding-right: 1rem;
-}
-
-.pr-3r{
-  padding-right: 3rem;
-}
-
-.pt-1r{
-  padding-top: 1rem;
-}
-
-.pb-1r{
-  padding-bottom: 1rem;
 }
