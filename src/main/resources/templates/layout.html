@@ -14,7 +14,7 @@
   <!-- Main stylesheet -->
   <link rel="stylesheet" href="../static/css/layout.css" th:href="@{css/layout.css}">
   <!-- Custom scripts -->
-  <script src="../static/js/navbar.js" th:src="@{js/navbar.js}" type="module"></script>
+  <script src="../static/js/layout-navbar.js" th:src="@{js/layout-navbar.js}" type="module"></script>
 </head>
 
 <body>
@@ -32,10 +32,10 @@
     <!-- Nav list items -->
     <ul class="nav-list" id="navi-list">
       <li class="list-item">
-        <a href="">HOME</a>
+        <a href="/">HOME</a>
       </li>
       <li class="list-item">
-        <a href="#">MODULES</a>
+        <a href="/modules">MODULES</a>
       </li>
       <li class="list-item">
         <a href="#">ABOUT ME</a>
@@ -55,7 +55,7 @@
   </nav>
   <!-- Navbar end -->
 
-  <main layout:fragment="content"></main>
+  <main layout:fragment="navbar"></main>
 
 </body>
 

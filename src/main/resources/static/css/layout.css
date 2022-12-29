@@ -1,12 +1,14 @@
 @import "shared.css";
 
 .navbar {
-  background: var(--sns-wihte);
+  background: var(--sns-white);
   color: var(--sns-gray);
   display: flex;
   justify-content: space-around;
   align-items: center;
   box-shadow: 0 1px 7px 0 rgb(0 0 0 / 25%);
+  width: 80%;
+  margin: auto;
 }
 
 /* Logo setup */
