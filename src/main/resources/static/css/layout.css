@@ -9,13 +9,14 @@
   box-shadow: 0 1px 7px 0 rgb(0 0 0 / 25%);
   width: 80%;
   margin: auto;
+  max-width: 950px;
 }
 
 /* Logo setup */
 .logo-container img {
-  max-height: 3.5rem;
+  max-height: 5.5rem;
   padding: 5px;
-  margin: 0.2rem;
+  margin: 0.5rem;
   font-weight: 900;
   font-size: 1.8rem;
   letter-spacing: 10px;
@@ -48,9 +49,9 @@
 
 .list-item a {
   color: var(--sns-gray);
-  font-size: 1rem;
+  font-size: 1.4rem;
   font-weight: 900;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.9px;
 }
 
 .list-item:hover a{
