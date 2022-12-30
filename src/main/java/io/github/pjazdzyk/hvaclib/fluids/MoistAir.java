@@ -127,7 +127,7 @@ public class MoistAir implements HumidGas {
         else if ((humidityRatioX > maxHumidityRatioX) && temperature > 0)
             vapourStatus = VapourState.DROPLET_FOG;
         else if ((humidityRatioX > maxHumidityRatioX) && temperature <= 0)
-            vapourStatus = VapourState.SOLID_FOG;
+            vapourStatus = VapourState.ICE_FOG;
         else
             vapourStatus = VapourState.UNSATURATED;
     }
