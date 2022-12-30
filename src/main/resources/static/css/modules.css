@@ -5,9 +5,17 @@
     --readonly-bg: rgb(227, 227, 227, 0.5);
 }
 
+.gap-5rem{
+    width: 5rem;
+    margin: 1rem;
+}
+
 .main-container {
+    display: flex;
+    justify-content: center;
     width: 80%;
     margin: auto;
+    max-width: 1000px;
 }
 
 .card{
@@ -44,6 +52,7 @@
 .form-input{
     margin-right: 1rem;
     padding: 0.3rem;
+    letter-spacing: 0.2px;
 }
 
 .form-textfield{
@@ -59,6 +68,11 @@
 
 .form-input, .form-label, .form-unit{
     font-size: 1.3rem;
+}
+
+.form-input:last-child{
+    width: 11.8rem;
+    text-align: center;
 }
 
 .form-button-container{
@@ -104,4 +118,8 @@ input[readonly]{
 
 input[disabled]{
     border: solid 1px;
+}
+
+@media all and (max-width: 1185px) {
+
 }
