@@ -28,8 +28,8 @@ class FluidServiceImpl implements FluidService{
     public MoistAirResponseDto createMoistAirProperty(MoistAirDto moistAirDto) {
         HumidGas moistAir = new MoistAir.Builder()
                 .withAtmPressure(moistAirDto.absPressure())
-                .withAirTemperature(moistAirDto.dryBulbTemp())
-                .withHumidityRatioX(moistAirDto.humidityRatio())
+                .withAirTemperature(moistAirDto.dryBulbTemperature())
+                .withHumidityRatioX(moistAirDto.humidityRatioX())
                 .build();
 
         return FluidMappers.toDto(moistAir);

@@ -4,5 +4,5 @@ public enum VapourState {
     UNSATURATED,
     SATURATED,
     DROPLET_FOG,
-    SOLID_FOG
+    ICE_FOG
 }
