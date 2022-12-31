@@ -12,11 +12,11 @@
 
 .main-container {
     display: flex;
-    justify-content: center;
-    width: 80%;
+    align-items: top;
     margin: auto;
-    max-width: 1000px;
-}
+    width: 80%;
+    max-width: 950px;
+  }
 
 .card{
     width: fit-content;

@@ -80,7 +80,7 @@
 }
 
 
-@media all and (max-width: 850px) {
+@media all and (max-width: 1000px) {
 
   #logo-lg {
     display: none;
@@ -96,7 +96,7 @@
 
 }
 
-@media all and (max-width: 650px) {
+@media all and (max-width: 680px) {
 
   #logo-lg {
     display: block;
@@ -132,7 +132,7 @@
 
 }
 
-@media all and (max-width: 450px) {
+@media all and (max-width: 480px) {
 
   #logo-lg {
     display: none;

@@ -1,0 +1,64 @@
+@import "shared.css";
+
+.about-me-container{
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5rem;
+    margin: auto;
+    width: 80%;
+    max-width: 950px;
+    text-align: justify;
+
+}
+
+.tech-title{
+    margin-bottom: 1.0rem;
+    letter-spacing: 0.1rem;
+}
+
+.tech-container{
+    display: flex;
+    justify-content: space-around;
+}
+
+.tech-list{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.footer{
+    align-self: flex-end;
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--drk-blue);
+}
+
+.footer p:last-child{
+    font-size: 2.0rem;
+    font-style: italic;
+}
+
+.about-me-container li{
+    list-style-type: disc;
+    padding: 0.3rem;
+    font-weight:  500;
+}
+
+.about-me-container ul{
+    margin: 2rem;
+    width: 100%;
+}
+
+ul h4{
+    position: relative;
+    right: 1.7rem;
+    color: var(--drk-blue);
+}
+
+@media all and (max-width: 630px) {
+    .tech-list{
+      flex-direction: column;  
+      justify-content: space-between;   
+    }
+}

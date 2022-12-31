@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://localhost:8002")
 @RequestMapping("/api/v1/properties")
 public class MoistAirRestController {
 

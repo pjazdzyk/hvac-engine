@@ -12,8 +12,13 @@ public class HomePageController {
     }
 
     @GetMapping("/modules")
-    public String showHomePage(){
+    public String showModules(){
         return "modules";
+    }
+
+    @GetMapping("/aboutme")
+    public String showAboutMeView(){
+        return "aboutme";
     }
 
 }
