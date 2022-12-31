@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="../static/css/aboutme.css" th:href="@{css/aboutme.css}">
+    <link rel="stylesheet" href="../static/css/index.css" th:href="@{css/aboutme.css}">
+    <title>HVAC|LIB - Modules</title>
+</head>
+
+<body>
+    <!-- LAYOUT NAVBAR PLACEHOLDER -->
+    <main layout:fragment="navbar"><br>
+
+        <div class="about-me-container">
+
+            <h3>Hi!</h3>
+            <br>
+            <p>I am a mechanical engineer, with a passion for programming. The last 15 years of my career were dedicated
+                to HVAC system design and advanced flow simulations (CFD) using software such as Ansys Fluent or NIST
+                FDS.
+            </p>
+            <br>
+            <p> This web application is the first step in creating a larger engineering platform for calculation
+                applications, helping other engineers with their projects, and sharing my knowledge on how to solve
+                certain problems.
+                This project is also a final project for the CS50x programming course at Harvard University. I hope I
+                will manage to fulfill one of the key goals - to create something that will outlive the course.
+            </p>
+            <br>
+            <p>Are you looking for a <strong>Java Backend Developer?</strong> Or maybe you would like me to create an
+                engineering application for you to increase your team's efficiency? If so, do not hesitate to contact
+                me!</p>
+            <br>
+            <h4 class="tech-title"><strong>MY TECH STACK:</strong></h4>
+
+            <div class="tech-container">
+                <div class="tech-list">
+                    <ul>
+                        <h4>BACKEND:</h4>
+                        <li>Java 16+</li>
+                        <li>Spring Boot</li>
+                        <li>MySql</li>
+                        <li>MongoDB</li>
+                    </ul>
+                    <ul>
+                        <h4>TESTING:</h4>
+                        <li>Junit5</li>
+                        <li>Mockito</li>
+                        <li>WireMock</li>
+                        <li>TestContainers</li>
+                    </ul>
+                </div>
+                <div class="tech-list">
+                    <ul>
+                        <h4>TECH:</h4>
+                        <li>Git/GitHb</li>
+                        <li>Mockito</li>
+                        <li>Docker</li>
+                        <li>AWS/EC2</li>
+                    </ul>
+                    <ul>
+                        <h4>FRONTEND:</h4>
+                        <li>HTML</li>
+                        <li>CSS</li>
+                        <li>JavaScript</li>
+                        <li>Bootstrap</li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+            <p>You are welcome to share any insights you have about the page's current and further functionality. Don't
+                forget to check my <strong><a href="http://linkedin.com/in/pjazdzyk">LinkedIn</a></strong> and say
+                hallo!
+            </p>
+            <br>
+            <div class="footer">
+                <p>Best regards,</p>
+                <p>Piotr Jażdżyk</p>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
