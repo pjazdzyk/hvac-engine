@@ -248,7 +248,7 @@ public final class PhysicsOfCooling {
      * @return linear average coil wall temperature in oC,
      */
     public static double calcAverageWallTemp(double supplyTemp, double returnTemp) {
-        return MathUtils.calcArithmeticAverage(supplyTemp, returnTemp);
+        return MathUtils.arithmeticAverage(supplyTemp, returnTemp);
     }
 
     /**

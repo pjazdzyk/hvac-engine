@@ -15,7 +15,7 @@ class MathUtilsTest {
         var expectedAverage = 4;
 
         // Act
-        var actualAverage = MathUtils.calcArithmeticAverage(a, b, c);
+        var actualAverage = MathUtils.arithmeticAverage(a, b, c);
 
         // Assert
         assertThat(actualAverage).isEqualTo(expectedAverage);

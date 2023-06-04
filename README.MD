@@ -6,7 +6,7 @@
 
 ---
 
-### [USER GUIDE](README_GUIDE.MD) &nbsp;|&nbsp; [FUNCTIONALITY](#functionality) &nbsp;|&nbsp; [REST-API](#rest-api-endpoints) &nbsp;|&nbsp;  [LEGAL DISCLAIMER](#legal-disclaimer) &nbsp;|&nbsp; [UPCOMING](#upcoming-functionality) &nbsp;|&nbsp; [RESOURCES](#reference-sources)
+### [USER GUIDE](README_GUIDE.MD) &nbsp;|&nbsp; [FUNCTIONALITY](#functionality) &nbsp;|&nbsp; [LEGAL DISCLAIMER](#legal-disclaimer) &nbsp;|&nbsp; [RESOURCES](#reference-sources)
 
 ---
 
@@ -93,76 +93,6 @@ calcMaTaTdpRH(){}
 
 The approach presented above, which probably may cause a serious headache to any professional programmer, helps me organize all methods into a clear
 structure, where corresponding methods are sorting themselves while writing a code using this library.
-
-## Rest-API Endpoints
-
-The separate Spring-Boot module has been provided to create an API as the example of service, which is using this library.
-Below are REST-API endpoints provided for future online deployment and UI integration:
-
-Service url: Service is currently in offline mode. Launch ETA is January 2023r.
-
-|        ENDPOINT         | METHOD | REQUEST | RESPONSE |        FUNCTION         |
-|:-----------------------:|:------:|:-------:|:--------:|:-----------------------:|
-| api/v1/properties/water |  GET   | Params  |   JSON   | liquid water properties |
-|  api/v1/properties/air  |  GET   | Params  |   JSON   |  moist air properties   |
-
-WATER PARAMS:
-* temperature - water temperature in oC [required]
-
-MOIST AIR PARAMS:
-* dryBulbTemp - dry bulb moist air temperature in oC [required]
-* absPressure - absolute atmospheric pressure in Pa [optional]
-* relativeHumidity - relative humidity (RH) in % [optional] OR
-* humidityRatio - humidity ratio (x) in kg.wv/kg.da [optional]
-
-IMPORTANT: At least one humidity type must be provided, relative humidity or humidity ratio. If none are specified or both - response will not be provided.
-
-RESPONSE EXAMPLES<br>
-Response example for water of +10oc:<br>
-_/api/v1/properties/water?temperature=10_
-```json
-{
-"pressure": 101325,
-"temp": 10,
-"density": 999.5457000320766,
-"specHeatCp": 4.195546277425652,
-"specEnthalpy": 41.95546277425652,
-"classOfFluid": "LiquidWater"
-}
-```
-
-Response example for moist air, with ta=+30oc and RH=45%:<br>
-_/api/v1/properties/air?dryBulbTemp=30&relativeHumidity=45_
-```json
-{
-"vapourStatus": "UNSATURATED",
-"absPressure": 101325, 
-"temperature": 30,
-"dewPointTemperature": 16.7763897453498,
-"wetBulbTemperature": 21.05330590356866,
-"relativeHumidity": 45,
-"humidityRatioX": 0.011953838501226322,
-"maxHumidityRatioX": 0.027203107078866213,
-"density": 1.1422421279927155,
-"specHeat": 1.0274922513226121,
-"specEnthalpy": 60.720122247395274,
-"thermalConductivity": 0.027093375624451826,
-"thermalDiffusivity": 0.000023084814496746698,
-"dynamicViscosity": 0.000018370927240723787,
-"kinematicViscosity": 0.000016083216325602852,
-"prandtlNumber": 0.6967011291283901,
-"classOfFluid": "MoistAir"
-}
-```
-
-## UPCOMING FUNCTIONALITY
-1. Service layer for easier objects creation and for increased module encapsulation,
-2. REST API for flow handling
-3. CSV Table generators for creating user-custom tables with requested properties value range
-4. Module for water spray air humidification
-5. Module for superheated steam air humidification
-6. Module for simplified heat and humid recovery exchanger
-7. Unit conversion system
 
 Do you have a special request what this library should do to help you in your calculations? Just let me know!
 

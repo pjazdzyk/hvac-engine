@@ -86,7 +86,7 @@ public class Examples {
 
         // Cooling process example
         double targetCoolingTemp = 24.0; // OC
-        double averageCoilWallTemp = MathUtils.calcArithmeticAverage(8, 14); // oC
+        double averageCoilWallTemp = MathUtils.arithmeticAverage(8, 14); // oC
         // Step 1: Creating moist air instance
         HumidGas summerAmbientAir = MoistAir.ofAir(32, 50, 90000);
         // Step 3: creating humid air flow
