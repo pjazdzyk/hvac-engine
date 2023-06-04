@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.github.pjazdzyk</groupId>
+    <groupId>com.synerset</groupId>
     <artifactId>hvac-lib</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>hvac-lib</name>
@@ -13,31 +13,39 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Synerset library versions -->
+        <brent-solver.version>1.1.3</brent-solver.version>
+        <unitility.version>1.0.0</unitility.version>
         <!-- Dependency versions -->
         <junit.version>5.9.0</junit.version>
         <assertJ.version>3.23.1</assertJ.version>
-        <!-- Synerset library versions -->
-        <brent-solver.version>1.1.2</brent-solver.version>
+        <junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
     </properties>
 
     <dependencies>
+        <!-- Synerset dependencies -->
         <dependency>
-            <groupId>io.github.pjazdzyk</groupId>
+            <groupId>com.synerset</groupId>
             <artifactId>brent-dekker-solver</artifactId>
             <version>${brent-solver.version}</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.synerset</groupId>
+            <artifactId>unitility</artifactId>
+            <version>${unitility.version}</version>
         </dependency>
 
+        <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.9.3</version>
+            <version>${junit-jupiter-api.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.9.3</version>
+            <version>${junit-jupiter-api.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
