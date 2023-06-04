@@ -7,7 +7,7 @@ public final class MathUtils {
 
     private MathUtils() {}
 
-    public static double calcArithmeticAverage(double... values) {
+    public static double arithmeticAverage(double... values) {
         OptionalDouble optionalDouble = Arrays.stream(values).average();
         if (optionalDouble.isPresent())
             return optionalDouble.getAsDouble();

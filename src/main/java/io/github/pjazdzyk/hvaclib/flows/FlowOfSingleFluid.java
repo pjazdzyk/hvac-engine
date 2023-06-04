@@ -71,16 +71,15 @@ public class FlowOfSingleFluid implements FlowOfSinglePhase {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Fluid properties: \n");
-        builder.append(String.format("ta = %.2f oC | ", fluid.getTemp()))
-                .append(String.format("rho = %.2f kg/m3 | ", fluid.getDensity()))
-                .append(String.format("fluid class = %s \n", fluid.getClass().getSimpleName()));
-        builder.append("Flow properties: \n");
-        builder.append(String.format("m = %.5f kg/s (fluid mass flow) | ", massFlow))
-                .append(String.format("v = %.8f m3/s (fluid vol flow) | ", volFlow))
-                .append(String.format("v = %.3f m3/h (fluid vol flow) \n", volFlow * 3600d));
-        return builder.toString();
+        String builder = "Fluid properties: \n" +
+                String.format("ta = %.2f oC | ", fluid.getTemp()) +
+                String.format("rho = %.2f kg/m3 | ", fluid.getDensity()) +
+                String.format("fluid class = %s \n", fluid.getClass().getSimpleName()) +
+                "Flow properties: \n" +
+                String.format("m = %.5f kg/s (fluid mass flow) | ", massFlow) +
+                String.format("v = %.8f m3/s (fluid vol flow) | ", volFlow) +
+                String.format("v = %.3f m3/h (fluid vol flow) \n", volFlow * 3600d);
+        return builder;
     }
 
     @Override

@@ -106,20 +106,19 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Air properties: \n");
-        builder.append(String.format("ta = %.2f oC | ", moistAir.getTemp()))
-                .append(String.format("RH = %.2f %s | ", moistAir.getRelativeHumidityRH(), "%"))
-                .append(String.format("x = %.5f kg.wv/kg.da | ", moistAir.getHumRatioX()))
-                .append(String.format("status = %s |\n", moistAir.getVapourState()));
-        builder.append("Flow properties: \n");
-        builder.append(String.format("m_Ma = %.3f kg/s (moist air mass flow) | ", massFlowMa))
-                .append(String.format("v_Ma = %.3f m3/s (moist air vol flow) |", volFlowMa))
-                .append(String.format("v_Ma = %.1f m3/s (moist air vol flow) \n", volFlowMa * 3600));
-        builder.append(String.format("m_Da = %.3f kg/s (dry air mass flow) | ", massFlowDa))
-                .append(String.format("v_Da %.3f m3/s (dry air vol flow) | ", volFlowDa))
-                .append("v_Da = ").append(String.format("v_Da %.1f m3/s (dry air vol flow)\n", volFlowDa * 3600));
-        return builder.toString();
+        String builder = "Air properties: \n" +
+                String.format("ta = %.2f oC | ", moistAir.getTemp()) +
+                String.format("RH = %.2f %s | ", moistAir.getRelativeHumidityRH(), "%") +
+                String.format("x = %.5f kg.wv/kg.da | ", moistAir.getHumRatioX()) +
+                String.format("status = %s |\n", moistAir.getVapourState()) +
+                "Flow properties: \n" +
+                String.format("m_Ma = %.3f kg/s (moist air mass flow) | ", massFlowMa) +
+                String.format("v_Ma = %.3f m3/s (moist air vol flow) |", volFlowMa) +
+                String.format("v_Ma = %.1f m3/s (moist air vol flow) \n", volFlowMa * 3600) +
+                String.format("m_Da = %.3f kg/s (dry air mass flow) | ", massFlowDa) +
+                String.format("v_Da %.3f m3/s (dry air vol flow) | ", volFlowDa) +
+                "v_Da = " + String.format("v_Da %.1f m3/s (dry air vol flow)\n", volFlowDa * 3600);
+        return builder;
     }
 
     @Override

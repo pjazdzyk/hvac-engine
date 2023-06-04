@@ -259,16 +259,15 @@ public class MoistAir implements HumidGas {
 
     @Override
     public final String toString() {
-        StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append(String.format("Core parameters  : Pat=%.0f Pa | ta=%.3f degC | RH_Ma= %.3f %% | Wbt_Ma=%.3f degC | Tdp_Ma=%.3f degC | Ps= %.2f Pa | x_Ma= %.6f kg/kg | xMax= %.6f kg/kg \n",
-                absPressure, temperature, relativeHumidity, wetBulbTemperature, dewPointTemperature, saturationPressureWv, humidityRatioX, maxHumidityRatioX));
-        strBuilder.append(String.format("Dry air          : rho_Da= %.3f kg/m3 | cp_Da= %.4f kJ/kgK | i_Da= %.2f kJ/kg.da \n",
-                densityDa, specHeatDa, specEnthalpyDa));
-        strBuilder.append(String.format("Water vapour     : rho_Wv= %.3f kg/m3 | cp_Wv= %.4f kJ/kgK | i_Wv= %.2f kJ/kg.da | i_Wt= %.2f kJ/kg.da | i_Ice= %.2f kJ/kg.da \n",
-                densityWv, specHeatWv, specEnthalpyWv, specEnthalpyWt, specEnthalpyIce));
-        strBuilder.append(String.format("Moist air        : rho_Ma= %.3f kg/m3 | cp_Ma= %.4f kJ/kgK | k_Ma= %.4f W/(m*K) | thDiff_Ma= %.8f m2/s | dynVis_Ma = %.8f kg/(m*s) | kinVis_Ma=%.7f m2/s | Pr_Ma=%.2f | i_Ma= %.2f kJ/kg.da \n",
-                density, specHeat, thermalConductivity, thermalDiffusivity, dynamicViscosity, kinematicViscosity, prandtlNumber, specEnthalpy));
-        return strBuilder.toString();
+        String strBuilder = String.format("Core parameters  : Pat=%.0f Pa | ta=%.3f degC | RH_Ma= %.3f %% | Wbt_Ma=%.3f degC | Tdp_Ma=%.3f degC | Ps= %.2f Pa | x_Ma= %.6f kg/kg | xMax= %.6f kg/kg \n",
+                absPressure, temperature, relativeHumidity, wetBulbTemperature, dewPointTemperature, saturationPressureWv, humidityRatioX, maxHumidityRatioX) +
+                String.format("Dry air          : rho_Da= %.3f kg/m3 | cp_Da= %.4f kJ/kgK | i_Da= %.2f kJ/kg.da \n",
+                        densityDa, specHeatDa, specEnthalpyDa) +
+                String.format("Water vapour     : rho_Wv= %.3f kg/m3 | cp_Wv= %.4f kJ/kgK | i_Wv= %.2f kJ/kg.da | i_Wt= %.2f kJ/kg.da | i_Ice= %.2f kJ/kg.da \n",
+                        densityWv, specHeatWv, specEnthalpyWv, specEnthalpyWt, specEnthalpyIce) +
+                String.format("Moist air        : rho_Ma= %.3f kg/m3 | cp_Ma= %.4f kJ/kgK | k_Ma= %.4f W/(m*K) | thDiff_Ma= %.8f m2/s | dynVis_Ma = %.8f kg/(m*s) | kinVis_Ma=%.7f m2/s | Pr_Ma=%.2f | i_Ma= %.2f kJ/kg.da \n",
+                        density, specHeat, thermalConductivity, thermalDiffusivity, dynamicViscosity, kinematicViscosity, prandtlNumber, specEnthalpy);
+        return strBuilder;
     }
 
     public enum HumidityInputType {

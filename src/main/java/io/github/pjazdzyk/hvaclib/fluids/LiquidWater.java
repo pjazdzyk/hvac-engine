@@ -82,13 +82,12 @@ public class LiquidWater implements Fluid {
     @Override
     public final String toString() {
 
-        StringBuilder strb = new StringBuilder();
-        strb.append(String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n",
-                        waterTemperature,
-                        waterSpecificHeatCP,
-                        waterDensity,
-                        waterSpecificEnthalpy));
-        return strb.toString();
+        String strb = String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n",
+                waterTemperature,
+                waterSpecificHeatCP,
+                waterDensity,
+                waterSpecificEnthalpy);
+        return strb;
     }
 
     @Override
