@@ -1,8 +1,8 @@
 package com.synerset.hvaclib.fluids;
 
-public final class PhysicsPropCommon {
+public final class SharedEquations {
 
-    private PhysicsPropCommon() {
+    private SharedEquations() {
     }
 
     /**
@@ -13,7 +13,7 @@ public final class PhysicsPropCommon {
      * @param altitude altitude over sea level (can be negative), m
      * @return atmospheric pressure at provided altitude, Pa
      */
-    public static double calcPatAlt(double altitude) {
+    public static double atmAltitudePressure(double altitude) {
         return 101.325 * Math.pow((1 - 2.25577 * Math.pow(10, -5) * altitude), 5.2559) * 1000;
     }
 
@@ -26,7 +26,7 @@ public final class PhysicsPropCommon {
      * @param altitude       altitude over sea level (can be negative), m
      * @return temperature at provided altitude, oC
      */
-    public static double calcTxAlt(double tempAtSeaLevel, double altitude) {
+    public static double altitudeTemperature(double tempAtSeaLevel, double altitude) {
         return tempAtSeaLevel - 0.0065 * altitude;
     }
 
@@ -40,10 +40,7 @@ public final class PhysicsPropCommon {
      * @param cp  air specific heat, kJ/kgK
      * @return air thermal diffusivity, m2/s
      */
-    public static double calcThDiff(double rho, double k, double cp) {
-        FluidValidators.requirePositiveAndNonZeroValue("Density", rho);
-        FluidValidators.requirePositiveAndNonZeroValue("Thermal conductivity", k);
-        FluidValidators.requirePositiveAndNonZeroValue("Specific heat", cp);
+    public static double thermalDiffusivity(double rho, double k, double cp) {
         return k / (rho * cp * 1000d);
     }
 
@@ -56,10 +53,7 @@ public final class PhysicsPropCommon {
      * @param cp     air specific heat, kJ/kgK
      * @return Prandtl number, -
      */
-    public static double calcPrandtl(double dynVis, double k, double cp) {
-        FluidValidators.requirePositiveAndNonZeroValue("Dynamic viscosity", dynVis);
-        FluidValidators.requirePositiveAndNonZeroValue("Thermal conductivity", k);
-        FluidValidators.requirePositiveAndNonZeroValue("Specific heat", cp);
+    public static double prandtlNumber(double dynVis, double k, double cp) {
         return dynVis * cp * 1000d / k;
     }
 }

@@ -1,7 +1,5 @@
 package com.synerset.hvaclib.flows;
 
-import com.synerset.hvaclib.flows.FlowOfSingleFluid;
-import com.synerset.hvaclib.flows.FlowOfSinglePhase;
 import com.synerset.hvaclib.fluids.Fluid;
 import com.synerset.hvaclib.fluids.LiquidWater;
 import org.junit.jupiter.api.DisplayName;

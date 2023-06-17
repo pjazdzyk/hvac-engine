@@ -5,13 +5,14 @@ import java.util.OptionalDouble;
 
 public final class MathUtils {
 
-    private MathUtils() {}
+    private MathUtils() {
+    }
 
     public static double arithmeticAverage(double... values) {
         OptionalDouble optionalDouble = Arrays.stream(values).average();
         if (optionalDouble.isPresent())
             return optionalDouble.getAsDouble();
-        throw new NullPointerException("No values are provided.");
+        throw new IllegalStateException("No values are provided.");
     }
 
     public static double linearInterpolation(double x1, double f_x1, double x2, double f_x2, double x) {

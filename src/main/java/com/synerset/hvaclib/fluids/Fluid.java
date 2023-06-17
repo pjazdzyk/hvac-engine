@@ -4,12 +4,12 @@ public interface Fluid {
 
     double getAbsPressure();
 
-    double getTemp();
+    double getTemperature();
 
     double getDensity();
 
-    double getSpecHeatCP();
+    double getSpecificHeatCp();
 
-    double getSpecEnthalpy();
+    double getSpecificEnthalpy();
 
 }

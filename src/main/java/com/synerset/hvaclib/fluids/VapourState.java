@@ -3,6 +3,6 @@ package com.synerset.hvaclib.fluids;
 public enum VapourState {
     UNSATURATED,
     SATURATED,
-    DROPLET_FOG,
+    WATER_MIST,
     ICE_FOG
 }

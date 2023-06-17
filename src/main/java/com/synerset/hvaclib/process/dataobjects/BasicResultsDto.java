@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.process.resultsdto;
+package com.synerset.hvaclib.process.dataobjects;
 
 public record BasicResultsDto(double pressure,
                               double outTemperature,

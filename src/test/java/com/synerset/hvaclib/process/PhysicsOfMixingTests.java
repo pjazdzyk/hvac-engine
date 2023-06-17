@@ -4,8 +4,8 @@ import com.synerset.hvaclib.PhysicsTestConstants;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.flows.FlowOfMoistAir;
 import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.MoistAir;
-import com.synerset.hvaclib.fluids.PhysicsPropOfMoistAir;
+import com.synerset.hvaclib.fluids.HumidAir;
+import com.synerset.hvaclib.fluids.HumidAirEquations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
     @DisplayName("should return results for mixing of two different moist air flows")
     void calcMixing_shouldReturnResultsForMixingOfTwoDifferentMoistAirFlows() {
         // Arrange
-        HumidGas air1 = new MoistAir.Builder()
+        HumidGas air1 = new HumidAir.Builder()
                 .withAtmPressure(P_ATM)
                 .withAirTemperature(-20.0)
                 .withRelativeHumidity(100.0)
@@ -26,7 +26,7 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
                 .withMassFlowDa(5000d / 3600d)
                 .build();
 
-        HumidGas air2 = new MoistAir.Builder()
+        HumidGas air2 = new HumidAir.Builder()
                 .withAtmPressure(P_ATM)
                 .withAirTemperature(18.0)
                 .withRelativeHumidity(55.0)
@@ -38,9 +38,9 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
         var mda1 = airFlow1.getMassFlowDa();
         var mda2 = airFlow2.getMassFlowDa();
         var outMda = mda1 + mda2;
-        var expectedOutHumRatioX = (mda1 * air1.getHumRatioX() + mda2 * air2.getHumRatioX()) / outMda;
-        var expectedOutEnthalpy = (mda1 * air1.getSpecEnthalpy() + mda2 * air2.getSpecEnthalpy()) / outMda;
-        var expectedOutAirTemp = PhysicsPropOfMoistAir.calcMaTaIX(expectedOutEnthalpy, expectedOutHumRatioX, P_ATM);
+        var expectedOutHumRatioX = (mda1 * air1.getHumidityRatioX() + mda2 * air2.getHumidityRatioX()) / outMda;
+        var expectedOutEnthalpy = (mda1 * air1.getSpecificEnthalpy() + mda2 * air2.getSpecificEnthalpy()) / outMda;
+        var expectedOutAirTemp = HumidAirEquations.dryBulbTemperatureIX(expectedOutEnthalpy, expectedOutHumRatioX, P_ATM);
 
         // Act
         var mixingResults = PhysicsOfMixing.mixTwoHumidGasFlows(airFlow1, airFlow2);

@@ -1,10 +1,12 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.exceptions.FluidArgumentException;
+public final class WaterVapourEquations {
 
-public final class PhysicsPropOfWaterVapour {
+    public final static double WATER_VAPOUR_MOLECULAR_MASS = 18.01528;           // [kg/mol]            - Water vapour molecular mass
+    public final static double WATER_VAPOUR_SPEC_GAS_CONSTANT = 461.52;          // [J/(kg*K)]          - Water vapour specific gas constant
+    public final static double WATER_VAPOUR_SUTHERLAND_CONSTANT = 961.0;         // [K]                 - water vapour Sutherland Constant
 
-    private PhysicsPropOfWaterVapour() {
+    private WaterVapourEquations() {
     }
 
     /**
@@ -14,7 +16,7 @@ public final class PhysicsPropOfWaterVapour {
      * @param ta air temperature, oC
      * @return water vapour dynamic viscosity, kg/(m*s)
      */
-    public static double calcWvDynVis(double ta) {
+    public static double dynamicViscosity(double ta) {
         double T = ta + 273.15;
         double aNum = Math.sqrt(T / 647.27);
         double bAux = 647.27 / T;
@@ -30,7 +32,7 @@ public final class PhysicsPropOfWaterVapour {
      * @param ta air temperature, oC
      * @return dry air thermal conductivity, W/(m*K)
      */
-    public static double calcWvK(double ta) {
+    public static double thermalConductivity(double ta) {
         return 1.74822 * Math.pow(10, -2) + 7.69127
                 * Math.pow(10, -5) * ta - 3.23464
                 * Math.pow(10, -7) * Math.pow(ta, 2) + 2.59524
@@ -44,9 +46,9 @@ public final class PhysicsPropOfWaterVapour {
      * @param ta dry air temperature, oC
      * @return water vapour specific enthalpy, kJ/kg
      */
-    public static double calcWvI(double ta) {
-        double cp_Wv = calcWvCp(ta);
-        return cp_Wv * ta + PhysicsConstants.CST_WT_R;
+    public static double specificEnthalpy(double ta) {
+        double cp_Wv = specificHeat(ta);
+        return cp_Wv * ta + LiquidWaterEquations.HEAT_OF_WATER_VAPORIZATION;
     }
 
     /**
@@ -57,7 +59,7 @@ public final class PhysicsPropOfWaterVapour {
      * @param ta air temperature, oC
      * @return dry air specific heat, kJ/(kg*K)
      */
-    public static double calcWvCp(double ta) {
+    public static double specificHeat(double ta) {
         double tk = ta + 273.15;
         double c0, c1, c2, c3, c4, c5, c6;
         if (ta <= -48.15) {
@@ -88,11 +90,11 @@ public final class PhysicsPropOfWaterVapour {
      * @param Pat atmospheric pressure, Pa
      * @return water vapour density, kg/m3
      */
-    public static double calcWvRho(double ta, double RH, double Pat) {
+    public static double density(double ta, double RH, double Pat) {
         double tk = ta + 273.15;
-        double P_Da = RH / 100 * PhysicsPropOfMoistAir.calcMaPs(ta);
+        double P_Da = RH / 100 * HumidAirEquations.saturationPressure(ta);
         double P_Wv = Pat - P_Da;
-        return P_Wv / (PhysicsConstants.CST_WV_RG * tk);
+        return P_Wv / (WATER_VAPOUR_SPEC_GAS_CONSTANT * tk);
     }
 
     /**
@@ -102,9 +104,7 @@ public final class PhysicsPropOfWaterVapour {
      * @param rho_Wv dry air density, kg/m3
      * @return kinematic viscosity, m^2/s
      */
-    public static double calcWvKinVis(double ta, double rho_Wv) {
-        if (rho_Wv <= 0)
-            throw new FluidArgumentException("Error. Value of rho_Wv is smaller than or equal 0." + String.format("rho_Ma= %.3f", rho_Wv));
-        return calcWvDynVis(ta) / rho_Wv;
+    public static double kinematicViscosity(double ta, double rho_Wv) {
+        return dynamicViscosity(ta) / rho_Wv;
     }
 }

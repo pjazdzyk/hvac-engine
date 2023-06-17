@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsPropCommonTest implements PhysicsTestConstants {
+class SharedEquationsTest implements PhysicsTestConstants {
 
     @Test
     @DisplayName("should return atmospheric pressure when higher altitude is given")
@@ -17,7 +17,7 @@ class PhysicsPropCommonTest implements PhysicsTestConstants {
         var expectedPressure = 101.325 * Math.pow((1 - 2.25577 * Math.pow(10, -5) * altitude), 5.2559) * 1000;
 
         //Act
-        double actualPressure = PhysicsPropCommon.calcPatAlt(altitude);
+        double actualPressure = SharedEquations.atmAltitudePressure(altitude);
 
         // Assert
         assertThat(actualPressure).isEqualTo(expectedPressure);
@@ -33,7 +33,7 @@ class PhysicsPropCommonTest implements PhysicsTestConstants {
         var expectedTemp = tempAtSea - 0.0065 * altitude;
 
         //Act
-        var actualTemp = PhysicsPropCommon.calcTxAlt(tempAtSea, altitude);
+        var actualTemp = SharedEquations.altitudeTemperature(tempAtSea, altitude);
 
         // Assert
         assertThat(actualTemp).isEqualTo(expectedTemp);
@@ -46,13 +46,13 @@ class PhysicsPropCommonTest implements PhysicsTestConstants {
         // Arrange
         var Pat = 101_300;
         var ta = 26.85;
-        var rhoDa = PhysicsPropOfDryAir.calcDaRho(ta, Pat);
-        var kDa = PhysicsPropOfDryAir.calcDaK(ta);
-        var cpDa = PhysicsPropOfDryAir.calcDaCp(ta);
+        var rhoDa = DryAirEquations.density(ta, Pat);
+        var kDa = DryAirEquations.thermalConductivity(ta);
+        var cpDa = DryAirEquations.specificHeat(ta);
         var expectedThermalDiffusivity = 2.218E-5;
 
         //Act
-        var actualThermalDiffusivity = PhysicsPropCommon.calcThDiff(rhoDa, kDa, cpDa);
+        var actualThermalDiffusivity = SharedEquations.thermalDiffusivity(rhoDa, kDa, cpDa);
 
         // Assert
         assertThat(actualThermalDiffusivity).isEqualTo(expectedThermalDiffusivity, withPrecision(TH_DIFF_ACCURACY));
@@ -63,13 +63,13 @@ class PhysicsPropCommonTest implements PhysicsTestConstants {
     void calcPrandtlTest_shouldReturnDryAirPrandtlNumber_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 26.85;
-        var dynVis = PhysicsPropOfDryAir.calcDaDynVis(ta);
-        var kDa = PhysicsPropOfDryAir.calcDaK(ta);
-        var cpDa = PhysicsPropOfDryAir.calcDaCp(ta);
+        var dynVis = DryAirEquations.dynamicViscosity(ta);
+        var kDa = DryAirEquations.thermalConductivity(ta);
+        var cpDa = DryAirEquations.specificHeat(ta);
         var expectedPrandtlNumber = 0.707;
 
         //Act
-        var actualPrandtlNumber = PhysicsPropCommon.calcPrandtl(dynVis, kDa, cpDa);
+        var actualPrandtlNumber = SharedEquations.prandtlNumber(dynVis, kDa, cpDa);
 
         // Assert
         assertThat(actualPrandtlNumber).isEqualTo(expectedPrandtlNumber, withPrecision(PRANDTL_ACCURACY));

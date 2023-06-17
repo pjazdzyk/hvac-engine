@@ -4,11 +4,11 @@ import com.synerset.brentsolver.BrentSolver;
 import com.synerset.hvaclib.common.MathUtils;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.PhysicsPropOfMoistAir;
+import com.synerset.hvaclib.fluids.HumidAirEquations;
 import com.synerset.hvaclib.process.exceptions.ProcessArgumentException;
-import com.synerset.hvaclib.process.resultsdto.CoolingResultDto;
-import com.synerset.hvaclib.process.resultsdto.HeatingResultDto;
-import com.synerset.hvaclib.fluids.PhysicsPropOfWater;
+import com.synerset.hvaclib.process.dataobjects.CoolingResultDto;
+import com.synerset.hvaclib.process.dataobjects.HeatingResultDto;
+import com.synerset.hvaclib.fluids.LiquidWaterEquations;
 
 /**
  * PSYCHROMETRICS PROCESS EQUATIONS LIBRARY <br>
@@ -55,7 +55,7 @@ public final class PhysicsOfCooling {
         return new CoolingResultDto(
                 inletFlow.getFluid().getAbsPressure(),
                 dryCoolingResult.outTemperature(),
-                inletFlow.getFluid().getHumRatioX(),
+                inletFlow.getFluid().getHumidityRatioX(),
                 inletFlow.getMassFlowDa(),
                 dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
@@ -79,9 +79,9 @@ public final class PhysicsOfCooling {
         ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAir = inletFlow.getFluid();
         double pressure = inletAir.getAbsPressure();
-        ProcessValidators.requireFirstValueAsGreaterThanSecond("Dry cooling temps validation. ", inletAir.getTemp(), targetOutTemp);
+        ProcessValidators.requireFirstValueAsGreaterThanSecond("Dry cooling temps validation. ", inletAir.getTemperature(), targetOutTemp);
         // If target temperature is below dew point temperature it is certain that this is no longer dry cooling
-        double tdp = inletAir.getDewPointTemp();
+        double tdp = inletAir.getDewPointTemperature();
         if (targetOutTemp < tdp) {
             throw new ProcessArgumentException("Expected temperature must be higher than dew point. Not applicable for dry cooling process.");
         }
@@ -92,7 +92,7 @@ public final class PhysicsOfCooling {
         return new CoolingResultDto(
                 pressure,
                 dryCoolingResult.outTemperature(),
-                inletAir.getHumRatioX(),
+                inletAir.getHumidityRatioX(),
                 inletFlow.getMassFlowDa(),
                 dryCoolingResult.heatOfProcess(),
                 dryCoolingResult.outTemperature(),
@@ -118,8 +118,8 @@ public final class PhysicsOfCooling {
         // Determining Bypass Factor and direct near-wall contact airflow and bypassing airflow
         ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAir = inletFlow.getFluid();
-        double inTx = inletAir.getTemp(); // oC
-        double inX = inletAir.getHumRatioX(); // kg.wv/kg.da
+        double inTx = inletAir.getTemperature(); // oC
+        double inX = inletAir.getHumidityRatioX(); // kg.wv/kg.da
         double pressure = inletAir.getAbsPressure(); // Pa
         double heatOfProcess = 0.0; // W
         double t_Cond = tm_Wall; // oC
@@ -137,18 +137,18 @@ public final class PhysicsOfCooling {
 
         // Determining direct near-wall air properties
         double Pat = inletAir.getAbsPressure();
-        double tdp_Inlet = inletAir.getDewPointTemp();
-        double Ps_Tm = PhysicsPropOfMoistAir.calcMaPs(tm_Wall);
-        double x_Tm = tm_Wall >= tdp_Inlet ? inletAir.getHumRatioX() : PhysicsPropOfMoistAir.calcMaXMax(Ps_Tm, Pat);
-        double i_Tm = PhysicsPropOfMoistAir.calcMaIx(tm_Wall, x_Tm, Pat);
+        double tdp_Inlet = inletAir.getDewPointTemperature();
+        double Ps_Tm = HumidAirEquations.saturationPressure(tm_Wall);
+        double x_Tm = tm_Wall >= tdp_Inlet ? inletAir.getHumidityRatioX() : HumidAirEquations.maxHumidityRatio(Ps_Tm, Pat);
+        double i_Tm = HumidAirEquations.specificEnthalpy(tm_Wall, x_Tm, Pat);
 
         // Determining condensate discharge and properties
-        double x1 = inletAir.getHumRatioX();
+        double x1 = inletAir.getHumidityRatioX();
         m_Cond = tm_Wall >= tdp_Inlet ? 0.0 : calcCondensateDischarge(mDa_DirectContact, x1, x_Tm);
 
         // Determining required cooling performance
-        double i_Cond = PhysicsPropOfWater.calcIx(t_Cond);
-        double i_Inlet = inletAir.getSpecEnthalpy();
+        double i_Cond = LiquidWaterEquations.specificEnthalpy(t_Cond);
+        double i_Inlet = inletAir.getSpecificEnthalpy();
         heatOfProcess = (mDa_DirectContact * (i_Tm - i_Inlet) + m_Cond * i_Cond) * 1000d;
 
         // Determining outlet humidity ratio
@@ -181,7 +181,7 @@ public final class PhysicsOfCooling {
             double heatOfProcess = 0.0; // W
             double condensateFlow = 0.0; // kg/s
             double mdaInlet = inletFlow.getMassFlowDa();
-            return new CoolingResultDto(pressure, inletAirProp.getTemp(), inletAirProp.getHumRatioX(), mdaInlet, heatOfProcess, tm_Wall, condensateFlow);
+            return new CoolingResultDto(pressure, inletAirProp.getTemperature(), inletAirProp.getHumidityRatioX(), mdaInlet, heatOfProcess, tm_Wall, condensateFlow);
         }
         if (outRH > 99.0) {
             throw new ProcessArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
@@ -190,12 +190,12 @@ public final class PhysicsOfCooling {
         //Iterative loop to determine which outlet temperature will result in expected RH.
         CoolingResultDto[] result = new CoolingResultDto[1]; // Array is needed here to work-around issue of updating result variable from the inside of inner class.
         BrentSolver solver = new BrentSolver("calcCoolingFromOutletRH SOLVER");
-        solver.setCounterpartPoints(inletAirProp.getTemp(), inletAirProp.getDewPointTemp());
+        solver.setCounterpartPoints(inletAirProp.getTemperature(), inletAirProp.getDewPointTemperature());
         solver.calcForFunction(testOutTx -> {
             result[0] = calcCoolingFromOutletTx(inletFlow, tm_Wall, testOutTx);
             double outTx = result[0].outTemperature();
             double outX = result[0].outHumidityRatio();
-            double actualRH = PhysicsPropOfMoistAir.calcMaRH(outTx, outX, pressure);
+            double actualRH = HumidAirEquations.relativeHumidity(outTx, outX, pressure);
             return outRH - actualRH;
         });
         solver.resetSolverRunFlags();
@@ -215,15 +215,15 @@ public final class PhysicsOfCooling {
     public static CoolingResultDto calcCoolingFromInputHeat(FlowOfHumidGas inletFlow, double tm_Wall, double inputHeat) {
         ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
-        double t1 = inletAirProp.getTemp();
-        double x1 = inletAirProp.getHumRatioX();
+        double t1 = inletAirProp.getTemperature();
+        double x1 = inletAirProp.getHumidityRatioX();
         double pressure = inletAirProp.getAbsPressure();
         if (inputHeat == 0.0) {
             double condensateFlow = 0.0;
             new CoolingResultDto(pressure, t1, x1, inletFlow.getMassFlowDa(), inputHeat, tm_Wall, condensateFlow);
         }
         CoolingResultDto[] result = new CoolingResultDto[1];
-        double tMin = inletAirProp.getTemp();
+        double tMin = inletAirProp.getTemperature();
 
         //For the provided inputHeat, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
         double tMax = calcDryCoolingFromInputHeat(inletFlow, inputHeat).outTemperature();

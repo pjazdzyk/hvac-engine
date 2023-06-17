@@ -4,7 +4,7 @@ import com.synerset.hvaclib.PhysicsTestConstants;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.flows.FlowOfMoistAir;
 import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.MoistAir;
+import com.synerset.hvaclib.fluids.HumidAir;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class HeatingForTargetTempTest implements PhysicsTestConstants {
         // Arrange
         var expectedOutTemp = 30d;
         var expectedHeatOfProcess = 56358.392203075746; // W
-        HumidGas heatingCaseInletAir = new MoistAir.Builder()
+        HumidGas heatingCaseInletAir = new HumidAir.Builder()
                 .withAtmPressure(P_TEST)
                 .withAirTemperature(10.0)
                 .withRelativeHumidity(60.0)
@@ -31,7 +31,7 @@ class HeatingForTargetTempTest implements PhysicsTestConstants {
         // Act
         ProcessHeatDriven heatingProcess = new HeatingForTargetTemp(inletFlow, expectedOutTemp);
         FlowOfHumidGas actualResultingFlow = heatingProcess.runProcess();
-        double actualOutTemp = actualResultingFlow.getFluid().getTemp();
+        double actualOutTemp = actualResultingFlow.getFluid().getTemperature();
         double actualHeatOfProcess = heatingProcess.getHeatOfProcess();
 
         // Assert

@@ -6,7 +6,7 @@ import java.util.Objects;
  * <h3>LIQUID WATER</h3>
  * <p>
  * This class represents a model of liquid water for a typical air conditioning low near atmospheric pressure appliances.
- * Properties are calculated based on equations in {@link PhysicsPropOfWater}.<br>
+ * Properties are calculated based on equations in {@link LiquidWaterEquations}.<br>
  * <span><b>IMPORTANT: </b></span> Please note that at this stage of development, this model is not dedicated for
  * high pressure applications. Usage limit is <100oC and  >0oC.
  * </p><br>
@@ -49,9 +49,9 @@ public class LiquidWater implements Fluid {
     public LiquidWater(double pressure, double waterTemperature) {
         this.waterTemperature = waterTemperature;
         this.waterPressure = pressure;
-        waterSpecificHeatCP = PhysicsPropOfWater.calcCp(waterTemperature);
-        waterDensity = PhysicsPropOfWater.calcRho(waterTemperature);
-        waterSpecificEnthalpy = PhysicsPropOfWater.calcIx(waterTemperature);
+        waterSpecificHeatCP = LiquidWaterEquations.specificHeat(waterTemperature);
+        waterDensity = LiquidWaterEquations.density(waterTemperature);
+        waterSpecificEnthalpy = LiquidWaterEquations.specificEnthalpy(waterTemperature);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class LiquidWater implements Fluid {
     }
 
     @Override
-    public double getTemp() {
+    public double getTemperature() {
         return this.waterTemperature;
     }
 
@@ -70,12 +70,12 @@ public class LiquidWater implements Fluid {
     }
 
     @Override
-    public double getSpecHeatCP() {
+    public double getSpecificHeatCp() {
         return this.waterSpecificHeatCP;
     }
 
     @Override
-    public double getSpecEnthalpy() {
+    public double getSpecificEnthalpy() {
         return this.waterSpecificEnthalpy;
     }
 

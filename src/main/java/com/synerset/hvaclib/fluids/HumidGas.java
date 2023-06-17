@@ -4,13 +4,13 @@ public interface HumidGas extends Fluid {
     // Mandatory HUMID gas mixture properties
     double getRelativeHumidityRH();
 
-    double getHumRatioX();
+    double getHumidityRatioX();
 
-    double getMaxHumidRatioX();
+    double getMaxHumidityRatioX();
 
-    double getDewPointTemp();
+    double getDewPointTemperature();
 
-    double getWetBulbTemp();
+    double getWetBulbTemperature();
 
     double getThermalConductivity();
 
@@ -22,29 +22,30 @@ public interface HumidGas extends Fluid {
 
     double getPrandtlNumber();
 
+    double getSaturationPressure();
+
     VapourState getVapourState();
 
 
     // Mandatory DRY gas component properties
-    double getDensityDa();
+    double getDryAirDensity();
 
-    double getSpecificHeatDa();
+    double getDryAirSpecificHeat();
 
-    double getSpecEnthalpyDa();
+    double getDryAirSpecificEnthalpy();
 
 
     // Mandatory WATER VAPOUR component properties
 
-    double getDensityWv();
+    double getWaterVapourDensity();
 
-    double getSpecHeatWv();
+    double getWaterVapourSpecificHeat();
 
-    double getSaturationPressureWv();
 
-    double getSpecEnthalpyWv();
+    double getWaterVapourSpecEnthalpy();
 
-    double getSpecEnthalpyWt();
+    double getWaterSpecEnthalpy();
 
-    double getSpecEnthalpyIce();
+    double getIceSpecEnthalpy();
 
 }

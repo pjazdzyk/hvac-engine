@@ -4,11 +4,11 @@ import com.synerset.brentsolver.BrentSolver;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.fluids.HumidGas;
 import com.synerset.hvaclib.process.exceptions.ProcessArgumentException;
-import com.synerset.hvaclib.process.inputdata.MixingInputDataDto;
-import com.synerset.hvaclib.process.resultsdto.BasicResults;
-import com.synerset.hvaclib.process.resultsdto.BasicResultsDto;
-import com.synerset.hvaclib.process.resultsdto.MixingResultDto;
-import com.synerset.hvaclib.fluids.PhysicsPropOfMoistAir;
+import com.synerset.hvaclib.process.dataobjects.MixingInputDataDto;
+import com.synerset.hvaclib.process.dataobjects.BasicResults;
+import com.synerset.hvaclib.process.dataobjects.BasicResultsDto;
+import com.synerset.hvaclib.process.dataobjects.MixingResultDto;
+import com.synerset.hvaclib.fluids.HumidAirEquations;
 
 public final class PhysicsOfMixing {
 
@@ -30,21 +30,21 @@ public final class PhysicsOfMixing {
         ProcessValidators.requirePositiveValue("Inlet dry air flow", firstInDryAirFlow);
         ProcessValidators.requirePositiveValue("Second dry air flow", secondInDryAirFlow);
         double outDryAirFlow = firstInDryAirFlow + secondInDryAirFlow;
-        double x1 = inFirstAir.getHumRatioX();
-        double x2 = inSecondAir.getHumRatioX();
+        double x1 = inFirstAir.getHumidityRatioX();
+        double x2 = inSecondAir.getHumidityRatioX();
         double pressure = inFirstAir.getAbsPressure();
         if (firstInDryAirFlow == 0.0) {
-            return new MixingResultDto(pressure, inSecondAir.getTemp(), x2, secondInDryAirFlow, firstInDryAirFlow, secondInDryAirFlow);
+            return new MixingResultDto(pressure, inSecondAir.getTemperature(), x2, secondInDryAirFlow, firstInDryAirFlow, secondInDryAirFlow);
         }
         if (secondInDryAirFlow == 0.0 || outDryAirFlow == 0.0) {
-            return new MixingResultDto(pressure, inFirstAir.getTemp(), x1, outDryAirFlow, firstInDryAirFlow, secondInDryAirFlow);
+            return new MixingResultDto(pressure, inFirstAir.getTemperature(), x1, outDryAirFlow, firstInDryAirFlow, secondInDryAirFlow);
         }
-        double i1 = inFirstAir.getSpecEnthalpy();
-        double i2 = inSecondAir.getSpecEnthalpy();
+        double i1 = inFirstAir.getSpecificEnthalpy();
+        double i2 = inSecondAir.getSpecificEnthalpy();
         double x3 = (firstInDryAirFlow * x1 + secondInDryAirFlow * x2) / outDryAirFlow;
         double i3 = (firstInDryAirFlow * i1 + secondInDryAirFlow * i2) / outDryAirFlow;
         double Pat = inFirstAir.getAbsPressure();
-        double t3 = PhysicsPropOfMoistAir.calcMaTaIX(i3, x3, Pat);
+        double t3 = HumidAirEquations.dryBulbTemperatureIX(i3, x3, Pat);
         return new MixingResultDto(pressure, t3, x3, outDryAirFlow, firstInDryAirFlow, secondInDryAirFlow);
     }
 
@@ -78,13 +78,13 @@ public final class PhysicsOfMixing {
         ProcessValidators.requireArrayNotContainsNull("Recirculation flows", recirculationFlows);
         HumidGas inletAir = inletFlow.getFluid();
         double mda3 = inletFlow.getMassFlowDa();
-        double xMda = mda3 * inletAir.getHumRatioX();
-        double iMda = mda3 * inletAir.getSpecEnthalpy();
+        double xMda = mda3 * inletAir.getHumidityRatioX();
+        double iMda = mda3 * inletAir.getSpecificEnthalpy();
         double pressure = inletAir.getAbsPressure();
         for (FlowOfHumidGas flow : recirculationFlows) {
             mda3 += flow.getMassFlowDa();
-            xMda += flow.getMassFlowDa() * flow.getFluid().getHumRatioX();
-            iMda += flow.getMassFlowDa() * flow.getFluid().getSpecEnthalpy();
+            xMda += flow.getMassFlowDa() * flow.getFluid().getHumidityRatioX();
+            iMda += flow.getMassFlowDa() * flow.getFluid().getSpecificEnthalpy();
             pressure = Double.max(pressure, flow.getFluid().getAbsPressure());
         }
         if (mda3 == 0.0) {
@@ -92,7 +92,7 @@ public final class PhysicsOfMixing {
         }
         double x3 = xMda / mda3;
         double i3 = iMda / mda3;
-        double t3 = PhysicsPropOfMoistAir.calcMaTaIX(i3, x3, pressure);
+        double t3 = HumidAirEquations.dryBulbTemperatureIX(i3, x3, pressure);
         return new BasicResultsDto(pressure, t3, x3, mda3);
     }
 
