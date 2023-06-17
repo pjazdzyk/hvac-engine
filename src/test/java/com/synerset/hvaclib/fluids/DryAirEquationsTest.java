@@ -12,14 +12,14 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
+class DryAirEquationsTest implements PhysicsTestConstants {
 
     @ParameterizedTest
     @MethodSource("dynVisDaInlineData")
     @DisplayName("should return dry air dynamic viscosity according to the physics tables for each temperature in dataset")
     void calcDaDynVisTest_shouldReturnDryAirDynamicViscosity_whenAirTemperatureIsGiven(double ta, double expectedDynViscosityFromTables) {
         //Act
-        var actualDynamicViscosity = PhysicsPropOfDryAir.calcDaDynVis(ta);
+        var actualDynamicViscosity = DryAirEquations.dynamicViscosity(ta);
 
         // Assert
         assertThat(actualDynamicViscosity).isEqualTo(expectedDynViscosityFromTables, withPrecision(DYN_VIS_ACCURACY));
@@ -45,7 +45,7 @@ class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
     void calcRhoDaTest_shouldReturnDryAirDensityAccToASHRAETables_whenAirTempIsGiven(double ta, double expectedDaDensity) {
         //Act
         var Pat = 101325;
-        var actualDaDensity = PhysicsPropOfDryAir.calcDaRho(ta, Pat);
+        var actualDaDensity = DryAirEquations.density(ta, Pat);
 
         // Arrange
         assertThat(actualDaDensity).isEqualTo(expectedDaDensity, withPrecision(RHO_ACCURACY));
@@ -69,11 +69,11 @@ class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
     void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
         // Arrange
         var ta = 20.0;
-        var rhoDa = PhysicsPropOfDryAir.calcDaRho(ta, P_PHYS);
+        var rhoDa = DryAirEquations.density(ta, P_PHYS);
         var expectedDaKinViscosity = 1.519954676200779E-5;
 
         //Act
-        var actualDaKinViscosity = PhysicsPropOfDryAir.calcDaKinVis(ta, rhoDa);
+        var actualDaKinViscosity = DryAirEquations.kinematicViscosity(ta, rhoDa);
 
         // Assert
         assertThat(actualDaKinViscosity).isEqualTo(expectedDaKinViscosity, withPrecision(MATH_ACCURACY));
@@ -84,7 +84,7 @@ class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
     @DisplayName("should return dry air thermal conductivity according to tables when air temperature is given")
     void calcDaKTest_shouldReturnDryAirThermalConductivity_WhenAirTemperatureIsGiven(double ta, double expectedDryAirThermalConductivity) {
         //Act
-        var actualDryAirThermalConductivity = PhysicsPropOfDryAir.calcDaK(ta);
+        var actualDryAirThermalConductivity = DryAirEquations.thermalConductivity(ta);
         var accuracy = K_LOW_TEMP_ACCURACY;
         if (ta > 200)
             accuracy = K_HIGH_TEMP_ACCURACY;
@@ -120,7 +120,7 @@ class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
     @DisplayName("should return dry specific heat air according to tables when air temperature is given")
     void calcDaCpTest_shouldReturnDryAirSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedDaSpecificHeat) {
         //Act
-        var actualDaSpecificHeat = PhysicsPropOfDryAir.calcDaCp(ta);
+        var actualDaSpecificHeat = DryAirEquations.specificHeat(ta);
 
         // Assert
         assertThat(actualDaSpecificHeat).isEqualTo(expectedDaSpecificHeat, withPrecision(CP_DA_ACCURACY));
@@ -154,7 +154,7 @@ class PhysicsPropOfDryAirTest implements PhysicsTestConstants {
         var expectedDaSpecificEnthalpy = 20.093833530674114;
 
         //Act
-        var actualDaSpecificEnthalpy = PhysicsPropOfDryAir.calcDaI(ta);
+        var actualDaSpecificEnthalpy = DryAirEquations.specificEnthalpy(ta);
 
         // Assert
         assertThat(actualDaSpecificEnthalpy).isEqualTo(expectedDaSpecificEnthalpy, withPrecision(MATH_ACCURACY));

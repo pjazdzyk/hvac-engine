@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
+class LiquidWaterEquationsVapourTest implements PhysicsTestConstants {
 
     @Test
     @DisplayName("should return correct water vapour dynamic viscosity when input temperature is given")
@@ -22,7 +22,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         var expectedDynViscosity = 9.731572271822231E-6;
 
         //Act
-        var actualDynViscosity = PhysicsPropOfWaterVapour.calcWvDynVis(ta);
+        var actualDynViscosity = WaterVapourEquations.dynamicViscosity(ta);
 
         // Assert
         assertThat(actualDynViscosity).isEqualTo(expectedDynViscosity, withPrecision(MATH_ACCURACY));
@@ -37,7 +37,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         var expectedWvDensity = 0.7304844902588641;
 
         //Act
-        var actualWvDensity = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_PHYS);
+        var actualWvDensity = WaterVapourEquations.density(ta, RH, P_PHYS);
 
         // Assert
         assertThat(actualWvDensity).isEqualTo(expectedWvDensity, withPrecision(MATH_ACCURACY));
@@ -49,11 +49,11 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var rhoWv = PhysicsPropOfWaterVapour.calcWvRho(ta, RH, P_PHYS);
+        var rhoWv = WaterVapourEquations.density(ta, RH, P_PHYS);
         var expectedWvKinViscosity = 1.3322079252324198E-5;
 
         //Act
-        var actualWvKinViscosity = PhysicsPropOfWaterVapour.calcWvKinVis(ta, rhoWv);
+        var actualWvKinViscosity = WaterVapourEquations.kinematicViscosity(ta, rhoWv);
 
         // Assert
         assertThat(actualWvKinViscosity).isEqualTo(expectedWvKinViscosity, withPrecision(MATH_ACCURACY));
@@ -64,7 +64,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
     @DisplayName("should return water vapour specific heat according to tables when air temperature is given")
     void calcWvCpTest_shouldReturnWaterVapourSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedWvSpecificHeat) {
         //Act
-        var actualWvSpecificHeat = PhysicsPropOfWaterVapour.calcWvCp(ta);
+        var actualWvSpecificHeat = WaterVapourEquations.specificHeat(ta);
 
         // Assert
         assertThat(actualWvSpecificHeat).isEqualTo(expectedWvSpecificHeat, withPrecision(CP_WV_ACCURACY));
@@ -103,7 +103,7 @@ class PhysicsPropOfWaterVapourTest implements PhysicsTestConstants {
         var expectedWvSpecificEnthalpy = 2538.155121040328;
 
         //Act
-        var actualWvSpecificEnthalpy = PhysicsPropOfWaterVapour.calcWvI(ta);
+        var actualWvSpecificEnthalpy = WaterVapourEquations.specificEnthalpy(ta);
 
         // Assert
         assertThat(expectedWvSpecificEnthalpy).isEqualTo(actualWvSpecificEnthalpy, withPrecision(MATH_ACCURACY));

@@ -50,7 +50,7 @@ abstract class GenericCoolingProcess extends GenericHeatingProcess implements Pr
     protected double calculateCoilByPassFactor(){
         HumidGas inletAir = inletFlow.getFluid();
         HumidGas outletAir = outletFlow.getFluid();
-        return PhysicsOfCooling.calcCoolingCoilBypassFactor(averageCoilWallTemp, inletAir.getTemp(), outletAir.getTemp());
+        return PhysicsOfCooling.calcCoolingCoilBypassFactor(averageCoilWallTemp, inletAir.getTemperature(), outletAir.getTemperature());
     }
 
 }

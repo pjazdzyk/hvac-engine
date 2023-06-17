@@ -1,7 +1,7 @@
 package com.synerset.hvaclib.flows;
 
 import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.MoistAir;
+import com.synerset.hvaclib.fluids.HumidAir;
 
 import java.util.Objects;
 
@@ -21,14 +21,14 @@ import java.util.Objects;
 public class FlowOfMoistAir implements FlowOfHumidGas {
 
     private static final double DEF_AIR_FLOW = 0.1; // kg/s
-    private final HumidGas moistAir;
-    private double massFlowMa;
-    private double volFlowMa;
+    private final HumidGas humidAir;
+    private double massFlowHa;
+    private double volFlowHa;
     private double massFlowDa;
     private double volFlowDa;
 
     public FlowOfMoistAir() {
-        this(new MoistAir(), DEF_AIR_FLOW, TypeOfAirFlow.MA_MASS_FLOW);
+        this(new HumidAir(), DEF_AIR_FLOW, TypeOfAirFlow.MASS_FLOW_HUMID);
     }
 
     private FlowOfMoistAir(Builder builder) {
@@ -39,59 +39,59 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
      * Primary constructor. Creates FlowOfFluid instance for provided Moist Air, flow and flow type.
      *
      * @param flowRate flow rate of specified type of flow in kg/s or m3/s
-     * @param moistAir type of Fluid (moist air)
+     * @param humidAir type of Fluid (moist air)
      * @param flowType - type of Flow (selected from FluidFlowType enum).
      */
-    public FlowOfMoistAir(HumidGas moistAir, double flowRate, TypeOfAirFlow flowType) {
-        FlowValidators.requireNotNull("MoistAir instance does not exist.", moistAir);
+    public FlowOfMoistAir(HumidGas humidAir, double flowRate, TypeOfAirFlow flowType) {
+        FlowValidators.requireNotNull("MoistAir instance does not exist.", humidAir);
         FlowValidators.requireNotNull("FluidFlowType has not been specified", flowType);
         FlowValidators.requirePositiveValue("FlowRate must not be negative", flowRate);
-        this.moistAir = moistAir;
+        this.humidAir = humidAir;
         initializeFlows(flowRate, flowType);
     }
 
     private void initializeFlows(double inputFlow, TypeOfAirFlow typeOfAirFlow) {
         switch (typeOfAirFlow) {
-            case MA_MASS_FLOW -> {
-                massFlowMa = inputFlow;
-                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getDensity(), massFlowMa);
-                massFlowDa = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getHumRatioX(), massFlowMa);
-                volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getDensityDa(), massFlowDa);
+            case MASS_FLOW_HUMID -> {
+                massFlowHa = inputFlow;
+                volFlowHa = FlowEquations.volFlowFromMassFlow(humidAir.getDensity(), massFlowHa);
+                massFlowDa = FlowEquations.massFlowDaFromMassFlowHa(humidAir.getHumidityRatioX(), massFlowHa);
+                volFlowDa = FlowEquations.volFlowFromMassFlow(humidAir.getDryAirDensity(), massFlowDa);
             }
-            case MA_VOL_FLOW -> {
-                volFlowMa = inputFlow;
-                massFlowMa = PhysicsOfFlow.calcMassFlowFromVolFlow(moistAir.getDensity(), volFlowMa);
-                massFlowDa = PhysicsOfFlow.calcDaMassFlowFromMaMassFlow(moistAir.getHumRatioX(), massFlowMa);
-                volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getDensityDa(), massFlowDa);
+            case VOL_FLOW_HUMID -> {
+                volFlowHa = inputFlow;
+                massFlowHa = FlowEquations.massFlowFromVolFlow(humidAir.getDensity(), volFlowHa);
+                massFlowDa = FlowEquations.massFlowDaFromMassFlowHa(humidAir.getHumidityRatioX(), massFlowHa);
+                volFlowDa = FlowEquations.volFlowFromMassFlow(humidAir.getDryAirDensity(), massFlowDa);
             }
-            case DA_MASS_FLOW -> {
+            case MASS_FLOW_DRY -> {
                 massFlowDa = inputFlow;
-                massFlowMa = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getHumRatioX(), massFlowDa);
-                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getDensity(), massFlowMa);
-                volFlowDa = PhysicsOfFlow.calcDaVolFlowFromDaMassFlow(moistAir.getDensityDa(), massFlowDa);
+                massFlowHa = FlowEquations.massFlowHaFromMassFlowDa(humidAir.getHumidityRatioX(), massFlowDa);
+                volFlowHa = FlowEquations.volFlowFromMassFlow(humidAir.getDensity(), massFlowHa);
+                volFlowDa = FlowEquations.volFlowFromMassFlow(humidAir.getDryAirDensity(), massFlowDa);
             }
-            case DA_VOL_FLOW -> {
+            case VOL_FLOW_DRY -> {
                 volFlowDa = inputFlow;
-                massFlowDa = PhysicsOfFlow.calcDaMassFlowFromDaVolFlow(moistAir.getDensityDa(), volFlowDa);
-                massFlowMa = PhysicsOfFlow.calcMaMassFlowFromDaMassFlow(moistAir.getHumRatioX(), massFlowDa);
-                volFlowMa = PhysicsOfFlow.calcVolFlowFromMassFlow(moistAir.getDensity(), massFlowMa);
+                massFlowDa = FlowEquations.massFlowFromVolFlow(humidAir.getDryAirDensity(), volFlowDa);
+                massFlowHa = FlowEquations.massFlowHaFromMassFlowDa(humidAir.getHumidityRatioX(), massFlowDa);
+                volFlowHa = FlowEquations.volFlowFromMassFlow(humidAir.getDensity(), massFlowHa);
             }
         }
     }
 
     @Override
     public HumidGas getFluid() {
-        return moistAir;
+        return humidAir;
     }
 
     @Override
     public double getMassFlow() {
-        return massFlowMa;
+        return massFlowHa;
     }
 
     @Override
     public double getVolFlow() {
-        return volFlowMa;
+        return volFlowHa;
     }
 
     @Override
@@ -107,14 +107,14 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
     @Override
     public String toString() {
         String builder = "Air properties: \n" +
-                String.format("ta = %.2f oC | ", moistAir.getTemp()) +
-                String.format("RH = %.2f %s | ", moistAir.getRelativeHumidityRH(), "%") +
-                String.format("x = %.5f kg.wv/kg.da | ", moistAir.getHumRatioX()) +
-                String.format("status = %s |\n", moistAir.getVapourState()) +
+                String.format("ta = %.2f oC | ", humidAir.getTemperature()) +
+                String.format("RH = %.2f %s | ", humidAir.getRelativeHumidityRH(), "%") +
+                String.format("x = %.5f kg.wv/kg.da | ", humidAir.getHumidityRatioX()) +
+                String.format("status = %s |\n", humidAir.getVapourState()) +
                 "Flow properties: \n" +
-                String.format("m_Ma = %.3f kg/s (moist air mass flow) | ", massFlowMa) +
-                String.format("v_Ma = %.3f m3/s (moist air vol flow) |", volFlowMa) +
-                String.format("v_Ma = %.1f m3/s (moist air vol flow) \n", volFlowMa * 3600) +
+                String.format("m_Ma = %.3f kg/s (moist air mass flow) | ", massFlowHa) +
+                String.format("v_Ma = %.3f m3/s (moist air vol flow) |", volFlowHa) +
+                String.format("v_Ma = %.1f m3/s (moist air vol flow) \n", volFlowHa * 3600) +
                 String.format("m_Da = %.3f kg/s (dry air mass flow) | ", massFlowDa) +
                 String.format("v_Da %.3f m3/s (dry air vol flow) | ", volFlowDa) +
                 "v_Da = " + String.format("v_Da %.1f m3/s (dry air vol flow)\n", volFlowDa * 3600);
@@ -125,12 +125,12 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof FlowOfMoistAir that)) return false;
-        return Double.compare(that.massFlowDa, massFlowDa) == 0 && moistAir.equals(that.moistAir);
+        return Double.compare(that.massFlowDa, massFlowDa) == 0 && humidAir.equals(that.humidAir);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moistAir, massFlowDa);
+        return Objects.hash(humidAir, massFlowDa);
     }
 
     // STATIC FACTORY METHODS
@@ -144,7 +144,7 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
      * @return FlowOfMoistAir instance with default ID
      */
     public static FlowOfMoistAir ofM3hVolFlow(HumidGas moistAir, double volFlowMaM3h) {
-        return new FlowOfMoistAir(moistAir, volFlowMaM3h / 3600d, TypeOfAirFlow.MA_VOL_FLOW);
+        return new FlowOfMoistAir(moistAir, volFlowMaM3h / 3600d, TypeOfAirFlow.VOL_FLOW_HUMID);
     }
 
     // BUILDER PATTERN
@@ -152,7 +152,7 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
     public static class Builder {
         private final HumidGas moistAir;
         private double flowRate = DEF_AIR_FLOW;
-        private TypeOfAirFlow lockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
+        private TypeOfAirFlow lockedFlowType = TypeOfAirFlow.VOL_FLOW_HUMID;
 
         public Builder(HumidGas moistAir) {
             this.moistAir = moistAir;
@@ -160,25 +160,25 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
 
         public Builder withVolFlowMa(double volFlowMa) {
             this.flowRate = volFlowMa;
-            this.lockedFlowType = TypeOfAirFlow.MA_VOL_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.VOL_FLOW_HUMID;
             return this;
         }
 
         public Builder withMassFlowMa(double massFlowMa) {
             this.flowRate = massFlowMa;
-            this.lockedFlowType = TypeOfAirFlow.MA_MASS_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.MASS_FLOW_HUMID;
             return this;
         }
 
         public Builder withVolFlowDa(double volFlowDa) {
             this.flowRate = volFlowDa;
-            this.lockedFlowType = TypeOfAirFlow.DA_VOL_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.VOL_FLOW_DRY;
             return this;
         }
 
         public Builder withMassFlowDa(double massFlowDa) {
             this.flowRate = massFlowDa;
-            this.lockedFlowType = TypeOfAirFlow.DA_MASS_FLOW;
+            this.lockedFlowType = TypeOfAirFlow.MASS_FLOW_DRY;
             return this;
         }
 

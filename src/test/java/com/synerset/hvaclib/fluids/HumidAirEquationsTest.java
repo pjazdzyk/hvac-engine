@@ -13,14 +13,14 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
+class HumidAirEquationsTest implements PhysicsTestConstants {
 
     @ParameterizedTest
     @MethodSource("psInlineData")
     @DisplayName("should return saturation pressures as in ASHRAE tables when air temperature is given")
     void calcMaPsTest_shouldReturnSatPressureAsInAshraeTables_whenAirTempIsGiven(double ta, double expected) {
         //Act
-        var actual = PhysicsPropOfMoistAir.calcMaPs(ta);
+        var actual = HumidAirEquations.saturationPressure(ta);
         double accuracy;
 
         if (ta < 0)
@@ -55,7 +55,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     @DisplayName("should return dew point temperature as in generated source set, when air temperature is given")
     void calcMaTdpTests_shouldReturnDewPointTempAsInSourceSet_whenAirTempIsGiven(double ta, double RH, double expected) {
         //Act
-        var actual = PhysicsPropOfMoistAir.calcMaTdp(ta, RH, P_PHYS);
+        var actual = HumidAirEquations.dewPointTemperature(ta, RH, P_PHYS);
 
         // Assert
         assertThat(actual).isEqualTo(expected, withPrecision(TDP_ACCURACY));
@@ -80,7 +80,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var accuracy = ta < 60 ? WBT_LOW_TEMP_ACCURACY : WBT_HIGH_TEMP_ACCURACY;
 
         //Act
-        var actual = PhysicsPropOfMoistAir.calcMaWbt(ta, RH, P_PHYS);
+        var actual = HumidAirEquations.wetBulbTemperature(ta, RH, P_PHYS);
 
         // Assert
         assertThat(actual).isEqualTo(expected, withPrecision(accuracy));
@@ -118,7 +118,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var x = 0.007359483455449959;
 
         //Act
-        var actual = PhysicsPropOfMoistAir.calcMaPs(x, RH, P_PHYS);
+        var actual = HumidAirEquations.saturationPressure(x, RH, P_PHYS);
 
         // Assert
         assertThat(actual).isEqualTo(expected, withPrecision(MATH_ACCURACY));
@@ -129,7 +129,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     @DisplayName("should return RH as in provided data set for each dry bulb air temperature and dew point temperature")
     void calcMaRHTdpTest_shouldReturnRHasInDataSet_whenAirTempAndDwPointTempIsGiven(double ta, double tdp, double expected) {
         //Act
-        var actualRH = PhysicsPropOfMoistAir.calcMaRH(tdp, ta);
+        var actualRH = HumidAirEquations.relativeHumidity(tdp, ta);
 
         // Assert
         assertThat(actualRH).isEqualTo(expected, withPrecision(TDP_ACCURACY));
@@ -155,7 +155,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedRH = 45.0;
 
         //Act
-        var actualRH = PhysicsPropOfMoistAir.calcMaRH(ta, x, P_PHYS);
+        var actualRH = HumidAirEquations.relativeHumidity(ta, x, P_PHYS);
 
         // Assert
         assertThat(actualRH).isEqualTo(expectedRH, withPrecision(MATH_ACCURACY));
@@ -170,7 +170,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedHumRatio = 0.015143324009257978;
 
         //Act
-        var actualHumRatio = PhysicsPropOfMoistAir.calcMaX(RH, Ps, P_PHYS);
+        var actualHumRatio = HumidAirEquations.humidityRatio(RH, Ps, P_PHYS);
 
         // Assert
         assertThat(actualHumRatio).isEqualTo(expectedHumRatio, withPrecision(MATH_ACCURACY));
@@ -184,7 +184,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedHumidityRatio = 0.020356309472910922;
 
         //Act
-        var actualHumidityRatioX = PhysicsPropOfMoistAir.calcMaXMax(Ps, P_PHYS);
+        var actualHumidityRatioX = HumidAirEquations.maxHumidityRatio(Ps, P_PHYS);
 
         // Assert
         assertThat(actualHumidityRatioX).isEqualTo(expectedHumidityRatio, withPrecision(MATH_ACCURACY));
@@ -199,7 +199,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedDynamicViscosity = 1.7971489177670825E-5;
 
         //Act
-        var actualDynamicViscosity = PhysicsPropOfMoistAir.calcMaDynVis(ta, x);
+        var actualDynamicViscosity = HumidAirEquations.dynamicViscosity(ta, x);
 
         // Assert
         assertThat(actualDynamicViscosity).isEqualTo(expectedDynamicViscosity, withPrecision(MATH_ACCURACY));
@@ -211,7 +211,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     void calcRhoMaTest_shouldReturnMoistAirDensityAccToASHRAETables_whenAirTempAndHumidityRatioIsGiven(double ta, double humRatio, double expectedMaDensity) {
         //Act
         var Pat = 101325;
-        var actualMaDensity = PhysicsPropOfMoistAir.calcMaRho(ta, humRatio, Pat);
+        var actualMaDensity = HumidAirEquations.density(ta, humRatio, Pat);
 
         // Arrange
         assertThat(actualMaDensity).isEqualTo(expectedMaDensity, withPrecision(RHO_ACCURACY));
@@ -236,13 +236,13 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
-        var x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, P_PHYS);
-        var rhoMa = PhysicsPropOfMoistAir.calcMaRho(ta, x, P_PHYS);
+        var Ps = HumidAirEquations.saturationPressure(ta);
+        var x = HumidAirEquations.humidityRatio(RH, Ps, P_PHYS);
+        var rhoMa = HumidAirEquations.density(ta, x, P_PHYS);
         var expectedMaKinViscosity = 1.529406259567132E-5;
 
         //Act
-        var actualMaKinViscosity = PhysicsPropOfMoistAir.calcMaKinVis(ta, x, rhoMa);
+        var actualMaKinViscosity = HumidAirEquations.kinematicViscosity(ta, x, rhoMa);
 
         // Assert
         assertThat(actualMaKinViscosity).isEqualTo(expectedMaKinViscosity, withPrecision(MATH_ACCURACY));
@@ -257,7 +257,7 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedMoistAirSpecificHeat = 1.0182187895104544;
 
         //Act
-        var actualMoistAirSpecificHeat = PhysicsPropOfMoistAir.calcMaCp(ta, humRatio);
+        var actualMoistAirSpecificHeat = HumidAirEquations.specificHeat(ta, humRatio);
 
         // Assert
         assertThat(actualMoistAirSpecificHeat).isEqualTo(expectedMoistAirSpecificHeat, withPrecision(MATH_ACCURACY));
@@ -272,8 +272,8 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedWtMistEnthalpyForNegativeTemp = 0.0;
 
         //Act
-        var actualWtMistEnthalpyForPositiveTemp = PhysicsPropOfMoistAir.calcWtI(ta);
-        var actualWtMistEnthalpyForNegativeTemp = PhysicsPropOfMoistAir.calcWtI(-ta);
+        var actualWtMistEnthalpyForPositiveTemp = HumidAirEquations.calcWtI(ta);
+        var actualWtMistEnthalpyForNegativeTemp = HumidAirEquations.calcWtI(-ta);
 
         // Assert
         assertThat(actualWtMistEnthalpyForPositiveTemp).isEqualTo(expectedWtMistEnthalpyForPositiveTemp, withPrecision(MATH_ACCURACY));
@@ -289,8 +289,8 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedIceMistEnthalpyForNegativeTemp = -375.90000000000003;
 
         //Act
-        var actualIceMistEnthalpyForPositiveTemp = PhysicsPropOfMoistAir.calcIceI(ta);
-        var actualIceMistEnthalpyForNegativeTemp = PhysicsPropOfMoistAir.calcIceI(-ta);
+        var actualIceMistEnthalpyForPositiveTemp = HumidAirEquations.calcIceI(ta);
+        var actualIceMistEnthalpyForNegativeTemp = HumidAirEquations.calcIceI(-ta);
 
         // Assert
         assertThat(actualIceMistEnthalpyForPositiveTemp).isEqualTo(expectedIceMistEnthalpyForPositiveTemp, withPrecision(MATH_ACCURACY));
@@ -313,10 +313,10 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
         var expectedEnthalpyUnsaturatedNegative = -19.68254341443484;
 
         //Act
-        var actualEnthalpyUnsaturated = PhysicsPropOfMoistAir.calcMaIx(ta1, x1, P_PHYS);
-        var actualEnthalpyWithWaterMist = PhysicsPropOfMoistAir.calcMaIx(ta1, x2, P_PHYS);
-        var actualEnthalpyWithIceMist = PhysicsPropOfMoistAir.calcMaIx(ta2, x2, P_PHYS);
-        var actualEnthalpyUnsaturatedNegative = PhysicsPropOfMoistAir.calcMaIx(ta2, x3, P_PHYS);
+        var actualEnthalpyUnsaturated = HumidAirEquations.specificEnthalpy(ta1, x1, P_PHYS);
+        var actualEnthalpyWithWaterMist = HumidAirEquations.specificEnthalpy(ta1, x2, P_PHYS);
+        var actualEnthalpyWithIceMist = HumidAirEquations.specificEnthalpy(ta2, x2, P_PHYS);
+        var actualEnthalpyUnsaturatedNegative = HumidAirEquations.specificEnthalpy(ta2, x3, P_PHYS);
 
         // Assert
         assertThat(actualEnthalpyUnsaturated).isEqualTo(expectedEnthalpyUnsaturated, withPrecision(MATH_ACCURACY));
@@ -330,10 +330,10 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     @DisplayName("should return moist air temperature when dew point temperature and relative humidity is given")
     void calcMaTaTdpRHTest_shouldReturnMoistAirTemperature_whenAirDewPointTemperatureAndRelHumidityIsGiven(double expectedTa, double RH) {
         // Arrange
-        var tdp = PhysicsPropOfMoistAir.calcMaTdp(expectedTa, RH, P_PHYS);
+        var tdp = HumidAirEquations.dewPointTemperature(expectedTa, RH, P_PHYS);
 
         //Act
-        var actualTa = PhysicsPropOfMoistAir.calcMaTaTdpRH(tdp, RH, P_PHYS);
+        var actualTa = HumidAirEquations.dryBulbTemperatureTdpRH(tdp, RH, P_PHYS);
 
         // Assert
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
@@ -361,11 +361,11 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     @DisplayName("should return moist air temperature when humidity ratio and relative humidity is given")
     void calcMaTaRHXTest_shouldReturnAirTemperature_whenHumidityRatioAndRelHumidityIsGiven(double expectedTa, double RH) {
         // Arrange
-        var Ps = PhysicsPropOfMoistAir.calcMaPs(expectedTa);
-        var x = PhysicsPropOfMoistAir.calcMaX(RH, Ps, P_PHYS);
+        var Ps = HumidAirEquations.saturationPressure(expectedTa);
+        var x = HumidAirEquations.humidityRatio(RH, Ps, P_PHYS);
 
         //Act
-        var actualTa = PhysicsPropOfMoistAir.calcMaTaRHX(x, RH, P_PHYS);
+        var actualTa = HumidAirEquations.dryBulbTemperatureXRH(x, RH, P_PHYS);
 
         // Assert
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(MATH_ACCURACY));
@@ -396,10 +396,10 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     @DisplayName("should return moist air temperature when moist air enthalpy and humidity ratio is given")
     void calcMaTaIXTest_shouldReturnMoistAirTemperature_WhenMoistAirEnthalpyAndHumidityRatioIsGiven(double expectedTa, double x) {
         // Arrange
-        var ix = PhysicsPropOfMoistAir.calcMaIx(expectedTa, x, P_PHYS);
+        var ix = HumidAirEquations.specificEnthalpy(expectedTa, x, P_PHYS);
 
         //Act
-        var actualTa = PhysicsPropOfMoistAir.calcMaTaIX(ix, x, P_PHYS);
+        var actualTa = HumidAirEquations.dryBulbTemperatureIX(ix, x, P_PHYS);
 
         // Assert
         assertThat(actualTa).isEqualTo(expectedTa, withPrecision(LIMITED_MATH_ACCURACY));
@@ -430,8 +430,8 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     @DisplayName("should return maximum dry bulb air temperature for Ps<Pat condition, when saturation pressure and atm pressures are given")
     void calcMaTaMaxPatTest_shouldReturnMaxDryBulbAirTemperature_whenSaturationPressureAndAtmPressureAreGiven(double expectedPat) {
         //Act
-        var actualMaxTemperature = PhysicsPropOfMoistAir.calcMaTaMaxPat(expectedPat);
-        var actualPs = PhysicsPropOfMoistAir.calcMaPs(actualMaxTemperature);
+        var actualMaxTemperature = HumidAirEquations.dryBulbTemperatureMax(expectedPat);
+        var actualPs = HumidAirEquations.saturationPressure(actualMaxTemperature);
 
         // We expect that if calcMaTaMaxPat() works correctly, resulting PS will be equals as Pat.
         // Assert
@@ -451,10 +451,10 @@ class PhysicsPropOfMoistAirTest implements PhysicsTestConstants {
     @DisplayName("should return dry bulb air temperature when wet bulb air temperature and relative humidity is given")
     void calcMaTaWbtTest_shouldReturnDryBulbAirTemperature_WhenWetBulbAirTemperatureAndRelativeHumidityIsGiven(double expectedTa, double RH) {
         // Arrange
-        var wbt = PhysicsPropOfMoistAir.calcMaWbt(expectedTa, RH, P_PHYS);
+        var wbt = HumidAirEquations.wetBulbTemperature(expectedTa, RH, P_PHYS);
 
         //Act
-        var actualTa = PhysicsPropOfMoistAir.calcMaTaWbt(wbt, RH, P_PHYS);
+        var actualTa = HumidAirEquations.dryBulbTemperatureWbtRH(wbt, RH, P_PHYS);
 
         // Assert
         Assertions.assertEquals(expectedTa, actualTa, LIMITED_MATH_ACCURACY);

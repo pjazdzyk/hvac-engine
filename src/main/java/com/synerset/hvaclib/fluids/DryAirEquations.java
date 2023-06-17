@@ -2,9 +2,14 @@ package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.common.MathUtils;
 
-public final class PhysicsPropOfDryAir {
+public final class DryAirEquations {
 
-    private PhysicsPropOfDryAir() {
+    // Dry air
+    public final static double DRY_AIR_MOLECULAR_MASS = 28.96546;               // [kg/mol]             - Dry air molecular mass
+    public final static double DRY_AIR_GAS_CONSTANT = 287.055;                  // [J/(kg*K)]           - Dry air specific gas constant
+    public final static double DRY_AIR_SUTHERLAND_CONSTANT = 111.0;             // [K]                  - Dry air Sutherland Constant
+
+    private DryAirEquations() {
     }
 
     /**
@@ -14,7 +19,7 @@ public final class PhysicsPropOfDryAir {
      * @param ta air temperature, oC
      * @return dynamic viscosity, kg/(m*s)
      */
-    public static double calcDaDynVis(double ta) {
+    public static double dynamicViscosity(double ta) {
         double tk = ta + 273.15;
         return (0.40401 + 0.074582 * tk - 5.7171 * Math.pow(10, -5)
                 * Math.pow(tk, 2) + 2.9928 * Math.pow(10, -8)
@@ -29,9 +34,8 @@ public final class PhysicsPropOfDryAir {
      * @param rho_Da dry air density, kg/m3
      * @return kinematic viscosity, m^2/s
      */
-    public static double calcDaKinVis(double ta, double rho_Da) {
-        FluidValidators.requirePositiveAndNonZeroValue("Dry air density", rho_Da);
-        return calcDaDynVis(ta) / rho_Da;
+    public static double kinematicViscosity(double ta, double rho_Da) {
+        return dynamicViscosity(ta) / rho_Da;
     }
 
     /**
@@ -42,7 +46,7 @@ public final class PhysicsPropOfDryAir {
      * @param ta dry air temperature
      * @return thermal conductivity, W/(m*K)
      */
-    public static double calcDaK(double ta) {
+    public static double thermalConductivity(double ta) {
         return 2.43714 * Math.pow(10, -2)
                 + 7.83035 * Math.pow(10, -5) * ta
                 - 1.94021 * Math.pow(10, -8) * Math.pow(ta, 2)
@@ -57,8 +61,8 @@ public final class PhysicsPropOfDryAir {
      * @param ta dry air temperature, oC
      * @return dry air specific enthalpy, kJ/kg
      */
-    public static double calcDaI(double ta) {
-        double cp_Da = calcDaCp(ta);
+    public static double specificEnthalpy(double ta) {
+        double cp_Da = specificHeat(ta);
         return cp_Da * ta;
     }
 
@@ -71,7 +75,7 @@ public final class PhysicsPropOfDryAir {
      * @param ta air temperature, oC
      * @return dry air specific heat, kJ/(kg*K)
      */
-    public static double calcDaCp(double ta) {
+    public static double specificHeat(double ta) {
         double a, b, c, d, e;
         if (ta <= -73.15)
             return 1.002;
@@ -102,9 +106,8 @@ public final class PhysicsPropOfDryAir {
      * @param Pat atmospheric pressure, Pa
      * @return dry air density, kg/m3
      */
-    public static double calcDaRho(double ta, double Pat) {
-        FluidValidators.requireFirstValueAsGreaterThanSecond("Pressure must be > than limiter.", Pat, FluidLimiters.MIN_PAT);
+    public static double density(double ta, double Pat) {
         double tk = ta + 273.15;
-        return Pat / (PhysicsConstants.CST_DA_RG * tk);
+        return Pat / (DRY_AIR_GAS_CONSTANT * tk);
     }
 }

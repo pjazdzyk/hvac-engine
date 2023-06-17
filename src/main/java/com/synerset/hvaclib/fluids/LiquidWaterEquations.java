@@ -1,7 +1,5 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.exceptions.FluidArgumentException;
-
 /**
  * LIQUID WATER EQUATIONS LIBRARY (PSYCHROMETRICS) <br>
  * Set of static methods outputs process result as an array with process heat, core output air parameters (temperature, humidity ratio) and condensate
@@ -18,9 +16,12 @@ import com.synerset.hvaclib.fluids.exceptions.FluidArgumentException;
  * @author  Piotr Jażdżyk, MScEng
  */
 
-public final class PhysicsPropOfWater {
+public final class LiquidWaterEquations {
 
-    private PhysicsPropOfWater() {}
+    // Water
+    public final static double HEAT_OF_WATER_VAPORIZATION = 2500.9;             // [kJ/kg]              - Water heat of vaporization (t=0oC)
+
+    private LiquidWaterEquations() {}
 
     /**
      * Returns water enthalpy at provided temperature in kJ/kg<br>
@@ -30,8 +31,8 @@ public final class PhysicsPropOfWater {
      * @param tx water temperature, oC
      * @return water enthalpy at provided temperature, kJ/kg
      */
-    public static double calcIx(double tx) {
-        double cp = calcCp(tx);
+    public static double specificEnthalpy(double tx) {
+        double cp = specificHeat(tx);
         return tx * cp;
     }
 
@@ -43,12 +44,7 @@ public final class PhysicsPropOfWater {
      * @param tx water temperature, oC
      * @return water density at temperature tx and atmospheric pressure, kg/m3
      */
-    public static double calcRho(double tx) {
-        if (tx <= 0) {
-            throw new FluidArgumentException("[calcWtRho] ERROR: Temperature equals or lower than 0 oC");
-        } else if (tx > 150) {
-            throw new FluidArgumentException("[calcWtRho] WARNING: Temperature exceeds formula threshold tw>150 oC ");
-        }
+    public static double density(double tx) {
         return (999.83952 + 16.945176 * tx
                 - 7.9870401 * Math.pow(10, -3) * Math.pow(tx, 2)
                 - 46.170461 * Math.pow(10, -6) * Math.pow(tx, 3)
@@ -65,7 +61,7 @@ public final class PhysicsPropOfWater {
      * @param tx water temperature, oC
      * @return water isobaric specific heat
      */
-    public static double calcCp(double tx) {
+    public static double specificHeat(double tx) {
         if (tx > 0 && tx <= 100)
             return 3.93240161 * Math.pow(10, -13) * Math.pow(tx, 6)
                     - 1.525847751 * Math.pow(10, -10) * Math.pow(tx, 5)

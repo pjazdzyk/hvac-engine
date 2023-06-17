@@ -1,7 +1,7 @@
 package com.synerset.hvaclib.process;
 
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
-import com.synerset.hvaclib.process.resultsdto.CoolingResultDto;
+import com.synerset.hvaclib.process.dataobjects.CoolingResultDto;
 
 public class CoolingForTargetTemp extends GenericCoolingProcess implements ProcessWithCondensate {
 

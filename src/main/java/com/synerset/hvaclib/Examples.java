@@ -7,8 +7,8 @@ import com.synerset.hvaclib.flows.FlowOfSingleFluid;
 import com.synerset.hvaclib.flows.FlowOfSinglePhase;
 import com.synerset.hvaclib.fluids.Fluid;
 import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.MoistAir;
-import com.synerset.hvaclib.fluids.PhysicsPropOfMoistAir;
+import com.synerset.hvaclib.fluids.HumidAir;
+import com.synerset.hvaclib.fluids.HumidAirEquations;
 import com.synerset.hvaclib.process.CoolingForTargetTemp;
 import com.synerset.hvaclib.process.MixingOfMoistAir;
 import com.synerset.hvaclib.process.ProcessHeatDriven;
@@ -24,21 +24,21 @@ public class Examples {
 
     public static void runUserGuideExamples() {
         // Using library classes for single value calculation
-        double saturationPressure = PhysicsPropOfMoistAir.calcMaPs(20);
+        double saturationPressure = HumidAirEquations.saturationPressure(20);
         System.out.println(saturationPressure); //Outputs 2338.80 Pa
 
         // Creating MoistAir instance using constructor
-        HumidGas summerAir = new MoistAir(30, 45, 90000, MoistAir.HumidityInputType.REL_HUMID);
+        HumidGas summerAir = new HumidAir(30, 45, 90000, HumidAir.HumidityInputType.RELATIVE_HUMIDITY);
 
         // Using Builder Pattern
-        HumidGas summerAirBld = new MoistAir.Builder()
+        HumidGas summerAirBld = new HumidAir.Builder()
                 .withAirTemperature(30)
                 .withRelativeHumidity(45)
                 .build();
 
         // Static factory methods
-        HumidGas exampleAir1 = MoistAir.ofAir(30, 45);
-        HumidGas exampleAir2 = MoistAir.ofAir(30, 45, 90000);
+        HumidGas exampleAir1 = HumidAir.ofAir(30, 45);
+        HumidGas exampleAir2 = HumidAir.ofAir(30, 45, 90000);
 
         // Creating Liquid water instance
         Fluid waterCondensateExample1 = new LiquidWater(90000, 10);
@@ -51,7 +51,7 @@ public class Examples {
         double airTemp = 20; // oC
         double airRH = 50;   // %
         double moistAirVolFLow = 5000d / 3600d; // m3/s
-        HumidGas airExample = new MoistAir.Builder()
+        HumidGas airExample = new HumidAir.Builder()
                 .withAirTemperature(airTemp)
                 .withRelativeHumidity(airRH)
                 .build();
@@ -76,7 +76,7 @@ public class Examples {
         // Heating process example
         double targetHeatingTemp = 18.0; // OC
         // Step 1: Creating moist air instance
-        HumidGas winterAmbientAir = MoistAir.ofAir(-20, 99, 101_325);
+        HumidGas winterAmbientAir = HumidAir.ofAir(-20, 99, 101_325);
         // Step 3: creating humid air flow
         FlowOfHumidGas winterAirflow = FlowOfMoistAir.ofM3hVolFlow(winterAmbientAir, 5000);
         // Step 4: creating heating process
@@ -88,7 +88,7 @@ public class Examples {
         double targetCoolingTemp = 24.0; // OC
         double averageCoilWallTemp = MathUtils.arithmeticAverage(8, 14); // oC
         // Step 1: Creating moist air instance
-        HumidGas summerAmbientAir = MoistAir.ofAir(32, 50, 90000);
+        HumidGas summerAmbientAir = HumidAir.ofAir(32, 50, 90000);
         // Step 3: creating humid air flow
         FlowOfHumidGas summerAirFlow = FlowOfMoistAir.ofM3hVolFlow(summerAmbientAir, 5000);
         // Step 4: creating heating process
@@ -98,14 +98,14 @@ public class Examples {
 
         // Mixing process example
         // Step 1: Creating inlet flow
-        HumidGas coldAmbientAir = MoistAir.ofAir(-20, 99, 101_325);
+        HumidGas coldAmbientAir = HumidAir.ofAir(-20, 99, 101_325);
         FlowOfHumidGas inletAirFlow = FlowOfMoistAir.ofM3hVolFlow(coldAmbientAir, 5000);
         // Step 2: Creating a couple of recirculation flows
-        HumidGas returnAir1 = MoistAir.ofAir(20, 30, 101_325);
+        HumidGas returnAir1 = HumidAir.ofAir(20, 30, 101_325);
         FlowOfHumidGas returnFlow1 = FlowOfMoistAir.ofM3hVolFlow(returnAir1, 5000);
-        HumidGas returnAir2 = MoistAir.ofAir(15, 45, 101_325);
+        HumidGas returnAir2 = HumidAir.ofAir(15, 45, 101_325);
         FlowOfHumidGas returnFlow2 = FlowOfMoistAir.ofM3hVolFlow(returnAir2, 2000);
-        HumidGas returnAir3 = MoistAir.ofAir(18, 30, 101_325);
+        HumidGas returnAir3 = HumidAir.ofAir(18, 30, 101_325);
         FlowOfHumidGas returnFlow3 = FlowOfMoistAir.ofM3hVolFlow(returnAir3, 1000);
         // Step 3: Creating air mixing process
         ProcessWithMixing mixing = new MixingOfMoistAir(inletAirFlow, returnFlow1, returnFlow2, returnFlow3);

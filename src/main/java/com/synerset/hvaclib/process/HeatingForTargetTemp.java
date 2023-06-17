@@ -1,7 +1,7 @@
 package com.synerset.hvaclib.process;
 
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
-import com.synerset.hvaclib.process.resultsdto.HeatingResultDto;
+import com.synerset.hvaclib.process.dataobjects.HeatingResultDto;
 
 public class HeatingForTargetTemp extends GenericHeatingProcess implements ProcessHeatDriven {
 

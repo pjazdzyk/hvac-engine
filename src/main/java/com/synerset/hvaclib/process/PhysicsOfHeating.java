@@ -3,8 +3,8 @@ package com.synerset.hvaclib.process;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.fluids.HumidGas;
 import com.synerset.hvaclib.process.exceptions.ProcessArgumentException;
-import com.synerset.hvaclib.process.resultsdto.HeatingResultDto;
-import com.synerset.hvaclib.fluids.PhysicsPropOfMoistAir;
+import com.synerset.hvaclib.process.dataobjects.HeatingResultDto;
+import com.synerset.hvaclib.fluids.HumidAirEquations;
 
 public final class PhysicsOfHeating {
     private PhysicsOfHeating() {
@@ -24,16 +24,16 @@ public final class PhysicsOfHeating {
         ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
         double pressure = inletAirProp.getAbsPressure();
-        double t1 = inletAirProp.getTemp();
-        double x1 = inletAirProp.getHumRatioX();
+        double t1 = inletAirProp.getTemperature();
+        double x1 = inletAirProp.getHumidityRatioX();
         double m1 = inletFlow.getMassFlowDa();
         if (inputHeatQ == 0.0 || inletFlow.getMassFlow() == 0.0) {
             return new HeatingResultDto(pressure, t1, x1, m1, inputHeatQ);
         }
         double Pat = inletAirProp.getAbsPressure();
-        double i1 = inletAirProp.getSpecEnthalpy();
+        double i1 = inletAirProp.getSpecificEnthalpy();
         double i2 = (m1 * i1 + inputHeatQ / 1000) / m1;
-        double t2 = PhysicsPropOfMoistAir.calcMaTaIX(i2, x1, Pat);
+        double t2 = HumidAirEquations.dryBulbTemperatureIX(i2, x1, Pat);
         return new HeatingResultDto(pressure, t2, x1, m1, inputHeatQ);
     }
 
@@ -50,17 +50,17 @@ public final class PhysicsOfHeating {
     public static HeatingResultDto calcHeatingForTargetTemp(FlowOfHumidGas inletFlow, double targetOutTemp) {
         ProcessValidators.requireNotNull("Inlet flow", inletFlow);
         HumidGas inletAirProp = inletFlow.getFluid();
-        ProcessValidators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletAirProp.getTemp());
+        ProcessValidators.requireFirstValueAsGreaterThanSecond("Heating temps validation. ", targetOutTemp, inletAirProp.getTemperature());
         double pressure = inletAirProp.getAbsPressure();
-        double t1 = inletAirProp.getTemp();
-        double x1 = inletAirProp.getHumRatioX();
+        double t1 = inletAirProp.getTemperature();
+        double x1 = inletAirProp.getHumidityRatioX();
         double m1 = inletFlow.getMassFlowDa();
         double inputHeat = 0.0;
         if (targetOutTemp == t1) {
             return new HeatingResultDto(pressure, t1, x1, m1, inputHeat);
         }
-        double i1 = inletAirProp.getSpecEnthalpy();
-        double i2 = PhysicsPropOfMoistAir.calcMaIx(targetOutTemp, x1, pressure);
+        double i1 = inletAirProp.getSpecificEnthalpy();
+        double i2 = HumidAirEquations.specificEnthalpy(targetOutTemp, x1, pressure);
         inputHeat = (m1 * i2 - m1 * i1) * 1000d;
         return new HeatingResultDto(pressure, targetOutTemp, x1, m1, inputHeat);
     }
@@ -81,8 +81,8 @@ public final class PhysicsOfHeating {
         HumidGas inletAirProp = inletFlow.getFluid();
         double pressure = inletAirProp.getAbsPressure();
         double RH1 = inletAirProp.getRelativeHumidityRH();
-        double t1 = inletAirProp.getTemp();
-        double x1 = inletAirProp.getHumRatioX();
+        double t1 = inletAirProp.getTemperature();
+        double x1 = inletAirProp.getHumidityRatioX();
         double m1 = inletFlow.getMassFlowDa();
         double heatOfProcess = 0.0;
         if (outRH == RH1) {
@@ -92,9 +92,9 @@ public final class PhysicsOfHeating {
             throw new ProcessArgumentException("Expected RH must be smaller than initial value. If this was intended - use methods dedicated for cooling.");
         }
         double Pat = inletAirProp.getAbsPressure();
-        double i1 = inletAirProp.getSpecEnthalpy();
-        double t2 = PhysicsPropOfMoistAir.calcMaTaRHX(x1, outRH, Pat);
-        double i2 = PhysicsPropOfMoistAir.calcMaIx(t2, x1, Pat);
+        double i1 = inletAirProp.getSpecificEnthalpy();
+        double t2 = HumidAirEquations.dryBulbTemperatureXRH(x1, outRH, Pat);
+        double i2 = HumidAirEquations.specificEnthalpy(t2, x1, Pat);
         heatOfProcess = (m1 * i2 - m1 * i1) * 1000d;
         return new HeatingResultDto(pressure, t2, x1, m1, heatOfProcess);
     }

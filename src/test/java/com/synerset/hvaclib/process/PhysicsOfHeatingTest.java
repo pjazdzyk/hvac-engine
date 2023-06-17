@@ -4,7 +4,7 @@ import com.synerset.hvaclib.PhysicsTestConstants;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.flows.FlowOfMoistAir;
 import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.MoistAir;
+import com.synerset.hvaclib.fluids.HumidAir;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ class PhysicsOfHeatingTest implements PhysicsTestConstants {
 
     @BeforeEach
     void setUp() {
-        HumidGas heatingCaseInletAir = new MoistAir.Builder()
+        HumidGas heatingCaseInletAir = new HumidAir.Builder()
                 .withAtmPressure(P_TEST)
                 .withAirTemperature(10.0)
                 .withRelativeHumidity(60.0)
@@ -85,7 +85,7 @@ class PhysicsOfHeatingTest implements PhysicsTestConstants {
     void typicalWinterHVACScenario_shouldHeatUpWinterAir_whenExpectedOutletAirTemperatureIsGiven() {
         // Arrange
         var designWinterExternalTemp = -20.0; //oC
-        HumidGas winterAir = new MoistAir.Builder()
+        HumidGas winterAir = new HumidAir.Builder()
                 .withAtmPressure(P_TEST)
                 .withAirTemperature(designWinterExternalTemp)
                 .withRelativeHumidity(100.0)

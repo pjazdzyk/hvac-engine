@@ -9,19 +9,13 @@ import java.util.Objects;
  * <p>
  * This class represents a model of two-phase air mixture with water vapour, water mist or ice mist. All properties are automatically
  * updated if any core property is changed (pressure, temperature, humidity). All properties are calculated based on functions specified
- * in {@link PhysicsPropOfMoistAir} and {@link PhysicsPropOfWater} classes.
+ * in {@link HumidAirEquations} and {@link LiquidWaterEquations} classes.
  * </p><br>
  * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
  * </p><br>
  */
 
-public class MoistAir implements HumidGas {
-
-    // Default parameters
-
-    private static final double DEF_TEMP = 20;                                     // [oC]             - Default water temperature
-    private static final double DEF_RH = 50;                                       // [%]              - Default relative humidity
-    private static final double DEF_PAT = 101_325;                                 // [Pa]             - Standard atmospheric pressure (physical atmosphere)
+public class HumidAir implements HumidGas {
 
     // Moist air parameters
     private VapourState vapourStatus;        // -                - vapor status: unsaturated, saturated, water fog, ice fog
@@ -57,11 +51,11 @@ public class MoistAir implements HumidGas {
     private double specEnthalpyIce;          // [kJ/kg]          - ice mist enthalpy
 
 
-    public MoistAir() {
-        this(DEF_TEMP, DEF_RH, DEF_PAT, HumidityInputType.REL_HUMID);
+    public HumidAir() {
+        this(PropertyDefaults.INDOOR_WINTER_TEMP, PropertyDefaults.INDOOR_WINTER_RH, PropertyDefaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
-    private MoistAir(Builder builder) {
+    private HumidAir(Builder builder) {
         this(builder.airTemp, builder.humidityXorRH, builder.atmPressure, builder.humidityInputType);
     }
 
@@ -74,23 +68,23 @@ public class MoistAir implements HumidGas {
      * @param absPressure - atmospheric pressure in Pa,
      * @param humidType   - provide REL_HUMID if RH is provided or HUM_RATIO if humidity ratio is provided.
      */
-    public MoistAir(double temperature, double xRH, double absPressure, HumidityInputType humidType) {
+    public HumidAir(double temperature, double xRH, double absPressure, HumidityInputType humidType) {
         this.absPressure = absPressure;
         this.temperature = temperature;
-        this.saturationPressureWv = PhysicsPropOfMoistAir.calcMaPs(temperature);
+        this.saturationPressureWv = HumidAirEquations.saturationPressure(temperature);
         initializeHumidity(xRH, humidType);
         initializeRemainingProperties();
     }
 
     private void initializeHumidity(double xRH, HumidityInputType humidType) {
         switch (humidType) {
-            case REL_HUMID -> {
+            case RELATIVE_HUMIDITY -> {
                 this.relativeHumidity = xRH;
-                this.humidityRatioX = PhysicsPropOfMoistAir.calcMaX(relativeHumidity, saturationPressureWv, absPressure);
+                this.humidityRatioX = HumidAirEquations.humidityRatio(relativeHumidity, saturationPressureWv, absPressure);
             }
-            case HUM_RATIO -> {
+            case HUMIDITY_RATIO -> {
                 this.humidityRatioX = xRH;
-                this.relativeHumidity = PhysicsPropOfMoistAir.calcMaRH(temperature, xRH, absPressure);
+                this.relativeHumidity = HumidAirEquations.relativeHumidity(temperature, xRH, absPressure);
             }
             default ->
                     throw new FluidArgumentException("Wrong humidity argument value. Instance was not created.");
@@ -98,25 +92,25 @@ public class MoistAir implements HumidGas {
     }
 
     private void initializeRemainingProperties() {
-        this.maxHumidityRatioX = PhysicsPropOfMoistAir.calcMaXMax(saturationPressureWv, absPressure);
-        this.densityDa = PhysicsPropOfDryAir.calcDaRho(temperature, absPressure);
-        this.densityWv = PhysicsPropOfWaterVapour.calcWvRho(temperature, relativeHumidity, absPressure);
-        this.density = PhysicsPropOfMoistAir.calcMaRho(temperature, humidityRatioX, absPressure);
-        this.specHeatDa = PhysicsPropOfDryAir.calcDaCp(temperature);
-        this.specHeatWv = PhysicsPropOfWaterVapour.calcWvCp(temperature);
-        this.specHeat = PhysicsPropOfMoistAir.calcMaCp(temperature, humidityRatioX);
-        this.dynamicViscosity = PhysicsPropOfMoistAir.calcMaDynVis(temperature, humidityRatioX);
-        this.kinematicViscosity = PhysicsPropOfMoistAir.calcMaKinVis(temperature, humidityRatioX, density);
-        this.thermalConductivity = PhysicsPropOfMoistAir.calcMaK(temperature, humidityRatioX);
-        this.thermalDiffusivity = PhysicsPropCommon.calcThDiff(density, thermalConductivity, specHeat);
-        this.prandtlNumber = PhysicsPropCommon.calcPrandtl(dynamicViscosity, thermalConductivity, specHeat);
-        this.specEnthalpy = PhysicsPropOfMoistAir.calcMaIx(temperature, humidityRatioX, absPressure);
-        this.specEnthalpyDa = PhysicsPropOfDryAir.calcDaI(temperature);
-        this.specEnthalpyWv = PhysicsPropOfWaterVapour.calcWvI(temperature);
-        this.specEnthalpyWt = PhysicsPropOfMoistAir.calcWtI(temperature);
-        this.specEnthalpyIce = PhysicsPropOfMoistAir.calcIceI(temperature);
-        this.wetBulbTemperature = PhysicsPropOfMoistAir.calcMaWbt(temperature, relativeHumidity, absPressure);
-        this.dewPointTemperature = PhysicsPropOfMoistAir.calcMaTdp(temperature, relativeHumidity, absPressure);
+        this.maxHumidityRatioX = HumidAirEquations.maxHumidityRatio(saturationPressureWv, absPressure);
+        this.densityDa = DryAirEquations.density(temperature, absPressure);
+        this.densityWv = WaterVapourEquations.density(temperature, relativeHumidity, absPressure);
+        this.density = HumidAirEquations.density(temperature, humidityRatioX, absPressure);
+        this.specHeatDa = DryAirEquations.specificHeat(temperature);
+        this.specHeatWv = WaterVapourEquations.specificHeat(temperature);
+        this.specHeat = HumidAirEquations.specificHeat(temperature, humidityRatioX);
+        this.dynamicViscosity = HumidAirEquations.dynamicViscosity(temperature, humidityRatioX);
+        this.kinematicViscosity = HumidAirEquations.kinematicViscosity(temperature, humidityRatioX, density);
+        this.thermalConductivity = HumidAirEquations.thermalConductivity(temperature, humidityRatioX);
+        this.thermalDiffusivity = SharedEquations.thermalDiffusivity(density, thermalConductivity, specHeat);
+        this.prandtlNumber = SharedEquations.prandtlNumber(dynamicViscosity, thermalConductivity, specHeat);
+        this.specEnthalpy = HumidAirEquations.specificEnthalpy(temperature, humidityRatioX, absPressure);
+        this.specEnthalpyDa = DryAirEquations.specificEnthalpy(temperature);
+        this.specEnthalpyWv = WaterVapourEquations.specificEnthalpy(temperature);
+        this.specEnthalpyWt = HumidAirEquations.calcWtI(temperature);
+        this.specEnthalpyIce = HumidAirEquations.calcIceI(temperature);
+        this.wetBulbTemperature = HumidAirEquations.wetBulbTemperature(temperature, relativeHumidity, absPressure);
+        this.dewPointTemperature = HumidAirEquations.dewPointTemperature(temperature, relativeHumidity, absPressure);
         checkVapourStatus();
     }
 
@@ -125,7 +119,7 @@ public class MoistAir implements HumidGas {
         if (humidityRatioX == maxHumidityRatioX)
             vapourStatus = VapourState.SATURATED;
         else if ((humidityRatioX > maxHumidityRatioX) && temperature > 0)
-            vapourStatus = VapourState.DROPLET_FOG;
+            vapourStatus = VapourState.WATER_MIST;
         else if ((humidityRatioX > maxHumidityRatioX) && temperature <= 0)
             vapourStatus = VapourState.ICE_FOG;
         else
@@ -138,7 +132,7 @@ public class MoistAir implements HumidGas {
     }
 
     @Override
-    public double getTemp() {
+    public double getTemperature() {
         return temperature;
     }
 
@@ -148,12 +142,12 @@ public class MoistAir implements HumidGas {
     }
 
     @Override
-    public double getSpecHeatCP() {
+    public double getSpecificHeatCp() {
         return specHeat;
     }
 
     @Override
-    public double getSpecEnthalpy() {
+    public double getSpecificEnthalpy() {
         return specEnthalpy;
     }
 
@@ -163,22 +157,22 @@ public class MoistAir implements HumidGas {
     }
 
     @Override
-    public double getHumRatioX() {
+    public double getHumidityRatioX() {
         return humidityRatioX;
     }
 
     @Override
-    public double getMaxHumidRatioX() {
+    public double getMaxHumidityRatioX() {
         return maxHumidityRatioX;
     }
 
     @Override
-    public double getDewPointTemp() {
+    public double getDewPointTemperature() {
         return dewPointTemperature;
     }
 
     @Override
-    public double getWetBulbTemp() {
+    public double getWetBulbTemperature() {
         return wetBulbTemperature;
     }
 
@@ -213,47 +207,47 @@ public class MoistAir implements HumidGas {
     }
 
     @Override
-    public double getDensityDa() {
+    public double getDryAirDensity() {
         return densityDa;
     }
 
     @Override
-    public double getSpecificHeatDa() {
+    public double getDryAirSpecificHeat() {
         return specHeatDa;
     }
 
     @Override
-    public double getSpecEnthalpyDa() {
+    public double getDryAirSpecificEnthalpy() {
         return specEnthalpyDa;
     }
 
     @Override
-    public double getDensityWv() {
+    public double getWaterVapourDensity() {
         return densityWv;
     }
 
     @Override
-    public double getSpecHeatWv() {
+    public double getWaterVapourSpecificHeat() {
         return specHeatWv;
     }
 
     @Override
-    public double getSaturationPressureWv() {
+    public double getSaturationPressure() {
         return saturationPressureWv;
     }
 
     @Override
-    public double getSpecEnthalpyWv() {
+    public double getWaterVapourSpecEnthalpy() {
         return specEnthalpyWv;
     }
 
     @Override
-    public double getSpecEnthalpyWt() {
+    public double getWaterSpecEnthalpy() {
         return specEnthalpyWt;
     }
 
     @Override
-    public double getSpecEnthalpyIce() {
+    public double getIceSpecEnthalpy() {
         return specEnthalpyIce;
     }
 
@@ -271,15 +265,15 @@ public class MoistAir implements HumidGas {
     }
 
     public enum HumidityInputType {
-        REL_HUMID,
-        HUM_RATIO
+        RELATIVE_HUMIDITY,
+        HUMIDITY_RATIO
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MoistAir moistAir)) return false;
-        return Double.compare(moistAir.absPressure, absPressure) == 0 && Double.compare(moistAir.temperature, temperature) == 0 && Double.compare(moistAir.humidityRatioX, humidityRatioX) == 0;
+        if (!(o instanceof HumidAir humidAir)) return false;
+        return Double.compare(humidAir.absPressure, absPressure) == 0 && Double.compare(humidAir.temperature, temperature) == 0 && Double.compare(humidAir.humidityRatioX, humidityRatioX) == 0;
     }
 
     @Override
@@ -288,20 +282,20 @@ public class MoistAir implements HumidGas {
     }
 
     // STATIC FACTORY METHOD PATTERN
-    public static MoistAir ofAir(double tx, double RH) {
-        return new MoistAir(tx, RH, DEF_PAT, HumidityInputType.REL_HUMID);
+    public static HumidAir ofAir(double tx, double RH) {
+        return new HumidAir(tx, RH, PropertyDefaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
-    public static MoistAir ofAir(double tx, double RH, double Pat) {
-        return new MoistAir(tx, RH, Pat, HumidityInputType.REL_HUMID);
+    public static HumidAir ofAir(double tx, double RH, double Pat) {
+        return new HumidAir(tx, RH, Pat, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
     // BUILDER PATTERN
     public static class Builder {
-        private double airTemp = DEF_TEMP;
-        private double humidityXorRH = DEF_RH;
-        private double atmPressure = DEF_PAT;
-        private HumidityInputType humidityInputType = HumidityInputType.REL_HUMID;
+        private double airTemp = PropertyDefaults.INDOOR_WINTER_TEMP;
+        private double humidityXorRH = PropertyDefaults.INDOOR_WINTER_RH;
+        private double atmPressure = PropertyDefaults.STANDARD_ATMOSPHERE;
+        private HumidityInputType humidityInputType = HumidityInputType.RELATIVE_HUMIDITY;
 
         public Builder withAirTemperature(double ta) {
             this.airTemp = ta;
@@ -310,13 +304,13 @@ public class MoistAir implements HumidGas {
 
         public Builder withRelativeHumidity(double RH) {
             this.humidityXorRH = RH;
-            this.humidityInputType = HumidityInputType.REL_HUMID;
+            this.humidityInputType = HumidityInputType.RELATIVE_HUMIDITY;
             return this;
         }
 
         public Builder withHumidityRatioX(double x) {
             this.humidityXorRH = x;
-            this.humidityInputType = HumidityInputType.HUM_RATIO;
+            this.humidityInputType = HumidityInputType.HUMIDITY_RATIO;
             return this;
         }
 
@@ -326,17 +320,17 @@ public class MoistAir implements HumidGas {
         }
 
         public Builder withAtmPressureBasedOnASLElevation(double elevationAboveSea) {
-            this.atmPressure = PhysicsPropCommon.calcPatAlt(elevationAboveSea);
+            this.atmPressure = SharedEquations.atmAltitudePressure(elevationAboveSea);
             return this;
         }
 
         public Builder withAirTemperatureCorrectedByASLElevation(double tempAtSeaLevel, double elevationAboveSea) {
-            this.airTemp = PhysicsPropCommon.calcTxAlt(tempAtSeaLevel, elevationAboveSea);
+            this.airTemp = SharedEquations.altitudeTemperature(tempAtSeaLevel, elevationAboveSea);
             return this;
         }
 
-        public MoistAir build() {
-            return new MoistAir(this);
+        public HumidAir build() {
+            return new HumidAir(this);
         }
 
     }

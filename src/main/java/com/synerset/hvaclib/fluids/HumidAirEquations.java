@@ -37,12 +37,12 @@ import java.util.function.DoubleFunction;
  * @author Piotr Jażdżyk, MScEng
  */
 
-public final class PhysicsPropOfMoistAir {
+public final class HumidAirEquations {
 
-    private PhysicsPropOfMoistAir() {
+    private HumidAirEquations() {
     }
 
-    private static final double WG_RATIO = PhysicsConstants.CST_WV_MM / PhysicsConstants.CST_DA_MM;
+    private static final double WG_RATIO = WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS / DryAirEquations.DRY_AIR_MOLECULAR_MASS;
     private static final double SOLVER_A_COEF = 0.8;
     private static final double SOLVER_B_COEF = 1.01;
 
@@ -56,16 +56,13 @@ public final class PhysicsPropOfMoistAir {
      * @param ta air temperature, oC
      * @return temperature at provided altitude, oC
      */
-    public static double calcMaPs(double ta) {
-        FluidValidators.requireFirstValueAsGreaterThanSecond("Air temperature must be > than limiter.", ta, FluidLimiters.MIN_T);
-        if (ta < FluidLimiters.MIN_T_FOR_PS)
-            return 0.0;
-        double exactPs;
-        double estimatedPs;
+    public static double saturationPressure(double ta) {
+        double expectedSatPressure;
+        double estimatedSatPressure;
         double a;
         double tk = ta + 273.15;
-        double n = 1.0; // additional convergence coefficient for higher temperatures
-        DoubleFunction<Double> psFunction;
+        // additional convergence coefficient for higher temperatures, determine empirically
+        double n = 1.0;
         final double C1 = -5.6745359E+03;
         final double C2 = 6.3925247E+00;
         final double C3 = -9.6778430E-03;
@@ -79,20 +76,27 @@ public final class PhysicsPropOfMoistAir {
         final double C11 = 4.1764768E-05;
         final double C12 = -1.4452093E-08;
         final double C13 = 6.5459673E+00;
-        if (ta < 0) {
+
+        DoubleFunction<Double> satPressureExpression;
+
+        if (ta < 0.0) {
             a = 6.1115;
-            psFunction = ps -> Math.log(ps) - C1 / tk - C2 - C3 * tk - C4 * tk * tk - C5 * tk * tk * tk - C6 * tk * tk * tk * tk - C7 * Math.log(tk);
+            satPressureExpression = ps -> Math.log(ps) - C1 / tk - C2 - C3 * tk - C4 * tk * tk - C5 * tk * tk * tk - C6 * tk * tk * tk * tk - C7 * Math.log(tk);
         } else {
             a = 6.1121;
-            psFunction = ps -> Math.log(ps) - C8 / tk - C9 - C10 * tk - C11 * tk * tk - C12 * tk * tk * tk - C13 * Math.log(tk);
+            satPressureExpression = ps -> Math.log(ps) - C8 / tk - C9 - C10 * tk - C11 * tk * tk - C12 * tk * tk * tk - C13 * Math.log(tk);
         }
-        if (ta > 50)
+        if (ta > 50.0) {
             n = 1.1;
-        estimatedPs = a * Math.exp(calcAlfaT(ta)) * 100.0;
+        }
+
+        // Estimated saturation pressure for convergence speedup
+        estimatedSatPressure = a * Math.exp(calcAlfaT(ta)) * 100.0;
+
         BrentSolver solver = new BrentSolver("P_SOLVER", 2, 0);
-        solver.setCounterpartPoints(estimatedPs * SOLVER_A_COEF, estimatedPs * SOLVER_B_COEF * n);
-        exactPs = solver.calcForFunction(psFunction);
-        return exactPs;
+        solver.setCounterpartPoints(estimatedSatPressure * SOLVER_A_COEF, estimatedSatPressure * SOLVER_B_COEF * n);
+        expectedSatPressure = solver.calcForFunction(satPressureExpression);
+        return expectedSatPressure;
     }
 
     /**
@@ -103,10 +107,7 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pa
      * @return saturation vapour pressure, Pa
      */
-    public static double calcMaPs(double x, double RH, double Pat) {
-        FluidValidators.requirePositiveAndNonZeroValue("Humidity ratio", x);
-        FluidValidators.requirePositiveAndNonZeroValue("Relative humidity", RH);
-        FluidValidators.requireFirstValueAsGreaterThanSecond("Pressure must be > than limiter.", Pat, FluidLimiters.MIN_PAT);
+    public static double saturationPressure(double x, double RH, double Pat) {
         return x * Pat / ((WG_RATIO * RH / 100.0) + x * RH / 100.0);
     }
 
@@ -119,18 +120,16 @@ public final class PhysicsPropOfMoistAir {
      * @param RH relative humidity, %
      * @return dew point temperature, oC
      */
-    public static double calcMaTdp(double ta, double RH, double Pat) {
-        FluidValidators.requireFirstValueAsGreaterThanSecond("Pressure must be > than limiter.", Pat, FluidLimiters.MIN_PAT);
-        FluidValidators.requirePositiveValue("Relative humidity", RH);
+    public static double dewPointTemperature(double ta, double RH, double Pat) {
         if (RH >= 100)
             return ta;
-        if (RH == 0)
+        if (RH == 0.0)
             return Double.NEGATIVE_INFINITY;
-        //Arden-Buck procedure tdP estimation (used for RH>25)
+        // Arden-Buck procedure tdP estimation (used for RH>25)
         double tdpEstimated;
         double a, b, c, d;
         double beta_TRH, b_TRH, c_TRH;
-        if (ta > 0) {
+        if (ta > 0.0) {
             b = 18.678;
             c = 257.14;
             d = 234.50;
@@ -139,21 +138,21 @@ public final class PhysicsPropOfMoistAir {
             c = 279.82;
             d = 333.70;
         }
-        a = 2 / d;
-        beta_TRH = Math.log(RH / 100) + calcAlfaT(ta);
+        a = 2.0 / d;
+        beta_TRH = Math.log(RH / 100.0) + calcAlfaT(ta);
         b_TRH = b - beta_TRH;
         c_TRH = -c * beta_TRH;
-        tdpEstimated = 1 / a * (b_TRH - Math.sqrt(b_TRH * b_TRH + 2 * a * c_TRH));
-        if (RH < 25) {
-            double Ps = calcMaPs(ta);
-            double x = calcMaX(RH, Ps, Pat);
+        tdpEstimated = 1.0 / a * (b_TRH - Math.sqrt(b_TRH * b_TRH + 2.0 * a * c_TRH));
+        if (RH < 25.0) {
+            double Ps = saturationPressure(ta);
+            double x = humidityRatio(RH, Ps, Pat);
             BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
             solver.setCounterpartPoints(tdpEstimated * SOLVER_A_COEF, tdpEstimated * SOLVER_B_COEF);
-            if (RH < 1)
+            if (RH < 1.0)
                 solver.setAccuracy(0.0000001);
             double tdpExact = solver.calcForFunction(temp -> {
-                double Ps1 = calcMaPs(temp);
-                double x1 = calcMaXMax(Ps1, Pat);
+                double Ps1 = saturationPressure(temp);
+                double x1 = maxHumidityRatio(Ps1, Pat);
                 return x1 - x;
 
             });
@@ -172,28 +171,27 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pa
      * @return moist air wet bulb temperature, oC
      */
-    public static double calcMaWbt(double ta, double RH, double Pat) {
-        FluidValidators.requirePositiveValue("Relative humidity", RH);
-        if (RH >= 100)
+    public static double wetBulbTemperature(double ta, double RH, double Pat) {
+        if (RH >= 100.0)
             return ta;
         double estimatedWbt = ta * Math.atan(0.151977 * Math.pow(RH + 8.313659, 0.5))
                 + Math.atan(ta + RH) - Math.atan(RH - 1.676331)
                 + 0.00391838 * Math.pow(RH, 1.5) * Math.atan(0.023101 * RH)
                 - 4.686035;
-        double Ps = calcMaPs(ta);
-        double x = calcMaX(RH, Ps, Pat);
-        double h = calcMaIx(ta, x, Pat);
+        double Ps = saturationPressure(ta);
+        double x = humidityRatio(RH, Ps, Pat);
+        double h = specificEnthalpy(ta, x, Pat);
         BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
         solver.setCounterpartPoints(estimatedWbt * SOLVER_A_COEF, estimatedWbt * SOLVER_B_COEF);
         double exactWbt = solver.calcForFunction(temp -> {
-            double Ps1 = calcMaPs(temp);
-            double x1 = calcMaXMax(Ps1, Pat);
-            double h1 = calcMaIx(temp, x1, Pat);
+            double Ps1 = saturationPressure(temp);
+            double x1 = maxHumidityRatio(Ps1, Pat);
+            double h1 = specificEnthalpy(temp, x1, Pat);
             double hw1;
-            if (temp <= 0)
+            if (temp <= 0.0)
                 hw1 = calcIceI(temp);
             else
-                hw1 = PhysicsPropOfWater.calcIx(temp);
+                hw1 = LiquidWaterEquations.specificEnthalpy(temp);
             return h + (x1 - x) * hw1 - h1;
         });
         return exactWbt;
@@ -208,7 +206,7 @@ public final class PhysicsPropOfMoistAir {
      * @param tdp air dew point temperature, oC
      * @return relative humidity, %
      */
-    public static double calcMaRH(double tdp, double ta) {
+    public static double relativeHumidity(double tdp, double ta) {
         return Math.exp(calcAlfaT(tdp) - calcAlfaT(ta)) * 100;
     }
 
@@ -220,11 +218,10 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pa
      * @return relative humidity, %
      */
-    public static double calcMaRH(double ta, double x, double Pat) {
-        FluidValidators.requirePositiveValue("Humidity ratio", x);
+    public static double relativeHumidity(double ta, double x, double Pat) {
         if (x == 0.0)
             return 0.0;
-        double Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
+        double Ps = HumidAirEquations.saturationPressure(ta);
         double RH = x * Pat / (WG_RATIO * Ps + x * Ps);
         return RH > 1 ? 100 : RH * 100;
     }
@@ -238,10 +235,7 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pa
      * @return humidity ratio, kg.wv/kg.da
      */
-    public static double calcMaX(double RH, double Ps, double Pat) {
-        FluidValidators.requirePositiveValue("Relative humidity", RH);
-        FluidValidators.requirePositiveValue("Saturation pressure", Ps);
-        FluidValidators.requireFirstValueAsGreaterThanSecond("Pressure must be > than saturation pressure.", Pat, Ps);
+    public static double humidityRatio(double RH, double Ps, double Pat) {
         if (RH == 0)
             return 0.0;
         return WG_RATIO * (RH / 100.0 * Ps) / (Pat - (RH / 100.0) * Ps);
@@ -255,8 +249,8 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pa
      * @return humidity ratio, kg.wv/kg.da
      */
-    public static double calcMaXMax(double Ps, double Pat) {
-        return calcMaX(100.0, Ps, Pat);
+    public static double maxHumidityRatio(double Ps, double Pat) {
+        return humidityRatio(100.0, Ps, Pat);
     }
 
     /*DYNAMIC VISCOSITY CALCULATION*/
@@ -270,15 +264,16 @@ public final class PhysicsPropOfMoistAir {
      * @param x  humidity ratio, kg.wv/kg.da
      * @return dynamic viscosity, kg/(m*s)
      */
-    public static double calcMaDynVis(double ta, double x) {
-        FluidValidators.requirePositiveValue("Humidity ratio", x);
-        double dynVis_Da = PhysicsPropOfDryAir.calcDaDynVis(ta);
+    public static double dynamicViscosity(double ta, double x) {
+        double dynVis_Da = DryAirEquations.dynamicViscosity(ta);
         if (x == 0)
             return dynVis_Da;
         double xm = x * 1.61;
-        double dynVis_Wv = PhysicsPropOfWaterVapour.calcWvDynVis(ta);
-        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(PhysicsConstants.CST_WV_MM / PhysicsConstants.CST_DA_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsConstants.CST_DA_MM / PhysicsConstants.CST_WV_MM), 0.5));
-        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(PhysicsConstants.CST_DA_MM / PhysicsConstants.CST_WV_MM, 0.25), 2) / (2 * Math.sqrt(2) * Math.pow(1 + (PhysicsConstants.CST_WV_MM / PhysicsConstants.CST_DA_MM), 0.5));
+        double dynVis_Wv = WaterVapourEquations.dynamicViscosity(ta);
+        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS / DryAirEquations.DRY_AIR_MOLECULAR_MASS, 0.25), 2)
+                / (2 * Math.sqrt(2) * Math.pow(1 + (DryAirEquations.DRY_AIR_MOLECULAR_MASS / WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS), 0.5));
+        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(DryAirEquations.DRY_AIR_MOLECULAR_MASS / WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS, 0.25), 2)
+                / (2 * Math.sqrt(2) * Math.pow(1 + (WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS / DryAirEquations.DRY_AIR_MOLECULAR_MASS), 0.5));
         return (dynVis_Da / (1 + fi_AV * xm)) + (dynVis_Wv / (1 + fi_VA / xm));
     }
 
@@ -292,12 +287,10 @@ public final class PhysicsPropOfMoistAir {
      * @param rho_Ma humid air density, kg/m3
      * @return kinematic viscosity, m^2/s
      */
-    public static double calcMaKinVis(double ta, double x, double rho_Ma) {
-        FluidValidators.requirePositiveAndNonZeroValue("Moist air density", rho_Ma);
-        FluidValidators.requirePositiveValue("Humidity ratio", x);
+    public static double kinematicViscosity(double ta, double x, double rho_Ma) {
         return x == 0.0
-                ? PhysicsPropOfDryAir.calcDaDynVis(ta) / rho_Ma
-                : calcMaDynVis(ta, x) / rho_Ma;
+                ? DryAirEquations.dynamicViscosity(ta) / rho_Ma
+                : dynamicViscosity(ta, x) / rho_Ma;
     }
 
     /*THERMAL CONDUCTIVITY CALCULATION*/
@@ -311,18 +304,17 @@ public final class PhysicsPropOfMoistAir {
      * @param x  air humidity ratio, kg.wv/kg.da
      * @return air thermal conductivity, W/(m*K)
      */
-    public static double calcMaK(double ta, double x) {
-        FluidValidators.requirePositiveValue("Humidity ratio", x);
-        double dynVisDa = PhysicsPropOfDryAir.calcDaDynVis(ta);
-        double dynVisWv = PhysicsPropOfWaterVapour.calcWvDynVis(ta);
-        double k_Da = PhysicsPropOfDryAir.calcDaK(ta);
-        if (x == 0)
+    public static double thermalConductivity(double ta, double x) {
+        double dynVisDa = DryAirEquations.dynamicViscosity(ta);
+        double dynVisWv = WaterVapourEquations.dynamicViscosity(ta);
+        double k_Da = DryAirEquations.thermalConductivity(ta);
+        if (x == 0.0)
             return k_Da;
-        double sut_Da = PhysicsConstants.CST_DA_SUT;
-        double sut_Wv = PhysicsConstants.CST_WV_SUT;
+        double sut_Da = DryAirEquations.DRY_AIR_SUTHERLAND_CONSTANT;
+        double sut_Wv = WaterVapourEquations.WATER_VAPOUR_SUTHERLAND_CONSTANT;
         double tk = ta + 273.15;
         double sutAv = 0.733 * Math.sqrt(sut_Da * sut_Wv);
-        double k_Wv = PhysicsPropOfWaterVapour.calcWvK(ta);
+        double k_Wv = WaterVapourEquations.thermalConductivity(ta);
         double xm = 1.61 * x;
         double alfa_AV;
         double alfa_VA;
@@ -330,13 +322,13 @@ public final class PhysicsPropOfMoistAir {
         double beta_VA;
         double A_AV;
         double A_VA;
-        alfa_AV = (dynVisDa / dynVisWv) * Math.pow(WG_RATIO, 0.75) * ((1 + sut_Da / tk) / (1 + sut_Wv / tk));
-        alfa_VA = (dynVisWv / dynVisDa) * Math.pow(WG_RATIO, 0.75) * ((1 + sut_Wv / tk) / (1 + sut_Da / tk));
-        beta_AV = (1 + sutAv / tk) / (1 + sut_Da / tk);
-        beta_VA = (1 + sutAv / tk) / (1 + sut_Wv / tk);
-        A_AV = 0.25 * Math.pow(1 + alfa_AV, 2) * beta_AV;
-        A_VA = 0.25 * Math.pow(1 + alfa_VA, 2) * beta_VA;
-        return (k_Da / (1 + A_AV * xm)) + (k_Wv / (1 + A_VA / xm));
+        alfa_AV = (dynVisDa / dynVisWv) * Math.pow(WG_RATIO, 0.75) * ((1.0 + sut_Da / tk) / (1.0 + sut_Wv / tk));
+        alfa_VA = (dynVisWv / dynVisDa) * Math.pow(WG_RATIO, 0.75) * ((1.0 + sut_Wv / tk) / (1.0 + sut_Da / tk));
+        beta_AV = (1.0 + sutAv / tk) / (1.0 + sut_Da / tk);
+        beta_VA = (1.0 + sutAv / tk) / (1.0 + sut_Wv / tk);
+        A_AV = 0.25 * Math.pow(1.0 + alfa_AV, 2.0) * beta_AV;
+        A_VA = 0.25 * Math.pow(1.0 + alfa_VA, 2.0) * beta_VA;
+        return (k_Da / (1.0 + A_AV * xm)) + (k_Wv / (1.0 + A_VA / xm));
     }
 
     /*SPECIFIC ENTHALPY CALCULATION*/
@@ -352,25 +344,25 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pa
      * @return humid air specific enthalpy
      */
-    public static double calcMaIx(double ta, double x, double Pat) {
-        FluidValidators.requirePositiveValue("Humidity ratio", x);
-        FluidValidators.requireFirstValueAsGreaterThanSecond("Pressure must be > than limiter.", Pat, FluidLimiters.MIN_PAT);
-        double i_Da = PhysicsPropOfDryAir.calcDaI(ta);
+    public static double specificEnthalpy(double ta, double x, double Pat) {
+        double i_Da = DryAirEquations.specificEnthalpy(ta);
         //Case1: no humidity = dry air only
         if (x == 0.0)
             return i_Da;
         //Case2: x <= xMax, unsaturated air
-        double Ps = PhysicsPropOfMoistAir.calcMaPs(ta);
-        double xMax = calcMaXMax(Ps, Pat);
-        double i_Wv = PhysicsPropOfWaterVapour.calcWvI(ta) * x;
+        double Ps = HumidAirEquations.saturationPressure(ta);
+        double xMax = maxHumidityRatio(Ps, Pat);
+        double i_Wv = WaterVapourEquations.specificEnthalpy(ta) * x;
         if (x <= xMax)
             return i_Da + i_Wv;
         //Case3: x > XMax, saturated air with water or ice fog
-        i_Wv = PhysicsPropOfWaterVapour.calcWvI(ta) * xMax;
+        i_Wv = WaterVapourEquations.specificEnthalpy(ta) * xMax;
         double i_Wt = calcWtI(ta) * (x - xMax);
         double i_Ice = calcIceI(ta) * (x - xMax);
         return i_Da + i_Wv + i_Wt + i_Ice;
     }
+
+    // TODO usunąć
 
     /**
      * Returns water mist specific enthalpy, kJ/kg<br>
@@ -380,8 +372,10 @@ public final class PhysicsPropOfMoistAir {
      * @return water mist specific enthalpy, kJ/kg
      */
     public static double calcWtI(double ta) {
-        return ta < 0.0 ? 0.0 : PhysicsPropOfWater.calcIx(ta);
+        return ta < 0.0 ? 0.0 : LiquidWaterEquations.specificEnthalpy(ta);
     }
+
+    // TODO przeniesc do klasy odpowiedzialnej za ice mist
 
     /**
      * Returns ice mist specific enthalpy, kJ/kg<br>
@@ -391,7 +385,7 @@ public final class PhysicsPropOfMoistAir {
      * @return ice mist specific enthalpy, kJ/kg
      */
     public static double calcIceI(double ta) {
-        return ta > 0.0 ? 0.0 : PropertyDefaults.DEF_ICE_CP * ta - PhysicsConstants.CST_ICE_R;
+        return ta > 0.0 ? 0.0 : PropertyDefaults.DEF_ICE_CP * ta - PhysicsConstants.HEAT_OF_ICE_MELT;
     }
 
     /*SPECIFIC HEAT CALCULATION*/
@@ -405,9 +399,8 @@ public final class PhysicsPropOfMoistAir {
      * @param x  air humidity ratio, kg.wv/kg.da
      * @return moist air specific heat, kJ/(kg*K)
      */
-    public static double calcMaCp(double ta, double x) {
-        FluidValidators.requirePositiveValue("Humidity ratio", x);
-        return PhysicsPropOfDryAir.calcDaCp(ta) + x * PhysicsPropOfWaterVapour.calcWvCp(ta);
+    public static double specificHeat(double ta, double x) {
+        return DryAirEquations.specificHeat(ta) + x * WaterVapourEquations.specificHeat(ta);
     }
 
     /*DENSITY CALCULATION*/
@@ -422,10 +415,10 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pa
      * @return air density, kg/m3
      */
-    public static double calcMaRho(double ta, double x, double Pat) {
-        FluidValidators.requirePositiveValue("Humidity ratio", x);
-        if (x == 0.0)
-            return PhysicsPropOfDryAir.calcDaRho(ta, Pat);
+    public static double density(double ta, double x, double Pat) {
+        if (x == 0.0) {
+            return DryAirEquations.density(ta, Pat);
+        }
         double PatKpa = Pat / 1000.0;
         double tk = ta + 273.15;
         return 1.0 / ((0.2871 * tk * (1.0 + 1.6078 * x)) / PatKpa);
@@ -441,16 +434,16 @@ public final class PhysicsPropOfMoistAir {
      * @param RH  air relative humidity, %
      * @return air dry bulb temperature, oC
      */
-    public static double calcMaTaTdpRH(double tdp, double RH, double Pat) {
-        FluidValidators.requirePositiveValue("Relative humidity", RH);
-        if (RH == 0.0)
+    public static double dryBulbTemperatureTdpRH(double tdp, double RH, double Pat) {
+        if (RH == 0.0) {
             return Double.POSITIVE_INFINITY;
+        }
         double taEstimated = (tdp - 112 * Math.pow(RH / 100, 1.0 / 8.0) + 112) / (0.9 * Math.pow(RH / 100, 1.0 / 8.0) + 0.1);
         //New instance of BrentSolver is required, to avoid clash between two methods using P_SOLVER
         //at the same time.
         BrentSolver solver = new BrentSolver();
         solver.setCounterpartPoints(taEstimated * SOLVER_A_COEF, taEstimated * SOLVER_B_COEF);
-        return solver.calcForFunction(temp -> tdp - calcMaTdp(temp, RH, Pat));
+        return solver.calcForFunction(temp -> tdp - dewPointTemperature(temp, RH, Pat));
     }
 
     /**
@@ -461,9 +454,9 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat - atmospheric pressure, Pa
      * @return dry bulb air temperature, oC
      */
-    public static double calcMaTaRHX(double x, double RH, double Pat) {
-        BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
-        return solver.calcForFunction(tx -> calcMaPs(x, RH, Pat) - calcMaPs(tx));
+    public static double dryBulbTemperatureXRH(double x, double RH, double Pat) {
+        BrentSolver solver = new BrentSolver("T_XRH_SOLVER", 2, 5);
+        return solver.calcForFunction(tx -> saturationPressure(x, RH, Pat) - saturationPressure(tx));
     }
 
     /**
@@ -475,22 +468,9 @@ public final class PhysicsPropOfMoistAir {
      * @param Pat atmospheric pressure, Pat
      * @return air dry bulb temperature, oC
      */
-    public static double calcMaTaIX(double ix, double x, double Pat) {
-        BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
-        return solver.calcForFunction(tx -> ix - PhysicsPropOfMoistAir.calcMaIx(tx, x, Pat));
-    }
-
-    /**
-     * Returns maximum dry bulb air temperature, for which condition Pat>Ps is met for RH=100% oC
-     *
-     * @param inPat atmospheric pressure, Pa
-     * @return maximum dry bulb air temperature, oC
-     */
-    public static double calcMaTaMaxPat(double inPat) {
-        double estimatedTa = -237300 * Math.log(0.001638 * inPat) / (1000 * Math.log(0.001638 * inPat) - 17269);
-        BrentSolver solver = new BrentSolver();
-        solver.setCounterpartPoints(estimatedTa * SOLVER_A_COEF, estimatedTa * SOLVER_B_COEF * 1.5);
-        return solver.calcForFunction(ta -> inPat - calcMaPs(ta));
+    public static double dryBulbTemperatureIX(double ix, double x, double Pat) {
+        BrentSolver solver = new BrentSolver("T_IX_SOLVER", 2, 5);
+        return solver.calcForFunction(tx -> ix - HumidAirEquations.specificEnthalpy(tx, x, Pat));
     }
 
     /*OTHER FUNCTIONS*/
@@ -502,9 +482,22 @@ public final class PhysicsPropOfMoistAir {
      * @param RH  relative humidity, %
      * @return air dry bulb temperature, oC
      */
-    public static double calcMaTaWbt(double wbt, double RH, double Pat) {
+    public static double dryBulbTemperatureWbtRH(double wbt, double RH, double Pat) {
+        BrentSolver solver = new BrentSolver("T_WbtRH_SOLVER");
+        return solver.calcForFunction(temp -> wbt - wetBulbTemperature(temp, RH, Pat));
+    }
+
+    /**
+     * Returns maximum dry bulb air temperature, for which condition Pat>Ps is met for RH=100% oC
+     *
+     * @param inPat atmospheric pressure, Pa
+     * @return maximum dry bulb air temperature, oC
+     */
+    public static double dryBulbTemperatureMax(double inPat) {
+        double estimatedTa = -237300 * Math.log(0.001638 * inPat) / (1000 * Math.log(0.001638 * inPat) - 17269);
         BrentSolver solver = new BrentSolver();
-        return solver.calcForFunction(temp -> wbt - calcMaWbt(temp, RH, Pat));
+        solver.setCounterpartPoints(estimatedTa * SOLVER_A_COEF, estimatedTa * SOLVER_B_COEF * 1.5);
+        return solver.calcForFunction(ta -> inPat - saturationPressure(ta));
     }
 
     /*TOOL METHODS*/

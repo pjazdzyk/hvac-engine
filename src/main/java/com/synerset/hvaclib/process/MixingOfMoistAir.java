@@ -1,7 +1,7 @@
 package com.synerset.hvaclib.process;
 
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
-import com.synerset.hvaclib.process.resultsdto.BasicResults;
+import com.synerset.hvaclib.process.dataobjects.BasicResults;
 
 public class MixingOfMoistAir extends GenericMixingProcess {
 

@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.process.inputdata;
+package com.synerset.hvaclib.process.dataobjects;
 
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 

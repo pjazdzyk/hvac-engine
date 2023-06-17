@@ -45,11 +45,11 @@ public class FlowOfSingleFluid implements FlowOfSinglePhase {
         switch (typeOfFlow) {
             case MASS_FLOW -> {
                 this.massFlow = flowRate;
-                this.volFlow = PhysicsOfFlow.calcVolFlowFromMassFlow(fluid.getDensity(), massFlow);
+                this.volFlow = FlowEquations.volFlowFromMassFlow(fluid.getDensity(), massFlow);
             }
             case VOL_FLOW -> {
                 this.volFlow = flowRate;
-                this.massFlow = PhysicsOfFlow.calcMassFlowFromVolFlow(fluid.getDensity(), volFlow);
+                this.massFlow = FlowEquations.massFlowFromVolFlow(fluid.getDensity(), volFlow);
             }
         }
     }
@@ -72,7 +72,7 @@ public class FlowOfSingleFluid implements FlowOfSinglePhase {
     @Override
     public String toString() {
         String builder = "Fluid properties: \n" +
-                String.format("ta = %.2f oC | ", fluid.getTemp()) +
+                String.format("ta = %.2f oC | ", fluid.getTemperature()) +
                 String.format("rho = %.2f kg/m3 | ", fluid.getDensity()) +
                 String.format("fluid class = %s \n", fluid.getClass().getSimpleName()) +
                 "Flow properties: \n" +
