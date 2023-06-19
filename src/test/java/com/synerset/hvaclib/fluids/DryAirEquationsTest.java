@@ -14,6 +14,12 @@ import static org.assertj.core.api.Assertions.withPrecision;
 
 class DryAirEquationsTest implements PhysicsTestConstants {
 
+    double DYN_VIS_ACCURACY = 0.00000007;
+    double CP_DA_ACCURACY = 0.00047;
+    double K_LOW_TEMP_ACCURACY = 0.0006;
+    double K_HIGH_TEMP_ACCURACY = 0.0013;
+    double RHO_ACCURACY = 0.004;
+
     @ParameterizedTest
     @MethodSource("dynVisDaInlineData")
     @DisplayName("should return dry air dynamic viscosity according to the physics tables for each temperature in dataset")

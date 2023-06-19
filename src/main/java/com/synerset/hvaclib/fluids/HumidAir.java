@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.hvaclib.common.Defaults;
 import com.synerset.hvaclib.fluids.exceptions.FluidArgumentException;
 
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class HumidAir implements HumidGas {
 
 
     public HumidAir() {
-        this(PropertyDefaults.INDOOR_WINTER_TEMP, PropertyDefaults.INDOOR_WINTER_RH, PropertyDefaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
+        this(Defaults.INDOOR_WINTER_TEMP, Defaults.INDOOR_WINTER_RH, Defaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
     private HumidAir(Builder builder) {
@@ -107,8 +108,8 @@ public class HumidAir implements HumidGas {
         this.specEnthalpy = HumidAirEquations.specificEnthalpy(temperature, humidityRatioX, absPressure);
         this.specEnthalpyDa = DryAirEquations.specificEnthalpy(temperature);
         this.specEnthalpyWv = WaterVapourEquations.specificEnthalpy(temperature);
-        this.specEnthalpyWt = HumidAirEquations.calcWtI(temperature);
-        this.specEnthalpyIce = HumidAirEquations.calcIceI(temperature);
+        this.specEnthalpyWt = LiquidWaterEquations.specificEnthalpy(temperature);
+        this.specEnthalpyIce = LiquidWaterEquations.specificEnthalpy(temperature);
         this.wetBulbTemperature = HumidAirEquations.wetBulbTemperature(temperature, relativeHumidity, absPressure);
         this.dewPointTemperature = HumidAirEquations.dewPointTemperature(temperature, relativeHumidity, absPressure);
         checkVapourStatus();
@@ -283,7 +284,7 @@ public class HumidAir implements HumidGas {
 
     // STATIC FACTORY METHOD PATTERN
     public static HumidAir ofAir(double tx, double RH) {
-        return new HumidAir(tx, RH, PropertyDefaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
+        return new HumidAir(tx, RH, Defaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
     public static HumidAir ofAir(double tx, double RH, double Pat) {
@@ -292,9 +293,9 @@ public class HumidAir implements HumidGas {
 
     // BUILDER PATTERN
     public static class Builder {
-        private double airTemp = PropertyDefaults.INDOOR_WINTER_TEMP;
-        private double humidityXorRH = PropertyDefaults.INDOOR_WINTER_RH;
-        private double atmPressure = PropertyDefaults.STANDARD_ATMOSPHERE;
+        private double airTemp = Defaults.INDOOR_WINTER_TEMP;
+        private double humidityXorRH = Defaults.INDOOR_WINTER_RH;
+        private double atmPressure = Defaults.STANDARD_ATMOSPHERE;
         private HumidityInputType humidityInputType = HumidityInputType.RELATIVE_HUMIDITY;
 
         public Builder withAirTemperature(double ta) {

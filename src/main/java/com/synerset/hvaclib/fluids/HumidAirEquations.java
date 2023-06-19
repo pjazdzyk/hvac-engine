@@ -2,6 +2,7 @@ package com.synerset.hvaclib.fluids;
 
 
 import com.synerset.brentsolver.BrentSolver;
+import com.synerset.hvaclib.solids.IceEquations;
 
 import java.util.function.DoubleFunction;
 
@@ -189,7 +190,7 @@ public final class HumidAirEquations {
             double h1 = specificEnthalpy(temp, x1, Pat);
             double hw1;
             if (temp <= 0.0)
-                hw1 = calcIceI(temp);
+                hw1 = IceEquations.specificEnthalpy(temp);
             else
                 hw1 = LiquidWaterEquations.specificEnthalpy(temp);
             return h + (x1 - x) * hw1 - h1;
@@ -357,35 +358,9 @@ public final class HumidAirEquations {
             return i_Da + i_Wv;
         //Case3: x > XMax, saturated air with water or ice fog
         i_Wv = WaterVapourEquations.specificEnthalpy(ta) * xMax;
-        double i_Wt = calcWtI(ta) * (x - xMax);
-        double i_Ice = calcIceI(ta) * (x - xMax);
+        double i_Wt = LiquidWaterEquations.specificEnthalpy(ta) * (x - xMax);
+        double i_Ice = IceEquations.specificEnthalpy(ta) * (x - xMax);
         return i_Da + i_Wv + i_Wt + i_Ice;
-    }
-
-    // TODO usunąć
-
-    /**
-     * Returns water mist specific enthalpy, kJ/kg<br>
-     * REFERENCE SOURCE: [5] [i,kJ/kg] (-) [19]<br>
-     *
-     * @param ta air temperature, oC
-     * @return water mist specific enthalpy, kJ/kg
-     */
-    public static double calcWtI(double ta) {
-        return ta < 0.0 ? 0.0 : LiquidWaterEquations.specificEnthalpy(ta);
-    }
-
-    // TODO przeniesc do klasy odpowiedzialnej za ice mist
-
-    /**
-     * Returns ice mist specific enthalpy, kJ/kg<br>
-     * REFERENCE SOURCE: [5] [i,kJ/kg] (-) [19]<br>
-     *
-     * @param ta air temperature, oC
-     * @return ice mist specific enthalpy, kJ/kg
-     */
-    public static double calcIceI(double ta) {
-        return ta > 0.0 ? 0.0 : PropertyDefaults.DEF_ICE_CP * ta - PhysicsConstants.HEAT_OF_ICE_MELT;
     }
 
     /*SPECIFIC HEAT CALCULATION*/

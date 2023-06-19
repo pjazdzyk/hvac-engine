@@ -9,6 +9,9 @@ import static org.assertj.core.api.Assertions.withPrecision;
 
 class SharedEquationsTest implements PhysicsTestConstants {
 
+    double TH_DIFF_ACCURACY = 0.021E-5;
+    double PRANDTL_ACCURACY = 0.009;
+
     @Test
     @DisplayName("should return atmospheric pressure when higher altitude is given")
     void calcPatAltTest_shouldReturnLowerAtmPressure_whenHigherAltitudeIsGiven() {
