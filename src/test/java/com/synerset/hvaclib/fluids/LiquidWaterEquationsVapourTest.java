@@ -14,6 +14,8 @@ import static org.assertj.core.api.Assertions.withPrecision;
 
 class LiquidWaterEquationsVapourTest implements PhysicsTestConstants {
 
+    double CP_WV_ACCURACY = 0.025;
+
     @Test
     @DisplayName("should return correct water vapour dynamic viscosity when input temperature is given")
     void calcWvDynVisTest_shouldReturnDynamicWaterVapourDynamicViscosity_whenInputTemperatureIsGiven() {

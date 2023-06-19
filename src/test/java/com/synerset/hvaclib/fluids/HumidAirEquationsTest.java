@@ -1,6 +1,7 @@
 package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.PhysicsTestConstants;
+import com.synerset.hvaclib.solids.IceEquations;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
 class HumidAirEquationsTest implements PhysicsTestConstants {
+
+    double PS_LOW_TEMP_ACCURACY = 0.03;
+    double PS_MED_TEMP_ACCURACY = 0.20;
+    double PS_HIGH_TEMP_ACCURACY = 1.90;
+    double WBT_LOW_TEMP_ACCURACY = 0.007;
+    double WBT_HIGH_TEMP_ACCURACY = 0.05;
+    double TDP_ACCURACY = 0.04;
+    double RHO_ACCURACY = 0.004;
 
     @ParameterizedTest
     @MethodSource("psInlineData")
@@ -272,8 +281,8 @@ class HumidAirEquationsTest implements PhysicsTestConstants {
         var expectedWtMistEnthalpyForNegativeTemp = 0.0;
 
         //Act
-        var actualWtMistEnthalpyForPositiveTemp = HumidAirEquations.calcWtI(ta);
-        var actualWtMistEnthalpyForNegativeTemp = HumidAirEquations.calcWtI(-ta);
+        var actualWtMistEnthalpyForPositiveTemp = LiquidWaterEquations.specificEnthalpy(ta);
+        var actualWtMistEnthalpyForNegativeTemp = LiquidWaterEquations.specificEnthalpy(-ta);
 
         // Assert
         assertThat(actualWtMistEnthalpyForPositiveTemp).isEqualTo(expectedWtMistEnthalpyForPositiveTemp, withPrecision(MATH_ACCURACY));
@@ -286,11 +295,11 @@ class HumidAirEquationsTest implements PhysicsTestConstants {
         // Arrange
         var ta = 20.0;
         var expectedIceMistEnthalpyForPositiveTemp = 0.0;
-        var expectedIceMistEnthalpyForNegativeTemp = -375.90000000000003;
+        var expectedIceMistEnthalpyForNegativeTemp = -372.96357844600004;
 
         //Act
-        var actualIceMistEnthalpyForPositiveTemp = HumidAirEquations.calcIceI(ta);
-        var actualIceMistEnthalpyForNegativeTemp = HumidAirEquations.calcIceI(-ta);
+        var actualIceMistEnthalpyForPositiveTemp = IceEquations.specificEnthalpy(ta);
+        var actualIceMistEnthalpyForNegativeTemp = IceEquations.specificEnthalpy(-ta);
 
         // Assert
         assertThat(actualIceMistEnthalpyForPositiveTemp).isEqualTo(expectedIceMistEnthalpyForPositiveTemp, withPrecision(MATH_ACCURACY));
@@ -309,7 +318,7 @@ class HumidAirEquationsTest implements PhysicsTestConstants {
 
         var expectedEnthalpyUnsaturated = 38.4012926032259;
         var expectedEnthalpyWithWaterMist = 58.32618455095958;
-        var expectedEnthalpyWithIceMist = -25.75234854259204;
+        var expectedEnthalpyWithIceMist = -25.69550793501464;
         var expectedEnthalpyUnsaturatedNegative = -19.68254341443484;
 
         //Act
