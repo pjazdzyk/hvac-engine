@@ -3,9 +3,9 @@ package com.synerset.hvaclib.process;
 import com.synerset.hvaclib.PhysicsTestConstants;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.flows.FlowOfMoistAir;
-import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.HumidAirEquations;
+import com.synerset.hvaclib.fluids.HumidAirOld;
+import com.synerset.hvaclib.fluids.HumidGas;
 import com.synerset.hvaclib.fluids.LiquidWaterEquations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ class PhysicsOfCoolingTest implements PhysicsTestConstants {
 
     @BeforeEach
     void setUp() {
-        coolingCaseInletAir = new HumidAir.Builder()
+        coolingCaseInletAir = new HumidAirOld.Builder()
                 .withAtmPressure(P_TEST)
                 .withAirTemperature(34.0)
                 .withRelativeHumidity(40.0)

@@ -1,9 +1,9 @@
 package com.synerset.hvaclib.flows;
 
 import com.synerset.hvaclib.fluids.Fluid;
+import com.synerset.hvaclib.fluids.HumidAirOld;
 import com.synerset.hvaclib.fluids.HumidGas;
 import com.synerset.hvaclib.fluids.LiquidWater;
-import com.synerset.hvaclib.fluids.HumidAir;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ class FlowEquationsTest {
     static final Fluid SAMPLE_LIQ_WATER = new LiquidWater.Builder()
             .withTemperature(15.0)
             .build();
-    HumidGas SAMPLE_AIR = new HumidAir.Builder()
+    HumidGas SAMPLE_AIR = new HumidAirOld.Builder()
             .withAirTemperature(20.0)
             .withRelativeHumidity(50.0)
             .build();

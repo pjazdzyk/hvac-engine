@@ -16,7 +16,7 @@ import java.util.Objects;
  * </p><br>
  */
 
-public class HumidAir implements HumidGas {
+public class HumidAirOld implements HumidGas {
 
     // Moist air parameters
     private VapourState vapourStatus;        // -                - vapor status: unsaturated, saturated, water fog, ice fog
@@ -52,11 +52,11 @@ public class HumidAir implements HumidGas {
     private double specEnthalpyIce;          // [kJ/kg]          - ice mist enthalpy
 
 
-    public HumidAir() {
+    public HumidAirOld() {
         this(Defaults.INDOOR_WINTER_TEMP, Defaults.INDOOR_WINTER_RH, Defaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
-    private HumidAir(Builder builder) {
+    private HumidAirOld(Builder builder) {
         this(builder.airTemp, builder.humidityXorRH, builder.atmPressure, builder.humidityInputType);
     }
 
@@ -69,7 +69,7 @@ public class HumidAir implements HumidGas {
      * @param absPressure - atmospheric pressure in Pa,
      * @param humidType   - provide REL_HUMID if RH is provided or HUM_RATIO if humidity ratio is provided.
      */
-    public HumidAir(double temperature, double xRH, double absPressure, HumidityInputType humidType) {
+    public HumidAirOld(double temperature, double xRH, double absPressure, HumidityInputType humidType) {
         this.absPressure = absPressure;
         this.temperature = temperature;
         this.saturationPressureWv = HumidAirEquations.saturationPressure(temperature);
@@ -273,7 +273,7 @@ public class HumidAir implements HumidGas {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof HumidAir humidAir)) return false;
+        if (!(o instanceof HumidAirOld humidAir)) return false;
         return Double.compare(humidAir.absPressure, absPressure) == 0 && Double.compare(humidAir.temperature, temperature) == 0 && Double.compare(humidAir.humidityRatioX, humidityRatioX) == 0;
     }
 
@@ -283,12 +283,12 @@ public class HumidAir implements HumidGas {
     }
 
     // STATIC FACTORY METHOD PATTERN
-    public static HumidAir ofAir(double tx, double RH) {
-        return new HumidAir(tx, RH, Defaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
+    public static HumidAirOld ofAir(double tx, double RH) {
+        return new HumidAirOld(tx, RH, Defaults.STANDARD_ATMOSPHERE, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
-    public static HumidAir ofAir(double tx, double RH, double Pat) {
-        return new HumidAir(tx, RH, Pat, HumidityInputType.RELATIVE_HUMIDITY);
+    public static HumidAirOld ofAir(double tx, double RH, double Pat) {
+        return new HumidAirOld(tx, RH, Pat, HumidityInputType.RELATIVE_HUMIDITY);
     }
 
     // BUILDER PATTERN
@@ -330,8 +330,8 @@ public class HumidAir implements HumidGas {
             return this;
         }
 
-        public HumidAir build() {
-            return new HumidAir(this);
+        public HumidAirOld build() {
+            return new HumidAirOld(this);
         }
 
     }

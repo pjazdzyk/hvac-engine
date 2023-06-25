@@ -4,9 +4,9 @@ import com.synerset.hvaclib.PhysicsTestConstants;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.flows.FlowOfMoistAir;
 import com.synerset.hvaclib.flows.FlowOfSinglePhase;
-import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.HumidAirEquations;
+import com.synerset.hvaclib.fluids.HumidAirOld;
+import com.synerset.hvaclib.fluids.HumidGas;
 import com.synerset.hvaclib.fluids.LiquidWaterEquations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class CoolingForTargetRHTest implements PhysicsTestConstants {
     @DisplayName("should cool down inlet air when target relative humidity RH is given")
     void runProcess_shouldCoolDownInletAir_whenTargetRHIsGiven() {
         // Arrange
-        HumidGas coolingCaseInletAir = new HumidAir.Builder()
+        HumidGas coolingCaseInletAir = new HumidAirOld.Builder()
                 .withAtmPressure(P_TEST)
                 .withAirTemperature(34.0)
                 .withRelativeHumidity(40.0)

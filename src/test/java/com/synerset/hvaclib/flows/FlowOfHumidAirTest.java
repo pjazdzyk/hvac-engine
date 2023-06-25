@@ -1,6 +1,6 @@
 package com.synerset.hvaclib.flows;
 
-import com.synerset.hvaclib.fluids.HumidAir;
+import com.synerset.hvaclib.fluids.HumidAirOld;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class FlowOfHumidAirTest {
     @DisplayName("should create FlowOfMoistAir instance with properly calculated flows when valid input is given")
     void flowOfMoistAirInstance_shouldCreateValidFlowOfMoistAirInstance_whenValidSampleInputIsGiven() {
         // Arrange
-        HumidAir sampleAir = new HumidAir.Builder()
+        HumidAirOld sampleAir = new HumidAirOld.Builder()
                 .withAirTemperature(45.0)
                 .withRelativeHumidity(60.1)
                 .build();

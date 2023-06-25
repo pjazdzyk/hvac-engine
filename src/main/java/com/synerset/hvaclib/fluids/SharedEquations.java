@@ -31,8 +31,7 @@ public final class SharedEquations {
     }
 
     /**
-     * Returns air thermal diffusivity, m2/s
-     * Valid for DA, WV, MA if all arguments are provided for type of fluid.
+     * Returns thermal diffusivity, m2/s
      * REFERENCE SOURCE: [8] [am,m2/s] (35) [5]<br>
      *
      * @param rho air density, kg/m3
