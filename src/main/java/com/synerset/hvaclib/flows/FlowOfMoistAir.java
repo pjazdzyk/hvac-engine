@@ -1,7 +1,7 @@
 package com.synerset.hvaclib.flows;
 
+import com.synerset.hvaclib.fluids.HumidAirOld;
 import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.HumidAir;
 
 import java.util.Objects;
 
@@ -28,7 +28,7 @@ public class FlowOfMoistAir implements FlowOfHumidGas {
     private double volFlowDa;
 
     public FlowOfMoistAir() {
-        this(new HumidAir(), DEF_AIR_FLOW, TypeOfAirFlow.MASS_FLOW_HUMID);
+        this(new HumidAirOld(), DEF_AIR_FLOW, TypeOfAirFlow.MASS_FLOW_HUMID);
     }
 
     private FlowOfMoistAir(Builder builder) {

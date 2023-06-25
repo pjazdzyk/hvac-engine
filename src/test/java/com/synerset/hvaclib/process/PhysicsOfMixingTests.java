@@ -3,9 +3,9 @@ package com.synerset.hvaclib.process;
 import com.synerset.hvaclib.PhysicsTestConstants;
 import com.synerset.hvaclib.flows.FlowOfHumidGas;
 import com.synerset.hvaclib.flows.FlowOfMoistAir;
-import com.synerset.hvaclib.fluids.HumidGas;
-import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.HumidAirEquations;
+import com.synerset.hvaclib.fluids.HumidAirOld;
+import com.synerset.hvaclib.fluids.HumidGas;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
     @DisplayName("should return results for mixing of two different moist air flows")
     void calcMixing_shouldReturnResultsForMixingOfTwoDifferentMoistAirFlows() {
         // Arrange
-        HumidGas air1 = new HumidAir.Builder()
+        HumidGas air1 = new HumidAirOld.Builder()
                 .withAtmPressure(P_ATM)
                 .withAirTemperature(-20.0)
                 .withRelativeHumidity(100.0)
@@ -26,7 +26,7 @@ class PhysicsOfMixingTests implements PhysicsTestConstants {
                 .withMassFlowDa(5000d / 3600d)
                 .build();
 
-        HumidGas air2 = new HumidAir.Builder()
+        HumidGas air2 = new HumidAirOld.Builder()
                 .withAtmPressure(P_ATM)
                 .withAirTemperature(18.0)
                 .withRelativeHumidity(55.0)

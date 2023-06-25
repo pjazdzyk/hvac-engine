@@ -107,4 +107,5 @@ public final class WaterVapourEquations {
     public static double kinematicViscosity(double ta, double rho_Wv) {
         return dynamicViscosity(ta) / rho_Wv;
     }
+
 }

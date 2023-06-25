@@ -10,6 +10,8 @@ import java.util.function.DoubleFunction;
  * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)<br>
  * Set of static methods for calculating temperature dependant thermophysical air properties. Properties are calculated independently for dry air,
  * water vapour, water mist or ice mist to determine correct values for moist air.<br>
+ * These equations are public, stateless, thread safe, based on primitive types. Can be used for iterative high performance computing of intermediate
+ * calculations.
  * <p><br>
  * PROPERTY ABBREVIATIONS: <br>
  * WT - water <br>
