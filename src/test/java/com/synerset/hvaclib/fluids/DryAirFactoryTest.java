@@ -1,6 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.dataobjects.DryAir;
+import com.synerset.hvaclib.fluids.euqtions.DryAirEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +24,7 @@ class DryAirFactoryTest {
         double expectedThermalConductivity = DryAirEquations.thermalConductivity(inputAirTemp);
 
         // When
-        DryAir dryAir = DryAirFactory.create(
+        DryAir dryAir = DryAir.of(
                 Pressure.ofPascal(inputPressure),
                 Temperature.ofCelsius(inputAirTemp)
         );

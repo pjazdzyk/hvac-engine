@@ -20,8 +20,8 @@ LAST CHANGES (2022.12.11):<br>
 * provided first simple REST-API for retrieving water and moist air physical properties
 
 The library is organized into following modules:
-* _fluids module_ - includes classes dedicated to fluid property representation and calculation
-* _flows module_ - includes classes representing fluid or humid gas flow handling<br>
+* _fluids module_ - includes classes dedicated to fluidOld property representation and calculation
+* _flows module_ - includes classes representing fluidOld or humid gas flow handling<br>
 
 <a href="https://raw.githubusercontent.com/pjazdzyk/hvac-lib/main/architecture/ARCH_1_FluidAndFlow.png"><img src="architecture/ARCH_1_FluidAndFlow.png" width="850"/><br></a>
 
@@ -87,7 +87,7 @@ Please find the example below:
 calcMaTaTdpRH(){}
 ```
 - a first fragment - "calc": stands for calculation type method of a given property. "Set" is for setters, "get" for getters.
-- a second fragment - next part is a type of fluid: Ma - moist air, Da - dry air, Wv - water vapour, Wt - water
+- a second fragment - next part is a type of fluidOld: Ma - moist air, Da - dry air, Wv - water vapour, Wt - water
 - a third fragment - is a name of variable returned by this function, Ta means that this function outputs air temperature as the result,
 - a fourth part - are the variables needed as an input.
 

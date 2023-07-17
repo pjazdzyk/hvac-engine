@@ -1,7 +1,8 @@
 package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.common.Defaults;
-import com.synerset.hvaclib.fluids.dataobjects.HumidAir;
+import com.synerset.hvaclib.fluids.euqtions.HumidAirEquations;
+import com.synerset.hvaclib.fluids.euqtions.SharedEquations;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
@@ -36,14 +37,14 @@ class HumidAirFactoryTest {
         double expectedPrandtlVal = SharedEquations.prandtlNumber(expectedDynVisVal, expectedKVal, expectedCpVal);
 
         // When
-        HumidAir humidAir = HumidAirFactory.create(
+        HumidAir humidAir = HumidAir.of(
                 Pressure.ofPascal(inputPressure),
                 Temperature.ofCelsius(inputAirTemp),
                 HumidityRatio.ofKilogramPerKilogram(inputHumidRatio)
         );
 
         double actualPressure = humidAir.pressure().getValue();
-        double actualDryBulbTemp = humidAir.dryBulbTemperature().getValue();
+        double actualDryBulbTemp = humidAir.temperature().getValue();
         double actualHumRatio = humidAir.humidityRatio().getValue();
         double actualRhoVal = humidAir.density().getValue();
         double actualRHVal = humidAir.relativeHumidity().getValue();
@@ -85,31 +86,31 @@ class HumidAirFactoryTest {
     @DisplayName("should create humid air instance of the same parameters for different constructor input")
     void shouldCreateTheSameAirInstance_whenUsingDifferentConstructors(){
         // Given
-        double inputPressure = Defaults.STANDARD_ATMOSPHERE;
+        double inputPressure = Defaults.STANDARD_ATMOSPHERE.getValue();
         double inputAirTemp = 25.0;
         double inputHumidRatio = 0.0072129;
         double relativeHumidity = HumidAirEquations.relativeHumidity(inputAirTemp,inputHumidRatio,inputPressure);
 
 
         // When
-        HumidAir humidAir = HumidAirFactory.create(
+        HumidAir humidAir = HumidAir.of(
                 Pressure.ofPascal(inputPressure),
                 Temperature.ofCelsius(inputAirTemp),
                 HumidityRatio.ofKilogramPerKilogram(inputHumidRatio)
         );
 
-        HumidAir humidAir_1 = HumidAirFactory.create(
+        HumidAir humidAir_1 = HumidAir.of(
                 Pressure.ofPascal(inputPressure),
                 Temperature.ofCelsius(inputAirTemp),
                 RelativeHumidity.ofPercentage(relativeHumidity)
         );
 
-        HumidAir humidAir_2 = HumidAirFactory.create(
+        HumidAir humidAir_2 = HumidAir.of(
                 Temperature.ofCelsius(inputAirTemp),
                 HumidityRatio.ofKilogramPerKilogram(inputHumidRatio)
         );
 
-        HumidAir humidAir_3 = HumidAirFactory.create(
+        HumidAir humidAir_3 = HumidAir.of(
                 Temperature.ofCelsius(inputAirTemp),
                 RelativeHumidity.ofPercentage(relativeHumidity)
         );

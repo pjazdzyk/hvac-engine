@@ -1,15 +1,26 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.unitility.unitsystem.thermodynamic.*;
+
 public interface Fluid {
 
-    double getAbsPressure();
+    Temperature temperature();
 
-    double getTemperature();
+    Pressure pressure();
 
-    double getDensity();
+    Density density();
 
-    double getSpecificHeatCp();
+    SpecificHeat specificHeat();
 
-    double getSpecificEnthalpy();
+    SpecificEnthalpy specificEnthalpy();
+
+    default <K extends Fluid> boolean isEqualsWithPrecision(K fluid, double epsilon) {
+        if (this == fluid) return true;
+        if (fluid == null) return false;
+        if (this.getClass() != fluid.getClass()) return false;
+
+        return pressure().isEqualsWithPrecision(fluid.pressure(), epsilon)
+                && temperature().isEqualsWithPrecision(fluid.temperature(), epsilon);
+    }
 
 }
