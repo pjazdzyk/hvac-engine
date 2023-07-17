@@ -1,6 +1,8 @@
 package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.PhysicsTestConstants;
+import com.synerset.hvaclib.fluids.euqtions.HumidAirEquations;
+import com.synerset.hvaclib.fluids.euqtions.LiquidWaterEquations;
 import com.synerset.hvaclib.solids.IceEquations;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

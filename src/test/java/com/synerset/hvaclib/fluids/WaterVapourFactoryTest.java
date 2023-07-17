@@ -1,6 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.dataobjects.WaterVapour;
+import com.synerset.hvaclib.fluids.euqtions.WaterVapourEquations;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
@@ -26,7 +26,7 @@ class WaterVapourFactoryTest {
         double expectedThermalConductivity = WaterVapourEquations.thermalConductivity(inputAirTemp);
 
         // When
-        WaterVapour waterVapour = WaterVapourFactory.create(
+        WaterVapour waterVapour = WaterVapour.of(
                 Pressure.ofPascal(inputPressure),
                 Temperature.ofCelsius(inputAirTemp),
                 RelativeHumidity.ofPercentage(inputAirRH)

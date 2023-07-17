@@ -95,7 +95,7 @@ Fluid waterCondensateExample2 = new LiquidWater.Builder()
            .build();
 ```
 
-To get fluid resulting properties just use getters, or print everything via toString();
+To get fluidOld resulting properties just use getters, or print everything via toString();
 
 ```
 // Outputs
@@ -106,7 +106,7 @@ Core parameters  : ta=10.000 oC | cp=4.196 kJ/kgK | rho= 999.546 kg/m3 | ix=41.9
 
 FlowOfMoistAir instance calculates and stores mass flow and volumetric flow for moist air and its dry air component. All
 of these flows depend on each other. They are calculated only once accordingly based on provided flow rate and type of flow upon
-instance creation. Flow instance requires specific fluid which must be provided as an argument in constructor.
+instance creation. Flow instance requires specific fluidOld which must be provided as an argument in constructor.
 
 Creating a flow of moist air
 with volumetric flow 5000m3/h of temperature ta=20oC and relative humidity RH=50%. For simplicity and ease of use
@@ -149,13 +149,13 @@ Each application may need a different flow type, this is why this class combines
 
 ## FLOW OF FLUID
 
-FlowOfFluid simpler compared to the above. It is designed to model a single-phase flow of any fluid class
+FlowOfFluid simpler compared to the above. It is designed to model a single-phase flow of any fluidOld class
 implementing the Fluid interface. At the moment LiquidWater is provided to implement condensate discharge. Examples how
 FlowOfFluid can be created as shown below. Similarly, as in case of flow of humid air, FlowOfFluid requires
 a Fluid instance to be created prior to instantiating the flow:
 
 ```java
-// Creating flow of fluid instance
+// Creating flow of fluidOld instance
 double temp = 10.0; // oC
 double volFlow = 1.2; // m3/s
 LiquidWater waterExample = new LiquidWater.Builder()
@@ -260,9 +260,9 @@ m_Da = 1.366 kg/s (dry air mass flow) | v_Da 1.295 m3/s (dry air vol flow) | v_D
 
 CONDENSATE FLOW DATA:
 Fluid properties: 
-ta = 11.00 oC | rho = 999.44 kg/m3 | fluid class = LiquidWater 
+ta = 11.00 oC | rho = 999.44 kg/m3 | fluidOld class = LiquidWater 
 Flow properties: 
-m = 0.00400 kg/s (fluid mass flow) | v = 0.00000400 m3/s (fluid vol flow) | v = 0.014 m3/h (fluid vol flow) 
+m = 0.00400 kg/s (fluidOld mass flow) | v = 0.00000400 m3/s (fluidOld vol flow) | v = 0.014 m3/h (fluidOld vol flow) 
 
 PROCESS SPECIFIC DATA:
 Q = -21232.738 W (heat of process)

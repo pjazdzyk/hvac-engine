@@ -1,126 +1,89 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.hvaclib.fluids.euqtions.LiquidWaterEquations;
+import com.synerset.unitility.unitsystem.thermodynamic.*;
+
 import java.util.Objects;
 
-/**
- * <h3>LIQUID WATER</h3>
- * <p>
- * This class represents a model of liquid water for a typical air conditioning low near atmospheric pressure appliances.
- * Properties are calculated based on equations in {@link LiquidWaterEquations}.<br>
- * <span><b>IMPORTANT: </b></span> Please note that at this stage of development, this model is not dedicated for
- * high pressure applications. Usage limit is <100oC and  >0oC.
- * </p><br>
- * <p><span><b>AUTHOR: </span>Piotr Jażdżyk, MScEng</p>
- * </p><br>
- */
+import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
-public class LiquidWater implements Fluid {
+public class LiquidWater implements Fluid{
+    private final Temperature temperature;
+    private final Pressure pressure;
+    private final Density density;
+    private final SpecificHeat specificHeat;
+    private final SpecificEnthalpy specificEnthalpy;
 
-    private static final double DEF_TEMP = 10;                                     // [oC]             - Default water temperature
-    private static final double DEF_PAT = 101_325;                                 // [Pa]             - Standard atmospheric pressure (physical atmosphere)
-    private final double waterPressure;                                            // Pa               - water pressure
-    private final double waterTemperature;                                         // [oC]             - water temperature
-    private final double waterSpecificHeatCP;                                      // [kJ/kg*K]        - water isobaric specific heat
-    private final double waterDensity;                                             // [kg/m3]          - water density at temperature tx
-    private final double waterSpecificEnthalpy;                                    // [kJ/kg]          - water specific enthalpy
+    public LiquidWater(Pressure pressure,
+                       Temperature temperature) {
 
-    /**
-     * Creates new liquid water instance with default temperature of 10oC.
-     */
+        this.temperature = temperature;
+        this.pressure = pressure;
+        double tempVal = temperature.toCelsius().getValue();
+        double densVal = LiquidWaterEquations.density(tempVal);
+        this.density = Density.ofKilogramPerCubicMeter(densVal);
+        double specHeatVal = LiquidWaterEquations.specificHeat(tempVal);
+        this.specificHeat = SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
+        double specEnthalpyVal = LiquidWaterEquations.specificEnthalpy(tempVal);
+        this.specificEnthalpy = SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
 
-    public LiquidWater() {
-        this(DEF_PAT, DEF_TEMP);
     }
 
-    /**
-     * Creates new LiquidWater instance based on Builder instance.
-     *
-     * @param builder Builder instance
-     */
-    private LiquidWater(Builder builder) {
-        this(builder.waterPressure, builder.waterTemperature);
+    public Temperature temperature() {
+        return temperature;
     }
 
-    /**
-     * Creates new liquid water instance with provided name and water temperature.
-     *
-     * @param waterTemperature - water temperature in oC
-     */
-    public LiquidWater(double pressure, double waterTemperature) {
-        this.waterTemperature = waterTemperature;
-        this.waterPressure = pressure;
-        waterSpecificHeatCP = LiquidWaterEquations.specificHeat(waterTemperature);
-        waterDensity = LiquidWaterEquations.density(waterTemperature);
-        waterSpecificEnthalpy = LiquidWaterEquations.specificEnthalpy(waterTemperature);
+    public Pressure pressure() {
+        return pressure;
+    }
+
+    public Density density() {
+        return density;
+    }
+
+    public SpecificHeat specificHeat() {
+        return specificHeat;
+    }
+
+    public SpecificEnthalpy specificEnthalpy() {
+        return specificEnthalpy;
     }
 
     @Override
-    public double getAbsPressure() {
-        return this.waterPressure;
-    }
-
-    @Override
-    public double getTemperature() {
-        return this.waterTemperature;
-    }
-
-    @Override
-    public double getDensity() {
-        return this.waterDensity;
-    }
-
-    @Override
-    public double getSpecificHeatCp() {
-        return this.waterSpecificHeatCP;
-    }
-
-    @Override
-    public double getSpecificEnthalpy() {
-        return this.waterSpecificEnthalpy;
-    }
-
-    @Override
-    public final String toString() {
-
-        String strb = String.format("Core parameters  : ta=%.3f oC | cp=%.3f kJ/kgK | rho= %.3f kg/m3 | ix=%.3f kJ/kg \n",
-                waterTemperature,
-                waterSpecificHeatCP,
-                waterDensity,
-                waterSpecificEnthalpy);
-        return strb;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof LiquidWater that)) return false;
-        return Double.compare(that.waterPressure, waterPressure) == 0 && Double.compare(that.waterTemperature, waterTemperature) == 0;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (LiquidWater) obj;
+        return Objects.equals(this.temperature, that.temperature) &&
+                Objects.equals(this.pressure, that.pressure) &&
+                Objects.equals(this.density, that.density) &&
+                Objects.equals(this.specificHeat, that.specificHeat) &&
+                Objects.equals(this.specificEnthalpy, that.specificEnthalpy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(waterPressure, waterTemperature);
+        return Objects.hash(temperature, pressure, density, specificHeat, specificEnthalpy);
     }
 
-    //BUILDER PATTERN
-    public static class Builder {
-        private double waterTemperature = DEF_TEMP;
-        private double waterPressure = DEF_PAT;
+    @Override
+    public String toString() {
+        return "LiquidWaterFL[" +
+                "temperature=" + temperature + ", " +
+                "pressure=" + pressure + ", " +
+                "density=" + density + ", " +
+                "specificHeat=" + specificHeat + ", " +
+                "specificEnthalpy=" + specificEnthalpy + ']';
+    }
 
-        public Builder withTemperature(double waterTemperature) {
-            this.waterTemperature = waterTemperature;
-            return this;
-        }
 
-        public Builder withPressure(double waterPressure) {
-            this.waterPressure = waterPressure;
-            return this;
-        }
+    // Static factory methods
+    public static LiquidWater of(Pressure pressure, Temperature temperature) {
+        return new LiquidWater(pressure, temperature);
+    }
 
-        public Fluid build() {
-            return new LiquidWater(this);
-        }
+    public static LiquidWater of(Temperature temperature) {
+        return new LiquidWater(STANDARD_ATMOSPHERE, temperature);
     }
 
 }
-

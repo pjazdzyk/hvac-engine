@@ -1,6 +1,10 @@
 package com.synerset.hvaclib.flows;
 
-import com.synerset.hvaclib.fluids.HumidAirOld;
+import com.synerset.hvaclib.flows.equations.FlowEquations;
+import com.synerset.hvaclib.fluids.HumidAir;
+import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
+import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,31 +18,28 @@ class FlowOfHumidAirTest {
     @DisplayName("should create FlowOfMoistAir instance with properly calculated flows when valid input is given")
     void flowOfMoistAirInstance_shouldCreateValidFlowOfMoistAirInstance_whenValidSampleInputIsGiven() {
         // Arrange
-        HumidAirOld sampleAir = new HumidAirOld.Builder()
-                .withAirTemperature(45.0)
-                .withRelativeHumidity(60.1)
-                .build();
-        double densityMa = sampleAir.getDensity();
-        double densityDa = sampleAir.getDryAirDensity();
-        double humidRatio = sampleAir.getHumidityRatioX();
+        HumidAir sampleAir = HumidAir.of(Temperature.ofCelsius(45.0), RelativeHumidity.ofPercentage(60.1));
+
+        double densityMa = sampleAir.density().getValueOfKilogramPerCubicMeter();
+        double densityDa = sampleAir.dryAirComponent().density().getValueOfKilogramPerCubicMeter();
+        double humidRatio = sampleAir.humidityRatio().getValueOfKilogramPerKilogram();
         double expectedVolFlow_Ma = INIT_MASS_FLOW_MA / densityMa;
-        double expectedMassFlow_Da = FlowEquations.massFlowDaFromMassFlowHa(humidRatio, INIT_MASS_FLOW_MA);
+        double expectedMassFlow_Da = FlowEquations.massFlowHaToMassFlowDa(humidRatio, INIT_MASS_FLOW_MA);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
 
         // Act
-        FlowOfMoistAir flowAir = new FlowOfMoistAir.Builder(sampleAir)
-                .withMassFlowMa(INIT_MASS_FLOW_MA)
-                .build();
-        double actualMassFlowMa = flowAir.getMassFlow();
-        double actualVolFlowMa = flowAir.getVolFlow();
-        double actualMassFlowDa = flowAir.getMassFlowDa();
-        double actualVolFlowDa = flowAir.getVolFlowDa();
+        FlowOfHumidAir flowAir = FlowOfHumidAir.of(sampleAir, MassFlow.ofKilogramsPerSecond(INIT_MASS_FLOW_MA));
+
+        double actualMassFlowMa = flowAir.massFlow().getValueOfKilogramsPerSecond();
+        double actualVolFlowMa = flowAir.volumetricFlow().getValueOfCubicMetersPerSecond();
+        double actualMassFlowDa = flowAir.dryAirMassFlow().getValueOfKilogramsPerSecond();
+        double actualVolFlowDa = flowAir.dryAirVolumetricFlow().getValueOfCubicMetersPerSecond();
 
         // Assert
         assertThat(actualMassFlowMa).isEqualTo(INIT_MASS_FLOW_MA);
         assertThat(actualVolFlowMa).isEqualTo(expectedVolFlow_Ma);
         assertThat(actualMassFlowDa).isEqualTo(expectedMassFlow_Da);
         assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
-        assertThat(flowAir.getFluid()).isEqualTo(sampleAir);
+        assertThat(flowAir.fluid()).isEqualTo(sampleAir);
     }
 }
