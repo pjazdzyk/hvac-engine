@@ -1,6 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.euqtions.LiquidWaterEquations;
+import com.synerset.hvaclib.fluids.euqations.LiquidWaterEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;

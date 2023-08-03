@@ -1,15 +1,14 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.PhysicsTestConstants;
-import com.synerset.hvaclib.fluids.euqtions.DryAirEquations;
-import com.synerset.hvaclib.fluids.euqtions.SharedEquations;
+import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
+import com.synerset.hvaclib.fluids.euqations.SharedEquations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class SharedEquationsTest implements PhysicsTestConstants {
+class SharedEquationsTest implements FluidsTestConstants {
 
     double TH_DIFF_ACCURACY = 0.021E-5;
     double PRANDTL_ACCURACY = 0.009;
@@ -26,7 +25,7 @@ class SharedEquationsTest implements PhysicsTestConstants {
 
         // Assert
         assertThat(actualPressure).isEqualTo(expectedPressure);
-        assertThat(actualPressure).isLessThan(P_PHYS);
+        assertThat(actualPressure).isLessThan(PHYS_ATMOSPHERE);
     }
 
     @Test

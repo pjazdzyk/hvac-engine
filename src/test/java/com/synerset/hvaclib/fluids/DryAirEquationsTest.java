@@ -1,7 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.PhysicsTestConstants;
-import com.synerset.hvaclib.fluids.euqtions.DryAirEquations;
+import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class DryAirEquationsTest implements PhysicsTestConstants {
+class DryAirEquationsTest implements FluidsTestConstants {
 
     double DYN_VIS_ACCURACY = 0.00000007;
     double CP_DA_ACCURACY = 0.00047;
@@ -76,7 +75,7 @@ class DryAirEquationsTest implements PhysicsTestConstants {
     void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
         // Arrange
         var ta = 20.0;
-        var rhoDa = DryAirEquations.density(ta, P_PHYS);
+        var rhoDa = DryAirEquations.density(ta, PHYS_ATMOSPHERE);
         var expectedDaKinViscosity = 1.519954676200779E-5;
 
         //Act

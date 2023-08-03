@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.flows;
 
+import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
@@ -118,6 +119,14 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
 
     public static FlowOfHumidAir of(HumidAir humidAir, VolumetricFlow volFlowHa) {
         return new FlowOfHumidAir(humidAir, volFlowHa);
+    }
+
+    public static FlowOfHumidAir ofDryAirMassFlow(HumidAir humidAir, MassFlow massFlowDa) {
+        double humRatioVal = humidAir.humidityRatio().getValueOfKilogramPerKilogram();
+        double dryAirMassFlowVal = massFlowDa.getValueOfKilogramsPerSecond();
+        double humidAirMassFlowVal = FlowEquations.massFlowDaToMassFlowHa(humRatioVal, dryAirMassFlowVal);
+        MassFlow humidAirMassFlow = MassFlow.ofKilogramsPerSecond(humidAirMassFlowVal);
+        return FlowOfHumidAir.of(humidAir, humidAirMassFlow);
     }
 
 }
