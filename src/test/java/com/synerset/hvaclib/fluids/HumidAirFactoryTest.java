@@ -1,8 +1,8 @@
 package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.common.Defaults;
-import com.synerset.hvaclib.fluids.euqtions.HumidAirEquations;
-import com.synerset.hvaclib.fluids.euqtions.SharedEquations;
+import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
+import com.synerset.hvaclib.fluids.euqations.SharedEquations;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;

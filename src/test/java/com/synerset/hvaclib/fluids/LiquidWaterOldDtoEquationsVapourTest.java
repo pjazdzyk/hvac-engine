@@ -1,7 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.PhysicsTestConstants;
-import com.synerset.hvaclib.fluids.euqtions.WaterVapourEquations;
+import com.synerset.hvaclib.fluids.euqations.WaterVapourEquations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class LiquidWaterOldDtoEquationsVapourTest implements PhysicsTestConstants {
+class LiquidWaterOldDtoEquationsVapourTest implements FluidsTestConstants {
 
     double CP_WV_ACCURACY = 0.025;
 
@@ -40,7 +39,7 @@ class LiquidWaterOldDtoEquationsVapourTest implements PhysicsTestConstants {
         var expectedWvDensity = 0.7304844902588641;
 
         //Act
-        var actualWvDensity = WaterVapourEquations.density(ta, RH, P_PHYS);
+        var actualWvDensity = WaterVapourEquations.density(ta, RH, PHYS_ATMOSPHERE);
 
         // Assert
         assertThat(actualWvDensity).isEqualTo(expectedWvDensity, withPrecision(MATH_ACCURACY));
@@ -52,7 +51,7 @@ class LiquidWaterOldDtoEquationsVapourTest implements PhysicsTestConstants {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
-        var rhoWv = WaterVapourEquations.density(ta, RH, P_PHYS);
+        var rhoWv = WaterVapourEquations.density(ta, RH, PHYS_ATMOSPHERE);
         var expectedWvKinViscosity = 1.3322079252324198E-5;
 
         //Act

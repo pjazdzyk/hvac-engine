@@ -1,6 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.euqtions.DryAirEquations;
+import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;

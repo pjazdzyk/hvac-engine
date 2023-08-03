@@ -1,6 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.euqtions.WaterVapourEquations;
+import com.synerset.hvaclib.fluids.euqations.WaterVapourEquations;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
