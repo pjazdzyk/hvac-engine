@@ -17,7 +17,7 @@ class SharedEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return atmospheric pressure when higher altitude is given")
-    void calcPatAltTest_shouldReturnLowerAtmPressure_whenHigherAltitudeIsGiven() {
+    void atmAltitudePressure_shouldReturnLowerAtmPressure_whenHigherAltitudeIsGiven() {
         // Arrange
         var altitude = 2000;
         var expectedPressure = 101.325 * Math.pow((1 - 2.25577 * Math.pow(10, -5) * altitude), 5.2559) * 1000;
@@ -32,7 +32,7 @@ class SharedEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return lower temperature for higher altitudes")
-    void calcTxAltTest_shouldReturnLowerTemperature_whenHigherAltitudeIsGiven() {
+    void altitudeTemperature_shouldReturnLowerTemperature_whenHigherAltitudeIsGiven() {
         // Arrange
         var altitude = 2000;
         var tempAtSea = 20.0;
@@ -48,7 +48,7 @@ class SharedEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return dry air thermal diffusivity when air temperature is given")
-    void calcThDiffTest_shouldReturnDryAirThermalDiffusivity_whenAirTemperatureIsGiven() {
+    void thermalDiffusivity_shouldReturnDryAirThermalDiffusivity_whenAirTemperatureIsGiven() {
         // Arrange
         var Pat = 101_300;
         var ta = 26.85;
@@ -66,7 +66,7 @@ class SharedEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return dry air Prandtl number when air temperature is given")
-    void calcPrandtlTest_shouldReturnDryAirPrandtlNumber_whenAirTemperatureIsGiven() {
+    void prandtlNumber_shouldReturnDryAirPrandtlNumber_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 26.85;
         var dynVis = DryAirEquations.dynamicViscosity(ta);
@@ -100,13 +100,13 @@ class SharedEquationsTest implements FluidsTestConstants {
 
         double expectedAltPressure = SharedEquations.atmAltitudePressure(heightVal);
         double expectedAltTemperature = SharedEquations.altitudeTemperature(tempVal, heightVal);
-        double expectedThermDiffusivity = SharedEquations.thermalDiffusivity(densityVal, thermalCondVal,specHeatVal);
+        double expectedThermDiffusivity = SharedEquations.thermalDiffusivity(densityVal, thermalCondVal, specHeatVal);
         double expectedPrandtlNum = SharedEquations.prandtlNumber(dynVisVal, thermalCondVal, specHeatVal);
 
         // When
         double actualAltPressure = SharedEquations.atmAltitudePressure(height).getValueOfPascals();
         double actualAltTemperature = SharedEquations.altitudeTemperature(temp, height).getValueOfCelsius();
-        double actualThermDiffusivity = SharedEquations.thermalDiffusivity(density, thermalCond,specHeat).getValueOfSquareMetersPerSecond();
+        double actualThermDiffusivity = SharedEquations.thermalDiffusivity(density, thermalCond, specHeat).getValueOfSquareMetersPerSecond();
         double actualPrandtlNum = SharedEquations.prandtlNumber(dynVis, thermalCond, specHeat).getValue();
 
         // Then
