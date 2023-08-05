@@ -1,5 +1,10 @@
 package com.synerset.hvaclib.fluids.euqations;
 
+import com.synerset.unitility.unitsystem.thermodynamic.Density;
+import com.synerset.unitility.unitsystem.thermodynamic.SpecificEnthalpy;
+import com.synerset.unitility.unitsystem.thermodynamic.SpecificHeat;
+import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
+
 /**
  * LIQUID WATER EQUATIONS LIBRARY (PSYCHROMETRICS) <br>
  * Set of static methods outputs process result as an array with process heat, core output air parameters (temperature, humidity ratio) and condensate
@@ -36,6 +41,11 @@ public final class LiquidWaterEquations {
         return tx < 0.0 ? 0.0 : tx * specificHeat(tx);
     }
 
+    public static SpecificEnthalpy specificEnthalpy(Temperature temperature) {
+        double specificEnthalpyVal = specificEnthalpy(temperature.getValueOfCelsius());
+        return SpecificEnthalpy.ofKiloJoulePerKiloGram(specificEnthalpyVal);
+    }
+
     /**
      * Returns water density at provided temperature and constant pressure at 101.325kPa Pa<br>
      * REFERENCE SOURCE: [1] [kg/m3] (1) [kg/m3]<br>
@@ -53,6 +63,11 @@ public final class LiquidWaterEquations {
                 / (1 + 16.89785 * Math.pow(10, -3) * tx);
     }
 
+    public static Density density(Temperature temperature) {
+        double densityVal = density(temperature.getValueOfCelsius());
+        return Density.ofKilogramPerCubicMeter(densityVal);
+    }
+
     /**
      * Returns water isobaric specific heat kJ/kgK<br>
      * REFERENCE SOURCE: [2] [kJ/kgK] (1) [kg/m3]<br>
@@ -65,7 +80,7 @@ public final class LiquidWaterEquations {
         if (tx > 0 && tx <= 100) {
             return 3.93240161 * Math.pow(10, -13) * Math.pow(tx, 6)
                     - 1.525847751 * Math.pow(10, -10) * Math.pow(tx, 5)
-                    + 2.47922718 * Math.pow(10, -8) * Math.pow(tx, 4)
+                    + 2.479227180 * Math.pow(10, -8) * Math.pow(tx, 4)
                     - 2.166932275 * Math.pow(10, -6) * Math.pow(tx, 3)
                     + 1.156152199 * Math.pow(10, -4) * Math.pow(tx, 2)
                     - 3.400567477 * Math.pow(10, -3) * tx + 4.219924305;
@@ -74,10 +89,15 @@ public final class LiquidWaterEquations {
                     - 3.604612987 * Math.pow(10, -12) * Math.pow(tx, 6)
                     + 2.112059173 * Math.pow(10, -9) * Math.pow(tx, 5)
                     - 6.727469888 * Math.pow(10, -7) * Math.pow(tx, 4)
-                    + 1.25584188 * Math.pow(10, -4) * Math.pow(tx, 3)
+                    + 1.255841880 * Math.pow(10, -4) * Math.pow(tx, 3)
                     - 1.370455849 * Math.pow(10, -2) * Math.pow(tx, 2)
                     + 8.093157187 * Math.pow(10, -1) * tx - 15.75651097;
         }
+    }
+
+    public static SpecificHeat specificHeat(Temperature temperature) {
+        double specHeatVal = specificHeat(temperature.getValueOfCelsius());
+        return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
 
 }

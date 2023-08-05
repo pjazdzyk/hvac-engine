@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class WaterVapourFactoryTest {
+class WaterVapourTest {
 
     @Test
     @DisplayName("should create water vapour instance with valid parameters")

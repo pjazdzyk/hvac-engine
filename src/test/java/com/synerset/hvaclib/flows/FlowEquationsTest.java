@@ -3,7 +3,13 @@ package com.synerset.hvaclib.flows;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.LiquidWater;
+import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
+import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
+import com.synerset.unitility.unitsystem.thermodynamic.Density;
+import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -125,5 +131,41 @@ class FlowEquationsTest {
         assertThat(actualMaAirMassFlow).isEqualTo(expectedMaVolFLow, withPrecision(MATH_ACCURACY));
     }
 
+    @Test
+    @DisplayName("should all Flow methods using primitive values return the same output as methods using Unitility objects arguments")
+    void shouldAllFlowMethodsWithPrimitiveArguments_returnTheSameOutput() {
+        // Given
+        double densityVal = 1.2;
+        double massFlowVal = 2.0;
+        double volFlowVal = 1.5;
+        double humRatioVal = 0.001;
+        Density density = Density.ofKilogramPerCubicMeter(densityVal);
+        MassFlow massFlow = MassFlow.ofKilogramsPerSecond(massFlowVal);
+        VolumetricFlow volFlow = VolumetricFlow.ofCubicMetersPerSecond(volFlowVal);
+        HumidityRatio humRatio = HumidityRatio.ofKilogramPerKilogram(humRatioVal);
+
+        double expectedVolFlowFromMassFlow = FlowEquations.massFlowToVolFlow(densityVal, massFlowVal);
+        double expectedMassFlowFromVolFlow = FlowEquations.volFlowToMassFlow(densityVal, volFlowVal);
+        double expectedMassFlowDaFromMassFlowHa = FlowEquations.massFlowHaToMassFlowDa(humRatioVal, massFlowVal);
+        double expectedMassFlowHaFromMassFlowDa = FlowEquations.massFlowDaToMassFlowHa(humRatioVal, massFlowVal);
+        double expectedVolFlowHaFromMassFlowDa = FlowEquations.massFlowDaToVolFlowHa(densityVal, humRatioVal, massFlowVal);
+        double expectedMassFlowDaFromVolFlowHa = FlowEquations.volFlowHaToMassFlowDa(densityVal, humRatioVal, volFlowVal);
+
+        // When
+        double actualVolFlowFromMassFlow = FlowEquations.massFlowToVolFlow(density, massFlow).getValueOfCubicMetersPerSecond();
+        double actualMassFlowFromVolFlow = FlowEquations.volFlowToMassFlow(density, volFlow).getValueOfKilogramsPerSecond();
+        double actualMassFlowDaFromMassFlowHa = FlowEquations.massFlowHaToMassFlowDa(humRatio, massFlow).getValueOfKilogramsPerSecond();
+        double actualMassFlowHaFromMassFlowDa = FlowEquations.massFlowDaToMassFlowHa(humRatio, massFlow).getValueOfKilogramsPerSecond();
+        double actualVolFlowHaFromMassFlowDa = FlowEquations.massFlowDaToVolFlowHa(density, humRatio, massFlow).getValueOfKilogramsPerSecond();
+        double actualMassFlowDaFromVolFlowHa = FlowEquations.volFlowHaToMassFlowDa(density, humRatio, volFlow).getValueOfKilogramsPerSecond();
+
+        // Then
+        assertThat(actualVolFlowFromMassFlow).isEqualTo(expectedVolFlowFromMassFlow);
+        assertThat(actualMassFlowFromVolFlow).isEqualTo(expectedMassFlowFromVolFlow);
+        assertThat(actualMassFlowDaFromMassFlowHa).isEqualTo(expectedMassFlowDaFromMassFlowHa);
+        assertThat(actualMassFlowHaFromMassFlowDa).isEqualTo(expectedMassFlowHaFromMassFlowDa);
+        assertThat(actualVolFlowHaFromMassFlowDa).isEqualTo(expectedVolFlowHaFromMassFlowDa);
+        assertThat(actualMassFlowDaFromVolFlowHa).isEqualTo(expectedMassFlowDaFromVolFlowHa);
+    }
 
 }

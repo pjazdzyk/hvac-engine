@@ -1,5 +1,10 @@
 package com.synerset.hvaclib.flows.equations;
 
+import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
+import com.synerset.unitility.unitsystem.thermodynamic.Density;
+
 /**
  * PHYSICS OF FLOW, CALCULATION AND CONVERSION LIBRARY <br>
  * Set of static methods for calculating fluid flow and moist air flow. Based on provided arguments, mass flow or volumetric flow
@@ -7,12 +12,14 @@ package com.synerset.hvaclib.flows.equations;
  * Abbreviations <br>
  * Ha - humid air
  * Da - dry air
+ *
  * @author Piotr Jażdżyk, MScEng
  */
 
 public final class FlowEquations {
 
-    private FlowEquations() {}
+    private FlowEquations() {
+    }
 
     // UNIVERSAL FLOW RATE CONVERSION METHODS
 
@@ -27,6 +34,11 @@ public final class FlowEquations {
         return massFlow / density;
     }
 
+    public static VolumetricFlow massFlowToVolFlow(Density density, MassFlow massFlow) {
+        double volFlowVal = massFlowToVolFlow(density.getValueOfKilogramPerCubicMeter(), massFlow.getValueOfKilogramsPerSecond());
+        return VolumetricFlow.ofCubicMetersPerSecond(volFlowVal);
+    }
+
     /**
      * Returns mass flow rate in kg/s based on provided fluid instance and its volumetric flow rate.
      *
@@ -36,6 +48,11 @@ public final class FlowEquations {
      */
     public static double volFlowToMassFlow(double density, double volFlow) {
         return volFlow * density;
+    }
+
+    public static MassFlow volFlowToMassFlow(Density density, VolumetricFlow volFlow) {
+        double massFlowVal = volFlowToMassFlow(density.getValueOfKilogramPerCubicMeter(), volFlow.getValueOfCubicMetersPerSecond());
+        return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 
     // MOIST AIR SPECIFIC FLOW RATE CONVERSION METHODS
@@ -52,6 +69,12 @@ public final class FlowEquations {
         return massFlowHa / (1.0 + humidityRatio);
     }
 
+    public static MassFlow massFlowHaToMassFlowDa(HumidityRatio humRatio, MassFlow massFlowHa) {
+        double massFlowVal = massFlowHaToMassFlowDa(humRatio.getValueOfKilogramPerKilogram(),
+                massFlowHa.getValueOfKilogramsPerSecond());
+        return MassFlow.ofKilogramsPerSecond(massFlowVal);
+    }
+
     /**
      * Returns moist air mass flow, based on dry air mass flow and humidity ratio from provided air instance.
      * It is used to get back moist air flow after psychrometrics calculation.
@@ -62,6 +85,12 @@ public final class FlowEquations {
      */
     public static double massFlowDaToMassFlowHa(double humidityRatio, double massFlowDa) {
         return massFlowDa * (1.0 + humidityRatio);
+    }
+
+    public static MassFlow massFlowDaToMassFlowHa(HumidityRatio humRatio, MassFlow massFlowDa) {
+        double massFlowVal = massFlowDaToMassFlowHa(humRatio.getValueOfKilogramPerKilogram(),
+                massFlowDa.getValueOfKilogramsPerSecond());
+        return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 
     /**
@@ -77,6 +106,13 @@ public final class FlowEquations {
         return massFlowToVolFlow(densityOfMoistAir, massFlowMa);
     }
 
+    public static MassFlow massFlowDaToVolFlowHa(Density density, HumidityRatio humRatio, MassFlow massFlowDa) {
+        double massFlowVal = massFlowDaToVolFlowHa(density.getValueOfKilogramPerCubicMeter(),
+                humRatio.getValueOfKilogramPerKilogram(),
+                massFlowDa.getValueOfKilogramsPerSecond());
+        return MassFlow.ofKilogramsPerSecond(massFlowVal);
+    }
+
     /**
      * Returns dry air mass flow in kg/s from moist air volumetric flow in m3/s.
      *
@@ -90,5 +126,11 @@ public final class FlowEquations {
         return massFlowHaToMassFlowDa(humidityRatio, massFlowMa);
     }
 
-}
+    public static MassFlow volFlowHaToMassFlowDa(Density density, HumidityRatio humRatio, VolumetricFlow volFlowHa) {
+        double massFlowVal = volFlowHaToMassFlowDa(density.getValueOfKilogramPerCubicMeter(),
+                humRatio.getValueOfKilogramPerKilogram(),
+                volFlowHa.getValueOfCubicMetersPerSecond());
+        return MassFlow.ofKilogramsPerSecond(massFlowVal);
+    }
 
+}

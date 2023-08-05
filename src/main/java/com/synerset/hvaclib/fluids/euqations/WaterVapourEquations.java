@@ -1,5 +1,8 @@
 package com.synerset.hvaclib.fluids.euqations;
 
+import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
+import com.synerset.unitility.unitsystem.thermodynamic.*;
+
 public final class WaterVapourEquations {
 
     public final static double WATER_VAPOUR_MOLECULAR_MASS = 18.01528;           // [kg/mol]            - Water vapour molecular mass
@@ -24,6 +27,27 @@ public final class WaterVapourEquations {
         return (aNum / cDnum) * Math.pow(10, -6);
     }
 
+    public static DynamicViscosity dynamicViscosity(Temperature temperature) {
+        double dynVisVal = dynamicViscosity(temperature.getValueOfCelsius());
+        return DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
+    }
+
+    /**
+     * Returns water vapour kinematic viscosity, m^2/s<br>
+     *
+     * @param ta     air temperature, oC
+     * @param rho_Wv dry air density, kg/m3
+     * @return kinematic viscosity, m^2/s
+     */
+    public static double kinematicViscosity(double ta, double rho_Wv) {
+        return dynamicViscosity(ta) / rho_Wv;
+    }
+
+    public static KinematicViscosity kinematicViscosity(Temperature temperature, Density waterVapourDensity) {
+        double kinVisVal = kinematicViscosity(temperature.getValueOfCelsius(), waterVapourDensity.getValueOfKilogramPerCubicMeter());
+        return KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
+    }
+
     /**
      * Returns dry air thermal conductivity, W/(m*K)
      * REFERENCE SOURCE: [4] [k,W/(m*K)] (6.17) [5]<br>
@@ -40,6 +64,11 @@ public final class WaterVapourEquations {
                 * Math.pow(10, -12) * Math.pow(ta, 4);
     }
 
+    public static ThermalConductivity thermalConductivity(Temperature temperature) {
+        double thermCondVal = thermalConductivity(temperature.getValueOfCelsius());
+        return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
+    }
+
     /**
      * Returns water vapour specific enthalpy, kJ/kg<br>
      *
@@ -49,6 +78,11 @@ public final class WaterVapourEquations {
     public static double specificEnthalpy(double ta) {
         double cp_Wv = specificHeat(ta);
         return cp_Wv * ta + LiquidWaterEquations.HEAT_OF_WATER_VAPORIZATION;
+    }
+
+    public static SpecificEnthalpy specificEnthalpy(Temperature temperature) {
+        double specEnthalpyVal = specificEnthalpy(temperature.getValueOfCelsius());
+        return SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
     }
 
     /**
@@ -82,6 +116,11 @@ public final class WaterVapourEquations {
                 + c6 * tk * tk * tk * tk * tk * tk;
     }
 
+    public static SpecificHeat specificHeat(Temperature temperature) {
+        double specHeatVal = specificHeat(temperature.getValueOfCelsius());
+        return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
+    }
+
     /**
      * Returns water vapour density, kg/m3
      *
@@ -97,15 +136,11 @@ public final class WaterVapourEquations {
         return P_Wv / (WATER_VAPOUR_SPEC_GAS_CONSTANT * tk);
     }
 
-    /**
-     * Returns water vapour kinematic viscosity, m^2/s<br>
-     *
-     * @param ta     air temperature, oC
-     * @param rho_Wv dry air density, kg/m3
-     * @return kinematic viscosity, m^2/s
-     */
-    public static double kinematicViscosity(double ta, double rho_Wv) {
-        return dynamicViscosity(ta) / rho_Wv;
+    public static Density density(Temperature temperature, RelativeHumidity relativeHumidity, Pressure pressure) {
+        double densityVal = density(temperature.getValueOfCelsius(),
+                relativeHumidity.getValueOfPercent(),
+                pressure.getValueOfPascals());
+        return Density.ofKilogramPerCubicMeter(densityVal);
     }
 
 }
