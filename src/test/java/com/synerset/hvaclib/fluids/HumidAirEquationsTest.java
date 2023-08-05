@@ -3,6 +3,12 @@ package com.synerset.hvaclib.fluids;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.LiquidWaterEquations;
 import com.synerset.hvaclib.solids.IceEquations;
+import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
+import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
+import com.synerset.unitility.unitsystem.thermodynamic.Density;
+import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
+import com.synerset.unitility.unitsystem.thermodynamic.SpecificEnthalpy;
+import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -490,5 +496,81 @@ class HumidAirEquationsTest implements FluidsTestConstants {
                 Arguments.of(70, 95)
         );
     }
+
+    @Test
+    @DisplayName("should all HumidAir methods using primitive values return the same output as methods using Unitility objects arguments")
+    void shouldAllDryAirMethodsWithPrimitiveArguments_returnTheSameOutput() {
+        // Given
+        double dryAirTempVal = 15.5;
+        double absPressureVal = 100_000.0;
+        double humRatioVal = 0.0001;
+        Pressure absPressure = Pressure.ofPascal(absPressureVal);
+        Temperature dryAirTemp = Temperature.ofCelsius(dryAirTempVal);
+        HumidityRatio humRatio = HumidityRatio.ofKilogramPerKilogram(humRatioVal);
+
+        double expectedRelHumFromDbT = HumidAirEquations.relativeHumidity(dryAirTempVal, humRatioVal, absPressureVal);
+        double expectedSatPressFromTa = HumidAirEquations.saturationPressure(dryAirTempVal);
+        double expectedSatPressFromXRH = HumidAirEquations.saturationPressure(humRatioVal, expectedRelHumFromDbT, absPressureVal);
+        double expectedDewPointTemp = HumidAirEquations.dewPointTemperature(dryAirTempVal, expectedRelHumFromDbT, absPressureVal);
+        double expectedWetBulbTemp = HumidAirEquations.wetBulbTemperature(dryAirTempVal, expectedRelHumFromDbT, absPressureVal);
+        double expectedRelHumFromTdp = HumidAirEquations.relativeHumidity(expectedDewPointTemp, dryAirTempVal);
+        double expectedHumRatio = HumidAirEquations.humidityRatio(expectedRelHumFromDbT, expectedSatPressFromTa, absPressureVal);
+        double expectedMaxHumRatio = HumidAirEquations.maxHumidityRatio(expectedSatPressFromTa, absPressureVal);
+        double expectedDynVis = HumidAirEquations.dynamicViscosity(dryAirTempVal, humRatioVal);
+        double expectedDensity = HumidAirEquations.density(dryAirTempVal, humRatioVal, absPressureVal);
+        double expectedKinVis = HumidAirEquations.kinematicViscosity(dryAirTempVal, humRatioVal, expectedDensity);
+        double expectedThermCond = HumidAirEquations.thermalConductivity(dryAirTempVal, humRatioVal);
+        double expectedSpecEnthalpy = HumidAirEquations.specificEnthalpy(dryAirTempVal, humRatioVal, absPressureVal);
+        double expectedSpecHeat = HumidAirEquations.specificHeat(dryAirTempVal, humRatioVal);
+        double expectedDryBulbTempFromTdp = HumidAirEquations.dryBulbTemperatureTdpRH(expectedDewPointTemp, expectedRelHumFromDbT, absPressureVal);
+        double expectedDryBulbTempFromXRH = HumidAirEquations.dryBulbTemperatureXRH(humRatioVal, expectedRelHumFromDbT, absPressureVal);
+        double expectedDryBulbTempFromIX = HumidAirEquations.dryBulbTemperatureIX(expectedSpecEnthalpy, expectedRelHumFromDbT, absPressureVal);
+        double expectedDryBulbTempFromWbtRH = HumidAirEquations.dryBulbTemperatureWbtRH(expectedWetBulbTemp, expectedRelHumFromDbT, absPressureVal);
+        double expectedMaxDryBulbTemp = HumidAirEquations.dryBulbTemperatureMax(absPressureVal);
+
+        // When
+        double actualRelHumFromDbT = HumidAirEquations.relativeHumidity(dryAirTemp, humRatio, absPressure).getValueOfPercent();
+        double actualSatPressFromTa = HumidAirEquations.saturationPressure(dryAirTemp).getValueOfPascals();
+        double actualSatPressFromXRH = HumidAirEquations.saturationPressure(humRatio, RelativeHumidity.ofPercentage(actualRelHumFromDbT), absPressure).getValueOfPascals();
+        double actualDewPointTemp = HumidAirEquations.dewPointTemperature(dryAirTemp, RelativeHumidity.ofPercentage(actualRelHumFromDbT), absPressure).getValueOfCelsius();
+        double actualWetBulbTemp = HumidAirEquations.wetBulbTemperature(dryAirTemp, RelativeHumidity.ofPercentage(actualRelHumFromDbT), absPressure).getValueOfCelsius();
+        double actualRelHumFromTdp = HumidAirEquations.relativeHumidity(Temperature.ofCelsius(expectedDewPointTemp), Temperature.ofCelsius(dryAirTempVal)).getValueOfPercent();
+        double actualHumRatio = HumidAirEquations.humidityRatio(RelativeHumidity.ofPercentage(actualRelHumFromDbT), Pressure.ofPascal(actualSatPressFromTa), absPressure).getValueOfKilogramPerKilogram();
+        double actualMaxHumRatio = HumidAirEquations.maxHumidityRatio(Pressure.ofPascal(actualSatPressFromTa), absPressure).getValueOfKilogramPerKilogram();
+        double actualDynVis = HumidAirEquations.dynamicViscosity(dryAirTemp, humRatio).getValueOfPascalSecond();
+        double actualDensity = HumidAirEquations.density(dryAirTemp, humRatio, absPressure).getValueOfKilogramPerCubicMeter();
+        double actualKinVis = HumidAirEquations.kinematicViscosity(dryAirTemp, humRatio, Density.ofKilogramPerCubicMeter(actualDensity)).getValueOfSquareMetersPerSecond();
+        double actualThermCond = HumidAirEquations.thermalConductivity(dryAirTemp, humRatio).getValueOfWatsPerMeterKelvin();
+        double actualSpecEnthalpy = HumidAirEquations.specificEnthalpy(dryAirTemp, humRatio, absPressure).getValueOfKiloJoulePerKilogram();
+        double actualSpecHeat = HumidAirEquations.specificHeat(dryAirTemp, humRatio).getValueOfKiloJoulesPerKilogramKelvin();
+        double actualDryBulbTempFromTdp = HumidAirEquations.dryBulbTemperatureTdpRH(Temperature.ofCelsius(actualDewPointTemp), RelativeHumidity.ofPercentage(actualRelHumFromDbT), absPressure).getValueOfCelsius();
+        double actualDryBulbTempFromXRH = HumidAirEquations.dryBulbTemperatureXRH(humRatio, RelativeHumidity.ofPercentage(actualRelHumFromDbT), absPressure).getValueOfCelsius();
+        double actualDryBulbTempFromIX = HumidAirEquations.dryBulbTemperatureIX(SpecificEnthalpy.ofKiloJoulePerKiloGram(actualSpecEnthalpy), RelativeHumidity.ofPercentage(actualRelHumFromDbT), absPressure).getValueOfCelsius();
+        double actualDryBulbTempFromWbtRH = HumidAirEquations.dryBulbTemperatureWbtRH(Temperature.ofCelsius(actualWetBulbTemp), RelativeHumidity.ofPercentage(actualRelHumFromDbT), absPressure).getValueOfCelsius();
+        double actualMaxDryBulbTemp = HumidAirEquations.dryBulbTemperatureMax(absPressure).getValueOfCelsius();
+
+        // Then
+        assertThat(actualRelHumFromDbT).isEqualTo(expectedRelHumFromDbT);
+        assertThat(actualSatPressFromTa).isEqualTo(expectedSatPressFromTa);
+        assertThat(actualSatPressFromXRH).isEqualTo(expectedSatPressFromXRH);
+        assertThat(actualDewPointTemp).isEqualTo(expectedDewPointTemp);
+        assertThat(actualWetBulbTemp).isEqualTo(expectedWetBulbTemp);
+        assertThat(actualRelHumFromTdp).isEqualTo(expectedRelHumFromTdp);
+        assertThat(actualHumRatio).isEqualTo(expectedHumRatio);
+        assertThat(actualMaxHumRatio).isEqualTo(expectedMaxHumRatio);
+        assertThat(actualDynVis).isEqualTo(expectedDynVis);
+        assertThat(actualDensity).isEqualTo(expectedDensity);
+        assertThat(actualKinVis).isEqualTo(expectedKinVis);
+        assertThat(actualThermCond).isEqualTo(expectedThermCond);
+        assertThat(actualSpecEnthalpy).isEqualTo(expectedSpecEnthalpy);
+        assertThat(actualSpecHeat).isEqualTo(expectedSpecHeat);
+        assertThat(actualDryBulbTempFromTdp).isEqualTo(expectedDryBulbTempFromTdp);
+        assertThat(actualDryBulbTempFromXRH).isEqualTo(expectedDryBulbTempFromXRH);
+        assertThat(actualDryBulbTempFromIX).isEqualTo(expectedDryBulbTempFromIX);
+        assertThat(actualDryBulbTempFromWbtRH).isEqualTo(expectedDryBulbTempFromWbtRH);
+        assertThat(actualMaxDryBulbTemp).isEqualTo(expectedMaxDryBulbTemp);
+
+    }
+
 }
 

@@ -1,6 +1,10 @@
 package com.synerset.hvaclib.solids;
 
+import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
+import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
+import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -110,6 +114,31 @@ class IceEquationsTest {
                 Arguments.of(-90, 3.34),
                 Arguments.of(-100, 3.48)
         );
+    }
+
+    @Test
+    @DisplayName("should all Ice methods using primitive values return the same output as methods using Unitility objects arguments")
+    void shouldAllIceMethodsWithPrimitiveArguments_returnTheSameOutput() {
+        // Given
+        double iceTempVal = -15.5;
+        Temperature iceTemp = Temperature.ofCelsius(iceTempVal);
+
+        double expectedDensVal = IceEquations.density(iceTempVal);
+        double expectedThermCondVal = IceEquations.thermalConductivity(iceTempVal);
+        double expectedSpecHeatVal = IceEquations.specificHeat(iceTempVal);
+        double expectedSpecEnthalpyVal = IceEquations.specificEnthalpy(iceTempVal);
+
+        // When
+        double actualDensVal = IceEquations.density(iceTemp).getValueOfKilogramPerCubicMeter();
+        double actualThermCondVal = IceEquations.thermalConductivity(iceTemp).getValueOfWatsPerMeterKelvin();
+        double actualSpecHeatVal = IceEquations.specificHeat(iceTemp).getValueOfKiloJoulesPerKilogramKelvin();
+        double actualSpecEnthalpyVal = IceEquations.specificEnthalpy(iceTemp).getValueOfKiloJoulePerKilogram();
+
+        // Then
+        assertThat(actualDensVal).isEqualTo(expectedDensVal);
+        assertThat(actualThermCondVal).isEqualTo(expectedThermCondVal);
+        assertThat(actualSpecHeatVal).isEqualTo(expectedSpecHeatVal);
+        assertThat(actualSpecEnthalpyVal).isEqualTo(expectedSpecEnthalpyVal);
     }
 
 }

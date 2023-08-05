@@ -1,6 +1,12 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.WaterVapourEquations;
+import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
+import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
+import com.synerset.unitility.unitsystem.thermodynamic.Density;
+import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
+import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +18,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class LiquidWaterOldDtoEquationsVapourTest implements FluidsTestConstants {
+class WaterVapourEquationsTest implements FluidsTestConstants {
 
     double CP_WV_ACCURACY = 0.025;
 
@@ -109,6 +115,41 @@ class LiquidWaterOldDtoEquationsVapourTest implements FluidsTestConstants {
 
         // Assert
         assertThat(expectedWvSpecificEnthalpy).isEqualTo(actualWvSpecificEnthalpy, withPrecision(MATH_ACCURACY));
+    }
+
+    @Test
+    @DisplayName("should all Water Vapour methods using primitive values return the same output as methods using Unitility objects arguments")
+    void shouldAllWaterVapourMethodsWithPrimitiveArguments_returnTheSameOutput() {
+        // Given
+        double vapourTemp = 15.5;
+        double absPressureVal = 100_000.0;
+        double relHumVal = 55.5;
+        Pressure absPressure = Pressure.ofPascal(absPressureVal);
+        Temperature dryAirTemp = Temperature.ofCelsius(vapourTemp);
+        RelativeHumidity relHum =  RelativeHumidity.ofPercentage(relHumVal);
+
+        double expectedDensVal = WaterVapourEquations.density(vapourTemp, relHumVal, absPressureVal);
+        double expectedDynVisVal = WaterVapourEquations.dynamicViscosity(vapourTemp);
+        double expectedKinVisVal = WaterVapourEquations.kinematicViscosity(vapourTemp, expectedDensVal);
+        double expectedThermCondVal = WaterVapourEquations.thermalConductivity(vapourTemp);
+        double expectedSpecHeatVal = WaterVapourEquations.specificHeat(vapourTemp);
+        double expectedSpecEnthalpy = WaterVapourEquations.specificEnthalpy(vapourTemp);
+
+        // When
+        double actualDensVal = WaterVapourEquations.density(dryAirTemp, relHum, absPressure).getValueOfKilogramPerCubicMeter();
+        double actualDynVisVal = WaterVapourEquations.dynamicViscosity(dryAirTemp).getValueOfPascalSecond();
+        double actualKinVisVal = WaterVapourEquations.kinematicViscosity(dryAirTemp, Density.ofKilogramPerCubicMeter(actualDensVal)).getValueOfSquareMetersPerSecond();
+        double actualThermCondVal = WaterVapourEquations.thermalConductivity(dryAirTemp).getValueOfWatsPerMeterKelvin();
+        double actualSpecHeatVal = WaterVapourEquations.specificHeat(dryAirTemp).getValueOfKiloJoulesPerKilogramKelvin();
+        double actualSpecEnthalpy = WaterVapourEquations.specificEnthalpy(dryAirTemp).getValueOfKiloJoulePerKilogram();
+
+        // Then
+        assertThat(actualDensVal).isEqualTo(expectedDensVal);
+        assertThat(actualDynVisVal).isEqualTo(expectedDynVisVal);
+        assertThat(actualKinVisVal).isEqualTo(expectedKinVisVal);
+        assertThat(actualThermCondVal).isEqualTo(expectedThermCondVal);
+        assertThat(actualSpecHeatVal).isEqualTo(expectedSpecHeatVal);
+        assertThat(actualSpecEnthalpy).isEqualTo(expectedSpecEnthalpy);
     }
 
 }

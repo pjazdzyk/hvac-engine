@@ -2,6 +2,8 @@ package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
 import com.synerset.hvaclib.fluids.euqations.SharedEquations;
+import com.synerset.unitility.unitsystem.common.Distance;
+import com.synerset.unitility.unitsystem.thermodynamic.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -79,4 +81,38 @@ class SharedEquationsTest implements FluidsTestConstants {
         assertThat(actualPrandtlNumber).isEqualTo(expectedPrandtlNumber, withPrecision(PRANDTL_ACCURACY));
     }
 
+    @Test
+    @DisplayName("should all shared methods using primitive values return the same output as methods using Unitility objects arguments")
+    void shouldAllSharedMethodsWithPrimitiveArguments_returnTheSameOutput() {
+        // Given
+        double heightVal = 5_000;
+        double tempVal = 30.0;
+        double densityVal = 1.2;
+        double specHeatVal = 1.005;
+        double thermalCondVal = 1.6;
+        double dynVisVal = 0.000001;
+        Distance height = Distance.ofMeters(heightVal);
+        Temperature temp = Temperature.ofCelsius(tempVal);
+        Density density = Density.ofKilogramPerCubicMeter(densityVal);
+        SpecificHeat specHeat = SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
+        ThermalConductivity thermalCond = ThermalConductivity.ofWattsPerMeterKelvin(thermalCondVal);
+        DynamicViscosity dynVis = DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
+
+        double expectedAltPressure = SharedEquations.atmAltitudePressure(heightVal);
+        double expectedAltTemperature = SharedEquations.altitudeTemperature(tempVal, heightVal);
+        double expectedThermDiffusivity = SharedEquations.thermalDiffusivity(densityVal, thermalCondVal,specHeatVal);
+        double expectedPrandtlNum = SharedEquations.prandtlNumber(dynVisVal, thermalCondVal, specHeatVal);
+
+        // When
+        double actualAltPressure = SharedEquations.atmAltitudePressure(height).getValueOfPascals();
+        double actualAltTemperature = SharedEquations.altitudeTemperature(temp, height).getValueOfCelsius();
+        double actualThermDiffusivity = SharedEquations.thermalDiffusivity(density, thermalCond,specHeat).getValueOfSquareMetersPerSecond();
+        double actualPrandtlNum = SharedEquations.prandtlNumber(dynVis, thermalCond, specHeat).getValue();
+
+        // Then
+        assertThat(actualAltPressure).isEqualTo(expectedAltPressure);
+        assertThat(actualAltTemperature).isEqualTo(expectedAltTemperature);
+        assertThat(actualThermDiffusivity).isEqualTo(expectedThermDiffusivity);
+        assertThat(actualPrandtlNum).isEqualTo(expectedPrandtlNum);
+    }
 }

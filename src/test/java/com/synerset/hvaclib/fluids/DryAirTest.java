@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DryAirFactoryTest {
+class DryAirTest {
 
     @Test
     @DisplayName("should create dry air instance with valid parameters")

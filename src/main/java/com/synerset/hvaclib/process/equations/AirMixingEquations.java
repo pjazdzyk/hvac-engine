@@ -162,8 +162,8 @@ public final class AirMixingEquations {
         solver.calcForFunction(mda_iter -> {
             double m_rec = mda_out - mda_iter;
             FlowOfHumidAir iterInletAir = FlowOfHumidAir.of(inletHumidAir, MassFlow.ofKilogramsPerSecond(mda_iter));
-            FlowOfHumidAir iterRecircAir = FlowOfHumidAir.of(recircHumidAir, MassFlow.ofKilogramsPerSecond(m_rec));
-            result[0] = mixTwoHumidGasFlows(iterInletAir, iterRecircAir);
+            FlowOfHumidAir iterRecAir = FlowOfHumidAir.of(recircHumidAir, MassFlow.ofKilogramsPerSecond(m_rec));
+            result[0] = mixTwoHumidGasFlows(iterInletAir, iterRecAir);
             double t_iter_out = result[0].outletFlow().temperature().getValueOfCelsius();
             return t_out - t_iter_out;
         });

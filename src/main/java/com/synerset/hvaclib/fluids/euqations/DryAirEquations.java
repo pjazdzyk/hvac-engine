@@ -1,10 +1,10 @@
 package com.synerset.hvaclib.fluids.euqations;
 
 import com.synerset.hvaclib.common.MathUtils;
+import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 public final class DryAirEquations {
 
-    // Dry air
     public final static double DRY_AIR_MOLECULAR_MASS = 28.96546;               // [kg/mol]             - Dry air molecular mass
     public final static double DRY_AIR_GAS_CONSTANT = 287.055;                  // [J/(kg*K)]           - Dry air specific gas constant
     public final static double DRY_AIR_SUTHERLAND_CONSTANT = 111.0;             // [K]                  - Dry air Sutherland Constant
@@ -27,15 +27,26 @@ public final class DryAirEquations {
                 * Math.pow(tk, 4)) * Math.pow(10, -6);
     }
 
+    public static DynamicViscosity dynamicViscosity(Temperature temperature) {
+        double dynVisVal = dynamicViscosity(temperature.getValueOfCelsius());
+        return DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
+    }
+
     /**
      * Returns dry air kinematic viscosity, m^2/s<br>
      *
      * @param ta     air temperature, oC
-     * @param rho_Da dry air density, kg/m3
+     * @param absP   absolute pressure, Pa
      * @return kinematic viscosity, m^2/s
      */
-    public static double kinematicViscosity(double ta, double rho_Da) {
+    public static double kinematicViscosity(double ta, double absP) {
+        double rho_Da = density(ta, absP);
         return dynamicViscosity(ta) / rho_Da;
+    }
+
+    public static KinematicViscosity kinematicViscosity(Temperature dryAirTemperature, Pressure absPressure) {
+        double kinVisVal = kinematicViscosity(dryAirTemperature.getValueOfCelsius(), absPressure.getValueOfPascals());
+        return KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
     }
 
     /**
@@ -54,6 +65,11 @@ public final class DryAirEquations {
                 - 2.61420 * Math.pow(10, -14) * Math.pow(ta, 4);
     }
 
+    public static ThermalConductivity thermalConductivity(Temperature dryAirTemperature) {
+        double thermCondVal = thermalConductivity(dryAirTemperature.getValueOfCelsius());
+        return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
+    }
+
     /**
      * Returns dry air specific enthalpy, kJ/kg<br>
      * REFERENCE SOURCE: [5] [i,kJ/kg] (1.20a) [19]<br>
@@ -64,6 +80,11 @@ public final class DryAirEquations {
     public static double specificEnthalpy(double ta) {
         double cp_Da = specificHeat(ta);
         return cp_Da * ta;
+    }
+
+    public static SpecificEnthalpy specificEnthalpy(Temperature dryAirTemperature) {
+        double specEnthalpyVal = specificEnthalpy(dryAirTemperature.getValueOfCelsius());
+        return SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
     }
 
     /**
@@ -96,18 +117,33 @@ public final class DryAirEquations {
             d = -8.4171864437938596E-10;
             e = 3.0582028042912701E-13;
         }
-        return e * ta * ta * ta * ta + d * ta * ta * ta + c * ta * ta + b * ta + a;
+        return e * Math.pow(ta, 4)
+                + d * Math.pow(ta, 3)
+                + c * Math.pow(ta, 2)
+                + b * ta
+                + a;
+    }
+
+    public static SpecificHeat specificHeat(Temperature dryAirTemperature) {
+        double specHeatVal = specificHeat(dryAirTemperature.getValueOfCelsius());
+        return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
 
     /**
      * Returns dry air density, kg/m3
      *
      * @param ta  air temperature, oC
-     * @param Pat atmospheric pressure, Pa
+     * @param absP atmospheric pressure, Pa
      * @return dry air density, kg/m3
      */
-    public static double density(double ta, double Pat) {
+    public static double density(double ta, double absP) {
         double tk = ta + 273.15;
-        return Pat / (DRY_AIR_GAS_CONSTANT * tk);
+        return absP / (DRY_AIR_GAS_CONSTANT * tk);
     }
+
+    public static Density density(Temperature dryAirTemperature, Pressure pressure) {
+        double densityVal = density(dryAirTemperature.getValueOfCelsius(), pressure.getValueOfPascals());
+        return Density.ofKilogramPerCubicMeter(densityVal);
+    }
+
 }

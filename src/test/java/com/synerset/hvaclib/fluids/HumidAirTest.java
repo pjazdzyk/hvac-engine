@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class HumidAirFactoryTest {
+class HumidAirTest {
 
     @Test
     @DisplayName("should create humid air instance with valid parameters")

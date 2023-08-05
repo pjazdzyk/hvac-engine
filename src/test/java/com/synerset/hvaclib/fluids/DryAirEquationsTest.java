@@ -1,6 +1,7 @@
 package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
+import com.synerset.unitility.unitsystem.thermodynamic.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,10 +25,10 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @MethodSource("dynVisDaInlineData")
     @DisplayName("should return dry air dynamic viscosity according to the physics tables for each temperature in dataset")
     void calcDaDynVisTest_shouldReturnDryAirDynamicViscosity_whenAirTemperatureIsGiven(double ta, double expectedDynViscosityFromTables) {
-        //Act
+        // Given
         var actualDynamicViscosity = DryAirEquations.dynamicViscosity(ta);
 
-        // Assert
+        // Then
         assertThat(actualDynamicViscosity).isEqualTo(expectedDynViscosityFromTables, withPrecision(DYN_VIS_ACCURACY));
     }
 
@@ -49,11 +50,11 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @MethodSource("densityInlineData")
     @DisplayName("should return correct air density according to ASHRARE tables for given air temperature and humidity ratio ")
     void calcRhoDaTest_shouldReturnDryAirDensityAccToASHRAETables_whenAirTempIsGiven(double ta, double expectedDaDensity) {
-        //Act
+        // Given
         var Pat = 101325;
         var actualDaDensity = DryAirEquations.density(ta, Pat);
 
-        // Arrange
+        // Then
         assertThat(actualDaDensity).isEqualTo(expectedDaDensity, withPrecision(RHO_ACCURACY));
     }
 
@@ -73,15 +74,14 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @Test
     @DisplayName("should return dry air kinematic viscosity when air temperature and density are given")
     void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
-        // Arrange
+        // Given
         var ta = 20.0;
-        var rhoDa = DryAirEquations.density(ta, PHYS_ATMOSPHERE);
         var expectedDaKinViscosity = 1.519954676200779E-5;
 
-        //Act
-        var actualDaKinViscosity = DryAirEquations.kinematicViscosity(ta, rhoDa);
+        // When
+        var actualDaKinViscosity = DryAirEquations.kinematicViscosity(ta, PHYS_ATMOSPHERE);
 
-        // Assert
+        // Then
         assertThat(actualDaKinViscosity).isEqualTo(expectedDaKinViscosity, withPrecision(MATH_ACCURACY));
     }
 
@@ -89,13 +89,13 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @MethodSource("kDaInlineData")
     @DisplayName("should return dry air thermal conductivity according to tables when air temperature is given")
     void calcDaKTest_shouldReturnDryAirThermalConductivity_WhenAirTemperatureIsGiven(double ta, double expectedDryAirThermalConductivity) {
-        //Act
+        // Given
         var actualDryAirThermalConductivity = DryAirEquations.thermalConductivity(ta);
         var accuracy = K_LOW_TEMP_ACCURACY;
         if (ta > 200)
             accuracy = K_HIGH_TEMP_ACCURACY;
 
-        // Assert
+        // Then
         assertThat(actualDryAirThermalConductivity).isEqualTo(expectedDryAirThermalConductivity, withPrecision(accuracy));
     }
 
@@ -125,10 +125,10 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @MethodSource("cpDaInlineData")
     @DisplayName("should return dry specific heat air according to tables when air temperature is given")
     void calcDaCpTest_shouldReturnDryAirSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedDaSpecificHeat) {
-        //Act
+        // Given
         var actualDaSpecificHeat = DryAirEquations.specificHeat(ta);
 
-        // Assert
+        // Then
         assertThat(actualDaSpecificHeat).isEqualTo(expectedDaSpecificHeat, withPrecision(CP_DA_ACCURACY));
     }
 
@@ -155,17 +155,48 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @Test
     @DisplayName("should return dry air specific enthalpy when air temperature is given")
     void calcDaITest_shouldReturnDryAirSpecificEnthalpy_whenAirTemperatureIsGiven() {
-        // Arrange
+        // Given
         var ta = 20.0;
         var expectedDaSpecificEnthalpy = 20.093833530674114;
 
-        //Act
+        // When
         var actualDaSpecificEnthalpy = DryAirEquations.specificEnthalpy(ta);
 
-        // Assert
+        // Then
         assertThat(actualDaSpecificEnthalpy).isEqualTo(expectedDaSpecificEnthalpy, withPrecision(MATH_ACCURACY));
     }
 
+    @Test
+    @DisplayName("should all DryAir methods using primitive values return the same output as methods using Unitility objects arguments")
+    void shouldAllDryAirMethodsWithPrimitiveArguments_returnTheSameOutput() {
+        // Given
+        double dryAirTempVal = 15.5;
+        double absPressureVal = 100_000.0;
+        Pressure absPressure = Pressure.ofPascal(absPressureVal);
+        Temperature dryAirTemp = Temperature.ofCelsius(dryAirTempVal);
 
+        double expectedDensVal = DryAirEquations.density(dryAirTempVal, absPressureVal);
+        double expectedDynVisVal = DryAirEquations.dynamicViscosity(dryAirTempVal);
+        double expectedKinVisVal = DryAirEquations.kinematicViscosity(dryAirTempVal, absPressureVal);
+        double expectedThermCondVal = DryAirEquations.thermalConductivity(dryAirTempVal);
+        double expectedSpecHeatVal = DryAirEquations.specificHeat(dryAirTempVal);
+        double expectedSpecEnthalpyVal = DryAirEquations.specificEnthalpy(dryAirTempVal);
+
+        // When
+        double actualDensVal = DryAirEquations.density(dryAirTemp, absPressure).getValueOfKilogramPerCubicMeter();
+        double actualDynVisVal = DryAirEquations.dynamicViscosity(dryAirTemp).getValueOfPascalSecond();
+        double actualKinVisVal = DryAirEquations.kinematicViscosity(dryAirTemp, absPressure).getValueOfSquareMetersPerSecond();
+        double actualThermCondVal = DryAirEquations.thermalConductivity(dryAirTemp).getValueOfWatsPerMeterKelvin();
+        double actualSpecHeatVal = DryAirEquations.specificHeat(dryAirTemp).getValueOfKiloJoulesPerKilogramKelvin();
+        double actualSpecEnthalpyVal = DryAirEquations.specificEnthalpy(dryAirTemp).getValueOfKiloJoulePerKilogram();
+
+        // Then
+        assertThat(actualDensVal).isEqualTo(expectedDensVal);
+        assertThat(actualDynVisVal).isEqualTo(expectedDynVisVal);
+        assertThat(actualKinVisVal).isEqualTo(expectedKinVisVal);
+        assertThat(actualThermCondVal).isEqualTo(expectedThermCondVal);
+        assertThat(actualSpecHeatVal).isEqualTo(expectedSpecHeatVal);
+        assertThat(actualSpecEnthalpyVal).isEqualTo(expectedSpecEnthalpyVal);
+    }
 
 }
