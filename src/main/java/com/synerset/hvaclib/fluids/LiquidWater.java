@@ -7,16 +7,14 @@ import java.util.Objects;
 
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
-public class LiquidWater implements Fluid{
+public class LiquidWater implements Fluid {
     private final Temperature temperature;
     private final Pressure pressure;
     private final Density density;
     private final SpecificHeat specificHeat;
     private final SpecificEnthalpy specificEnthalpy;
 
-    public LiquidWater(Pressure pressure,
-                       Temperature temperature) {
-
+    public LiquidWater(Pressure pressure, Temperature temperature) {
         this.temperature = temperature;
         this.pressure = pressure;
         double tempVal = temperature.toCelsius().getValue();
@@ -26,7 +24,6 @@ public class LiquidWater implements Fluid{
         this.specificHeat = SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
         double specEnthalpyVal = LiquidWaterEquations.specificEnthalpy(tempVal);
         this.specificEnthalpy = SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
-
     }
 
     public Temperature temperature() {

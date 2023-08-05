@@ -35,7 +35,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("psInlineData")
     @DisplayName("should return saturation pressures as in ASHRAE tables when air temperature is given")
-    void calcMaPsTest_shouldReturnSatPressureAsInAshraeTables_whenAirTempIsGiven(double ta, double expected) {
+    void saturationPressure_shouldReturnSatPressureAsInAshraeTables_whenAirTempIsGiven(double ta, double expected) {
         //Act
         var actual = HumidAirEquations.saturationPressure(ta);
         double accuracy;
@@ -70,7 +70,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("tdpInlineData")
     @DisplayName("should return dew point temperature as in generated source set, when air temperature is given")
-    void calcMaTdpTests_shouldReturnDewPointTempAsInSourceSet_whenAirTempIsGiven(double ta, double RH, double expected) {
+    void dewPointTemperature_shouldReturnDewPointTempAsInSourceSet_whenAirTempIsGiven(double ta, double RH, double expected) {
         //Act
         var actual = HumidAirEquations.dewPointTemperature(ta, RH, PHYS_ATMOSPHERE);
 
@@ -92,7 +92,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest()
     @MethodSource("wbtInlineData")
     @DisplayName("should return wet bulb temperature as in provided dataset when air temperature and RH is given")
-    void calcMaWbtTests_shouldReturnWetBulbTempAsInDataSet_whenAirTempAndRHIsGiven(double ta, double RH, double expected) {
+    void wetBulbTemperature_shouldReturnWetBulbTempAsInDataSet_whenAirTempAndRHIsGiven(double ta, double RH, double expected) {
         // Arrange
         var accuracy = ta < 60 ? WBT_LOW_TEMP_ACCURACY : WBT_HIGH_TEMP_ACCURACY;
 
@@ -128,7 +128,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return correct saturation pressure, when humidity ratio, RH and atm pressure is given")
-    void calcMaPSTest_shouldReturnSatPressure_whenHumidityRatioRHandAtmPressureIsGiven() {
+    void saturationPressure_shouldReturnSatPressure_whenHumidityRatioRHandAtmPressureIsGiven() {
         // Arrange
         var expected = 2338.880310914088;
         var RH = 50.0;
@@ -144,7 +144,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("tdpRhInlineData")
     @DisplayName("should return RH as in provided data set for each dry bulb air temperature and dew point temperature")
-    void calcMaRHTdpTest_shouldReturnRHasInDataSet_whenAirTempAndDwPointTempIsGiven(double ta, double tdp, double expected) {
+    void relativeHumidity_shouldReturnRHasInDataSet_whenAirTempAndDwPointTempIsGiven(double ta, double tdp, double expected) {
         //Act
         var actualRH = HumidAirEquations.relativeHumidity(tdp, ta);
 
@@ -165,7 +165,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return relative humidity when dry bulb air temperature and humidity ratio is given")
-    void calcMaRHTest_shouldReturnRH_whenAirTempAndHumidityRatioIsGiven() {
+    void relativeHumidity_shouldReturnRH_whenAirTempAndHumidityRatioIsGiven() {
         // Arrange
         var ta = 20.0;
         var x = 0.006615487885540037;
@@ -180,7 +180,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return humidity ratio when RH and saturation pressure is given")
-    void calcMaXTest_shouldReturnHumidityRatio_whenRHAndSaturationPressureIsGiven() {
+    void humidityRatio_shouldReturnHumidityRatio_whenRHAndSaturationPressureIsGiven() {
         // Arrange
         var RH = 75.0;
         var Ps = 3169.2164701436063;
@@ -195,7 +195,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return correct maximum humidity ratio when saturation pressure Ps and atmospheric pressure Pat is given")
-    void calcMaXMaxTest_shouldReturnMaxHumidityRatio_WhenSaturationPressureAndAtmPressureIsGiven() {
+    void maxHumidityRatio_shouldReturnMaxHumidityRatio_WhenSaturationPressureAndAtmPressureIsGiven() {
         // Arrange
         var Ps = 3169.2164701436063;
         var expectedHumidityRatio = 0.020356309472910922;
@@ -209,7 +209,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return correct moist air dynamic viscosity when air temperature and humidity ratio is given")
-    void calcMaDynVisTest_shouldReturnMoistAirDynamicViscosity_whenAirTemperatureAndHumidityRatioIsGiven() {
+    void dynamicViscosity_shouldReturnMoistAirDynamicViscosity_whenAirTemperatureAndHumidityRatioIsGiven() {
         // Arrange
         var ta = 20.0;
         var x = 0.00648405507311303;
@@ -225,7 +225,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("densityInlineData")
     @DisplayName("should return correct air density according to ASHRARE tables for given air temperature and humidity ratio ")
-    void calcRhoMaTest_shouldReturnMoistAirDensityAccToASHRAETables_whenAirTempAndHumidityRatioIsGiven(double ta, double humRatio, double expectedMaDensity) {
+    void density_shouldReturnMoistAirDensityAccToASHRAETables_whenAirTempAndHumidityRatioIsGiven(double ta, double humRatio, double expectedMaDensity) {
         //Act
         var Pat = 101325;
         var actualMaDensity = HumidAirEquations.density(ta, humRatio, Pat);
@@ -249,7 +249,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return moist air kinematic viscosity when air temperature, density and humidity ratio are given")
-    void calcMaKinVisTest_shouldReturnMoistAirKinematicViscosity_whenAirTempDensityAndHumRatioIsGiven() {
+    void kinematicViscosity_shouldReturnMoistAirKinematicViscosity_whenAirTempDensityAndHumRatioIsGiven() {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
@@ -267,7 +267,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return moist air specific heat when air temperature is given")
-    void calcMaCpTest_shouldReturnMoistAirSpecificHeat_whenAirTemperatureIsGiven() {
+    void specificHeat_shouldReturnMoistAirSpecificHeat_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
         var humRatio = 0.007261881104670626;
@@ -282,7 +282,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return water mist enthalpy when air temperature is given")
-    void calcWtITest_shouldReturnWaterSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void specificEnthalpy_shouldReturnWaterSpecificEnthalpy_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
         var expectedWtMistEnthalpyForPositiveTemp = 83.68654489595968;
@@ -299,7 +299,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return ice mist enthalpy when air temperature is given")
-    void calcIceITest_shouldReturnIceMistSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void specificEnthalpy_shouldReturnIceMistSpecificEnthalpy_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
         var expectedIceMistEnthalpyForPositiveTemp = 0.0;
@@ -316,7 +316,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return moist air specific enthalpy when air temperature and humidity ratio is given")
-    void calcMaIxTest_shouldReturnMoistAirSpecificEnthalpy_whenAirTemperatureAndHumidityRatioIsGiven() {
+    void specificEnthalpy_shouldReturnMoistAirSpecificEnthalpy_whenAirTemperatureAndHumidityRatioIsGiven() {
         // Arrange
         var ta1 = 20.0;
         var x1 = 0.0072129;     //unsaturated for 20oC
@@ -345,7 +345,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("taTDPInlineData")
     @DisplayName("should return moist air temperature when dew point temperature and relative humidity is given")
-    void calcMaTaTdpRHTest_shouldReturnMoistAirTemperature_whenAirDewPointTemperatureAndRelHumidityIsGiven(double expectedTa, double RH) {
+    void dryBulbTemperatureTdpRH_shouldReturnMoistAirTemperature_whenAirDewPointTemperatureAndRelHumidityIsGiven(double expectedTa, double RH) {
         // Arrange
         var tdp = HumidAirEquations.dewPointTemperature(expectedTa, RH, PHYS_ATMOSPHERE);
 
@@ -376,7 +376,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("RHXInlineData")
     @DisplayName("should return moist air temperature when humidity ratio and relative humidity is given")
-    void calcMaTaRHXTest_shouldReturnAirTemperature_whenHumidityRatioAndRelHumidityIsGiven(double expectedTa, double RH) {
+    void dryBulbTemperatureXRH_shouldReturnAirTemperature_whenHumidityRatioAndRelHumidityIsGiven(double expectedTa, double RH) {
         // Arrange
         var Ps = HumidAirEquations.saturationPressure(expectedTa);
         var x = HumidAirEquations.humidityRatio(RH, Ps, PHYS_ATMOSPHERE);
@@ -411,7 +411,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("taIXInlineData")
     @DisplayName("should return moist air temperature when moist air enthalpy and humidity ratio is given")
-    void calcMaTaIXTest_shouldReturnMoistAirTemperature_WhenMoistAirEnthalpyAndHumidityRatioIsGiven(double expectedTa, double x) {
+    void specificEnthalpy_shouldReturnMoistAirTemperature_WhenMoistAirEnthalpyAndHumidityRatioIsGiven(double expectedTa, double x) {
         // Arrange
         var ix = HumidAirEquations.specificEnthalpy(expectedTa, x, PHYS_ATMOSPHERE);
 
@@ -445,7 +445,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("tmaxPatInlineData")
     @DisplayName("should return maximum dry bulb air temperature for Ps<Pat condition, when saturation pressure and atm pressures are given")
-    void calcMaTaMaxPatTest_shouldReturnMaxDryBulbAirTemperature_whenSaturationPressureAndAtmPressureAreGiven(double expectedPat) {
+    void saturationPressure_shouldReturnMaxDryBulbAirTemperature_whenSaturationPressureAndAtmPressureAreGiven(double expectedPat) {
         //Act
         var actualMaxTemperature = HumidAirEquations.dryBulbTemperatureMax(expectedPat);
         var actualPs = HumidAirEquations.saturationPressure(actualMaxTemperature);
@@ -466,7 +466,7 @@ class HumidAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("wbtTaInlineData")
     @DisplayName("should return dry bulb air temperature when wet bulb air temperature and relative humidity is given")
-    void calcMaTaWbtTest_shouldReturnDryBulbAirTemperature_WhenWetBulbAirTemperatureAndRelativeHumidityIsGiven(double expectedTa, double RH) {
+    void dryBulbTemperatureWbtRH_shouldReturnDryBulbAirTemperature_WhenWetBulbAirTemperatureAndRelativeHumidityIsGiven(double expectedTa, double RH) {
         // Arrange
         var wbt = HumidAirEquations.wetBulbTemperature(expectedTa, RH, PHYS_ATMOSPHERE);
 

@@ -1,7 +1,8 @@
 package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
-import com.synerset.unitility.unitsystem.thermodynamic.*;
+import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
+import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +25,7 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("dynVisDaInlineData")
     @DisplayName("should return dry air dynamic viscosity according to the physics tables for each temperature in dataset")
-    void calcDaDynVisTest_shouldReturnDryAirDynamicViscosity_whenAirTemperatureIsGiven(double ta, double expectedDynViscosityFromTables) {
+    void dynamicViscosity_shouldReturnDryAirDynamicViscosity_whenAirTemperatureIsGiven(double ta, double expectedDynViscosityFromTables) {
         // Given
         var actualDynamicViscosity = DryAirEquations.dynamicViscosity(ta);
 
@@ -49,7 +50,7 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("densityInlineData")
     @DisplayName("should return correct air density according to ASHRARE tables for given air temperature and humidity ratio ")
-    void calcRhoDaTest_shouldReturnDryAirDensityAccToASHRAETables_whenAirTempIsGiven(double ta, double expectedDaDensity) {
+    void density_shouldReturnDryAirDensityAccToASHRAETables_whenAirTempIsGiven(double ta, double expectedDaDensity) {
         // Given
         var Pat = 101325;
         var actualDaDensity = DryAirEquations.density(ta, Pat);
@@ -73,7 +74,7 @@ class DryAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return dry air kinematic viscosity when air temperature and density are given")
-    void calcDaKinVisTest_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
+    void kinematicViscosity_shouldReturnDryAirKinematicViscosity_whenAirTempAndDensityIsGiven() {
         // Given
         var ta = 20.0;
         var expectedDaKinViscosity = 1.519954676200779E-5;
@@ -88,7 +89,7 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("kDaInlineData")
     @DisplayName("should return dry air thermal conductivity according to tables when air temperature is given")
-    void calcDaKTest_shouldReturnDryAirThermalConductivity_WhenAirTemperatureIsGiven(double ta, double expectedDryAirThermalConductivity) {
+    void thermalConductivity_shouldReturnDryAirThermalConductivity_WhenAirTemperatureIsGiven(double ta, double expectedDryAirThermalConductivity) {
         // Given
         var actualDryAirThermalConductivity = DryAirEquations.thermalConductivity(ta);
         var accuracy = K_LOW_TEMP_ACCURACY;
@@ -124,7 +125,7 @@ class DryAirEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("cpDaInlineData")
     @DisplayName("should return dry specific heat air according to tables when air temperature is given")
-    void calcDaCpTest_shouldReturnDryAirSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedDaSpecificHeat) {
+    void specificHeat_shouldReturnDryAirSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedDaSpecificHeat) {
         // Given
         var actualDaSpecificHeat = DryAirEquations.specificHeat(ta);
 
@@ -154,7 +155,7 @@ class DryAirEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return dry air specific enthalpy when air temperature is given")
-    void calcDaITest_shouldReturnDryAirSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void specificEnthalpy_shouldReturnDryAirSpecificEnthalpy_whenAirTemperatureIsGiven() {
         // Given
         var ta = 20.0;
         var expectedDaSpecificEnthalpy = 20.093833530674114;

@@ -23,7 +23,7 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 public final class LiquidWaterEquations {
 
-    public final static double HEAT_OF_WATER_VAPORIZATION = 2500.9;             // [kJ/kg]              - Water heat of vaporization (t=0oC)
+    public final static double HEAT_OF_WATER_VAPORIZATION = 2500.9;   // [kJ/kg]   - Water heat of vaporization (t=0oC)
 
     private LiquidWaterEquations() {
     }

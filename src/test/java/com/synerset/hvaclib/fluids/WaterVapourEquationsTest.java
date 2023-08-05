@@ -1,8 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.WaterVapourEquations;
-import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Density;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
@@ -24,7 +22,7 @@ class WaterVapourEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return correct water vapour dynamic viscosity when input temperature is given")
-    void calcWvDynVisTest_shouldReturnDynamicWaterVapourDynamicViscosity_whenInputTemperatureIsGiven() {
+    void dynamicViscosity_shouldReturnDynamicWaterVapourDynamicViscosity_whenInputTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
         var expectedDynViscosity = 9.731572271822231E-6;
@@ -38,7 +36,7 @@ class WaterVapourEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return water vapour density when input temperature is given")
-    void calcWvRhoTest_shouldReturnWaterVapourDensity_whenAirTemperatureIsGiven() {
+    void density_shouldReturnWaterVapourDensity_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
@@ -53,7 +51,7 @@ class WaterVapourEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return water vapour kinematic viscosity when air temperature and density are given")
-    void calcWvKinVisTest_shouldReturnWaterVapourKinematicViscosity_whenAirTempAndDensityIsGiven() {
+    void kinematicViscosity_shouldReturnWaterVapourKinematicViscosity_whenAirTempAndDensityIsGiven() {
         // Arrange
         var ta = 20.0;
         var RH = 50.0;
@@ -70,7 +68,7 @@ class WaterVapourEquationsTest implements FluidsTestConstants {
     @ParameterizedTest
     @MethodSource("cpWvInlineData")
     @DisplayName("should return water vapour specific heat according to tables when air temperature is given")
-    void calcWvCpTest_shouldReturnWaterVapourSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedWvSpecificHeat) {
+    void specificHeat_shouldReturnWaterVapourSpecificHeat_whenAirTemperatureIsGiven(double ta, double expectedWvSpecificHeat) {
         //Act
         var actualWvSpecificHeat = WaterVapourEquations.specificHeat(ta);
 
@@ -105,7 +103,7 @@ class WaterVapourEquationsTest implements FluidsTestConstants {
 
     @Test
     @DisplayName("should return water vapour specific enthalpy when air temperature is given")
-    void calcWvITest_shouldReturnWaterVapourSpecificEnthalpy_whenAirTemperatureIsGiven() {
+    void specificEnthalpy_shouldReturnWaterVapourSpecificEnthalpy_whenAirTemperatureIsGiven() {
         // Arrange
         var ta = 20.0;
         var expectedWvSpecificEnthalpy = 2538.155121040328;
@@ -126,7 +124,7 @@ class WaterVapourEquationsTest implements FluidsTestConstants {
         double relHumVal = 55.5;
         Pressure absPressure = Pressure.ofPascal(absPressureVal);
         Temperature dryAirTemp = Temperature.ofCelsius(vapourTemp);
-        RelativeHumidity relHum =  RelativeHumidity.ofPercentage(relHumVal);
+        RelativeHumidity relHum = RelativeHumidity.ofPercentage(relHumVal);
 
         double expectedDensVal = WaterVapourEquations.density(vapourTemp, relHumVal, absPressureVal);
         double expectedDynVisVal = WaterVapourEquations.dynamicViscosity(vapourTemp);
