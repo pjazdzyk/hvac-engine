@@ -1,12 +1,15 @@
 package com.synerset.hvaclib.flows;
 
 import com.synerset.hvaclib.flows.equations.FlowEquations;
+import com.synerset.hvaclib.fluids.DryAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
+
+import java.util.Objects;
 
 public class FlowOfHumidAir implements Flow<HumidAir> {
 
@@ -112,6 +115,36 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         return FlowOfHumidAir.of(humidAir, massFlow);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FlowOfHumidAir that = (FlowOfHumidAir) o;
+        return Objects.equals(humidAir, that.humidAir) && Objects.equals(massFlow, that.massFlow);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(humidAir, massFlow);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("FlowOfHumidAir:\n\t")
+                .append("G = ").append(massFlow.toKiloGramPerHour().getValue()).append(" ").append(massFlow.toKiloGramPerHour().getUnitSymbol()).append(" | ")
+                .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
+                .append("V = ").append(volFlow.toCubicMetersPerHour().getValue()).append(" ").append(volFlow.toCubicMetersPerHour().getUnitSymbol())
+                .append("\n\t")
+                .append("Gda = ").append(dryAirMassFlow().getValue()).append(" ").append(dryAirMassFlow().getUnitSymbol()).append(" | ")
+                .append("Gda = ").append(dryAirMassFlow().toKiloGramPerHour().getValue()).append(" ").append(dryAirMassFlow().toKiloGramPerHour().getUnitSymbol())
+                .append("\n\t")
+                .append(humidAir)
+                .append("\n");
+
+        return stringBuilder.toString();
+    }
+
     // Static factory methods
     public static FlowOfHumidAir of(HumidAir humidAir, MassFlow massFlowHa) {
         return new FlowOfHumidAir(humidAir, massFlowHa);
@@ -122,10 +155,8 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     public static FlowOfHumidAir ofDryAirMassFlow(HumidAir humidAir, MassFlow massFlowDa) {
-        double humRatioVal = humidAir.humidityRatio().getValueOfKilogramPerKilogram();
-        double dryAirMassFlowVal = massFlowDa.getValueOfKilogramsPerSecond();
-        double humidAirMassFlowVal = FlowEquations.massFlowDaToMassFlowHa(humRatioVal, dryAirMassFlowVal);
-        MassFlow humidAirMassFlow = MassFlow.ofKilogramsPerSecond(humidAirMassFlowVal);
+        HumidityRatio humRatio = humidAir.humidityRatio();
+        MassFlow humidAirMassFlow = FlowEquations.massFlowDaToMassFlowHa(humRatio, massFlowDa);
         return FlowOfHumidAir.of(humidAir, humidAirMassFlow);
     }
 

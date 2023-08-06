@@ -2,7 +2,7 @@ package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.LiquidWaterEquations;
-import com.synerset.hvaclib.solids.IceEquations;
+import com.synerset.hvaclib.solids.equations.IceEquations;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Density;

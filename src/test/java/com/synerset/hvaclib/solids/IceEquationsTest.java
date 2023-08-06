@@ -1,7 +1,6 @@
 package com.synerset.hvaclib.solids;
 
-import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
-import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
+import com.synerset.hvaclib.solids.equations.IceEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

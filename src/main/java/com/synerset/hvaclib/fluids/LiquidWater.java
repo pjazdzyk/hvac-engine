@@ -17,13 +17,9 @@ public class LiquidWater implements Fluid {
     public LiquidWater(Pressure pressure, Temperature temperature) {
         this.temperature = temperature;
         this.pressure = pressure;
-        double tempVal = temperature.toCelsius().getValue();
-        double densVal = LiquidWaterEquations.density(tempVal);
-        this.density = Density.ofKilogramPerCubicMeter(densVal);
-        double specHeatVal = LiquidWaterEquations.specificHeat(tempVal);
-        this.specificHeat = SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
-        double specEnthalpyVal = LiquidWaterEquations.specificEnthalpy(tempVal);
-        this.specificEnthalpy = SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
+        this.density = LiquidWaterEquations.density(temperature);
+        this.specificHeat = LiquidWaterEquations.specificHeat(temperature);
+        this.specificEnthalpy = LiquidWaterEquations.specificEnthalpy(temperature);
     }
 
     public Temperature temperature() {
@@ -65,14 +61,18 @@ public class LiquidWater implements Fluid {
 
     @Override
     public String toString() {
-        return "LiquidWaterFL[" +
-                "temperature=" + temperature + ", " +
-                "pressure=" + pressure + ", " +
-                "density=" + density + ", " +
-                "specificHeat=" + specificHeat + ", " +
-                "specificEnthalpy=" + specificEnthalpy + ']';
-    }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("LiquidWater:\n\t")
+                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
+                .append("t_w = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
+                .append("\n\t")
+                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
+                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
+                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
+                .append("\n");
 
+        return stringBuilder.toString();
+    }
 
     // Static factory methods
     public static LiquidWater of(Pressure pressure, Temperature temperature) {

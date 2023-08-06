@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
-public final class WaterVapour implements Fluid{
+public final class WaterVapour implements Fluid {
     private final Temperature temperature;
     private final Pressure pressure;
     private final Density density;
@@ -24,22 +24,12 @@ public final class WaterVapour implements Fluid{
 
         this.pressure = pressure;
         this.temperature = temperature;
-        double tempVal = temperature.toCelsius().getValue();
-        double pressVal = pressure.toPascal().getValue();
-        double RHVal = relativeHumidity.toPercent().getValue();
-        double densVal = WaterVapourEquations.density(tempVal, RHVal, pressVal);
-        this.density = Density.ofKilogramPerCubicMeter(densVal);
-        double specHeatVal = WaterVapourEquations.specificHeat(tempVal);
-        this.specificHeat = SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
-        double specEnthalpyVal = WaterVapourEquations.specificEnthalpy(tempVal);
-        this.specificEnthalpy = SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
-        double dynVisVal = WaterVapourEquations.dynamicViscosity(tempVal);
-        this.dynamicViscosity = DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
-        double kinVisVal = WaterVapourEquations.kinematicViscosity(tempVal, densVal);
-        this.kinematicViscosity = KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
-        double thermCondVal = WaterVapourEquations.thermalConductivity(tempVal);
-        this.thermalConductivity = ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
-
+        this.density = WaterVapourEquations.density(temperature, relativeHumidity, pressure);
+        this.specificHeat = WaterVapourEquations.specificHeat(temperature);
+        this.specificEnthalpy = WaterVapourEquations.specificEnthalpy(temperature);
+        this.dynamicViscosity = WaterVapourEquations.dynamicViscosity(temperature);
+        this.kinematicViscosity = WaterVapourEquations.kinematicViscosity(temperature, density);
+        this.thermalConductivity = WaterVapourEquations.thermalConductivity(temperature);
     }
 
     public Temperature temperature() {
@@ -89,15 +79,21 @@ public final class WaterVapour implements Fluid{
 
     @Override
     public String toString() {
-        return "WaterVapour[" +
-                "temperature=" + temperature + ", " +
-                "pressure=" + pressure + ", " +
-                "density=" + density + ", " +
-                "specificHeat=" + specificHeat + ", " +
-                "specificEnthalpy=" + specificEnthalpy + ", " +
-                "dynamicViscosity=" + dynamicViscosity + ", " +
-                "kinematicViscosity=" + kinematicViscosity + ", " +
-                "thermalConductivity=" + thermalConductivity + ']';
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("WaterVapour:\n\t")
+                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
+                .append("Tvw = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
+                .append("\n\t")
+                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
+                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
+                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
+                .append("\n\t")
+                .append("ν = ").append(kinematicViscosity.getValue()).append(" ").append(kinematicViscosity.getUnitSymbol()).append(" | ")
+                .append("μ = ").append(dynamicViscosity.getValue()).append(" ").append(dynamicViscosity.getUnitSymbol()).append(" | ")
+                .append("k = ").append(thermalConductivity.getValue()).append(" ").append(thermalConductivity.getUnitSymbol())
+                .append("\n");
+
+        return stringBuilder.toString();
     }
 
     // Static factory methods

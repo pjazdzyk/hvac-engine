@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
-public final class DryAir implements Fluid{
+public final class DryAir implements Fluid {
     private final Temperature temperature;
     private final Pressure pressure;
     private final Density density;
@@ -18,24 +18,14 @@ public final class DryAir implements Fluid{
     private final ThermalConductivity thermalConductivity;
 
     private DryAir(Pressure pressure, Temperature temperature) {
-
         this.temperature = temperature;
         this.pressure = pressure;
-        double tempVal = temperature.toCelsius().getValue();
-        double pressVal = pressure.toPascal().getValue();
-        double densVal = DryAirEquations.density(tempVal, pressVal);
-        this.density = Density.ofKilogramPerCubicMeter(densVal);
-        double specHeatVal = DryAirEquations.specificHeat(tempVal);
-        this.specificHeat = SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
-        double specEnthalpyVal = DryAirEquations.specificEnthalpy(tempVal);
-        this.specificEnthalpy = SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
-        double dynVisVal = DryAirEquations.dynamicViscosity(tempVal);
-        this.dynamicViscosity = DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
-        double kinVisVal = DryAirEquations.kinematicViscosity(tempVal, densVal);
-        this.kinematicViscosity = KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
-        double thermCondVal = DryAirEquations.thermalConductivity(tempVal);
-        this.thermalConductivity = ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
-
+        this.density = DryAirEquations.density(temperature, pressure);
+        this.specificHeat = DryAirEquations.specificHeat(temperature);
+        this.specificEnthalpy = DryAirEquations.specificEnthalpy(temperature);
+        this.dynamicViscosity = DryAirEquations.dynamicViscosity(temperature);
+        this.kinematicViscosity = DryAirEquations.kinematicViscosity(temperature, pressure);
+        this.thermalConductivity = DryAirEquations.thermalConductivity(temperature);
     }
 
     public Temperature temperature() {
@@ -92,15 +82,21 @@ public final class DryAir implements Fluid{
 
     @Override
     public String toString() {
-        return "DryAirFL[" +
-                "temperature=" + temperature + ", " +
-                "pressure=" + pressure + ", " +
-                "density=" + density + ", " +
-                "specificHeat=" + specificHeat + ", " +
-                "specificEnthalpy=" + specificEnthalpy + ", " +
-                "dynamicViscosity=" + dynamicViscosity + ", " +
-                "kinematicViscosity=" + kinematicViscosity + ", " +
-                "thermalConductivity=" + thermalConductivity + ']';
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("DryAir:\n\t")
+                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
+                .append("DBT = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
+                .append("\n\t")
+                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
+                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
+                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
+                .append("\n\t")
+                .append("ν = ").append(kinematicViscosity.getValue()).append(" ").append(kinematicViscosity.getUnitSymbol()).append(" | ")
+                .append("μ = ").append(dynamicViscosity.getValue()).append(" ").append(dynamicViscosity.getUnitSymbol()).append(" | ")
+                .append("k = ").append(thermalConductivity.getValue()).append(" ").append(thermalConductivity.getUnitSymbol())
+                .append("\n");
+
+        return stringBuilder.toString();
     }
 
     // Custom equality check

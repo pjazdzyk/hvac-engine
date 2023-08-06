@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.solids;
+package com.synerset.hvaclib.solids.equations;
 
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
