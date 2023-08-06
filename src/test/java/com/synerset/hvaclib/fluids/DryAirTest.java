@@ -16,11 +16,10 @@ class DryAirTest {
         // Given
         double inputPressure = 100_000.0;
         double inputAirTemp = 25.0;
-        double densVal = DryAirEquations.density(inputAirTemp, inputPressure);
         double expectedSpecHeat = DryAirEquations.specificHeat(inputAirTemp);
         double expectedSpecEnthalpy = DryAirEquations.specificEnthalpy(inputAirTemp);
         double expectedDynVis = DryAirEquations.dynamicViscosity(inputAirTemp);
-        double expectedKinViscosity = DryAirEquations.kinematicViscosity(inputAirTemp, densVal);
+        double expectedKinViscosity = DryAirEquations.kinematicViscosity(inputAirTemp, inputPressure);
         double expectedThermalConductivity = DryAirEquations.thermalConductivity(inputAirTemp);
 
         // When

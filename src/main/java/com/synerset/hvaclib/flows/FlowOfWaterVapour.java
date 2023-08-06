@@ -78,11 +78,17 @@ public class FlowOfWaterVapour implements Flow<WaterVapour> {
 
     @Override
     public String toString() {
-        return "FlowOfFluid{" +
-                "fluid=" + waterVapour +
-                ", massFlow=" + massFlow +
-                ", volFlow=" + volFlow +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("FlowOfWaterVapour:\n\t")
+                .append("G = ").append(massFlow.getValue()).append(" ").append(massFlow.getUnitSymbol()).append(" | ")
+                .append("G = ").append(massFlow.toKiloGramPerHour().getValue()).append(" ").append(massFlow.toKiloGramPerHour().getUnitSymbol()).append(" | ")
+                .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
+                .append("V = ").append(volFlow.toCubicMetersPerHour().getValue()).append(" ").append(volFlow.toCubicMetersPerHour().getUnitSymbol())
+                .append("\n\t")
+                .append(waterVapour)
+                .append("\n");
+
+        return stringBuilder.toString();
     }
 
     // Class factory methods

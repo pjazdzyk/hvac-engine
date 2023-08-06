@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LiquidWaterTest {
+class LiquidWaterTest {
 
     @Test
     @DisplayName("should create liquid water instance with valid parameters")
