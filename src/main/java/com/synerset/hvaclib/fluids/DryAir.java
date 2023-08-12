@@ -61,6 +61,25 @@ public final class DryAir implements Fluid {
     }
 
     @Override
+    public String toFormattedString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("DryAir:\n\t")
+                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
+                .append("DBT = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
+                .append("\n\t")
+                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
+                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
+                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
+                .append("\n\t")
+                .append("ν = ").append(kinematicViscosity.getValue()).append(" ").append(kinematicViscosity.getUnitSymbol()).append(" | ")
+                .append("μ = ").append(dynamicViscosity.getValue()).append(" ").append(dynamicViscosity.getUnitSymbol()).append(" | ")
+                .append("k = ").append(thermalConductivity.getValue()).append(" ").append(thermalConductivity.getUnitSymbol())
+                .append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
@@ -82,21 +101,16 @@ public final class DryAir implements Fluid {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("DryAir:\n\t")
-                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
-                .append("DBT = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
-                .append("\n\t")
-                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
-                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
-                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
-                .append("\n\t")
-                .append("ν = ").append(kinematicViscosity.getValue()).append(" ").append(kinematicViscosity.getUnitSymbol()).append(" | ")
-                .append("μ = ").append(dynamicViscosity.getValue()).append(" ").append(dynamicViscosity.getUnitSymbol()).append(" | ")
-                .append("k = ").append(thermalConductivity.getValue()).append(" ").append(thermalConductivity.getUnitSymbol())
-                .append("\n");
-
-        return stringBuilder.toString();
+        return "DryAir{" +
+                "temperature=" + temperature +
+                ", pressure=" + pressure +
+                ", density=" + density +
+                ", specificHeat=" + specificHeat +
+                ", specificEnthalpy=" + specificEnthalpy +
+                ", dynamicViscosity=" + dynamicViscosity +
+                ", kinematicViscosity=" + kinematicViscosity +
+                ", thermalConductivity=" + thermalConductivity +
+                '}';
     }
 
     // Custom equality check

@@ -43,6 +43,21 @@ public class LiquidWater implements Fluid {
     }
 
     @Override
+    public String toFormattedString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("LiquidWater:\n\t")
+                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
+                .append("t_w = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
+                .append("\n\t")
+                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
+                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
+                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
+                .append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
@@ -61,17 +76,13 @@ public class LiquidWater implements Fluid {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("LiquidWater:\n\t")
-                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
-                .append("t_w = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
-                .append("\n\t")
-                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
-                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
-                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
-                .append("\n");
-
-        return stringBuilder.toString();
+        return "LiquidWater{" +
+                "temperature=" + temperature +
+                ", pressure=" + pressure +
+                ", density=" + density +
+                ", specificHeat=" + specificHeat +
+                ", specificEnthalpy=" + specificEnthalpy +
+                '}';
     }
 
     // Static factory methods

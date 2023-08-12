@@ -14,6 +14,8 @@ public interface Fluid {
 
     SpecificEnthalpy specificEnthalpy();
 
+    String toFormattedString();
+
     default <K extends Fluid> boolean isEqualsWithPrecision(K fluid, double epsilon) {
         if (this == fluid) return true;
         if (fluid == null) return false;
