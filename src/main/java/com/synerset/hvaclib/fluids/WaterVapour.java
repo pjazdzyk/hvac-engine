@@ -65,20 +65,7 @@ public final class WaterVapour implements Fluid {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WaterVapour that = (WaterVapour) o;
-        return Objects.equals(temperature, that.temperature) && Objects.equals(pressure, that.pressure);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(temperature, pressure);
-    }
-
-    @Override
-    public String toString() {
+    public String toFormattedString(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("WaterVapour:\n\t")
                 .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
@@ -94,6 +81,33 @@ public final class WaterVapour implements Fluid {
                 .append("\n");
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WaterVapour that = (WaterVapour) o;
+        return Objects.equals(temperature, that.temperature) && Objects.equals(pressure, that.pressure);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(temperature, pressure);
+    }
+
+    @Override
+    public String toString() {
+        return "WaterVapour{" +
+                "temperature=" + temperature +
+                ", pressure=" + pressure +
+                ", density=" + density +
+                ", specificHeat=" + specificHeat +
+                ", specificEnthalpy=" + specificEnthalpy +
+                ", dynamicViscosity=" + dynamicViscosity +
+                ", kinematicViscosity=" + kinematicViscosity +
+                ", thermalConductivity=" + thermalConductivity +
+                '}';
     }
 
     // Static factory methods

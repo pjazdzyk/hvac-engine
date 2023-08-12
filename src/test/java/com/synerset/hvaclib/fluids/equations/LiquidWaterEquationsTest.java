@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.fluids;
+package com.synerset.hvaclib.fluids.equations;
 
 import com.synerset.hvaclib.fluids.euqations.LiquidWaterEquations;
 import org.junit.jupiter.api.DisplayName;

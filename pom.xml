@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Synerset library versions -->
         <brent-solver.version>1.1.4</brent-solver.version>
-        <unitility.version>1.0.2</unitility.version>
+        <unitility.version>1.0.3</unitility.version>
         <!-- Dependency versions -->
         <junit.version>5.9.0</junit.version>
         <assertJ.version>3.23.1</assertJ.version>

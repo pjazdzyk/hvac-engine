@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.flows;
+package com.synerset.hvaclib.flows.equations;
 
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.HumidAir;

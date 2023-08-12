@@ -25,6 +25,8 @@ public interface Flow<F extends Fluid> {
 
     SpecificEnthalpy specificEnthalpy();
 
+    String toFormattedString();
+
     default <K extends Fluid> boolean isEqualsWithPrecision(Flow<K> flowOfWater, double epsilon) {
         if (this == flowOfWater) return true;
         if (flowOfWater == null) return false;

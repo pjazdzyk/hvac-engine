@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.fluids;
+package com.synerset.hvaclib.fluids.equations;
 
 import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;

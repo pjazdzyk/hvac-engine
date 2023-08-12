@@ -140,20 +140,7 @@ public final class HumidAir implements Fluid {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HumidAir that = (HumidAir) o;
-        return Objects.equals(dryBulbTemperature, that.dryBulbTemperature) && Objects.equals(absPressure, that.absPressure) && Objects.equals(humidityRatio, that.humidityRatio);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dryBulbTemperature, absPressure, humidityRatio);
-    }
-
-    @Override
-    public String toString() {
+    public String toFormattedString(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("HumidAir:\n\t")
                 .append("Pabs = ").append(absPressure.getValue()).append(" ").append(absPressure.getUnitSymbol()).append(" | ")
@@ -175,10 +162,47 @@ public final class HumidAir implements Fluid {
                 .append("α = ").append(thermalDiffusivity.getValue()).append(" ").append(thermalDiffusivity.getUnitSymbol()).append(" | ")
                 .append("Pr = ").append(prandtlNumber.getValue()).append(" ").append(prandtlNumber.getUnitSymbol())
                 .append("\n\t")
-                .append(dryAirComponent)
+                .append(dryAirComponent.toFormattedString())
                 .append("\n");
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HumidAir that = (HumidAir) o;
+        return Objects.equals(dryBulbTemperature, that.dryBulbTemperature) && Objects.equals(absPressure, that.absPressure) && Objects.equals(humidityRatio, that.humidityRatio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dryBulbTemperature, absPressure, humidityRatio);
+    }
+
+    @Override
+    public String toString() {
+        return "HumidAir{" +
+                "dryBulbTemperature=" + dryBulbTemperature +
+                ", absPressure=" + absPressure +
+                ", density=" + density +
+                ", relativeHumidity=" + relativeHumidity +
+                ", saturationPressure=" + saturationPressure +
+                ", humidityRatio=" + humidityRatio +
+                ", maxHumidityRatio=" + maxHumidityRatio +
+                ", vapourState=" + vapourState +
+                ", wetBulbTemperature=" + wetBulbTemperature +
+                ", dewPointTemperature=" + dewPointTemperature +
+                ", specificHeat=" + specificHeat +
+                ", specificEnthalpy=" + specificEnthalpy +
+                ", dynamicViscosity=" + dynamicViscosity +
+                ", kinematicViscosity=" + kinematicViscosity +
+                ", thermalConductivity=" + thermalConductivity +
+                ", thermalDiffusivity=" + thermalDiffusivity +
+                ", prandtlNumber=" + prandtlNumber +
+                ", dryAirComponent=" + dryAirComponent +
+                '}';
     }
 
     // Custom equality check

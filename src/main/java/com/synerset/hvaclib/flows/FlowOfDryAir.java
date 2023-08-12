@@ -1,10 +1,12 @@
 package com.synerset.hvaclib.flows;
 
 
+import com.synerset.hvaclib.common.Defaults;
 import com.synerset.hvaclib.fluids.DryAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
@@ -68,6 +70,21 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     @Override
+    public String toFormattedString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("FlowOfDryAir:\n\t")
+                .append("G = ").append(massFlow.getValue()).append(" ").append(massFlow.getUnitSymbol()).append(" | ")
+                .append("G = ").append(massFlow.toKiloGramPerHour().getValue()).append(" ").append(massFlow.toKiloGramPerHour().getUnitSymbol()).append(" | ")
+                .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
+                .append("V = ").append(volFlow.toCubicMetersPerHour().getValue()).append(" ").append(volFlow.toCubicMetersPerHour().getUnitSymbol())
+                .append("\n\t")
+                .append(dryAir.toFormattedString())
+                .append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -82,17 +99,11 @@ public class FlowOfDryAir implements Flow<DryAir> {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("FlowOfDryAir:\n\t")
-                .append("G = ").append(massFlow.getValue()).append(" ").append(massFlow.getUnitSymbol()).append(" | ")
-                .append("G = ").append(massFlow.toKiloGramPerHour().getValue()).append(" ").append(massFlow.toKiloGramPerHour().getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.toCubicMetersPerHour().getValue()).append(" ").append(volFlow.toCubicMetersPerHour().getUnitSymbol())
-                .append("\n\t")
-                .append(dryAir)
-                .append("\n");
-
-        return stringBuilder.toString();
+        return "FlowOfDryAir{" +
+                "dryAir=" + dryAir +
+                ", massFlow=" + massFlow +
+                ", volFlow=" + volFlow +
+                '}';
     }
 
     // Class factory methods
@@ -115,6 +126,19 @@ public class FlowOfDryAir implements Flow<DryAir> {
 
     public static FlowOfDryAir of(DryAir dryAir, VolumetricFlow volFlow) {
         return new FlowOfDryAir(dryAir, volFlow);
+    }
+
+    public static FlowOfDryAir ofValues(double absPressure, double temperature, double m3hVolFlow) {
+        Pressure absPress = Pressure.ofPascal(absPressure);
+        Temperature temp = Temperature.ofCelsius(temperature);
+        VolumetricFlow volFlow = VolumetricFlow.ofCubicMetersPerHour(m3hVolFlow);
+        DryAir dryAir = DryAir.of(absPress, temp);
+        return of(dryAir, volFlow);
+    }
+
+    public static FlowOfDryAir ofValues(double temperature, double m3hVolFlow) {
+        double pressure = Defaults.STANDARD_ATMOSPHERE.getValueOfPascals();
+        return ofValues(pressure, temperature, m3hVolFlow);
     }
 
 }
