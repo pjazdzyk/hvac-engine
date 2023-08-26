@@ -134,12 +134,12 @@ class WaterVapourEquationsTest implements FluidsTestConstants {
         double expectedSpecEnthalpy = WaterVapourEquations.specificEnthalpy(vapourTemp);
 
         // When
-        double actualDensVal = WaterVapourEquations.density(dryAirTemp, relHum, absPressure).getValueOfKilogramPerCubicMeter();
-        double actualDynVisVal = WaterVapourEquations.dynamicViscosity(dryAirTemp).getValueOfPascalSecond();
-        double actualKinVisVal = WaterVapourEquations.kinematicViscosity(dryAirTemp, Density.ofKilogramPerCubicMeter(actualDensVal)).getValueOfSquareMetersPerSecond();
-        double actualThermCondVal = WaterVapourEquations.thermalConductivity(dryAirTemp).getValueOfWatsPerMeterKelvin();
-        double actualSpecHeatVal = WaterVapourEquations.specificHeat(dryAirTemp).getValueOfKiloJoulesPerKilogramKelvin();
-        double actualSpecEnthalpy = WaterVapourEquations.specificEnthalpy(dryAirTemp).getValueOfKiloJoulePerKilogram();
+        double actualDensVal = WaterVapourEquations.density(dryAirTemp, relHum, absPressure).getInKilogramsPerCubicMeters();
+        double actualDynVisVal = WaterVapourEquations.dynamicViscosity(dryAirTemp).getInPascalsSecond();
+        double actualKinVisVal = WaterVapourEquations.kinematicViscosity(dryAirTemp, Density.ofKilogramPerCubicMeter(actualDensVal)).getInSquareMetersPerSecond();
+        double actualThermCondVal = WaterVapourEquations.thermalConductivity(dryAirTemp).getInWattsPerMeterKelvin();
+        double actualSpecHeatVal = WaterVapourEquations.specificHeat(dryAirTemp).getInKiloJoulesPerKiloGramKelvin();
+        double actualSpecEnthalpy = WaterVapourEquations.specificEnthalpy(dryAirTemp).getInKiloJoulesPerKiloGram();
 
         // Then
         assertThat(actualDensVal).isEqualTo(expectedDensVal);

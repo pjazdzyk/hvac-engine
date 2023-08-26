@@ -3,7 +3,6 @@ package com.synerset.hvaclib.process.equations;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.process.dataobjects.AirCoolingResultDto;
-import com.synerset.hvaclib.process.equations.AirCoolingEquations;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -15,7 +14,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.withPrecision;
 
 class AirCoolingEquationsTest {
 
@@ -36,7 +36,7 @@ class AirCoolingEquationsTest {
     // DRY COOLING
     @Test
     @DisplayName("should cool down air without humidity ratio change and without condensate discharge when target output temperature is given")
-    void processOfDryCooling_shouldCoolDownAirWithoutCondensateDischarge_whenTargetOutputTempIsGiven(){
+    void processOfDryCooling_shouldCoolDownAirWithoutCondensateDischarge_whenTargetOutputTempIsGiven() {
         // Given
         Temperature expectedOutAirTemp = Temperature.ofCelsius(25.0);
 
@@ -63,7 +63,7 @@ class AirCoolingEquationsTest {
 
     @Test
     @DisplayName("should cool down air without humidity ratio change and without condensate discharge when target output cooling power is given")
-    void processOfDryCooling_shouldCoolDownAirWithoutCondensateDischarge_whenTargetOutputCoolingPowerIsGiven(){
+    void processOfDryCooling_shouldCoolDownAirWithoutCondensateDischarge_whenTargetOutputCoolingPowerIsGiven() {
         // Given
         Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
 

@@ -2,11 +2,12 @@ package com.synerset.hvaclib.flows;
 
 
 import com.synerset.hvaclib.common.Defaults;
+import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.DryAir;
-import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flows.MassFlowUnits;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
-import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
+import com.synerset.unitility.unitsystem.flows.VolumetricFlowUnits;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
@@ -20,13 +21,13 @@ public class FlowOfDryAir implements Flow<DryAir> {
     private FlowOfDryAir(DryAir dryAir, MassFlow massFlow) {
         this.dryAir = dryAir;
         this.massFlow = massFlow;
-        this.volFlow = Flow.createVolumetricFlow(dryAir.density(), massFlow);
+        this.volFlow = FlowEquations.massFlowToVolFlow(dryAir.density(), massFlow);
     }
 
     private FlowOfDryAir(DryAir dryAir, VolumetricFlow volFlow) {
         this.dryAir = dryAir;
         this.volFlow = volFlow;
-        this.massFlow = Flow.createMassFlow(dryAir.density(), volFlow);
+        this.massFlow = FlowEquations.volFlowToMassFlow(dryAir.density(), volFlow);
     }
 
     @Override
@@ -70,13 +71,13 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     @Override
-    public String toFormattedString(){
+    public String toFormattedString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("FlowOfDryAir:\n\t")
                 .append("G = ").append(massFlow.getValue()).append(" ").append(massFlow.getUnitSymbol()).append(" | ")
-                .append("G = ").append(massFlow.toKiloGramPerHour().getValue()).append(" ").append(massFlow.toKiloGramPerHour().getUnitSymbol()).append(" | ")
+                .append("G = ").append(massFlow.getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol()).append(" | ")
                 .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.toCubicMetersPerHour().getValue()).append(" ").append(volFlow.toCubicMetersPerHour().getUnitSymbol())
+                .append("V = ").append(volFlow.getInCubicMetersPerHour()).append(" ").append(VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol())
                 .append("\n\t")
                 .append(dryAir.toFormattedString())
                 .append("\n");
@@ -137,7 +138,7 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     public static FlowOfDryAir ofValues(double temperature, double m3hVolFlow) {
-        double pressure = Defaults.STANDARD_ATMOSPHERE.getValueOfPascals();
+        double pressure = Defaults.STANDARD_ATMOSPHERE.getInPascals();
         return ofValues(pressure, temperature, m3hVolFlow);
     }
 

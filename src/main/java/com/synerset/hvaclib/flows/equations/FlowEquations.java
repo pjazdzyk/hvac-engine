@@ -35,7 +35,7 @@ public final class FlowEquations {
     }
 
     public static VolumetricFlow massFlowToVolFlow(Density density, MassFlow massFlow) {
-        double volFlowVal = massFlowToVolFlow(density.getValueOfKilogramPerCubicMeter(), massFlow.getValueOfKilogramsPerSecond());
+        double volFlowVal = massFlowToVolFlow(density.getInKilogramsPerCubicMeters(), massFlow.getInKilogramsPerSecond());
         return VolumetricFlow.ofCubicMetersPerSecond(volFlowVal);
     }
 
@@ -51,7 +51,7 @@ public final class FlowEquations {
     }
 
     public static MassFlow volFlowToMassFlow(Density density, VolumetricFlow volFlow) {
-        double massFlowVal = volFlowToMassFlow(density.getValueOfKilogramPerCubicMeter(), volFlow.getValueOfCubicMetersPerSecond());
+        double massFlowVal = volFlowToMassFlow(density.getInKilogramsPerCubicMeters(), volFlow.getInCubicMetersPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 
@@ -70,8 +70,8 @@ public final class FlowEquations {
     }
 
     public static MassFlow massFlowHaToMassFlowDa(HumidityRatio humRatio, MassFlow massFlowHa) {
-        double massFlowVal = massFlowHaToMassFlowDa(humRatio.getValueOfKilogramPerKilogram(),
-                massFlowHa.getValueOfKilogramsPerSecond());
+        double massFlowVal = massFlowHaToMassFlowDa(humRatio.getInKilogramPerKilogram(),
+                massFlowHa.getInKilogramsPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 
@@ -88,8 +88,8 @@ public final class FlowEquations {
     }
 
     public static MassFlow massFlowDaToMassFlowHa(HumidityRatio humRatio, MassFlow massFlowDa) {
-        double massFlowVal = massFlowDaToMassFlowHa(humRatio.getValueOfKilogramPerKilogram(),
-                massFlowDa.getValueOfKilogramsPerSecond());
+        double massFlowVal = massFlowDaToMassFlowHa(humRatio.getInKilogramPerKilogram(),
+                massFlowDa.getInKilogramsPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 
@@ -107,9 +107,9 @@ public final class FlowEquations {
     }
 
     public static MassFlow massFlowDaToVolFlowHa(Density density, HumidityRatio humRatio, MassFlow massFlowDa) {
-        double massFlowVal = massFlowDaToVolFlowHa(density.getValueOfKilogramPerCubicMeter(),
-                humRatio.getValueOfKilogramPerKilogram(),
-                massFlowDa.getValueOfKilogramsPerSecond());
+        double massFlowVal = massFlowDaToVolFlowHa(density.getInKilogramsPerCubicMeters(),
+                humRatio.getInKilogramPerKilogram(),
+                massFlowDa.getInKilogramsPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 
@@ -127,9 +127,9 @@ public final class FlowEquations {
     }
 
     public static MassFlow volFlowHaToMassFlowDa(Density density, HumidityRatio humRatio, VolumetricFlow volFlowHa) {
-        double massFlowVal = volFlowHaToMassFlowDa(density.getValueOfKilogramPerCubicMeter(),
-                humRatio.getValueOfKilogramPerKilogram(),
-                volFlowHa.getValueOfCubicMetersPerSecond());
+        double massFlowVal = volFlowHaToMassFlowDa(density.getInKilogramsPerCubicMeters(),
+                humRatio.getInKilogramPerKilogram(),
+                volFlowHa.getInCubicMetersPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 

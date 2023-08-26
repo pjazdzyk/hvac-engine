@@ -106,7 +106,7 @@ public final class HumidAirEquations {
     }
 
     public static Pressure saturationPressure(Temperature dryBulbTemp) {
-        double saturationPressVal = saturationPressure(dryBulbTemp.getValueOfCelsius());
+        double saturationPressVal = saturationPressure(dryBulbTemp.getInCelsius());
         return Pressure.ofPascal(saturationPressVal);
     }
 
@@ -123,9 +123,9 @@ public final class HumidAirEquations {
     }
 
     public static Pressure saturationPressure(HumidityRatio humRatio, RelativeHumidity relHum, Pressure absPressure) {
-        double saturationPressVal = saturationPressure(humRatio.getValueOfKilogramPerKilogram(),
-                relHum.getValueOfPercent(),
-                absPressure.getValueOfPascals());
+        double saturationPressVal = saturationPressure(humRatio.getInKilogramPerKilogram(),
+                relHum.getInPercent(),
+                absPressure.getInPascals());
         return Pressure.ofPascal(saturationPressVal);
     }
 
@@ -180,9 +180,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dewPointTemperature(Temperature dryBulbTemp, RelativeHumidity relHum, Pressure absPressure) {
-        double dewPointTempVal = dewPointTemperature(dryBulbTemp.getValueOfCelsius(),
-                relHum.getValueOfPercent(),
-                absPressure.getValueOfPascals());
+        double dewPointTempVal = dewPointTemperature(dryBulbTemp.getInCelsius(),
+                relHum.getInPercent(),
+                absPressure.getInPascals());
         return Temperature.ofCelsius(dewPointTempVal);
     }
 
@@ -223,9 +223,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature wetBulbTemperature(Temperature dryBulbTemp, RelativeHumidity relHum, Pressure absPressure) {
-        double wetBulbTempVal = wetBulbTemperature(dryBulbTemp.getValueOfCelsius(),
-                relHum.getValueOfPercent(),
-                absPressure.getValueOfPascals());
+        double wetBulbTempVal = wetBulbTemperature(dryBulbTemp.getInCelsius(),
+                relHum.getInPercent(),
+                absPressure.getInPascals());
         return Temperature.ofCelsius(wetBulbTempVal);
     }
 
@@ -243,8 +243,8 @@ public final class HumidAirEquations {
     }
 
     public static RelativeHumidity relativeHumidity(Temperature dewPointTemp, Temperature dryBulbTemp) {
-        double relHumVal = relativeHumidity(dewPointTemp.getValueOfCelsius(),
-                dryBulbTemp.getValueOfCelsius());
+        double relHumVal = relativeHumidity(dewPointTemp.getInCelsius(),
+                dryBulbTemp.getInCelsius());
         return RelativeHumidity.ofPercentage(relHumVal);
     }
 
@@ -265,9 +265,9 @@ public final class HumidAirEquations {
     }
 
     public static RelativeHumidity relativeHumidity(Temperature dryBulbTemp, HumidityRatio humidityRatio, Pressure absPressure) {
-        double relHumVal = relativeHumidity(dryBulbTemp.getValueOfCelsius(),
-                humidityRatio.getValueOfKilogramPerKilogram(),
-                absPressure.getValueOfPascals());
+        double relHumVal = relativeHumidity(dryBulbTemp.getInCelsius(),
+                humidityRatio.getInKilogramPerKilogram(),
+                absPressure.getInPascals());
         return RelativeHumidity.ofPercentage(relHumVal);
     }
 
@@ -287,9 +287,9 @@ public final class HumidAirEquations {
     }
 
     public static HumidityRatio humidityRatio(RelativeHumidity relHum, Pressure saturationPressure, Pressure absPressure) {
-        double humRatioVal = humidityRatio(relHum.getValueOfPercent(),
-                saturationPressure.getValueOfPascals(),
-                absPressure.getValueOfPascals());
+        double humRatioVal = humidityRatio(relHum.getInPercent(),
+                saturationPressure.getInPascals(),
+                absPressure.getInPascals());
         return HumidityRatio.ofKilogramPerKilogram(humRatioVal);
     }
 
@@ -306,8 +306,8 @@ public final class HumidAirEquations {
     }
 
     public static HumidityRatio maxHumidityRatio(Pressure saturationPressure, Pressure absPressure) {
-        double humRatioVal = maxHumidityRatio(saturationPressure.getValueOfPascals(),
-                absPressure.getValueOfPascals());
+        double humRatioVal = maxHumidityRatio(saturationPressure.getInPascals(),
+                absPressure.getInPascals());
         return HumidityRatio.ofKilogramPerKilogram(humRatioVal);
     }
 
@@ -336,8 +336,8 @@ public final class HumidAirEquations {
     }
 
     public static DynamicViscosity dynamicViscosity(Temperature dryBulbTemp, HumidityRatio humRatio) {
-        double dynVisVal = dynamicViscosity(dryBulbTemp.getValueOfCelsius(),
-                humRatio.getValueOfKilogramPerKilogram());
+        double dynVisVal = dynamicViscosity(dryBulbTemp.getInCelsius(),
+                humRatio.getInKilogramPerKilogram());
         return DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
     }
 
@@ -358,9 +358,9 @@ public final class HumidAirEquations {
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature dryBulbTemp, HumidityRatio humRatio, Density density) {
-        double kinVisVal = kinematicViscosity(dryBulbTemp.getValueOfCelsius(),
-                humRatio.getValueOfKilogramPerKilogram(),
-                density.getValueOfKilogramPerCubicMeter());
+        double kinVisVal = kinematicViscosity(dryBulbTemp.getInCelsius(),
+                humRatio.getInKilogramPerKilogram(),
+                density.getInKilogramsPerCubicMeters());
         return KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
     }
 
@@ -403,8 +403,8 @@ public final class HumidAirEquations {
     }
 
     public static ThermalConductivity thermalConductivity(Temperature dryBulbTemp, HumidityRatio humRatio) {
-        double thermCondVal = thermalConductivity(dryBulbTemp.getValueOfCelsius(),
-                humRatio.getValueOfKilogramPerKilogram());
+        double thermCondVal = thermalConductivity(dryBulbTemp.getInCelsius(),
+                humRatio.getInKilogramPerKilogram());
         return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
     }
 
@@ -440,9 +440,9 @@ public final class HumidAirEquations {
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature dryBulbTemp, HumidityRatio humRatio, Pressure absPressure) {
-        double specificEnthalpyVal = specificEnthalpy(dryBulbTemp.getValueOfCelsius(),
-                humRatio.getValueOfKilogramPerKilogram(),
-                absPressure.getValueOfPascals());
+        double specificEnthalpyVal = specificEnthalpy(dryBulbTemp.getInCelsius(),
+                humRatio.getInKilogramPerKilogram(),
+                absPressure.getInPascals());
         return SpecificEnthalpy.ofKiloJoulePerKiloGram(specificEnthalpyVal);
     }
 
@@ -462,8 +462,8 @@ public final class HumidAirEquations {
     }
 
     public static SpecificHeat specificHeat(Temperature dryBulbTemp, HumidityRatio humRatio) {
-        double specHeatVal = specificHeat(dryBulbTemp.getValueOfCelsius(),
-                humRatio.getValueOfKilogramPerKilogram());
+        double specHeatVal = specificHeat(dryBulbTemp.getInCelsius(),
+                humRatio.getInKilogramPerKilogram());
         return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
 
@@ -489,9 +489,9 @@ public final class HumidAirEquations {
     }
 
     public static Density density(Temperature dryBulbTemp, HumidityRatio humRatio, Pressure absPressure) {
-        double densVal = density(dryBulbTemp.getValueOfCelsius(),
-                humRatio.getValueOfKilogramPerKilogram(),
-                absPressure.getValueOfPascals());
+        double densVal = density(dryBulbTemp.getInCelsius(),
+                humRatio.getInKilogramPerKilogram(),
+                absPressure.getInPascals());
         return Density.ofKilogramPerCubicMeter(densVal);
     }
 
@@ -518,9 +518,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureTdpRH(Temperature dewPointTemp, RelativeHumidity relHum, Pressure absPressure) {
-        double dryBulbTemp = dryBulbTemperatureTdpRH(dewPointTemp.getValueOfCelsius(),
-                relHum.getValueOfPercent(),
-                absPressure.getValueOfPascals());
+        double dryBulbTemp = dryBulbTemperatureTdpRH(dewPointTemp.getInCelsius(),
+                relHum.getInPercent(),
+                absPressure.getInPascals());
         return Temperature.ofCelsius(dryBulbTemp);
     }
 
@@ -538,9 +538,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureXRH(HumidityRatio humidityRatio, RelativeHumidity relHum, Pressure absPressure) {
-        double dryBulbTemp = dryBulbTemperatureXRH(humidityRatio.getValueOfKilogramPerKilogram(),
-                relHum.getValueOfPercent(),
-                absPressure.getValueOfPascals());
+        double dryBulbTemp = dryBulbTemperatureXRH(humidityRatio.getInKilogramPerKilogram(),
+                relHum.getInPercent(),
+                absPressure.getInPascals());
         return Temperature.ofCelsius(dryBulbTemp);
     }
 
@@ -559,9 +559,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureIX(SpecificEnthalpy specEnthalpy, RelativeHumidity relHum, Pressure absPressure) {
-        double dryBulbTemp = dryBulbTemperatureIX(specEnthalpy.getValueOfKiloJoulePerKilogram(),
-                relHum.getValueOfPercent(),
-                absPressure.getValueOfPascals());
+        double dryBulbTemp = dryBulbTemperatureIX(specEnthalpy.getInKiloJoulesPerKiloGram(),
+                relHum.getInPercent(),
+                absPressure.getInPascals());
         return Temperature.ofCelsius(dryBulbTemp);
     }
 
@@ -580,9 +580,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureWbtRH(Temperature wetBulbTemperature, RelativeHumidity relHum, Pressure absPressure) {
-        double dryBulbTemp = dryBulbTemperatureWbtRH(wetBulbTemperature.getValueOfCelsius(),
-                relHum.getValueOfPercent(),
-                absPressure.getValueOfPascals());
+        double dryBulbTemp = dryBulbTemperatureWbtRH(wetBulbTemperature.getInCelsius(),
+                relHum.getInPercent(),
+                absPressure.getInPascals());
         return Temperature.ofCelsius(dryBulbTemp);
     }
 
@@ -600,7 +600,7 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureMax(Pressure absPressure) {
-        double dryBulbTemp = dryBulbTemperatureMax(absPressure.getValueOfPascals());
+        double dryBulbTemp = dryBulbTemperatureMax(absPressure.getInPascals());
         return Temperature.ofCelsius(dryBulbTemp);
     }
 

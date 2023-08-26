@@ -21,7 +21,8 @@ Variables could be divided into core parameters which are: pressure, temperature
 and dependent parameters,
 which are already listed in the readme file or JavaDoc. Properties calculation equations are grouped in separate
 classes with "Physics" prefix. These classes are meant to be used similarly as Java.util Math class, but for physics of
-fluids. This allows for quick value calculation in any intermediate calculations without computational expensive creation of
+fluids. This allows for quick value calculation in any intermediate calculations without computational expensive
+creation of
 instances.
 For some values where a direct calculation is not possible,
 the [Modified Brent Solver](https://github.com/pjazdzyk/brent-dekker-solver) is
@@ -34,8 +35,8 @@ Below is an example, which presents how to directly use calculation methods from
 
 ```java
 // Saturation pressure calculation for air temperature of 20 oC:
-double saturationPressure = LibPhysicsOfAir.calcMaPs(20);
-System.out.println(saturationPressure); // Outputs 2338.80 Pa
+double saturationPressure=LibPhysicsOfAir.calcMaPs(20);
+        System.out.println(saturationPressure); // Outputs 2338.80 Pa
 ```
 
 For flow calculation or heating/cooling process analysis, an instance of MoistAir is required.
@@ -81,8 +82,10 @@ Moist air        : rho_Ma= 1.142 kg/m3 | cp_Ma= 1.0275 kJ/kgK | k_Ma= 0.0271 W/(
 
 ## LIQUID WATER THERMOPHYSICAL PROPERTIES
 
-LiquidWater class is simpler, and it requires only the temperature and pressure to initialize properties. This class was created
-mainly for modeling condensate purposes. Despite the required pressure input - at present development stage, water properties are not calculated as
+LiquidWater class is simpler, and it requires only the temperature and pressure to initialize properties. This class was
+created
+mainly for modeling condensate purposes. Despite the required pressure input - at present development stage, water
+properties are not calculated as
 pressure dependent, this might come as a feature in later development.<br>
 To create a liquid water instance, just use a constructor or the builder pattern:
 
@@ -105,7 +108,8 @@ Core parameters  : ta=10.000 oC | cp=4.196 kJ/kgK | rho= 999.546 kg/m3 | ix=41.9
 ## FLOW OF MOIST AIR
 
 FlowOfMoistAir instance calculates and stores mass flow and volumetric flow for moist air and its dry air component. All
-of these flows depend on each other. They are calculated only once accordingly based on provided flow rate and type of flow upon
+of these flows depend on each other. They are calculated only once accordingly based on provided flow rate and type of
+flow upon
 instance creation. Flow instance requires specific fluidOld which must be provided as an argument in constructor.
 
 Creating a flow of moist air
@@ -126,7 +130,8 @@ FlowOfHumidGas flowOfAir = new FlowOfMoistAir.Builder(airExample)
         .build();
 ```       
 
-Or even simpler, by means of static factory method which takes volumetric flow in m3/h (most popular hvac unit) as an argument
+Or even simpler, by means of static factory method which takes volumetric flow in m3/h (most popular hvac unit) as an
+argument
 and MoistAir instance:
 
 ```java                                         
@@ -143,7 +148,8 @@ m_Da = 1.641 kg/s dry air mass flow | v_Da 1.363 m3/s  dry air vol flow | v_Da =
 ```
 
 As you can observe, we have specified volumetric flow, and all other flows were automatically calculated. <br>
-In HVAC discipline, dry air mass flow is required for psychrometrics calculation, volumetric moist airflow is needed for equipment
+In HVAC discipline, dry air mass flow is required for psychrometrics calculation, volumetric moist airflow is needed for
+equipment
 capacity sizing or for final room ACH calculation.
 Each application may need a different flow type, this is why this class combines all of them.
 
@@ -219,13 +225,17 @@ From the summary above we can see that the required heating power is around 73,8
 -20oC/95% to 18.0 oC/4.8% what is exactly what we would expect.<br>
 <br>
 The cooling process is more sophisticated. To properly calculate resulting cooling power or an outlet air properties, we
-must include the fact that some fraction of air in direct contact of cooling coil wall will be cooled down to approximately 
-the average wall temperature and the water condensate will be discharged consuming a significant amount of cooling power for 
-its phase change. As the result - this air will be mixed with part of the air which is not in direct coil wall contact. This means
-that the result is strongly dependent on coolant supply and return temperature, and resulting average wall temperature. 
-The value of average cooling coil wall temp must be provided for calculation, and for a typical case it is acceptable to 
+must include the fact that some fraction of air in direct contact of cooling coil wall will be cooled down to
+approximately
+the average wall temperature and the water condensate will be discharged consuming a significant amount of cooling power
+for
+its phase change. As the result - this air will be mixed with part of the air which is not in direct coil wall contact.
+This means
+that the result is strongly dependent on coolant supply and return temperature, and resulting average wall temperature.
+The value of average cooling coil wall temp must be provided for calculation, and for a typical case it is acceptable to
 provide arithmetic average between coolant supply and return temperatures.
-Let's try to simulate the cooling process for a typical air conditioning scenario: ambient air 32oC/50%, expected outlet air 
+Let's try to simulate the cooling process for a typical air conditioning scenario: ambient air 32oC/50%, expected outlet
+air
 temperature as +24oC, volumetric flow = 5000m3/h. Coolant parameters: 8/14oC.
 
 ```java
@@ -272,8 +282,10 @@ tm = 11.000 oC (average cooling coil wall temperature)
 ```
 
 Based on the results above: the required cooling power for the process is 21,2kW. Airflow properties have changed from
-32oC/50% to 24oC/66.2%. Average wall temperature (tm_wall) and bypass factors were calculated based on the provided input data.<br>
-If for any reason you would like to use dry cooling process without specifying coil details, you can find methods for this type of process
+32oC/50% to 24oC/66.2%. Average wall temperature (tm_wall) and bypass factors were calculated based on the provided
+input data.<br>
+If for any reason you would like to use dry cooling process without specifying coil details, you can find methods for
+this type of process
 inside the PhysicsOfCooling class.
 
 LIMITATIONS:<br>
@@ -285,7 +297,8 @@ At this stage of development, this functionality is dedicated to air conditionin
 
 The mixing process is designed to allow the mixing of two or more moist air flows. All parameters are recalculated
 accordingly to determine the resulting output airflow. Number of streams to be mixed is practically unlimited.
-Typical usage is to model the AHU recirculation section, where ambient intake is mixed with recirculated air from the room
+Typical usage is to model the AHU recirculation section, where ambient intake is mixed with recirculated air from the
+room
 to reduce the heat output of the heating coil if the amount of fresh air could be reduced.<br>
 For the purpose of this presentation, lets try to mix four different air flows together:
 
@@ -347,7 +360,9 @@ m_Da = 4.592 kg/s (dry air mass flow) | v_Da 3.584 m3/s (dry air vol flow) | v_D
 This process does not assume any humidity discharge. If x > xMax, water fog or ice fog is assumed to be traveling with
 air outside process boundary.
 
-In the PhysicsOfMixing class you can find more advanced mixing algorithm, which allows fot define target output dry air mass flow,
+In the PhysicsOfMixing class you can find more advanced mixing algorithm, which allows fot define target output dry air
+mass flow,
 and output temperature. Algorithm will not only calculate the resulting flow, but will attempt to adjust an inlet flow,
-with respect of defined minimal flow limits. This might be helpful for analyzing of air heater with mixing plenum, to determine
+with respect of defined minimal flow limits. This might be helpful for analyzing of air heater with mixing plenum, to
+determine
 appropriate recirculation ratio to achieve target supply parameters.

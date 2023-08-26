@@ -65,7 +65,7 @@ public final class WaterVapour implements Fluid {
     }
 
     @Override
-    public String toFormattedString(){
+    public String toFormattedString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("WaterVapour:\n\t")
                 .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")

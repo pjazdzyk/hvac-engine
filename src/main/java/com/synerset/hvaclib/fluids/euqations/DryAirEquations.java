@@ -28,15 +28,15 @@ public final class DryAirEquations {
     }
 
     public static DynamicViscosity dynamicViscosity(Temperature temperature) {
-        double dynVisVal = dynamicViscosity(temperature.getValueOfCelsius());
+        double dynVisVal = dynamicViscosity(temperature.getInCelsius());
         return DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
     }
 
     /**
      * Returns dry air kinematic viscosity, m^2/s<br>
      *
-     * @param ta     air temperature, oC
-     * @param absP   absolute pressure, Pa
+     * @param ta   air temperature, oC
+     * @param absP absolute pressure, Pa
      * @return kinematic viscosity, m^2/s
      */
     public static double kinematicViscosity(double ta, double absP) {
@@ -45,7 +45,7 @@ public final class DryAirEquations {
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature dryAirTemperature, Pressure absPressure) {
-        double kinVisVal = kinematicViscosity(dryAirTemperature.getValueOfCelsius(), absPressure.getValueOfPascals());
+        double kinVisVal = kinematicViscosity(dryAirTemperature.getInCelsius(), absPressure.getInPascals());
         return KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
     }
 
@@ -66,7 +66,7 @@ public final class DryAirEquations {
     }
 
     public static ThermalConductivity thermalConductivity(Temperature dryAirTemperature) {
-        double thermCondVal = thermalConductivity(dryAirTemperature.getValueOfCelsius());
+        double thermCondVal = thermalConductivity(dryAirTemperature.getInCelsius());
         return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
     }
 
@@ -83,7 +83,7 @@ public final class DryAirEquations {
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature dryAirTemperature) {
-        double specEnthalpyVal = specificEnthalpy(dryAirTemperature.getValueOfCelsius());
+        double specEnthalpyVal = specificEnthalpy(dryAirTemperature.getInCelsius());
         return SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
     }
 
@@ -125,14 +125,14 @@ public final class DryAirEquations {
     }
 
     public static SpecificHeat specificHeat(Temperature dryAirTemperature) {
-        double specHeatVal = specificHeat(dryAirTemperature.getValueOfCelsius());
+        double specHeatVal = specificHeat(dryAirTemperature.getInCelsius());
         return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
 
     /**
      * Returns dry air density, kg/m3
      *
-     * @param ta  air temperature, oC
+     * @param ta   air temperature, oC
      * @param absP atmospheric pressure, Pa
      * @return dry air density, kg/m3
      */
@@ -142,7 +142,7 @@ public final class DryAirEquations {
     }
 
     public static Density density(Temperature dryAirTemperature, Pressure pressure) {
-        double densityVal = density(dryAirTemperature.getValueOfCelsius(), pressure.getValueOfPascals());
+        double densityVal = density(dryAirTemperature.getInCelsius(), pressure.getInPascals());
         return Density.ofKilogramPerCubicMeter(densityVal);
     }
 

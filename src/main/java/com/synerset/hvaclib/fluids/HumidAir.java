@@ -140,7 +140,7 @@ public final class HumidAir implements Fluid {
     }
 
     @Override
-    public String toFormattedString(){
+    public String toFormattedString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("HumidAir:\n\t")
                 .append("Pabs = ").append(absPressure.getValue()).append(" ").append(absPressure.getUnitSymbol()).append(" | ")

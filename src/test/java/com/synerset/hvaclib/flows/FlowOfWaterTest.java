@@ -17,13 +17,13 @@ class FlowOfWaterTest {
     @DisplayName("should create FlowOfFluid instance with properly calculated flows when valid input is given")
     void flowOfFluidInstance_shouldCreateValidFlowOfFluidInstance_whenValidSampleInputIsGiven() {
         // Given
-        double waterDensity = SAMPLE_WATER.density().getValueOfKilogramPerCubicMeter();
+        double waterDensity = SAMPLE_WATER.density().getInKilogramsPerCubicMeters();
         double expectedVolFlow = SAMPLE_MASS_FLOW_RATE / waterDensity;
 
         // When
         FlowOfWater flowOfWater = FlowOfWater.of(SAMPLE_WATER, MassFlow.ofKilogramsPerSecond(SAMPLE_MASS_FLOW_RATE));
-        double actualMassFlow = flowOfWater.massFlow().getValueOfKilogramsPerSecond();
-        double actualVolFlow = flowOfWater.volumetricFlow().getValueOfCubicMetersPerSecond();
+        double actualMassFlow = flowOfWater.massFlow().getInKilogramsPerSecond();
+        double actualVolFlow = flowOfWater.volumetricFlow().getInCubicMetersPerSecond();
 
         // Then
         assertThat(actualMassFlow).isEqualTo(SAMPLE_MASS_FLOW_RATE);

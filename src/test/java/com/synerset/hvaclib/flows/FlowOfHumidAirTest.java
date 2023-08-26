@@ -20,9 +20,9 @@ class FlowOfHumidAirTest {
         // Arrange
         HumidAir sampleAir = HumidAir.of(Temperature.ofCelsius(45.0), RelativeHumidity.ofPercentage(60.1));
 
-        double densityMa = sampleAir.density().getValueOfKilogramPerCubicMeter();
-        double densityDa = sampleAir.dryAirComponent().density().getValueOfKilogramPerCubicMeter();
-        double humidRatio = sampleAir.humidityRatio().getValueOfKilogramPerKilogram();
+        double densityMa = sampleAir.density().getInKilogramsPerCubicMeters();
+        double densityDa = sampleAir.dryAirComponent().density().getInKilogramsPerCubicMeters();
+        double humidRatio = sampleAir.humidityRatio().getInKilogramPerKilogram();
         double expectedVolFlow_Ma = INIT_MASS_FLOW_MA / densityMa;
         double expectedMassFlow_Da = FlowEquations.massFlowHaToMassFlowDa(humidRatio, INIT_MASS_FLOW_MA);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
@@ -30,10 +30,10 @@ class FlowOfHumidAirTest {
         // Act
         FlowOfHumidAir flowAir = FlowOfHumidAir.of(sampleAir, MassFlow.ofKilogramsPerSecond(INIT_MASS_FLOW_MA));
 
-        double actualMassFlowMa = flowAir.massFlow().getValueOfKilogramsPerSecond();
-        double actualVolFlowMa = flowAir.volumetricFlow().getValueOfCubicMetersPerSecond();
-        double actualMassFlowDa = flowAir.dryAirMassFlow().getValueOfKilogramsPerSecond();
-        double actualVolFlowDa = flowAir.dryAirVolumetricFlow().getValueOfCubicMetersPerSecond();
+        double actualMassFlowMa = flowAir.massFlow().getInKilogramsPerSecond();
+        double actualVolFlowMa = flowAir.volumetricFlow().getInCubicMetersPerSecond();
+        double actualMassFlowDa = flowAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double actualVolFlowDa = flowAir.dryAirVolumetricFlow().getInCubicMetersPerSecond();
 
         // Assert
         assertThat(actualMassFlowMa).isEqualTo(INIT_MASS_FLOW_MA);

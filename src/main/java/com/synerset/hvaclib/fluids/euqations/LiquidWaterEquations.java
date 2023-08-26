@@ -42,7 +42,7 @@ public final class LiquidWaterEquations {
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature temperature) {
-        double specificEnthalpyVal = specificEnthalpy(temperature.getValueOfCelsius());
+        double specificEnthalpyVal = specificEnthalpy(temperature.getInCelsius());
         return SpecificEnthalpy.ofKiloJoulePerKiloGram(specificEnthalpyVal);
     }
 
@@ -64,7 +64,7 @@ public final class LiquidWaterEquations {
     }
 
     public static Density density(Temperature temperature) {
-        double densityVal = density(temperature.getValueOfCelsius());
+        double densityVal = density(temperature.getInCelsius());
         return Density.ofKilogramPerCubicMeter(densityVal);
     }
 
@@ -96,7 +96,7 @@ public final class LiquidWaterEquations {
     }
 
     public static SpecificHeat specificHeat(Temperature temperature) {
-        double specHeatVal = specificHeat(temperature.getValueOfCelsius());
+        double specHeatVal = specificHeat(temperature.getInCelsius());
         return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
 

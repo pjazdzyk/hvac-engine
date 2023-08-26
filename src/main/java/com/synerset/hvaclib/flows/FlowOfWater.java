@@ -4,7 +4,9 @@ package com.synerset.hvaclib.flows;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.LiquidWater;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flows.MassFlowUnits;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.flows.VolumetricFlowUnits;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
@@ -18,10 +20,7 @@ public class FlowOfWater implements Flow<LiquidWater> {
     private FlowOfWater(LiquidWater liquidWater, MassFlow massFlow) {
         this.liquidWater = liquidWater;
         this.massFlow = massFlow;
-        double massFlowVal = massFlow.toKilogramsPerSecond().getValue();
-        double densityVal = this.liquidWater.density().toKilogramPerCubicMeter().getValue();
-        double volFlowVal = FlowEquations.massFlowToVolFlow(densityVal, massFlowVal);
-        this.volFlow = VolumetricFlow.ofCubicMetersPerSecond(volFlowVal);
+        this.volFlow = FlowEquations.massFlowToVolFlow(liquidWater.density(), massFlow);
     }
 
     @Override
@@ -65,13 +64,13 @@ public class FlowOfWater implements Flow<LiquidWater> {
     }
 
     @Override
-    public String toFormattedString(){
+    public String toFormattedString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("FlowOfLiquidWater:\n\t")
                 .append("G = ").append(massFlow.getValue()).append(" ").append(massFlow.getUnitSymbol()).append(" | ")
-                .append("G = ").append(massFlow.toKiloGramPerHour().getValue()).append(" ").append(massFlow.toKiloGramPerHour().getUnitSymbol()).append(" | ")
+                .append("G = ").append(massFlow.getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol()).append(" | ")
                 .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.toCubicMetersPerHour().getValue()).append(" ").append(volFlow.toCubicMetersPerHour().getUnitSymbol())
+                .append("V = ").append(volFlow.getInCubicMetersPerHour()).append(" ").append(VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol())
                 .append("\n\t")
                 .append(liquidWater.toFormattedString())
                 .append("\n");
@@ -120,10 +119,7 @@ public class FlowOfWater implements Flow<LiquidWater> {
     }
 
     public static FlowOfWater of(LiquidWater liquidWater, VolumetricFlow volFlow) {
-        double densityVal = liquidWater.density().toKilogramPerCubicMeter().getValue();
-        double volFlowVal = volFlow.toCubicMetersPerSecond().getValue();
-        double massFlowVal = FlowEquations.volFlowToMassFlow(densityVal, volFlowVal);
-        MassFlow massFlow = MassFlow.ofKilogramsPerSecond(massFlowVal);
+        MassFlow massFlow = FlowEquations.volFlowToMassFlow(liquidWater.density(), volFlow);
         return new FlowOfWater(liquidWater, massFlow);
     }
 

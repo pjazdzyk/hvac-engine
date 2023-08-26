@@ -28,7 +28,7 @@ public final class WaterVapourEquations {
     }
 
     public static DynamicViscosity dynamicViscosity(Temperature temperature) {
-        double dynVisVal = dynamicViscosity(temperature.getValueOfCelsius());
+        double dynVisVal = dynamicViscosity(temperature.getInCelsius());
         return DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
     }
 
@@ -44,7 +44,7 @@ public final class WaterVapourEquations {
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature temperature, Density waterVapourDensity) {
-        double kinVisVal = kinematicViscosity(temperature.getValueOfCelsius(), waterVapourDensity.getValueOfKilogramPerCubicMeter());
+        double kinVisVal = kinematicViscosity(temperature.getInCelsius(), waterVapourDensity.getInKilogramsPerCubicMeters());
         return KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
     }
 
@@ -65,7 +65,7 @@ public final class WaterVapourEquations {
     }
 
     public static ThermalConductivity thermalConductivity(Temperature temperature) {
-        double thermCondVal = thermalConductivity(temperature.getValueOfCelsius());
+        double thermCondVal = thermalConductivity(temperature.getInCelsius());
         return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
     }
 
@@ -81,7 +81,7 @@ public final class WaterVapourEquations {
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature temperature) {
-        double specEnthalpyVal = specificEnthalpy(temperature.getValueOfCelsius());
+        double specEnthalpyVal = specificEnthalpy(temperature.getInCelsius());
         return SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
     }
 
@@ -117,7 +117,7 @@ public final class WaterVapourEquations {
     }
 
     public static SpecificHeat specificHeat(Temperature temperature) {
-        double specHeatVal = specificHeat(temperature.getValueOfCelsius());
+        double specHeatVal = specificHeat(temperature.getInCelsius());
         return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
 
@@ -137,9 +137,9 @@ public final class WaterVapourEquations {
     }
 
     public static Density density(Temperature temperature, RelativeHumidity relativeHumidity, Pressure pressure) {
-        double densityVal = density(temperature.getValueOfCelsius(),
-                relativeHumidity.getValueOfPercent(),
-                pressure.getValueOfPascals());
+        double densityVal = density(temperature.getInCelsius(),
+                relativeHumidity.getInPercent(),
+                pressure.getInPascals());
         return Density.ofKilogramPerCubicMeter(densityVal);
     }
 

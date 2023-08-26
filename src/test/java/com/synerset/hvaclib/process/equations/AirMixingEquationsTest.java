@@ -54,7 +54,7 @@ class AirMixingEquationsTest {
         HumidityRatio actualOutHumidityRatio = actualOutletFlow.humidityRatio();
 
         // Then
-        assertThat(actualOutDryAirMassFlow.getValueOfKilogramsPerSecond()).isEqualTo(mda_out);
+        assertThat(actualOutDryAirMassFlow.getInKilogramsPerSecond()).isEqualTo(mda_out);
         assertThat(actualOutHumidityRatio).isEqualTo(expectedHumidityRatio);
         assertThat(actualOutAirTemp).isEqualTo(expectedOutTemp);
     }
@@ -78,7 +78,7 @@ class AirMixingEquationsTest {
 
         // Then
         assertThat(actualOutletFlow.temperature()).isEqualTo(expectedTemp);
-        assertThat(actualOutletFlow.relativeHumidity()).isEqualTo(expectedRH);
+        assertThat(actualOutletFlow.relativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1E-11));
         assertThat(actualOutletFlow.dryAirMassFlow()).isEqualTo(expectedDryAirMassFlow);
 
     }
@@ -106,8 +106,8 @@ class AirMixingEquationsTest {
         FlowOfHumidAir actualRecircFlow = airMixingResultDto.recirculationFlow();
 
         // Then
-        assertThat(actualOutletFlow.temperature().getValueOfCelsius()).isEqualTo(targetOutletTemp.getValueOfCelsius(), withPrecision(1E-3));
-        assertThat(actualOutletFlow.dryAirMassFlow().getValueOfKilogramsPerSecond()).isEqualTo(targetDryAirMassFlow.getValueOfKilogramsPerSecond(), withPrecision(1E-2));
+        assertThat(actualOutletFlow.temperature().getInCelsius()).isEqualTo(targetOutletTemp.getInCelsius(), withPrecision(1E-3));
+        assertThat(actualOutletFlow.dryAirMassFlow().getInKilogramsPerSecond()).isEqualTo(targetDryAirMassFlow.getInKilogramsPerSecond(), withPrecision(1E-2));
         assertThat(actualInletFlow.massFlow()).isLessThan(inletFlow.massFlow());
         assertThat(actualRecircFlow.massFlow()).isGreaterThan(recircFlow.massFlow());
     }
