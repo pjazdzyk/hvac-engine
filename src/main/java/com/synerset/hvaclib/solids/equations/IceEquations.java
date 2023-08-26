@@ -33,7 +33,7 @@ public class IceEquations {
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature temperature) {
-        double specificEnthalpyVal = specificEnthalpy(temperature.getValueOfCelsius());
+        double specificEnthalpyVal = specificEnthalpy(temperature.getInCelsius());
         return SpecificEnthalpy.ofKiloJoulePerKiloGram(specificEnthalpyVal);
     }
 
@@ -52,7 +52,7 @@ public class IceEquations {
     }
 
     public static SpecificHeat specificHeat(Temperature temperature) {
-        double specHeatVal = specificHeat(temperature.getValueOfCelsius());
+        double specHeatVal = specificHeat(temperature.getInCelsius());
         return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
 
@@ -71,7 +71,7 @@ public class IceEquations {
     }
 
     public static ThermalConductivity thermalConductivity(Temperature temperature) {
-        double thermCondVal = thermalConductivity(temperature.getValueOfCelsius());
+        double thermCondVal = thermalConductivity(temperature.getInCelsius());
         return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
     }
 
@@ -94,7 +94,7 @@ public class IceEquations {
     }
 
     public static Density density(Temperature temperature) {
-        double densVal = density(temperature.getValueOfCelsius());
+        double densVal = density(temperature.getInCelsius());
         return Density.ofKilogramPerCubicMeter(densVal);
     }
 

@@ -104,9 +104,9 @@ class SharedEquationsTest implements FluidsTestConstants {
         double expectedPrandtlNum = SharedEquations.prandtlNumber(dynVisVal, thermalCondVal, specHeatVal);
 
         // When
-        double actualAltPressure = SharedEquations.atmAltitudePressure(height).getValueOfPascals();
-        double actualAltTemperature = SharedEquations.altitudeTemperature(temp, height).getValueOfCelsius();
-        double actualThermDiffusivity = SharedEquations.thermalDiffusivity(density, thermalCond, specHeat).getValueOfSquareMetersPerSecond();
+        double actualAltPressure = SharedEquations.atmAltitudePressure(height).getInPascals();
+        double actualAltTemperature = SharedEquations.altitudeTemperature(temp, height).getInCelsius();
+        double actualThermDiffusivity = SharedEquations.thermalDiffusivity(density, thermalCond, specHeat).getInSquareMetersPerSecond();
         double actualPrandtlNum = SharedEquations.prandtlNumber(dynVis, thermalCond, specHeat).getValue();
 
         // Then
@@ -115,4 +115,5 @@ class SharedEquationsTest implements FluidsTestConstants {
         assertThat(actualThermDiffusivity).isEqualTo(expectedThermDiffusivity);
         assertThat(actualPrandtlNum).isEqualTo(expectedPrandtlNum);
     }
+
 }

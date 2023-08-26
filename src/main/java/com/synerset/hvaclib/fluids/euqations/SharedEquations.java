@@ -22,7 +22,7 @@ public final class SharedEquations {
     }
 
     public static Pressure atmAltitudePressure(Distance altitude) {
-        double pressVal = atmAltitudePressure(altitude.getValueOfMeters());
+        double pressVal = atmAltitudePressure(altitude.getInMeters());
         return Pressure.ofPascal(pressVal);
     }
 
@@ -40,7 +40,7 @@ public final class SharedEquations {
     }
 
     public static Temperature altitudeTemperature(Temperature tempAtSeaLevel, Distance altitude) {
-        double tempVal = altitudeTemperature(tempAtSeaLevel.getValueOfCelsius(), altitude.getValueOfMeters());
+        double tempVal = altitudeTemperature(tempAtSeaLevel.getInCelsius(), altitude.getInMeters());
         return Temperature.ofCelsius(tempVal);
     }
 
@@ -58,9 +58,9 @@ public final class SharedEquations {
     }
 
     public static ThermalDiffusivity thermalDiffusivity(Density density, ThermalConductivity thermalConductivity, SpecificHeat specificHeat) {
-        double thermalDiffVal = thermalDiffusivity(density.getValueOfKilogramPerCubicMeter(),
-                thermalConductivity.getValueOfWatsPerMeterKelvin(),
-                specificHeat.getValueOfKiloJoulesPerKilogramKelvin());
+        double thermalDiffVal = thermalDiffusivity(density.getInKilogramsPerCubicMeters(),
+                thermalConductivity.getInWattsPerMeterKelvin(),
+                specificHeat.getInKiloJoulesPerKiloGramKelvin());
         return ThermalDiffusivity.ofSquareMeterPerSecond(thermalDiffVal);
     }
 
@@ -78,9 +78,9 @@ public final class SharedEquations {
     }
 
     public static PrandtlNumber prandtlNumber(DynamicViscosity dynamicViscosity, ThermalConductivity thermalConductivity, SpecificHeat specificHeat) {
-        double prandtlVal = prandtlNumber(dynamicViscosity.getValueOfPascalSecond(),
-                thermalConductivity.getValueOfWatsPerMeterKelvin(),
-                specificHeat.getValueOfKiloJoulesPerKilogramKelvin());
+        double prandtlVal = prandtlNumber(dynamicViscosity.getInPascalsSecond(),
+                thermalConductivity.getInWattsPerMeterKelvin(),
+                specificHeat.getInKiloJoulesPerKiloGramKelvin());
         return PrandtlNumber.of(prandtlVal);
     }
 

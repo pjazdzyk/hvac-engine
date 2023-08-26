@@ -184,12 +184,12 @@ class DryAirEquationsTest implements FluidsTestConstants {
         double expectedSpecEnthalpyVal = DryAirEquations.specificEnthalpy(dryAirTempVal);
 
         // When
-        double actualDensVal = DryAirEquations.density(dryAirTemp, absPressure).getValueOfKilogramPerCubicMeter();
-        double actualDynVisVal = DryAirEquations.dynamicViscosity(dryAirTemp).getValueOfPascalSecond();
-        double actualKinVisVal = DryAirEquations.kinematicViscosity(dryAirTemp, absPressure).getValueOfSquareMetersPerSecond();
-        double actualThermCondVal = DryAirEquations.thermalConductivity(dryAirTemp).getValueOfWatsPerMeterKelvin();
-        double actualSpecHeatVal = DryAirEquations.specificHeat(dryAirTemp).getValueOfKiloJoulesPerKilogramKelvin();
-        double actualSpecEnthalpyVal = DryAirEquations.specificEnthalpy(dryAirTemp).getValueOfKiloJoulePerKilogram();
+        double actualDensVal = DryAirEquations.density(dryAirTemp, absPressure).getInKilogramsPerCubicMeters();
+        double actualDynVisVal = DryAirEquations.dynamicViscosity(dryAirTemp).getInPascalsSecond();
+        double actualKinVisVal = DryAirEquations.kinematicViscosity(dryAirTemp, absPressure).getInSquareMetersPerSecond();
+        double actualThermCondVal = DryAirEquations.thermalConductivity(dryAirTemp).getInWattsPerMeterKelvin();
+        double actualSpecHeatVal = DryAirEquations.specificHeat(dryAirTemp).getInKiloJoulesPerKiloGramKelvin();
+        double actualSpecEnthalpyVal = DryAirEquations.specificEnthalpy(dryAirTemp).getInKiloJoulesPerKiloGram();
 
         // Then
         assertThat(actualDensVal).isEqualTo(expectedDensVal);

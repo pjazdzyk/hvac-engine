@@ -61,7 +61,7 @@ public final class DryAir implements Fluid {
     }
 
     @Override
-    public String toFormattedString(){
+    public String toFormattedString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("DryAir:\n\t")
                 .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")

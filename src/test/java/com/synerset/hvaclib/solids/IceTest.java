@@ -1,6 +1,5 @@
 package com.synerset.hvaclib.solids;
 
-import com.synerset.hvaclib.solids.Ice;
 import com.synerset.hvaclib.solids.equations.IceEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;

@@ -1,6 +1,5 @@
 package com.synerset.hvaclib.solids.equations;
 
-import com.synerset.hvaclib.solids.equations.IceEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -128,10 +127,10 @@ class IceEquationsTest {
         double expectedSpecEnthalpyVal = IceEquations.specificEnthalpy(iceTempVal);
 
         // When
-        double actualDensVal = IceEquations.density(iceTemp).getValueOfKilogramPerCubicMeter();
-        double actualThermCondVal = IceEquations.thermalConductivity(iceTemp).getValueOfWatsPerMeterKelvin();
-        double actualSpecHeatVal = IceEquations.specificHeat(iceTemp).getValueOfKiloJoulesPerKilogramKelvin();
-        double actualSpecEnthalpyVal = IceEquations.specificEnthalpy(iceTemp).getValueOfKiloJoulePerKilogram();
+        double actualDensVal = IceEquations.density(iceTemp).getInKilogramsPerCubicMeters();
+        double actualThermCondVal = IceEquations.thermalConductivity(iceTemp).getInWattsPerMeterKelvin();
+        double actualSpecHeatVal = IceEquations.specificHeat(iceTemp).getInKiloJoulesPerKiloGramKelvin();
+        double actualSpecEnthalpyVal = IceEquations.specificEnthalpy(iceTemp).getInKiloJoulesPerKiloGram();
 
         // Then
         assertThat(actualDensVal).isEqualTo(expectedDensVal);

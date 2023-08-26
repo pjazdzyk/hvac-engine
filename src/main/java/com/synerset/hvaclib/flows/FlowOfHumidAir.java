@@ -2,9 +2,12 @@ package com.synerset.hvaclib.flows;
 
 import com.synerset.hvaclib.common.Defaults;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
+import com.synerset.hvaclib.fluids.DryAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flows.MassFlowUnits;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.flows.VolumetricFlowUnits;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
@@ -21,15 +24,9 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     private FlowOfHumidAir(HumidAir humidAir, MassFlow massFlowHa) {
         this.humidAir = humidAir;
         this.massFlow = massFlowHa;
-        this.volFlow = Flow.createVolumetricFlow(humidAir.density(), massFlowHa);
-        this.flowOfDryAir = Flow.createFlowOfDryAir(humidAir.dryAirComponent(), humidAir.humidityRatio(), massFlow);
-    }
-
-    private FlowOfHumidAir(HumidAir humidAir, VolumetricFlow volFlow) {
-        this.humidAir = humidAir;
-        this.volFlow = volFlow;
-        this.massFlow = Flow.createMassFlow(humidAir.density(), volFlow);
-        this.flowOfDryAir = Flow.createFlowOfDryAir(humidAir.dryAirComponent(), humidAir.humidityRatio(), massFlow);
+        this.volFlow = FlowEquations.massFlowToVolFlow(humidAir.density(), massFlowHa);
+        MassFlow massFlowDa = FlowEquations.massFlowHaToMassFlowDa(humidAir.humidityRatio(), massFlowHa);
+        this.flowOfDryAir = FlowOfDryAir.of(DryAir.of(humidAir.temperature()), massFlowDa);
     }
 
     // Primary properties
@@ -116,15 +113,15 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     @Override
-    public String toFormattedString(){
+    public String toFormattedString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("FlowOfHumidAir:\n\t")
-                .append("G = ").append(massFlow.toKiloGramPerHour().getValue()).append(" ").append(massFlow.toKiloGramPerHour().getUnitSymbol()).append(" | ")
+                .append("G = ").append(massFlow.getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol()).append(" | ")
                 .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.toCubicMetersPerHour().getValue()).append(" ").append(volFlow.toCubicMetersPerHour().getUnitSymbol())
+                .append("V = ").append(volFlow.getInCubicMetersPerHour()).append(" ").append(VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol())
                 .append("\n\t")
                 .append("Gda = ").append(dryAirMassFlow().getValue()).append(" ").append(dryAirMassFlow().getUnitSymbol()).append(" | ")
-                .append("Gda = ").append(dryAirMassFlow().toKiloGramPerHour().getValue()).append(" ").append(dryAirMassFlow().toKiloGramPerHour().getUnitSymbol())
+                .append("Gda = ").append(dryAirMassFlow().getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol())
                 .append("\n\t")
                 .append(humidAir.toFormattedString())
                 .append("\n");
@@ -161,7 +158,7 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     public static FlowOfHumidAir of(HumidAir humidAir, VolumetricFlow volFlowHa) {
-        return new FlowOfHumidAir(humidAir, volFlowHa);
+        return new FlowOfHumidAir(humidAir, FlowEquations.volFlowToMassFlow(humidAir.density(), volFlowHa));
     }
 
     public static FlowOfHumidAir ofDryAirMassFlow(HumidAir humidAir, MassFlow massFlowDa) {
@@ -180,7 +177,7 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     public static FlowOfHumidAir ofValues(double dryBulbTemp, double relHum, double m3hVolFlow) {
-        double pressure = Defaults.STANDARD_ATMOSPHERE.getValueOfPascals();
+        double pressure = Defaults.STANDARD_ATMOSPHERE.getInPascals();
         return ofValues(pressure, dryBulbTemp, relHum, m3hVolFlow);
     }
 

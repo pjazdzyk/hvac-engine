@@ -24,8 +24,8 @@ public final class AirMixingEquations {
      * @return {@link AirMixingResultDto}
      */
     public static FlowOfHumidAir mixTwoHumidAirFlows(FlowOfHumidAir inletFlow, FlowOfHumidAir recirculationFlow) {
-        double mda_in = inletFlow.dryAirMassFlow().getValueOfKilogramsPerSecond();
-        double mda_rec = recirculationFlow.dryAirMassFlow().getValueOfKilogramsPerSecond();
+        double mda_in = inletFlow.dryAirMassFlow().getInKilogramsPerSecond();
+        double mda_rec = recirculationFlow.dryAirMassFlow().getInKilogramsPerSecond();
         double mda_out = mda_in + mda_rec;
         if (mda_in == 0.0) {
             return recirculationFlow;
@@ -36,11 +36,11 @@ public final class AirMixingEquations {
 
         HumidAir inletHumidAir = inletFlow.fluid();
         HumidAir recircHumidAir = recirculationFlow.fluid();
-        double x_in = inletHumidAir.humidityRatio().getValueOfKilogramPerKilogram();
-        double x_rec = recircHumidAir.humidityRatio().getValueOfKilogramPerKilogram();
-        double p_in = inletHumidAir.pressure().getValueOfPascals();
-        double i_in = inletHumidAir.specificEnthalpy().getValueOfKiloJoulePerKilogram();
-        double i_rec = recircHumidAir.specificEnthalpy().getValueOfKiloJoulePerKilogram();
+        double x_in = inletHumidAir.humidityRatio().getInKilogramPerKilogram();
+        double x_rec = recircHumidAir.humidityRatio().getInKilogramPerKilogram();
+        double p_in = inletHumidAir.pressure().getInPascals();
+        double i_in = inletHumidAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double i_rec = recircHumidAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
         double x_out = (mda_in * x_in + mda_rec * x_rec) / mda_out;
         double i_out = (mda_in * i_in + mda_rec * i_rec) / mda_out;
         double t_out = HumidAirEquations.dryBulbTemperatureIX(i_out, x_out, p_in);
@@ -62,17 +62,16 @@ public final class AirMixingEquations {
      */
     public static FlowOfHumidAir mixMultipleHumidAirFlows(FlowOfHumidAir inletFlow, FlowOfHumidAir... recirculationFlows) {
         HumidAir inletAir = inletFlow.fluid();
-        // Initializing values before loop
-        double mda_out = inletFlow.dryAirMassFlow().getValueOfKilogramsPerSecond();
-        double xMda = mda_out * inletAir.humidityRatio().getValueOfKilogramPerKilogram();
-        double iMda = mda_out * inletAir.specificEnthalpy().getValueOfKiloJoulePerKilogram();
-        double p_out = inletAir.pressure().getValueOfPascals();
+        double mda_out = inletFlow.dryAirMassFlow().getInKilogramsPerSecond();
+        double xMda = mda_out * inletAir.humidityRatio().getInKilogramPerKilogram();
+        double iMda = mda_out * inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double p_out = inletAir.pressure().getInPascals();
 
         for (FlowOfHumidAir flow : recirculationFlows) {
-            mda_out += flow.dryAirMassFlow().getValueOfKilogramsPerSecond();
-            xMda += flow.dryAirMassFlow().getValueOfKilogramsPerSecond() * flow.fluid().humidityRatio().getValueOfKilogramPerKilogram();
-            iMda += flow.dryAirMassFlow().getValueOfKilogramsPerSecond() * flow.fluid().specificEnthalpy().getValueOfKiloJoulePerKilogram();
-            p_out = Double.max(p_out, flow.pressure().getValueOfPascals());
+            mda_out += flow.dryAirMassFlow().getInKilogramsPerSecond();
+            xMda += flow.dryAirMassFlow().getInKilogramsPerSecond() * flow.fluid().humidityRatio().getInKilogramPerKilogram();
+            iMda += flow.dryAirMassFlow().getInKilogramsPerSecond() * flow.fluid().specificEnthalpy().getInKiloJoulesPerKiloGram();
+            p_out = Double.max(p_out, flow.pressure().getInPascals());
         }
 
         if (mda_out == 0.0) {
@@ -116,10 +115,10 @@ public final class AirMixingEquations {
         HumidAir recircHumidAir = recirculationFlow.fluid();
 
         // In case specified outflow is lower than sum of minimal inlet fixed values
-        double mdaMin_in = minimalInletDryAirMassFlow.getValueOfKilogramsPerSecond();
-        double mdaMin_rec = minimalRecirculationDryAirMassFlow.getValueOfKilogramsPerSecond();
+        double mdaMin_in = minimalInletDryAirMassFlow.getInKilogramsPerSecond();
+        double mdaMin_rec = minimalRecirculationDryAirMassFlow.getInKilogramsPerSecond();
         double minFlowSum = mdaMin_in + mdaMin_rec;
-        double mda_out = targetOutDryMassFlow.getValueOfKilogramsPerSecond();
+        double mda_out = targetOutDryMassFlow.getInKilogramsPerSecond();
 
         if (minFlowSum == 0.0 && mda_out == 0.0)
             throw new ProcessArgumentException("Target outlet flow cannot be zero.");
@@ -140,9 +139,9 @@ public final class AirMixingEquations {
         FlowOfHumidAir maxPossibleRecirculationFlow = FlowOfHumidAir.ofDryAirMassFlow(recircHumidAir, MassFlow.ofKilogramsPerSecond(mdaMaxPossible_rec));
         FlowOfHumidAir maxSecondFlowMinFirstFlowMixing = mixTwoHumidAirFlows(minPossibleInletFlow, maxPossibleRecirculationFlow);
 
-        double outNearT1 = maxFirstFlowMinSecondFlowMixing.temperature().getValueOfCelsius();
-        double outNearT2 = maxSecondFlowMinFirstFlowMixing.temperature().getValueOfCelsius();
-        double t_out = targetOutTemp.getValueOfCelsius();
+        double outNearT1 = maxFirstFlowMinSecondFlowMixing.temperature().getInCelsius();
+        double outNearT2 = maxSecondFlowMinFirstFlowMixing.temperature().getInCelsius();
+        double t_out = targetOutTemp.getInCelsius();
 
         // When expected outlet temperature is greater of equals to first or second flow
         // Result is returned maximum possible flow mixing result of flow which temperature is closer to the expected targetOutTemp
@@ -160,7 +159,7 @@ public final class AirMixingEquations {
             FlowOfHumidAir iterInletAir = FlowOfHumidAir.of(inletHumidAir, MassFlow.ofKilogramsPerSecond(mda_iter));
             FlowOfHumidAir iterRecAir = FlowOfHumidAir.of(recircHumidAir, MassFlow.ofKilogramsPerSecond(m_rec_iter));
             result[0] = new AirMixingResultDto(iterInletAir, iterRecAir, mixTwoHumidAirFlows(iterInletAir, iterRecAir));
-            double t_iter_out = result[0].outletFlow().temperature().getValueOfCelsius();
+            double t_iter_out = result[0].outletFlow().temperature().getInCelsius();
             return t_out - t_iter_out;
         });
 
