@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
-public final class DryAir implements Fluid {
+public class DryAir implements Fluid {
     private final Temperature temperature;
     private final Pressure pressure;
     private final Density density;
