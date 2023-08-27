@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
-public final class HumidAir implements Fluid {
+public class HumidAir implements Fluid {
     private final Temperature dryBulbTemperature;
     private final Pressure absPressure;
     private final Density density;
