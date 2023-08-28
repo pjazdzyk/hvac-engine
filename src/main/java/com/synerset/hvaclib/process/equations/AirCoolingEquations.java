@@ -54,7 +54,7 @@ public final class AirCoolingEquations {
      * @return {@link AirCoolingResultDto}
      */
     public static AirCoolingResultDto processOfDryCooling(FlowOfHumidAir inletFlow, Power inputHeatQ) {
-        // Dry cooling follows the same methodology as heating. Formulas used for heating can be reused:
+        // Dry cooling follows the same methodology as dry heating. Formulas used for heating can be reused:
         AirHeatingResultDto dryCoolingResult = AirHeatingEquations.processOfHeating(inletFlow, inputHeatQ);
 
         // Dry cooling does not produce humidity change therefore no condensate is discharged.

@@ -28,11 +28,13 @@
             <groupId>com.synerset</groupId>
             <artifactId>brent-dekker-solver</artifactId>
             <version>${brent-solver.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.synerset</groupId>
             <artifactId>unitility</artifactId>
             <version>${unitility.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test dependencies -->
