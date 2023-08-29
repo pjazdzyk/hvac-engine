@@ -1,5 +1,7 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
+import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.WaterVapourEquations;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
@@ -9,6 +11,10 @@ import java.util.Objects;
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
 public class WaterVapour implements Fluid {
+    public static final Pressure PRESSURE_MIN_LIMIT = Pressure.ofPascal(0);
+    public static final Temperature TEMPERATURE_MIN_LIMIT = Temperature.ofCelsius(-150);
+    public static final Temperature TEMPERATURE_MAX_LIMIT = Temperature.ofCelsius(1000);
+    public static final Temperature TEMPERATURE_MAX_LIMIT_WITH_RH = Temperature.ofCelsius(230);
     private final Temperature temperature;
     private final Pressure pressure;
     private final Density density;
@@ -18,13 +24,29 @@ public class WaterVapour implements Fluid {
     private final KinematicViscosity kinematicViscosity;
     private final ThermalConductivity thermalConductivity;
 
-    public WaterVapour(Pressure pressure,
-                       Temperature temperature,
-                       RelativeHumidity relativeHumidity) {
+    private WaterVapour(Pressure pressure,
+                        Temperature temperature,
+                        RelativeHumidity relativeHumidity) {
+
+        Validators.requireNotNull(pressure);
+        Validators.requireNotNull(temperature);
+        Validators.requireAboveLowerBound(pressure, PRESSURE_MIN_LIMIT);
+        Validators.requireBetweenBoundsInclusive(temperature, TEMPERATURE_MIN_LIMIT, TEMPERATURE_MAX_LIMIT);
 
         this.pressure = pressure;
         this.temperature = temperature;
-        this.density = WaterVapourEquations.density(temperature, relativeHumidity, pressure);
+
+        if (Objects.isNull(relativeHumidity)) {
+            this.density = WaterVapourEquations.density(temperature, pressure);
+        } else {
+            Validators.requireBelowUpperBoundInclusive(temperature, TEMPERATURE_MAX_LIMIT_WITH_RH);
+            Validators.requireAboveLowerBound(relativeHumidity, RelativeHumidity.RH_MIN_LIMIT);
+            Validators.requireBelowUpperBoundInclusive(relativeHumidity, RelativeHumidity.RH_MAX_LIMIT);
+            Pressure saturationPressure = HumidAirEquations.saturationPressure(temperature);
+            Validators.requireValidSaturationPressure(saturationPressure, pressure, temperature);
+            this.density = WaterVapourEquations.density(temperature, relativeHumidity, pressure);
+        }
+
         this.specificHeat = WaterVapourEquations.specificHeat(temperature);
         this.specificEnthalpy = WaterVapourEquations.specificEnthalpy(temperature);
         this.dynamicViscosity = WaterVapourEquations.dynamicViscosity(temperature);
@@ -66,21 +88,20 @@ public class WaterVapour implements Fluid {
 
     @Override
     public String toFormattedString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("WaterVapour:\n\t")
-                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
-                .append("Tvw = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
-                .append("\n\t")
-                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
-                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
-                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
-                .append("\n\t")
-                .append("ν = ").append(kinematicViscosity.getValue()).append(" ").append(kinematicViscosity.getUnitSymbol()).append(" | ")
-                .append("μ = ").append(dynamicViscosity.getValue()).append(" ").append(dynamicViscosity.getUnitSymbol()).append(" | ")
-                .append("k = ").append(thermalConductivity.getValue()).append(" ").append(thermalConductivity.getUnitSymbol())
-                .append("\n");
+        String stringBuilder = "WaterVapour:\n\t" +
+                "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
+                "Tvw = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
+                "\n\t" +
+                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
+                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
+                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                "\n\t" +
+                "ν = " + kinematicViscosity.getValue() + " " + kinematicViscosity.getUnitSymbol() + " | " +
+                "μ = " + dynamicViscosity.getValue() + " " + dynamicViscosity.getUnitSymbol() + " | " +
+                "k = " + thermalConductivity.getValue() + " " + thermalConductivity.getUnitSymbol() +
+                "\n";
 
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     @Override
@@ -116,7 +137,7 @@ public class WaterVapour implements Fluid {
     }
 
     public static WaterVapour of(Pressure pressure, Temperature temperature) {
-        return new WaterVapour(pressure, temperature, RelativeHumidity.ofPercentage(0));
+        return new WaterVapour(pressure, temperature, null);
     }
 
     public static WaterVapour of(Temperature temperature, RelativeHumidity relativeHumidity) {
@@ -124,7 +145,7 @@ public class WaterVapour implements Fluid {
     }
 
     public static WaterVapour of(Temperature temperature) {
-        return new WaterVapour(STANDARD_ATMOSPHERE, temperature, RelativeHumidity.ofPercentage(0));
+        return new WaterVapour(STANDARD_ATMOSPHERE, temperature, null);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.fluids.euqations.LiquidWaterEquations;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
@@ -8,6 +9,9 @@ import java.util.Objects;
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
 public class LiquidWater implements Fluid {
+    public static final Pressure PRESSURE_MIN_LIMIT = Pressure.ofPascal(0);
+    public static final Temperature TEMPERATURE_MIN_LIMIT = Temperature.ofCelsius(0);
+    public static final Temperature TEMPERATURE_MAX_LIMIT = Temperature.ofCelsius(200);
     private final Temperature temperature;
     private final Pressure pressure;
     private final Density density;
@@ -15,6 +19,11 @@ public class LiquidWater implements Fluid {
     private final SpecificEnthalpy specificEnthalpy;
 
     public LiquidWater(Pressure pressure, Temperature temperature) {
+        Validators.requireNotNull(pressure);
+        Validators.requireNotNull(temperature);
+        Validators.requireAboveLowerBound(pressure, PRESSURE_MIN_LIMIT);
+        Validators.requireAboveLowerBound(temperature, TEMPERATURE_MIN_LIMIT);
+        Validators.requireBelowUpperBoundInclusive(temperature, TEMPERATURE_MAX_LIMIT);
         this.temperature = temperature;
         this.pressure = pressure;
         this.density = LiquidWaterEquations.density(temperature);
@@ -44,17 +53,16 @@ public class LiquidWater implements Fluid {
 
     @Override
     public String toFormattedString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("LiquidWater:\n\t")
-                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
-                .append("t_w = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
-                .append("\n\t")
-                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
-                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
-                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
-                .append("\n");
+        String stringBuilder = "LiquidWater:\n\t" +
+                "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
+                "t_w = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
+                "\n\t" +
+                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
+                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
+                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                "\n";
 
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     @Override

@@ -65,17 +65,16 @@ public class FlowOfWater implements Flow<LiquidWater> {
 
     @Override
     public String toFormattedString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("FlowOfLiquidWater:\n\t")
-                .append("G = ").append(massFlow.getValue()).append(" ").append(massFlow.getUnitSymbol()).append(" | ")
-                .append("G = ").append(massFlow.getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol()).append(" | ")
-                .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.getInCubicMetersPerHour()).append(" ").append(VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol())
-                .append("\n\t")
-                .append(liquidWater.toFormattedString())
-                .append("\n");
+        String stringBuilder = "FlowOfLiquidWater:\n\t" +
+                "G = " + massFlow.getValue() + " " + massFlow.getUnitSymbol() + " | " +
+                "G = " + massFlow.getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() + " | " +
+                "V = " + volFlow.getValue() + " " + volFlow.getUnitSymbol() + " | " +
+                "V = " + volFlow.getInCubicMetersPerHour() + " " + VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol() +
+                "\n\t" +
+                liquidWater.toFormattedString() +
+                "\n";
 
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     @Override

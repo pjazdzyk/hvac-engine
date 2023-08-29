@@ -24,12 +24,6 @@ public class FlowOfDryAir implements Flow<DryAir> {
         this.volFlow = FlowEquations.massFlowToVolFlow(dryAir.density(), massFlow);
     }
 
-    private FlowOfDryAir(DryAir dryAir, VolumetricFlow volFlow) {
-        this.dryAir = dryAir;
-        this.volFlow = volFlow;
-        this.massFlow = FlowEquations.volFlowToMassFlow(dryAir.density(), volFlow);
-    }
-
     @Override
     public DryAir fluid() {
         return dryAir;
@@ -72,17 +66,16 @@ public class FlowOfDryAir implements Flow<DryAir> {
 
     @Override
     public String toFormattedString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("FlowOfDryAir:\n\t")
-                .append("G = ").append(massFlow.getValue()).append(" ").append(massFlow.getUnitSymbol()).append(" | ")
-                .append("G = ").append(massFlow.getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol()).append(" | ")
-                .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.getInCubicMetersPerHour()).append(" ").append(VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol())
-                .append("\n\t")
-                .append(dryAir.toFormattedString())
-                .append("\n");
+        String stringBuilder = "FlowOfDryAir:\n\t" +
+                "G = " + massFlow.getValue() + " " + massFlow.getUnitSymbol() + " | " +
+                "G = " + massFlow.getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() + " | " +
+                "V = " + volFlow.getValue() + " " + volFlow.getUnitSymbol() + " | " +
+                "V = " + volFlow.getInCubicMetersPerHour() + " " + VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol() +
+                "\n\t" +
+                dryAir.toFormattedString() +
+                "\n";
 
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     @Override
@@ -126,7 +119,8 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     public static FlowOfDryAir of(DryAir dryAir, VolumetricFlow volFlow) {
-        return new FlowOfDryAir(dryAir, volFlow);
+        MassFlow massFlow = FlowEquations.volFlowToMassFlow(dryAir.density(), volFlow);
+        return new FlowOfDryAir(dryAir, massFlow);
     }
 
     public static FlowOfDryAir ofValues(double absPressure, double temperature, double m3hVolFlow) {

@@ -1,11 +1,11 @@
 package com.synerset.hvaclib.process.equations;
 
 import com.synerset.brentsolver.BrentSolver;
+import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.process.dataobjects.AirMixingResultDto;
-import com.synerset.hvaclib.process.exceptions.ProcessArgumentException;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
@@ -75,7 +75,7 @@ public final class AirMixingEquations {
         }
 
         if (mda_out == 0.0) {
-            throw new ProcessArgumentException(String.format("Sum of all dry air mass recirculationFlows. %s", mda_out));
+            throw new InvalidArgumentException(String.format("Sum of all dry air mass recirculationFlows. %s", mda_out));
         }
 
         double x_out = xMda / mda_out;
@@ -121,7 +121,7 @@ public final class AirMixingEquations {
         double mda_out = targetOutDryMassFlow.getInKilogramsPerSecond();
 
         if (minFlowSum == 0.0 && mda_out == 0.0)
-            throw new ProcessArgumentException("Target outlet flow cannot be zero.");
+            throw new InvalidArgumentException("Target outlet flow cannot be zero.");
         if (minFlowSum > mda_out) {
             FlowOfHumidAir outletFlow = mixTwoHumidAirFlows(inletFlow, recirculationFlow);
             return new AirMixingResultDto(inletFlow, recirculationFlow, outletFlow);

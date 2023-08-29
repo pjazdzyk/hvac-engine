@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.SharedEquations;
 import com.synerset.unitility.unitsystem.dimensionless.PrandtlNumber;
@@ -12,6 +13,11 @@ import java.util.Objects;
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
 public class HumidAir implements Fluid {
+    public static final Pressure PRESSURE_MIN_LIMIT = Pressure.ofPascal(50_000);
+    public static final Pressure PRESSURE_MAX_LIMIT = Pressure.ofBar(50);
+    public static final Temperature TEMPERATURE_MIN_LIMIT = Temperature.ofCelsius(-150);
+    public static final Temperature TEMPERATURE_MAX_LIMIT = Temperature.ofCelsius(200);
+    public static final HumidityRatio HUMIDITY_RATIO_MAX_LIMIT = HumidityRatio.ofKilogramPerKilogram(3);
     private final Temperature dryBulbTemperature;
     private final Pressure absPressure;
     private final Density density;
@@ -35,12 +41,21 @@ public class HumidAir implements Fluid {
                      Temperature dryBulbTemperature,
                      HumidityRatio humidityRatio) {
 
+        Validators.requireNotNull(absPressure);
+        Validators.requireNotNull(dryBulbTemperature);
+        Validators.requireNotNull(humidityRatio);
+        Validators.requireBetweenBoundsInclusive(absPressure, PRESSURE_MIN_LIMIT, PRESSURE_MAX_LIMIT);
+        Validators.requireBetweenBoundsInclusive(dryBulbTemperature, TEMPERATURE_MIN_LIMIT, TEMPERATURE_MAX_LIMIT);
+        Validators.requireBetweenBoundsInclusive(humidityRatio, HumidityRatio.HUM_RATIO_MIN_LIMIT, HUMIDITY_RATIO_MAX_LIMIT);
+        Pressure saturationPressure = HumidAirEquations.saturationPressure(dryBulbTemperature);
+        Validators.requireValidSaturationPressure(saturationPressure, absPressure, dryBulbTemperature);
+
         this.absPressure = absPressure;
         this.dryBulbTemperature = dryBulbTemperature;
         this.humidityRatio = humidityRatio;
+        this.saturationPressure = saturationPressure;
         this.density = HumidAirEquations.density(dryBulbTemperature, humidityRatio, absPressure);
         this.relativeHumidity = HumidAirEquations.relativeHumidity(dryBulbTemperature, humidityRatio, absPressure);
-        this.saturationPressure = HumidAirEquations.saturationPressure(dryBulbTemperature);
         this.maxHumidityRatio = HumidAirEquations.maxHumidityRatio(saturationPressure, absPressure);
         this.vapourState = determineVapourState(dryBulbTemperature, humidityRatio, maxHumidityRatio);
         this.wetBulbTemperature = HumidAirEquations.wetBulbTemperature(dryBulbTemperature, relativeHumidity, absPressure);
@@ -141,31 +156,31 @@ public class HumidAir implements Fluid {
 
     @Override
     public String toFormattedString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("HumidAir:\n\t")
-                .append("Pabs = ").append(absPressure.getValue()).append(" ").append(absPressure.getUnitSymbol()).append(" | ")
-                .append("DBT = ").append(dryBulbTemperature.getValue()).append(" ").append(dryBulbTemperature.getUnitSymbol()).append(" | ")
-                .append("RH = ").append(relativeHumidity.getValue()).append(" ").append(relativeHumidity.getUnitSymbol()).append(" | ")
-                .append("x = ").append(humidityRatio.getValue()).append(" ").append(humidityRatio.getUnit().getSymbol())
-                .append("\n\t")
-                .append("WBT = ").append(dewPointTemperature.getValue()).append(" ").append(dewPointTemperature.getUnitSymbol()).append(" | ")
-                .append("TDP = ").append(wetBulbTemperature.getValue()).append(" ").append(wetBulbTemperature.getUnitSymbol())
-                .append("\n\t")
-                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
-                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
-                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
-                .append("\n\t")
-                .append("ν = ").append(kinematicViscosity.getValue()).append(" ").append(kinematicViscosity.getUnitSymbol()).append(" | ")
-                .append("μ = ").append(dynamicViscosity.getValue()).append(" ").append(dynamicViscosity.getUnitSymbol()).append(" | ")
-                .append("k = ").append(thermalConductivity.getValue()).append(" ").append(thermalConductivity.getUnitSymbol())
-                .append("\n\t")
-                .append("α = ").append(thermalDiffusivity.getValue()).append(" ").append(thermalDiffusivity.getUnitSymbol()).append(" | ")
-                .append("Pr = ").append(prandtlNumber.getValue()).append(" ").append(prandtlNumber.getUnitSymbol())
-                .append("\n\t")
-                .append(dryAirComponent.toFormattedString())
-                .append("\n");
+        String stringBuilder = "HumidAir:\n\t" +
+                "Pabs = " + absPressure.getValue() + " " + absPressure.getUnitSymbol() + " | " +
+                "DBT = " + dryBulbTemperature.getValue() + " " + dryBulbTemperature.getUnitSymbol() + " | " +
+                "RH = " + relativeHumidity.getValue() + " " + relativeHumidity.getUnitSymbol() + " | " +
+                "x = " + humidityRatio.getValue() + " " + humidityRatio.getUnit().getSymbol() +
+                "\n\t" +
+                "Ps = " + saturationPressure.getValue() + " " + saturationPressure.getUnitSymbol() + " | " +
+                "WBT = " + dewPointTemperature.getValue() + " " + dewPointTemperature.getUnitSymbol() + " | " +
+                "TDP = " + wetBulbTemperature.getValue() + " " + wetBulbTemperature.getUnitSymbol() +
+                "\n\t" +
+                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
+                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
+                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                "\n\t" +
+                "ν = " + kinematicViscosity.getValue() + " " + kinematicViscosity.getUnitSymbol() + " | " +
+                "μ = " + dynamicViscosity.getValue() + " " + dynamicViscosity.getUnitSymbol() + " | " +
+                "k = " + thermalConductivity.getValue() + " " + thermalConductivity.getUnitSymbol() +
+                "\n\t" +
+                "α = " + thermalDiffusivity.getValue() + " " + thermalDiffusivity.getUnitSymbol() + " | " +
+                "Pr = " + prandtlNumber.getValue() + " " + prandtlNumber.getUnitSymbol() +
+                "\n\t" +
+                dryAirComponent.toFormattedString() +
+                "\n";
 
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     @Override
@@ -226,7 +241,9 @@ public class HumidAir implements Fluid {
     }
 
     public static HumidAir of(Pressure pressure, Temperature dryBulbTemperature, RelativeHumidity relativeHumidity) {
+        Validators.requireBetweenBoundsInclusive(relativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.RH_MAX_LIMIT);
         Pressure satPressure = HumidAirEquations.saturationPressure(dryBulbTemperature);
+        Validators.requireValidSaturationPressure(satPressure, pressure, dryBulbTemperature);
         HumidityRatio humRatio = HumidAirEquations.humidityRatio(relativeHumidity, satPressure, pressure);
         return new HumidAir(pressure, dryBulbTemperature, humRatio);
     }

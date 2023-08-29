@@ -15,6 +15,7 @@ public final class WaterVapourEquations {
     /**
      * Returns water vapour dynamic viscosity
      * REFERENCE SOURCE: [4] [u,kg/(m*s)] (6.14) [4]<br>
+     * EQUATION LIMITS: {-40oC,+300oC},{1atm (1.013bar)}<br>
      *
      * @param ta air temperature, oC
      * @return water vapour dynamic viscosity, kg/(m*s)
@@ -122,17 +123,17 @@ public final class WaterVapourEquations {
     }
 
     /**
-     * Returns water vapour density, kg/m3
+     * Returns water vapour density, based on partial vapour pressure derived from relative humidity, kg/m3
      *
-     * @param ta  air temperature, oC
-     * @param RH  relative humidity, %
-     * @param Pat atmospheric pressure, Pa
+     * @param ta   air temperature, oC
+     * @param RH   relative humidity, %
+     * @param pAbs absolute pressure, Pa
      * @return water vapour density, kg/m3
      */
-    public static double density(double ta, double RH, double Pat) {
+    public static double density(double ta, double RH, double pAbs) {
         double tk = ta + 273.15;
-        double P_Da = RH / 100 * HumidAirEquations.saturationPressure(ta);
-        double P_Wv = Pat - P_Da;
+        double P_Da = (RH / 100) * HumidAirEquations.saturationPressure(ta);
+        double P_Wv = pAbs - P_Da;
         return P_Wv / (WATER_VAPOUR_SPEC_GAS_CONSTANT * tk);
     }
 
@@ -143,4 +144,21 @@ public final class WaterVapourEquations {
         return Density.ofKilogramPerCubicMeter(densityVal);
     }
 
+    /**
+     * Returns water vapour density, kg/m3
+     *
+     * @param ta   air temperature, oC
+     * @param pAbs absolute pressure, Pa
+     * @return water vapour density, kg/m3
+     */
+    public static double density(double ta, double pAbs) {
+        double tk = ta + 273.15;
+        return pAbs / (WATER_VAPOUR_SPEC_GAS_CONSTANT * tk);
+    }
+
+    public static Density density(Temperature temperature, Pressure pressure) {
+        double densityVal = density(temperature.getInCelsius(),
+                pressure.getInPascals());
+        return Density.ofKilogramPerCubicMeter(densityVal);
+    }
 }

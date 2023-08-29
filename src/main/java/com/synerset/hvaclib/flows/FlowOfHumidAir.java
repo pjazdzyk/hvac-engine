@@ -114,19 +114,18 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
 
     @Override
     public String toFormattedString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("FlowOfHumidAir:\n\t")
-                .append("G = ").append(massFlow.getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol()).append(" | ")
-                .append("V = ").append(volFlow.getValue()).append(" ").append(volFlow.getUnitSymbol()).append(" | ")
-                .append("V = ").append(volFlow.getInCubicMetersPerHour()).append(" ").append(VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol())
-                .append("\n\t")
-                .append("Gda = ").append(dryAirMassFlow().getValue()).append(" ").append(dryAirMassFlow().getUnitSymbol()).append(" | ")
-                .append("Gda = ").append(dryAirMassFlow().getInKiloGramsPerHour()).append(" ").append(MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol())
-                .append("\n\t")
-                .append(humidAir.toFormattedString())
-                .append("\n");
+        String stringBuilder = "FlowOfHumidAir:\n\t" +
+                "G = " + massFlow.getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() + " | " +
+                "V = " + volFlow.getValue() + " " + volFlow.getUnitSymbol() + " | " +
+                "V = " + volFlow.getInCubicMetersPerHour() + " " + VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol() +
+                "\n\t" +
+                "Gda = " + dryAirMassFlow().getValue() + " " + dryAirMassFlow().getUnitSymbol() + " | " +
+                "Gda = " + dryAirMassFlow().getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() +
+                "\n\t" +
+                humidAir.toFormattedString() +
+                "\n";
 
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     @Override
