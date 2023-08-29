@@ -1,6 +1,9 @@
 package com.synerset.hvaclib.fluids;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.fluids.euqations.DryAirEquations;
+import com.synerset.hvaclib.fluids.euqations.SharedEquations;
+import com.synerset.unitility.unitsystem.dimensionless.PrandtlNumber;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
@@ -8,6 +11,10 @@ import java.util.Objects;
 import static com.synerset.hvaclib.common.Defaults.STANDARD_ATMOSPHERE;
 
 public class DryAir implements Fluid {
+
+    public static final Pressure PRESSURE_MIN_LIMIT = Pressure.ofPascal(0);
+    public static final Temperature TEMPERATURE_MIN_LIMIT = Temperature.ofCelsius(-150);
+    public static final Temperature TEMPERATURE_MAX_LIMIT = Temperature.ofCelsius(1000);
     private final Temperature temperature;
     private final Pressure pressure;
     private final Density density;
@@ -16,8 +23,13 @@ public class DryAir implements Fluid {
     private final DynamicViscosity dynamicViscosity;
     private final KinematicViscosity kinematicViscosity;
     private final ThermalConductivity thermalConductivity;
+    private final PrandtlNumber prandtlNumber;
 
-    private DryAir(Pressure pressure, Temperature temperature) {
+    public DryAir(Pressure pressure, Temperature temperature) {
+        Validators.requireNotNull(pressure);
+        Validators.requireNotNull(temperature);
+        Validators.requireAboveLowerBound(pressure, PRESSURE_MIN_LIMIT);
+        Validators.requireBetweenBoundsInclusive(temperature, TEMPERATURE_MIN_LIMIT, TEMPERATURE_MAX_LIMIT);
         this.temperature = temperature;
         this.pressure = pressure;
         this.density = DryAirEquations.density(temperature, pressure);
@@ -26,6 +38,7 @@ public class DryAir implements Fluid {
         this.dynamicViscosity = DryAirEquations.dynamicViscosity(temperature);
         this.kinematicViscosity = DryAirEquations.kinematicViscosity(temperature, pressure);
         this.thermalConductivity = DryAirEquations.thermalConductivity(temperature);
+        this.prandtlNumber = SharedEquations.prandtlNumber(dynamicViscosity, thermalConductivity, specificHeat);
     }
 
     public Temperature temperature() {
@@ -60,23 +73,27 @@ public class DryAir implements Fluid {
         return thermalConductivity;
     }
 
+    public PrandtlNumber prandtlNumber() {
+        return prandtlNumber;
+    }
+
     @Override
     public String toFormattedString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("DryAir:\n\t")
-                .append("Pabs = ").append(pressure.getValue()).append(" ").append(pressure.getUnitSymbol()).append(" | ")
-                .append("DBT = ").append(temperature.getValue()).append(" ").append(temperature.getUnitSymbol())
-                .append("\n\t")
-                .append("i = ").append(specificEnthalpy.getValue()).append(" ").append(specificEnthalpy.getUnitSymbol()).append(" | ")
-                .append("ρ = ").append(density.getValue()).append(" ").append(density.getUnitSymbol()).append(" | ")
-                .append("CP = ").append(specificHeat.getValue()).append(" ").append(specificHeat.getUnitSymbol())
-                .append("\n\t")
-                .append("ν = ").append(kinematicViscosity.getValue()).append(" ").append(kinematicViscosity.getUnitSymbol()).append(" | ")
-                .append("μ = ").append(dynamicViscosity.getValue()).append(" ").append(dynamicViscosity.getUnitSymbol()).append(" | ")
-                .append("k = ").append(thermalConductivity.getValue()).append(" ").append(thermalConductivity.getUnitSymbol())
-                .append("\n");
+        String stringBuilder = "DryAir:\n\t" +
+                "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
+                "DBT = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
+                "\n\t" +
+                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
+                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
+                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                "\n\t" +
+                "ν = " + kinematicViscosity.getValue() + " " + kinematicViscosity.getUnitSymbol() + " | " +
+                "μ = " + dynamicViscosity.getValue() + " " + dynamicViscosity.getUnitSymbol() + " | " +
+                "k = " + thermalConductivity.getValue() + " " + thermalConductivity.getUnitSymbol() + " | " +
+                "Pr = " + prandtlNumber.getValue() + " " + prandtlNumber.getUnitSymbol() +
+                "\n";
 
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     @Override
@@ -110,6 +127,7 @@ public class DryAir implements Fluid {
                 ", dynamicViscosity=" + dynamicViscosity +
                 ", kinematicViscosity=" + kinematicViscosity +
                 ", thermalConductivity=" + thermalConductivity +
+                ", prandtlNumber=" + prandtlNumber +
                 '}';
     }
 

@@ -2,6 +2,7 @@ package com.synerset.hvaclib.process.equations;
 
 import com.synerset.brentsolver.BrentSolver;
 import com.synerset.hvaclib.common.MathUtils;
+import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.flows.FlowOfDryAir;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.flows.FlowOfWater;
@@ -11,7 +12,6 @@ import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.LiquidWaterEquations;
 import com.synerset.hvaclib.process.dataobjects.AirCoolingResultDto;
 import com.synerset.hvaclib.process.dataobjects.AirHeatingResultDto;
-import com.synerset.hvaclib.process.exceptions.ProcessArgumentException;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -86,7 +86,7 @@ public final class AirCoolingEquations {
         double t_out = targetOutTemp.getInCelsius();
         double tdp_in = inletHumidAir.dewPointTemperature().getInCelsius();
         if (t_out < tdp_in) {
-            throw new ProcessArgumentException("Expected temperature must be higher than dew point. Not applicable for dry cooling process.");
+            throw new InvalidArgumentException("Expected temperature must be higher than dew point. Not applicable for dry cooling process.");
         }
 
         // Dry cooling follows the same methodology as heating. Formulas used for heating can be reused:
@@ -120,7 +120,7 @@ public final class AirCoolingEquations {
         double t_in = inletHumidAir.temperature().getInCelsius();
         double t_out = targetOutTemp.getInCelsius();
         if (t_out > t_in) {
-            throw new ProcessArgumentException("Expected outlet temperature must be lover than inlet for cooling process. Use heating process method instead");
+            throw new InvalidArgumentException("Expected outlet temperature must be lover than inlet for cooling process. Use heating process method instead");
         }
 
         double m_cond = 0.0;
@@ -192,13 +192,13 @@ public final class AirCoolingEquations {
         double RH_out = targetOutRH.getInPercent();
         double RH_in = inletHumidAir.relativeHumidity().getInPercent();
         if (RH_out > 100 || RH_out < 0.0) {
-            throw new ProcessArgumentException("Relative Humidity outside acceptable values.");
+            throw new InvalidArgumentException("Relative Humidity outside acceptable values.");
         }
         if (RH_out < RH_in) {
-            throw new ProcessArgumentException("Process not possible. Cooling cannot decrease relative humidity");
+            throw new InvalidArgumentException("Process not possible. Cooling cannot decrease relative humidity");
         }
         if (RH_out > 99.0) {
-            throw new ProcessArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
+            throw new InvalidArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
         }
         if (RH_out == RH_in) {
             LiquidWater liquidWater = LiquidWater.of(inletFlow.temperature());
@@ -306,7 +306,7 @@ public final class AirCoolingEquations {
         double x_in = inletHumRatio.getInKilogramPerKilogram();
         double x_out = outletHumRatio.getInKilogramPerKilogram();
         if (mda_in < 0 || x_in < 0 || x_out < 0)
-            throw new ProcessArgumentException(String.format("Negative values of mda, x1 or x2 passed as method argument. %s, %s, %s", dryAirMassFlow, inletHumRatio, outletHumRatio));
+            throw new InvalidArgumentException(String.format("Negative values of mda, x1 or x2 passed as method argument. %s, %s, %s", dryAirMassFlow, inletHumRatio, outletHumRatio));
         if (x_in == 0)
             return MassFlow.ofKilogramsPerSecond(0.0);
         return MassFlow.ofKilogramsPerSecond(mda_in * (x_in - x_out));

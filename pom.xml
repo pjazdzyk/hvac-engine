@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Synerset library versions -->
         <brent-solver.version>1.1.4</brent-solver.version>
-        <unitility.version>1.1.0</unitility.version>
+        <unitility.version>1.1.1</unitility.version>
         <!-- Dependency versions -->
         <junit.version>5.9.0</junit.version>
         <assertJ.version>3.23.1</assertJ.version>
@@ -28,13 +28,11 @@
             <groupId>com.synerset</groupId>
             <artifactId>brent-dekker-solver</artifactId>
             <version>${brent-solver.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.synerset</groupId>
             <artifactId>unitility</artifactId>
             <version>${unitility.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Test dependencies -->
