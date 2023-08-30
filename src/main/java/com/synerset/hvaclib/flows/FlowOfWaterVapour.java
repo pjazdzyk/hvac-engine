@@ -19,7 +19,7 @@ public class FlowOfWaterVapour implements Flow<WaterVapour> {
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
 
-    private FlowOfWaterVapour(WaterVapour waterVapour, MassFlow massFlow) {
+    public FlowOfWaterVapour(WaterVapour waterVapour, MassFlow massFlow) {
         Validators.requireNotNull(waterVapour);
         Validators.requireNotNull(massFlow);
         Validators.requireBetweenBoundsInclusive(massFlow, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);

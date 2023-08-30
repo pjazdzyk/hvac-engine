@@ -70,7 +70,7 @@ public class HumidAir implements Fluid {
         this.dryAirComponent = DryAir.of(absPressure, dryBulbTemperature);
     }
 
-    private static VapourState determineVapourState(Temperature dryBulbTemperature, HumidityRatio humidityRatio, HumidityRatio maxHumidityRatio) {
+    public static VapourState determineVapourState(Temperature dryBulbTemperature, HumidityRatio humidityRatio, HumidityRatio maxHumidityRatio) {
         if (humidityRatio == maxHumidityRatio) {
             return VapourState.SATURATED;
         } else if ((humidityRatio.isGreaterThan(maxHumidityRatio)) && dryBulbTemperature.isPositive()) {

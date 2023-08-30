@@ -15,7 +15,7 @@ class FlowOfHumidAirTest {
     static final double INIT_MASS_FLOW_MA = 2.0; // kg/s
 
     @Test
-    @DisplayName("should create FlowOfMoistAir instance with properly calculated flows when valid input is given")
+    @DisplayName("FlowOfMoistAir: should instance with properly calculated flows when valid input is given")
     void flowOfMoistAirInstance_shouldCreateValidFlowOfMoistAirInstance_whenValidSampleInputIsGiven() {
         // Arrange
         HumidAir sampleAir = HumidAir.of(Temperature.ofCelsius(45.0), RelativeHumidity.ofPercentage(60.1));
@@ -29,6 +29,7 @@ class FlowOfHumidAirTest {
 
         // Act
         FlowOfHumidAir flowAir = FlowOfHumidAir.of(sampleAir, MassFlow.ofKilogramsPerSecond(INIT_MASS_FLOW_MA));
+        HumidAir humidAir = flowAir.fluid();
 
         double actualMassFlowMa = flowAir.massFlow().getInKilogramsPerSecond();
         double actualVolFlowMa = flowAir.volumetricFlow().getInCubicMetersPerSecond();
@@ -41,5 +42,14 @@ class FlowOfHumidAirTest {
         assertThat(actualMassFlowDa).isEqualTo(expectedMassFlow_Da);
         assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
         assertThat(flowAir.fluid()).isEqualTo(sampleAir);
+
+        assertThat(flowAir.temperature()).isEqualTo(humidAir.temperature());
+        assertThat(flowAir.relativeHumidity()).isEqualTo(humidAir.relativeHumidity());
+        assertThat(flowAir.humidityRatio()).isEqualTo(humidAir.humidityRatio());
+        assertThat(flowAir.pressure()).isEqualTo(humidAir.pressure());
+        assertThat(flowAir.density()).isEqualTo(humidAir.density());
+        assertThat(flowAir.specificHeat()).isEqualTo(humidAir.specificHeat());
+        assertThat(flowAir.specificEnthalpy()).isEqualTo(humidAir.specificEnthalpy());
+        assertThat(flowAir.saturationPressure()).isEqualTo(humidAir.saturationPressure());
     }
 }
