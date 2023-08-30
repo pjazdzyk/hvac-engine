@@ -37,7 +37,7 @@ public class HumidAir implements Fluid {
     private final PrandtlNumber prandtlNumber;
     private final DryAir dryAirComponent;
 
-    private HumidAir(Pressure absPressure,
+    public HumidAir(Pressure absPressure,
                      Temperature dryBulbTemperature,
                      HumidityRatio humidityRatio) {
 

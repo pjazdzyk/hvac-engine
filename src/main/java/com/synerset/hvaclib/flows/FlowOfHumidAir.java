@@ -1,6 +1,7 @@
 package com.synerset.hvaclib.flows;
 
 import com.synerset.hvaclib.common.Defaults;
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.DryAir;
 import com.synerset.hvaclib.fluids.HumidAir;
@@ -16,12 +17,17 @@ import java.util.Objects;
 
 public class FlowOfHumidAir implements Flow<HumidAir> {
 
+    public static MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
+    public static MassFlow MASS_FLOW_MAX_LIMIT = MassFlow.ofKilogramsPerSecond(5E9);
     private final HumidAir humidAir;
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
     private final FlowOfDryAir flowOfDryAir;
 
-    private FlowOfHumidAir(HumidAir humidAir, MassFlow massFlowHa) {
+    public FlowOfHumidAir(HumidAir humidAir, MassFlow massFlowHa) {
+        Validators.requireNotNull(humidAir);
+        Validators.requireNotNull(massFlowHa);
+        Validators.requireBetweenBoundsInclusive(massFlowHa, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.humidAir = humidAir;
         this.massFlow = massFlowHa;
         this.volFlow = FlowEquations.massFlowToVolFlow(humidAir.density(), massFlowHa);
@@ -157,10 +163,15 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     public static FlowOfHumidAir of(HumidAir humidAir, VolumetricFlow volFlowHa) {
+        Validators.requireNotNull(humidAir);
+        Validators.requireNotNull(volFlowHa);
         return new FlowOfHumidAir(humidAir, FlowEquations.volFlowToMassFlow(humidAir.density(), volFlowHa));
     }
 
     public static FlowOfHumidAir ofDryAirMassFlow(HumidAir humidAir, MassFlow massFlowDa) {
+        Validators.requireNotNull(humidAir);
+        Validators.requireNotNull(massFlowDa);
+        Validators.requireBetweenBoundsInclusive(massFlowDa, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         HumidityRatio humRatio = humidAir.humidityRatio();
         MassFlow humidAirMassFlow = FlowEquations.massFlowDaToMassFlowHa(humRatio, massFlowDa);
         return FlowOfHumidAir.of(humidAir, humidAirMassFlow);

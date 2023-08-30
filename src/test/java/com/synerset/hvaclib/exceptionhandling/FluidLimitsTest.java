@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class FluidLimitsTest {
 
     @Test
-    @DisplayName("should throw exception when null passed as argument")
-    void shouldThrowNullPointerExceptionWhenNullIsPassedAsArgument() {
+    @DisplayName("Fluids: should throw exception when null passed as argument")
+    void shouldThrowNullPointerExceptionWhenNullIsPassedAsArgumentFluids() {
         assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(MissingArgumentException.class);
         assertThatThrownBy(() -> DryAir.of(null, Temperature.ofCelsius(20))).isInstanceOf(MissingArgumentException.class);
 
@@ -37,7 +37,7 @@ class FluidLimitsTest {
     }
 
     @Test
-    @DisplayName("dry air: should throw exception when arguments exceeds limits")
+    @DisplayName("Dry air: should throw exception when arguments exceeds limits")
     void shouldThrowExceptionWhenArgumentsExceedsLimitsDryAir() {
         Pressure pressureMaxLimit = Pressure.ofPascal(0);
         Temperature temperatureMinLimit = Temperature.ofCelsius(-150);

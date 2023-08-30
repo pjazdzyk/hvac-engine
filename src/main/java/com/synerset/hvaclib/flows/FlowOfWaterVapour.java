@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.flows;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.WaterVapour;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
@@ -12,11 +13,16 @@ import java.util.Objects;
 
 public class FlowOfWaterVapour implements Flow<WaterVapour> {
 
+    public static MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
+    public static MassFlow MASS_FLOW_MAX_LIMIT = MassFlow.ofKilogramsPerSecond(5E9);
     private final WaterVapour waterVapour;
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
 
     private FlowOfWaterVapour(WaterVapour waterVapour, MassFlow massFlow) {
+        Validators.requireNotNull(waterVapour);
+        Validators.requireNotNull(massFlow);
+        Validators.requireBetweenBoundsInclusive(massFlow, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.waterVapour = waterVapour;
         this.massFlow = massFlow;
         this.volFlow = FlowEquations.massFlowToVolFlow(waterVapour.density(), massFlow);
@@ -117,6 +123,8 @@ public class FlowOfWaterVapour implements Flow<WaterVapour> {
     }
 
     public static FlowOfWaterVapour of(WaterVapour waterVapour, VolumetricFlow volFlow) {
+        Validators.requireNotNull(waterVapour);
+        Validators.requireNotNull(volFlow);
         MassFlow massFlow = FlowEquations.volFlowToMassFlow(waterVapour.density(), volFlow);
         return new FlowOfWaterVapour(waterVapour, massFlow);
     }
