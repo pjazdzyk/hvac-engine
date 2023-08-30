@@ -83,7 +83,7 @@ public class DryAir implements Fluid {
                 "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
                 "DBT = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
                 "\n\t" +
-                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
+                "i_da = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
                 "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
                 "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
                 "\n\t" +

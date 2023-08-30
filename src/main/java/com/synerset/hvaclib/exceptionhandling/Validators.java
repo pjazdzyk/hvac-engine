@@ -8,7 +8,11 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 import java.util.Objects;
 
-public class Validators {
+public final class Validators {
+
+    private Validators() {
+    }
+
 
     public static void requireNotNull(Object object) {
         if (Objects.isNull(object)) {

@@ -423,16 +423,16 @@ public final class HumidAirEquations {
      */
     public static double specificEnthalpy(double ta, double x, double Pat) {
         double i_Da = DryAirEquations.specificEnthalpy(ta);
-        //Case1: no humidity = dry air only
+        // Case1: no humidity = dry air only
         if (x == 0.0)
             return i_Da;
-        //Case2: x <= xMax, unsaturated air
+        // Case2: x <= xMax, unsaturated air
         double Ps = HumidAirEquations.saturationPressure(ta);
         double xMax = maxHumidityRatio(Ps, Pat);
         double i_Wv = WaterVapourEquations.specificEnthalpy(ta) * x;
         if (x <= xMax)
             return i_Da + i_Wv;
-        //Case3: x > XMax, saturated air with water or ice fog
+        // Case3: x > XMax, saturated air with water or ice fog
         i_Wv = WaterVapourEquations.specificEnthalpy(ta) * xMax;
         double i_Wt = LiquidWaterEquations.specificEnthalpy(ta) * (x - xMax);
         double i_Ice = IceEquations.specificEnthalpy(ta) * (x - xMax);

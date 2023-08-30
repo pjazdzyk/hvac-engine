@@ -1,7 +1,7 @@
 package com.synerset.hvaclib.flows;
 
-
 import com.synerset.hvaclib.common.Defaults;
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.DryAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
@@ -14,11 +14,16 @@ import java.util.Objects;
 
 public class FlowOfDryAir implements Flow<DryAir> {
 
+    public static MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
+    public static MassFlow MASS_FLOW_MAX_LIMIT = MassFlow.ofKilogramsPerSecond(5E9);
     private final DryAir dryAir;
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
 
-    private FlowOfDryAir(DryAir dryAir, MassFlow massFlow) {
+    public FlowOfDryAir(DryAir dryAir, MassFlow massFlow) {
+        Validators.requireNotNull(dryAir);
+        Validators.requireNotNull(massFlow);
+        Validators.requireBetweenBoundsInclusive(massFlow, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.dryAir = dryAir;
         this.massFlow = massFlow;
         this.volFlow = FlowEquations.massFlowToVolFlow(dryAir.density(), massFlow);
@@ -119,6 +124,7 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     public static FlowOfDryAir of(DryAir dryAir, VolumetricFlow volFlow) {
+        Validators.requireNotNull(volFlow);
         MassFlow massFlow = FlowEquations.volFlowToMassFlow(dryAir.density(), volFlow);
         return new FlowOfDryAir(dryAir, massFlow);
     }

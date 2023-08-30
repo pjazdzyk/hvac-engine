@@ -57,7 +57,7 @@ public class LiquidWater implements Fluid {
                 "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
                 "t_w = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
                 "\n\t" +
-                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
+                "i_w = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
                 "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
                 "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
                 "\n";

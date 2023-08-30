@@ -24,7 +24,7 @@ public class WaterVapour implements Fluid {
     private final KinematicViscosity kinematicViscosity;
     private final ThermalConductivity thermalConductivity;
 
-    private WaterVapour(Pressure pressure,
+    public WaterVapour(Pressure pressure,
                         Temperature temperature,
                         RelativeHumidity relativeHumidity) {
 
@@ -92,7 +92,7 @@ public class WaterVapour implements Fluid {
                 "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
                 "Tvw = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
                 "\n\t" +
-                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
+                "i_wv = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
                 "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
                 "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
                 "\n\t" +

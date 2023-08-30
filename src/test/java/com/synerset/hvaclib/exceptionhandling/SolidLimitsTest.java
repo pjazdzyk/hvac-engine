@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class SolidLimitsTest {
+class SolidLimitsTest {
 
     @Test
-    @DisplayName("should throw exception when null passed as argument")
+    @DisplayName("Ice: should throw exception when null passed as argument")
     void shouldThrowNullPointerExceptionWhenNullIsPassedAsArgumentSolids() {
         assertThatThrownBy(() -> Ice.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(MissingArgumentException.class);
         assertThatThrownBy(() -> Ice.of(null, Temperature.ofCelsius(-20))).isInstanceOf(MissingArgumentException.class);
