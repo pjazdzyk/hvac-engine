@@ -79,41 +79,33 @@ public class DryAir implements Fluid {
 
     @Override
     public String toFormattedString() {
-        String stringBuilder = "DryAir:\n\t" +
-                "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
-                "DBT = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
+        return "DryAir:" +
                 "\n\t" +
-                "i_da = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
-                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
-                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                pressure.toFormattedString("P", "abs", "| ") +
+                temperature.toFormattedString("DBT") +
                 "\n\t" +
-                "ν = " + kinematicViscosity.getValue() + " " + kinematicViscosity.getUnitSymbol() + " | " +
-                "μ = " + dynamicViscosity.getValue() + " " + dynamicViscosity.getUnitSymbol() + " | " +
-                "k = " + thermalConductivity.getValue() + " " + thermalConductivity.getUnitSymbol() + " | " +
-                "Pr = " + prandtlNumber.getValue() + " " + prandtlNumber.getUnitSymbol() +
+                specificEnthalpy.toFormattedString("i", "da", "| ") +
+                density.toFormattedString("ρ", "da", "| ") +
+                specificHeat.toFormattedString("cp", "da") +
+                "\n\t" +
+                kinematicViscosity.toFormattedString("ν", "da", "| ") +
+                dynamicViscosity.toFormattedString("μ", "da", "| ") +
+                thermalConductivity.toFormattedString("k", "da", "| ") +
+                prandtlNumber.toFormattedString("Pr", "da") +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (DryAir) obj;
-        return Objects.equals(this.temperature, that.temperature) &&
-                Objects.equals(this.pressure, that.pressure) &&
-                Objects.equals(this.density, that.density) &&
-                Objects.equals(this.specificHeat, that.specificHeat) &&
-                Objects.equals(this.specificEnthalpy, that.specificEnthalpy) &&
-                Objects.equals(this.dynamicViscosity, that.dynamicViscosity) &&
-                Objects.equals(this.kinematicViscosity, that.kinematicViscosity) &&
-                Objects.equals(this.thermalConductivity, that.thermalConductivity);
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        DryAir dryAir = (DryAir) object;
+        return Objects.equals(temperature, dryAir.temperature) && Objects.equals(pressure, dryAir.pressure);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(temperature, pressure, density, specificHeat, specificEnthalpy, dynamicViscosity, kinematicViscosity, thermalConductivity);
+        return Objects.hash(temperature, pressure);
     }
 
     @Override

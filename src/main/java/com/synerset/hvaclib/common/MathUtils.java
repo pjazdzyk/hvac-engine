@@ -1,5 +1,7 @@
 package com.synerset.hvaclib.common;
 
+import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentException;
+
 import java.util.Arrays;
 import java.util.OptionalDouble;
 
@@ -12,7 +14,7 @@ public final class MathUtils {
         OptionalDouble optionalDouble = Arrays.stream(values).average();
         if (optionalDouble.isPresent())
             return optionalDouble.getAsDouble();
-        throw new IllegalStateException("No values are provided.");
+        throw new InvalidArgumentException("No values are provided.");
     }
 
     public static double linearInterpolation(double x1, double f_x1, double x2, double f_x2, double x) {

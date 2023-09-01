@@ -15,7 +15,10 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
  *
  * @author Piotr Jażdżyk, MScEng
  */
-public class IceEquations {
+public final class IceEquations {
+
+    private IceEquations() {
+    }
 
     public final static double HEAT_OF_ICE_MELT = 334.1;                     // [kJ/kg]              - Heat of ice melt
 

@@ -53,16 +53,15 @@ public class LiquidWater implements Fluid {
 
     @Override
     public String toFormattedString() {
-        String stringBuilder = "LiquidWater:\n\t" +
-                "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
-                "t_w = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
+        return "LiquidWater:\n\t" +
                 "\n\t" +
-                "i_w = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
-                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
-                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                pressure.toFormattedString("P", "abs", "| ") +
+                temperature.toFormattedString("t", "w") +
+                "\n\t" +
+                specificEnthalpy.toFormattedString("i", "w", "| ") +
+                density.toFormattedString("ρ", "w", "| ") +
+                specificHeat.toFormattedString("cp", "w") +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override
