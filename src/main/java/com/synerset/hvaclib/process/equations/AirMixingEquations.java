@@ -5,7 +5,7 @@ import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentExceptio
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
-import com.synerset.hvaclib.process.dataobjects.AirMixingResultDto;
+import com.synerset.hvaclib.process.equations.dataobjects.AirMixingResult;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
@@ -21,7 +21,7 @@ public final class AirMixingEquations {
      *
      * @param inletFlow         inlet {@link FlowOfHumidAir}
      * @param recirculationFlow recirculation {@link FlowOfHumidAir}
-     * @return {@link AirMixingResultDto}
+     * @return {@link AirMixingResult}
      */
     public static FlowOfHumidAir mixTwoHumidAirFlows(FlowOfHumidAir inletFlow, FlowOfHumidAir recirculationFlow) {
         double mda_in = inletFlow.dryAirMassFlow().getInKilogramsPerSecond();
@@ -58,7 +58,7 @@ public final class AirMixingEquations {
      *
      * @param inletFlow          inlet {@link FlowOfHumidAir}
      * @param recirculationFlows multiple recirculation {@link FlowOfHumidAir}
-     * @return {@link AirMixingResultDto}
+     * @return {@link AirMixingResult}
      */
     public static FlowOfHumidAir mixMultipleHumidAirFlows(FlowOfHumidAir inletFlow, FlowOfHumidAir... recirculationFlows) {
         HumidAir inletAir = inletFlow.fluid();
@@ -102,14 +102,14 @@ public final class AirMixingEquations {
      * @param minimalRecirculationDryAirMassFlow minimal locked recirculation dry air {@link MassFlow}
      * @param targetOutDryMassFlow               target outlet dry air {@link MassFlow}
      * @param targetOutTemp                      target outlet air {@link Temperature}
-     * @return {@link AirMixingResultDto}
+     * @return {@link AirMixingResult}
      */
-    public static AirMixingResultDto mixTwoHumidAirFlowsForTargetOutTemp(FlowOfHumidAir inletFlow,
-                                                                         FlowOfHumidAir recirculationFlow,
-                                                                         MassFlow minimalInletDryAirMassFlow,
-                                                                         MassFlow minimalRecirculationDryAirMassFlow,
-                                                                         MassFlow targetOutDryMassFlow,
-                                                                         Temperature targetOutTemp) {
+    public static AirMixingResult mixTwoHumidAirFlowsForTargetOutTemp(FlowOfHumidAir inletFlow,
+                                                                      FlowOfHumidAir recirculationFlow,
+                                                                      MassFlow minimalInletDryAirMassFlow,
+                                                                      MassFlow minimalRecirculationDryAirMassFlow,
+                                                                      MassFlow targetOutDryMassFlow,
+                                                                      Temperature targetOutTemp) {
 
         HumidAir inletHumidAir = inletFlow.fluid();
         HumidAir recircHumidAir = recirculationFlow.fluid();
@@ -124,7 +124,7 @@ public final class AirMixingEquations {
             throw new InvalidArgumentException("Target outlet flow cannot be zero.");
         if (minFlowSum > mda_out) {
             FlowOfHumidAir outletFlow = mixTwoHumidAirFlows(inletFlow, recirculationFlow);
-            return new AirMixingResultDto(inletFlow, recirculationFlow, outletFlow);
+            return new AirMixingResult(inletFlow, recirculationFlow, outletFlow);
         }
 
         // Determining possible outcome to validate provided outlet temperature with respect to provided minimal flows
@@ -146,19 +146,19 @@ public final class AirMixingEquations {
         // When expected outlet temperature is greater of equals to first or second flow
         // Result is returned maximum possible flow mixing result of flow which temperature is closer to the expected targetOutTemp
         if ((outNearT1 <= outNearT2 && t_out <= outNearT1) || (outNearT1 >= outNearT2 && t_out >= outNearT1))
-            return new AirMixingResultDto(inletFlow, recirculationFlow, maxFirstFlowMinSecondFlowMixing);
+            return new AirMixingResult(inletFlow, recirculationFlow, maxFirstFlowMinSecondFlowMixing);
         if ((outNearT2 <= outNearT1 && t_out <= outNearT2) || (outNearT2 >= outNearT1 && t_out >= outNearT2))
-            return new AirMixingResultDto(inletFlow, recirculationFlow, maxSecondFlowMinFirstFlowMixing);
+            return new AirMixingResult(inletFlow, recirculationFlow, maxSecondFlowMinFirstFlowMixing);
 
         // For all other cases, first and second flow will be adjusted to determine targetOutTemp
-        AirMixingResultDto[] result = new AirMixingResultDto[1];
+        AirMixingResult[] result = new AirMixingResult[1];
         BrentSolver solver = new BrentSolver("Mixing OutTxMda Solver");
         solver.setCounterpartPoints(mdaMin_in, mda_out);
         solver.calcForFunction(mda_iter -> {
             double m_rec_iter = mda_out - mda_iter;
             FlowOfHumidAir iterInletAir = FlowOfHumidAir.of(inletHumidAir, MassFlow.ofKilogramsPerSecond(mda_iter));
             FlowOfHumidAir iterRecAir = FlowOfHumidAir.of(recircHumidAir, MassFlow.ofKilogramsPerSecond(m_rec_iter));
-            result[0] = new AirMixingResultDto(iterInletAir, iterRecAir, mixTwoHumidAirFlows(iterInletAir, iterRecAir));
+            result[0] = new AirMixingResult(iterInletAir, iterRecAir, mixTwoHumidAirFlows(iterInletAir, iterRecAir));
             double t_iter_out = result[0].outletFlow().temperature().getInCelsius();
             return t_out - t_iter_out;
         });

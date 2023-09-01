@@ -2,7 +2,9 @@ package com.synerset.hvaclib.fluids;
 
 import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
+import com.synerset.hvaclib.fluids.euqations.SharedEquations;
 import com.synerset.hvaclib.fluids.euqations.WaterVapourEquations;
+import com.synerset.unitility.unitsystem.dimensionless.PrandtlNumber;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
@@ -23,10 +25,11 @@ public class WaterVapour implements Fluid {
     private final DynamicViscosity dynamicViscosity;
     private final KinematicViscosity kinematicViscosity;
     private final ThermalConductivity thermalConductivity;
+    private final PrandtlNumber prandtlNumber;
 
     public WaterVapour(Pressure pressure,
-                        Temperature temperature,
-                        RelativeHumidity relativeHumidity) {
+                       Temperature temperature,
+                       RelativeHumidity relativeHumidity) {
 
         Validators.requireNotNull(pressure);
         Validators.requireNotNull(temperature);
@@ -52,6 +55,7 @@ public class WaterVapour implements Fluid {
         this.dynamicViscosity = WaterVapourEquations.dynamicViscosity(temperature);
         this.kinematicViscosity = WaterVapourEquations.kinematicViscosity(temperature, density);
         this.thermalConductivity = WaterVapourEquations.thermalConductivity(temperature);
+        this.prandtlNumber = SharedEquations.prandtlNumber(dynamicViscosity, thermalConductivity, specificHeat);
     }
 
     public Temperature temperature() {
@@ -86,22 +90,26 @@ public class WaterVapour implements Fluid {
         return thermalConductivity;
     }
 
+    public PrandtlNumber prandtlNumber() {
+        return prandtlNumber;
+    }
+
     @Override
     public String toFormattedString() {
-        String stringBuilder = "WaterVapour:\n\t" +
-                "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
-                "Tvw = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
+        return "WaterVapour:\n\t" +
                 "\n\t" +
-                "i_wv = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
-                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
-                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                pressure.toFormattedString("P", "abs", "| ") +
+                temperature.toFormattedString("t", "wv") +
                 "\n\t" +
-                "ν = " + kinematicViscosity.getValue() + " " + kinematicViscosity.getUnitSymbol() + " | " +
-                "μ = " + dynamicViscosity.getValue() + " " + dynamicViscosity.getUnitSymbol() + " | " +
-                "k = " + thermalConductivity.getValue() + " " + thermalConductivity.getUnitSymbol() +
+                specificEnthalpy.toFormattedString("i", "wv", "| ") +
+                density.toFormattedString("ρ", "wv", "| ") +
+                specificHeat.toFormattedString("cp", "wv") +
+                "\n\t" +
+                kinematicViscosity.toFormattedString("ν", "wv", "| ") +
+                dynamicViscosity.toFormattedString("μ", "wv", "| ") +
+                thermalConductivity.toFormattedString("k", "wv", "| ") +
+                prandtlNumber.toFormattedString("Pr", "wv") +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override
@@ -128,6 +136,7 @@ public class WaterVapour implements Fluid {
                 ", dynamicViscosity=" + dynamicViscosity +
                 ", kinematicViscosity=" + kinematicViscosity +
                 ", thermalConductivity=" + thermalConductivity +
+                ", prandtlNumber=" + prandtlNumber +
                 '}';
     }
 

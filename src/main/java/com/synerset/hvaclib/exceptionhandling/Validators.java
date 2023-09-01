@@ -6,6 +6,7 @@ import com.synerset.unitility.unitsystem.PhysicalQuantity;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
+import java.util.Collection;
 import java.util.Objects;
 
 public final class Validators {
@@ -13,10 +14,15 @@ public final class Validators {
     private Validators() {
     }
 
-
     public static void requireNotNull(Object object) {
         if (Objects.isNull(object)) {
             throw new MissingArgumentException("Argument cannot be null.");
+        }
+    }
+
+    public static void requireNotEmpty(Collection<?> collection) {
+        if (Objects.isNull(collection) || collection.isEmpty()) {
+            throw new MissingArgumentException("Collection cannot be null and not empty.");
         }
     }
 

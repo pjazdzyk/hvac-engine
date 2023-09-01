@@ -5,9 +5,7 @@ import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.DryAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.MassFlowUnits;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlowUnits;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
@@ -71,16 +69,14 @@ public class FlowOfDryAir implements Flow<DryAir> {
 
     @Override
     public String toFormattedString() {
-        String stringBuilder = "FlowOfDryAir:\n\t" +
-                "G = " + massFlow.getValue() + " " + massFlow.getUnitSymbol() + " | " +
-                "G = " + massFlow.getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() + " | " +
-                "V = " + volFlow.getValue() + " " + volFlow.getUnitSymbol() + " | " +
-                "V = " + volFlow.getInCubicMetersPerHour() + " " + VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol() +
+        return "FlowOfDryAir:\n\t" +
+                massFlow.toFormattedString("G", "da", "| ") +
+                massFlow.toKiloGramPerHour().toFormattedString("G", "da", "| ") +
+                volFlow.toFormattedString("V", "| ") +
+                volFlow.toCubicMetersPerHour().toFormattedString("V", "da") +
                 "\n\t" +
                 dryAir.toFormattedString() +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override

@@ -38,8 +38,8 @@ public class HumidAir implements Fluid {
     private final DryAir dryAirComponent;
 
     public HumidAir(Pressure absPressure,
-                     Temperature dryBulbTemperature,
-                     HumidityRatio humidityRatio) {
+                    Temperature dryBulbTemperature,
+                    HumidityRatio humidityRatio) {
 
         Validators.requireNotNull(absPressure);
         Validators.requireNotNull(dryBulbTemperature);
@@ -156,31 +156,30 @@ public class HumidAir implements Fluid {
 
     @Override
     public String toFormattedString() {
-        String stringBuilder = "HumidAir:\n\t" +
-                "Pabs = " + absPressure.getValue() + " " + absPressure.getUnitSymbol() + " | " +
-                "DBT = " + dryBulbTemperature.getValue() + " " + dryBulbTemperature.getUnitSymbol() + " | " +
-                "RH = " + relativeHumidity.getValue() + " " + relativeHumidity.getUnitSymbol() + " | " +
-                "x = " + humidityRatio.getValue() + " " + humidityRatio.getUnit().getSymbol() +
+        return "HumidAir:\n\t" +
+                absPressure.toFormattedString("P", "abs", "| ") +
+                dryBulbTemperature.toFormattedString("DBT", "", "| ") +
+                relativeHumidity.toFormattedString("RH", "", "| ") +
+                humidityRatio.toFormattedString("x", "", "| ") +
+                "Vapour status: " + vapourState +
                 "\n\t" +
-                "Ps = " + saturationPressure.getValue() + " " + saturationPressure.getUnitSymbol() + " | " +
-                "WBT = " + dewPointTemperature.getValue() + " " + dewPointTemperature.getUnitSymbol() + " | " +
-                "TDP = " + wetBulbTemperature.getValue() + " " + wetBulbTemperature.getUnitSymbol() +
+                saturationPressure.toFormattedString("Ps", "", "| ") +
+                dewPointTemperature.toFormattedString("WBT", "", "| ") +
+                wetBulbTemperature.toFormattedString("TDP") +
                 "\n\t" +
-                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
-                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
-                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                specificEnthalpy.toFormattedString("i", "", "| ") +
+                density.toFormattedString("ρ", "", "| ") +
+                specificHeat.toFormattedString("cp") +
                 "\n\t" +
-                "ν = " + kinematicViscosity.getValue() + " " + kinematicViscosity.getUnitSymbol() + " | " +
-                "μ = " + dynamicViscosity.getValue() + " " + dynamicViscosity.getUnitSymbol() + " | " +
-                "k = " + thermalConductivity.getValue() + " " + thermalConductivity.getUnitSymbol() +
+                kinematicViscosity.toFormattedString("ν", "", "| ") +
+                dynamicViscosity.toFormattedString("μ", "", "| ") +
+                thermalConductivity.toFormattedString("k") +
                 "\n\t" +
-                "α = " + thermalDiffusivity.getValue() + " " + thermalDiffusivity.getUnitSymbol() + " | " +
-                "Pr = " + prandtlNumber.getValue() + " " + prandtlNumber.getUnitSymbol() +
+                thermalDiffusivity.toFormattedString("α", "", "| ") +
+                prandtlNumber.toFormattedString("Pr") +
                 "\n\t" +
                 dryAirComponent.toFormattedString() +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override
@@ -188,7 +187,9 @@ public class HumidAir implements Fluid {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HumidAir that = (HumidAir) o;
-        return Objects.equals(dryBulbTemperature, that.dryBulbTemperature) && Objects.equals(absPressure, that.absPressure) && Objects.equals(humidityRatio, that.humidityRatio);
+        return Objects.equals(dryBulbTemperature, that.dryBulbTemperature)
+                && Objects.equals(absPressure, that.absPressure)
+                && Objects.equals(humidityRatio, that.humidityRatio);
     }
 
     @Override

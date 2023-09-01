@@ -4,9 +4,7 @@ import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.WaterVapour;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.MassFlowUnits;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlowUnits;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
@@ -70,16 +68,14 @@ public class FlowOfWaterVapour implements Flow<WaterVapour> {
 
     @Override
     public String toFormattedString() {
-        String stringBuilder = "FlowOfWaterVapour:\n\t" +
-                "G = " + massFlow.getValue() + " " + massFlow.getUnitSymbol() + " | " +
-                "G = " + massFlow.getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() + " | " +
-                "V = " + volFlow.getValue() + " " + volFlow.getUnitSymbol() + " | " +
-                "V = " + volFlow.getInCubicMetersPerHour() + " " + VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol() +
+        return "FlowOfWaterVapour:\n\t" +
+                massFlow.toFormattedString("G", "wv", "| ") +
+                massFlow.toKiloGramPerHour().toFormattedString("G", "wv", "| ") +
+                volFlow.toFormattedString("V", "| ") +
+                volFlow.toCubicMetersPerHour().toFormattedString("V", "wv") +
                 "\n\t" +
                 waterVapour.toFormattedString() +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override

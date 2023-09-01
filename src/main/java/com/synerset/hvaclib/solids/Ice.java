@@ -50,16 +50,14 @@ public class Ice {
     }
 
     public String toFormattedString() {
-        String stringBuilder = "Ice:\n\t" +
-                "Pabs = " + pressure.getValue() + " " + pressure.getUnitSymbol() + " | " +
-                "t_ice = " + temperature.getValue() + " " + temperature.getUnitSymbol() +
+        return "Ice:\n\t" +
+                pressure.toFormattedString("Pabs", "| ") +
+                temperature.toFormattedString("t_ice") +
                 "\n\t" +
-                "i = " + specificEnthalpy.getValue() + " " + specificEnthalpy.getUnitSymbol() + " | " +
-                "ρ = " + density.getValue() + " " + density.getUnitSymbol() + " | " +
-                "CP = " + specificHeat.getValue() + " " + specificHeat.getUnitSymbol() +
+                specificEnthalpy.toFormattedString("i_ice", "| ") +
+                density.toFormattedString("ρ_ice", "| ") +
+                specificHeat.toFormattedString("cp_ice") +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override

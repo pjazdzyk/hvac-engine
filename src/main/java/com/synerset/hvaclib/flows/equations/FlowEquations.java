@@ -21,7 +21,7 @@ public final class FlowEquations {
     private FlowEquations() {
     }
 
-    // UNIVERSAL FLOW RATE CONVERSION METHODS
+    // GENERAL FLOW CONVERSION
 
     /**
      * Returns volumetric flow rate in m3/s based on provided fluid instance and its mass flow rate.
@@ -55,7 +55,7 @@ public final class FlowEquations {
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
 
-    // MOIST AIR SPECIFIC FLOW RATE CONVERSION METHODS
+    // MOIST AIR SPECIFIC FLOW RATE CONVERSION
 
     /**
      * Returns dry air mass flow based on moist air mass flow and humidity ratio from provided air instance.

@@ -6,9 +6,7 @@ import com.synerset.hvaclib.flows.equations.FlowEquations;
 import com.synerset.hvaclib.fluids.DryAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.MassFlowUnits;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlowUnits;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
@@ -120,18 +118,17 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
 
     @Override
     public String toFormattedString() {
-        String stringBuilder = "FlowOfHumidAir:\n\t" +
-                "G = " + massFlow.getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() + " | " +
-                "V = " + volFlow.getValue() + " " + volFlow.getUnitSymbol() + " | " +
-                "V = " + volFlow.getInCubicMetersPerHour() + " " + VolumetricFlowUnits.CUBIC_METERS_PER_HOUR.getSymbol() +
+        return "FlowOfHumidAir:\n\t" +
+                massFlow.toFormattedString("G", "", "| ") +
+                massFlow.toKiloGramPerHour().toFormattedString("G", "", "| ") +
+                volFlow.toFormattedString("V", "| ") +
+                volFlow.toCubicMetersPerHour().toFormattedString("V", "") +
                 "\n\t" +
-                "Gda = " + dryAirMassFlow().getValue() + " " + dryAirMassFlow().getUnitSymbol() + " | " +
-                "Gda = " + dryAirMassFlow().getInKiloGramsPerHour() + " " + MassFlowUnits.KILOGRAM_PER_HOUR.getSymbol() +
+                dryAirMassFlow().toFormattedString("G", "da", "| ") +
+                dryAirMassFlow().toKiloGramPerHour().toFormattedString("G", "da") +
                 "\n\t" +
                 humidAir.toFormattedString() +
                 "\n";
-
-        return stringBuilder;
     }
 
     @Override

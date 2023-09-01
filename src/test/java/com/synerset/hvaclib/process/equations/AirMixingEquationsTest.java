@@ -3,7 +3,7 @@ package com.synerset.hvaclib.process.equations;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
-import com.synerset.hvaclib.process.dataobjects.AirMixingResultDto;
+import com.synerset.hvaclib.process.equations.dataobjects.AirMixingResult;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
@@ -95,15 +95,15 @@ class AirMixingEquationsTest {
         MassFlow targetDryAirMassFlow = FlowOfHumidAir.ofValues(15, 40, 1500).massFlow();
 
         // When
-        AirMixingResultDto airMixingResultDto = AirMixingEquations.mixTwoHumidAirFlowsForTargetOutTemp(inletFlow,
+        AirMixingResult airMixingResult = AirMixingEquations.mixTwoHumidAirFlowsForTargetOutTemp(inletFlow,
                 recircFlow,
                 minInletFlowDA,
                 minRecircFlowDA,
                 targetDryAirMassFlow,
                 targetOutletTemp);
-        FlowOfHumidAir actualInletFlow = airMixingResultDto.inletFlow();
-        FlowOfHumidAir actualOutletFlow = airMixingResultDto.outletFlow();
-        FlowOfHumidAir actualRecircFlow = airMixingResultDto.recirculationFlow();
+        FlowOfHumidAir actualInletFlow = airMixingResult.inletFlow();
+        FlowOfHumidAir actualOutletFlow = airMixingResult.outletFlow();
+        FlowOfHumidAir actualRecircFlow = airMixingResult.recirculationFlow();
 
         // Then
         assertThat(actualOutletFlow.temperature().getInCelsius()).isEqualTo(targetOutletTemp.getInCelsius(), withPrecision(1E-3));
