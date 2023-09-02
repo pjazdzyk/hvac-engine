@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.process.equations;
+package com.synerset.hvaclib.process.procedures;
 
 import com.synerset.brentsolver.BrentSolver;
 import com.synerset.hvaclib.common.MathUtils;
@@ -10,8 +10,8 @@ import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.LiquidWater;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.fluids.euqations.LiquidWaterEquations;
-import com.synerset.hvaclib.process.equations.dataobjects.AirCoolingResult;
-import com.synerset.hvaclib.process.equations.dataobjects.AirHeatingResult;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirCoolingResult;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirHeatingResult;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -37,9 +37,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
  * @author Piotr Jażdżyk, MScEng
  */
 
-public final class AirCoolingEquations {
+public final class AirCoolingProcedures {
 
-    private AirCoolingEquations() {
+    private AirCoolingProcedures() {
     }
 
     /**
@@ -55,7 +55,7 @@ public final class AirCoolingEquations {
      */
     public static AirCoolingResult processOfDryCooling(FlowOfHumidAir inletFlow, Power inputHeatQ) {
         // Dry cooling follows the same methodology as dry heating. Formulas used for heating can be reused:
-        AirHeatingResult dryCoolingResult = AirHeatingEquations.processOfHeating(inletFlow, inputHeatQ);
+        AirHeatingResult dryCoolingResult = AirHeatingProcedures.processOfHeating(inletFlow, inputHeatQ);
 
         // Dry cooling does not produce humidity change therefore no condensate is discharged.
         double m_cond = 0.0;
@@ -91,7 +91,7 @@ public final class AirCoolingEquations {
         }
 
         // Dry cooling follows the same methodology as heating. Formulas used for heating can be reused:
-        AirHeatingResult dryCoolingResult = AirHeatingEquations.processOfHeating(inletFlow, targetOutTemp);
+        AirHeatingResult dryCoolingResult = AirHeatingProcedures.processOfHeating(inletFlow, targetOutTemp);
 
         // Dry cooling does not produce humidity change therefore no condensate is discharged.
         double m_cond = 0.0;

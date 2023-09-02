@@ -3,7 +3,8 @@ package com.synerset.hvaclib.process.equations;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
-import com.synerset.hvaclib.process.equations.dataobjects.AirMixingResult;
+import com.synerset.hvaclib.process.procedures.AirMixingProcedures;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirMixingResult;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class AirMixingEquationsTest {
+class AirMixingProceduresTest {
 
     @Test
     @DisplayName("should return results for mixing of two different moist air flows")
@@ -47,7 +48,7 @@ class AirMixingEquationsTest {
         Temperature expectedOutTemp = Temperature.ofCelsius(expectedOutAirTempVal);
 
         // When
-        FlowOfHumidAir actualOutletFlow = AirMixingEquations.mixTwoHumidAirFlows(airFlow_in, airFlow_rec);
+        FlowOfHumidAir actualOutletFlow = AirMixingProcedures.mixTwoHumidAirFlows(airFlow_in, airFlow_rec);
 
         MassFlow actualOutDryAirMassFlow = actualOutletFlow.dryAirMassFlow();
         Temperature actualOutAirTemp = actualOutletFlow.temperature();
@@ -74,7 +75,7 @@ class AirMixingEquationsTest {
                 .getValue());
 
         // When
-        FlowOfHumidAir actualOutletFlow = AirMixingEquations.mixMultipleHumidAirFlows(inletFlow, recircFlow_1, recircFlow_2);
+        FlowOfHumidAir actualOutletFlow = AirMixingProcedures.mixMultipleHumidAirFlows(inletFlow, recircFlow_1, recircFlow_2);
 
         // Then
         assertThat(actualOutletFlow.temperature()).isEqualTo(expectedTemp);
@@ -95,7 +96,7 @@ class AirMixingEquationsTest {
         MassFlow targetDryAirMassFlow = FlowOfHumidAir.ofValues(15, 40, 1500).massFlow();
 
         // When
-        AirMixingResult airMixingResult = AirMixingEquations.mixTwoHumidAirFlowsForTargetOutTemp(inletFlow,
+        AirMixingResult airMixingResult = AirMixingProcedures.mixTwoHumidAirFlowsForTargetOutTemp(inletFlow,
                 recircFlow,
                 minInletFlowDA,
                 minRecircFlowDA,
