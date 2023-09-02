@@ -1,8 +1,9 @@
 package com.synerset.hvaclib.process;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
-import com.synerset.hvaclib.process.equations.dataobjects.AirHeatingResult;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirHeatingResult;
 import com.synerset.hvaclib.process.strategies.HeatingStrategy;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
@@ -26,6 +27,7 @@ public class Heating {
     private SpecificEnthalpy outSpecificEnthalpy;
 
     public Heating(HeatingStrategy heatingStrategy) {
+        Validators.requireNotNull(heatingStrategy);
         this.heatingStrategy = heatingStrategy;
         this.inputInletAir = heatingStrategy.inletAir();
         applyProcess();

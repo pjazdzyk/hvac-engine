@@ -1,19 +1,19 @@
-package com.synerset.hvaclib.process.equations;
+package com.synerset.hvaclib.process.procedures;
 
 import com.synerset.brentsolver.BrentSolver;
 import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
-import com.synerset.hvaclib.process.equations.dataobjects.AirMixingResult;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirMixingResult;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
-public final class AirMixingEquations {
+public final class AirMixingProcedures {
 
-    private AirMixingEquations() {
+    private AirMixingProcedures() {
     }
 
     /**

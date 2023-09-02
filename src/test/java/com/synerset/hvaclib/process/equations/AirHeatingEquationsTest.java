@@ -2,7 +2,8 @@ package com.synerset.hvaclib.process.equations;
 
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
-import com.synerset.hvaclib.process.equations.dataobjects.AirHeatingResult;
+import com.synerset.hvaclib.process.procedures.AirHeatingProcedures;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirHeatingResult;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
@@ -37,7 +38,7 @@ class AirHeatingEquationsTest {
         Temperature expectedOutTemp = Temperature.ofCelsius(30d);
 
         // When
-        AirHeatingResult airHeatingResult = AirHeatingEquations.processOfHeating(inletFlow, inputHeat);
+        AirHeatingResult airHeatingResult = AirHeatingProcedures.processOfHeating(inletFlow, inputHeat);
 
         Power actualProcessHeat = airHeatingResult.heatOfProcess();
         Temperature actualOutAirTemp = airHeatingResult.outletFlow().temperature();
@@ -55,7 +56,7 @@ class AirHeatingEquationsTest {
         Power inputHeat = Power.ofWatts(56093.07605668045);
 
         // When
-        AirHeatingResult airHeatingResult = AirHeatingEquations.processOfHeating(inletFlow, targetOutTemp);
+        AirHeatingResult airHeatingResult = AirHeatingProcedures.processOfHeating(inletFlow, targetOutTemp);
         Power actualHeatPower = airHeatingResult.heatOfProcess();
         Temperature actualOutTemp = airHeatingResult.outletFlow().temperature();
 
@@ -73,7 +74,7 @@ class AirHeatingEquationsTest {
         Temperature expectedOutTemp = Temperature.ofCelsius(30d);
 
         // Act
-        AirHeatingResult airHeatingResult = AirHeatingEquations.processOfHeating(inletFlow, expectedOutRH);
+        AirHeatingResult airHeatingResult = AirHeatingProcedures.processOfHeating(inletFlow, expectedOutRH);
         Power actualHeatOfProcess = airHeatingResult.heatOfProcess();
         Temperature actualOutAirTemp = airHeatingResult.outletFlow().temperature();
 

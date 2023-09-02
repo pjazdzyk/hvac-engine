@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.process;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.process.strategies.MixingStrategy;
@@ -26,6 +27,7 @@ public class Mixing {
     private SpecificEnthalpy outSpecificEnthalpy;
 
     public Mixing(MixingStrategy mixingStrategy) {
+        Validators.requireNotNull(mixingStrategy);
         this.mixingStrategy = mixingStrategy;
         this.inputInletAir = mixingStrategy.inletAir();
         applyProcess();

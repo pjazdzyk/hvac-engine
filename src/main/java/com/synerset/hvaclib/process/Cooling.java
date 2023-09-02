@@ -1,10 +1,11 @@
 package com.synerset.hvaclib.process;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.flows.FlowOfWater;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.process.dataobjects.CoolantData;
-import com.synerset.hvaclib.process.equations.dataobjects.AirCoolingResult;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirCoolingResult;
 import com.synerset.hvaclib.process.strategies.CoolingStrategy;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -34,6 +35,7 @@ public class Cooling {
     private SpecificEnthalpy condensateEnthalpy;
 
     public Cooling(CoolingStrategy coolingStrategy) {
+        Validators.requireNotNull(coolingStrategy);
         this.coolingStrategy = coolingStrategy;
         this.inputInletAir = coolingStrategy.inletAir();
         this.coolantData = coolingStrategy.inletCoolantData();

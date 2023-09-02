@@ -1,17 +1,17 @@
-package com.synerset.hvaclib.process.equations;
+package com.synerset.hvaclib.process.procedures;
 
 import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
-import com.synerset.hvaclib.process.equations.dataobjects.AirHeatingResult;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirHeatingResult;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
-public final class AirHeatingEquations {
-    private AirHeatingEquations() {
+public final class AirHeatingProcedures {
+    private AirHeatingProcedures() {
     }
 
     /**

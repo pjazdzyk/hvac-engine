@@ -3,8 +3,8 @@ package com.synerset.hvaclib.process.strategies;
 import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.process.dataobjects.CoolantData;
-import com.synerset.hvaclib.process.equations.AirCoolingEquations;
-import com.synerset.hvaclib.process.equations.dataobjects.AirCoolingResult;
+import com.synerset.hvaclib.process.procedures.AirCoolingProcedures;
+import com.synerset.hvaclib.process.procedures.dataobjects.AirCoolingResult;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 record CoolingFromTemperature(FlowOfHumidAir inletAir,
@@ -19,7 +19,7 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
 
     @Override
     public AirCoolingResult applyCooling() {
-        return AirCoolingEquations.processOfRealCooling(inletAir, inletCoolantData.getAverageTemperature(), outletTemperature);
+        return AirCoolingProcedures.processOfRealCooling(inletAir, inletCoolantData.getAverageTemperature(), outletTemperature);
     }
 
 }

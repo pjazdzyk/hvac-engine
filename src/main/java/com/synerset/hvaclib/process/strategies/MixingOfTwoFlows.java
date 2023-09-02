@@ -2,7 +2,7 @@ package com.synerset.hvaclib.process.strategies;
 
 import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
-import com.synerset.hvaclib.process.equations.AirMixingEquations;
+import com.synerset.hvaclib.process.procedures.AirMixingProcedures;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ record MixingOfTwoFlows(FlowOfHumidAir inletAir,
 
     @Override
     public FlowOfHumidAir applyMixing() {
-        return AirMixingEquations.mixTwoHumidAirFlows(inletAir, recirculationAirFlow);
+        return AirMixingProcedures.mixTwoHumidAirFlows(inletAir, recirculationAirFlow);
     }
 
     @Override
