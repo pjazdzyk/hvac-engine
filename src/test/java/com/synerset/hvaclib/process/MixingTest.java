@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.withPrecision;
  * B.Lipska - Projektowanie Wentylacji i Klimatyzacji, Podstawy uzdatniania powietrza. Gliwice 2014.
  * Section: 2.1, page: 37
  */
-public class MixingTest {
+class MixingTest {
 
     @Test
     @DisplayName("Mixing: should mix two humid air flows")

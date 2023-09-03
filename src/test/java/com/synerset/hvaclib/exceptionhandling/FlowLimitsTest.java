@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class FlowLimitsTest {
+class FlowLimitsTest {
 
     @Test
     @DisplayName("Flows: should throw exception when null passed as argument")
@@ -57,8 +57,8 @@ public class FlowLimitsTest {
         MassFlow massFlowMinLimit = MassFlow.ofKilogramsPerSecond(0);
         MassFlow massFlowMaxLimit = MassFlow.ofKilogramsPerSecond(5E9);
 
-        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, (MassFlow) massFlowMinLimit.subtract(1)));
-        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, (MassFlow) massFlowMaxLimit.add(1)));
+        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, massFlowMinLimit.subtract(1)));
+        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, massFlowMaxLimit.add(1)));
     }
 
     @Test
@@ -68,8 +68,8 @@ public class FlowLimitsTest {
         MassFlow massFlowMinLimit = MassFlow.ofKilogramsPerSecond(0);
         MassFlow massFlowMaxLimit = MassFlow.ofKilogramsPerSecond(5E9);
 
-        assertThatThrownBy(() -> FlowOfWater.of(liquidWater, (MassFlow) massFlowMinLimit.subtract(1)));
-        assertThatThrownBy(() -> FlowOfWater.of(liquidWater, (MassFlow) massFlowMaxLimit.add(1)));
+        assertThatThrownBy(() -> FlowOfWater.of(liquidWater, massFlowMinLimit.subtract(1)));
+        assertThatThrownBy(() -> FlowOfWater.of(liquidWater, massFlowMaxLimit.add(1)));
     }
 
     @Test
@@ -79,8 +79,8 @@ public class FlowLimitsTest {
         MassFlow massFlowMinLimit = MassFlow.ofKilogramsPerSecond(0);
         MassFlow massFlowMaxLimit = MassFlow.ofKilogramsPerSecond(5E9);
 
-        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, (MassFlow) massFlowMinLimit.subtract(1)));
-        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, (MassFlow) massFlowMaxLimit.add(1)));
+        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, massFlowMinLimit.subtract(1)));
+        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, massFlowMaxLimit.add(1)));
     }
 
 }

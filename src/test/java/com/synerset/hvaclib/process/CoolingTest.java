@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.withPrecision;
  * B.Lipska - Projektowanie Wentylacji i Klimatyzacji, Podstawy uzdatniania powietrza. Gliwice 2014.
  * Section: 2.5, page: 57
  */
-public class CoolingTest {
+class CoolingTest {
     @Test
     @DisplayName("Cooling: should heat up inlet air when target temperature is given")
     void shouldCoolInletAirWhenTargetTemperatureIsGiven() {

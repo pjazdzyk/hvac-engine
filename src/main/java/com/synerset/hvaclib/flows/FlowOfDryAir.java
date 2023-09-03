@@ -72,7 +72,7 @@ public class FlowOfDryAir implements Flow<DryAir> {
         return "FlowOfDryAir:\n\t" +
                 massFlow.toFormattedString("G", "da", "| ") +
                 massFlow.toKiloGramPerHour().toFormattedString("G", "da", "| ") +
-                volFlow.toFormattedString("V", "| ") +
+                volFlow.toFormattedString("V", "da", "| ") +
                 volFlow.toCubicMetersPerHour().toFormattedString("V", "da") +
                 "\n\t" +
                 dryAir.toFormattedString() +

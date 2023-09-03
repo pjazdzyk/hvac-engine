@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.withPrecision;
  * B.Lipska - Projektowanie Wentylacji i Klimatyzacji, Podstawy uzdatniania powietrza. Gliwice 2014.
  * Section: 2.1, page: 37
  */
-public class HeatingTest {
+class HeatingTest {
 
     @Test
     @DisplayName("Heating: should heat up inlet air when heating power is given")

@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.fluids.euqations;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.unitility.unitsystem.common.Distance;
 import com.synerset.unitility.unitsystem.dimensionless.PrandtlNumber;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
@@ -22,6 +23,7 @@ public final class SharedEquations {
     }
 
     public static Pressure atmAltitudePressure(Distance altitude) {
+        Validators.requireNotNull(altitude);
         double pressVal = atmAltitudePressure(altitude.getInMeters());
         return Pressure.ofPascal(pressVal);
     }
@@ -40,6 +42,8 @@ public final class SharedEquations {
     }
 
     public static Temperature altitudeTemperature(Temperature tempAtSeaLevel, Distance altitude) {
+        Validators.requireNotNull(tempAtSeaLevel);
+        Validators.requireNotNull(altitude);
         double tempVal = altitudeTemperature(tempAtSeaLevel.getInCelsius(), altitude.getInMeters());
         return Temperature.ofCelsius(tempVal);
     }
@@ -58,6 +62,9 @@ public final class SharedEquations {
     }
 
     public static ThermalDiffusivity thermalDiffusivity(Density density, ThermalConductivity thermalConductivity, SpecificHeat specificHeat) {
+        Validators.requireNotNull(density);
+        Validators.requireNotNull(thermalConductivity);
+        Validators.requireNotNull(specificHeat);
         double thermalDiffVal = thermalDiffusivity(density.getInKilogramsPerCubicMeters(),
                 thermalConductivity.getInWattsPerMeterKelvin(),
                 specificHeat.getInKiloJoulesPerKiloGramKelvin());
@@ -78,6 +85,9 @@ public final class SharedEquations {
     }
 
     public static PrandtlNumber prandtlNumber(DynamicViscosity dynamicViscosity, ThermalConductivity thermalConductivity, SpecificHeat specificHeat) {
+        Validators.requireNotNull(dynamicViscosity);
+        Validators.requireNotNull(thermalConductivity);
+        Validators.requireNotNull(specificHeat);
         double prandtlVal = prandtlNumber(dynamicViscosity.getInPascalsSecond(),
                 thermalConductivity.getInWattsPerMeterKelvin(),
                 specificHeat.getInKiloJoulesPerKiloGramKelvin());

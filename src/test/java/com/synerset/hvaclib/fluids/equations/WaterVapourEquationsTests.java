@@ -13,10 +13,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static com.synerset.hvaclib.fluids.equations.FluidsTestConstants.MATH_ACCURACY;
+import static com.synerset.hvaclib.fluids.equations.FluidsTestConstants.PHYS_ATMOSPHERE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class WaterVapourEquationsTest implements FluidsTestConstants {
+class WaterVapourEquationsTests {
 
     double CP_WV_ACCURACY = 0.025;
 
