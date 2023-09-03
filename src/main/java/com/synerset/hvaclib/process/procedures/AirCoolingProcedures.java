@@ -122,10 +122,6 @@ public final class AirCoolingProcedures {
         double t_in = inletHumidAir.temperature().getInCelsius();
         double t_out = targetOutTemp.getInCelsius();
 
-        if (t_out > t_in) {
-            throw new InvalidArgumentException("Expected outlet temperature must be lover than inlet for cooling process. Use heating process method instead");
-        }
-
         double m_cond = 0.0;
         LiquidWater liquidWater = LiquidWater.of(inletFlow.temperature());
         FlowOfWater condensateFlow = FlowOfWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(m_cond));
@@ -199,15 +195,6 @@ public final class AirCoolingProcedures {
         double p_in = inletHumidAir.pressure().getInPascals();
         double RH_out = targetOutRH.getInPercent();
         double RH_in = inletHumidAir.relativeHumidity().getInPercent();
-        if (RH_out > 100 || RH_out < 0.0) {
-            throw new InvalidArgumentException("Relative Humidity outside acceptable values.");
-        }
-        if (RH_out < RH_in) {
-            throw new InvalidArgumentException("Process not possible. Cooling cannot decrease relative humidity");
-        }
-        if (RH_out > 99.0) {
-            throw new InvalidArgumentException("Non-physical process. The area of the exchanger would have to be infinite.");
-        }
         if (RH_out == RH_in) {
             LiquidWater liquidWater = LiquidWater.of(inletFlow.temperature());
             FlowOfWater flowOfWater = FlowOfWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(0.0));

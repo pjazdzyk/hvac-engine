@@ -1,9 +1,14 @@
 package com.synerset.hvaclib.process.strategies;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
+import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
+import com.synerset.hvaclib.fluids.HumidAir;
+import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
 import com.synerset.hvaclib.process.procedures.dataobjects.AirHeatingResult;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
+import com.synerset.unitility.unitsystem.thermodynamic.SpecificEnthalpy;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 public interface HeatingStrategy {
@@ -12,16 +17,46 @@ public interface HeatingStrategy {
 
     FlowOfHumidAir inletAir();
 
-    static HeatingStrategy of(FlowOfHumidAir inletAir, Power inputPower) {
-        return new HeatingFromPower(inletAir, inputPower);
+    static HeatingStrategy of(FlowOfHumidAir inletAirFlow, Power inputPower) {
+        Validators.requireNotNull(inletAirFlow);
+        Validators.requireNotNull(inputPower);
+        if (inputPower.isNegative()) {
+            throw new InvalidArgumentException("Heating power must be positive value. Q_in = " + inputPower);
+        }
+        // Mox heating power estimate to reach t_max: Qheat.max= G * (imax - i_in)
+        Temperature t_max = HumidAirEquations.dryBulbTemperatureMax(inletAirFlow.pressure()).multiply(0.98);
+        SpecificEnthalpy i_max = HumidAirEquations.specificEnthalpy(t_max, inletAirFlow.humidityRatio(),
+                inletAirFlow.pressure());
+        double Q_max = i_max.subtract(inletAirFlow.specificEnthalpy())
+                .multiply(inletAirFlow.massFlow().toKilogramsPerSecond());
+        Power estimatedPowerLimit = Power.ofKiloWatts(Q_max);
+        if (inputPower.isGreaterThan(estimatedPowerLimit)) {
+            throw new InvalidArgumentException("To large heating power for provided flow. "
+                    + "Q_in = " + inputPower + " Q_limit = " + estimatedPowerLimit);
+        }
+        return new HeatingFromPower(inletAirFlow, inputPower);
     }
 
-    static HeatingStrategy of(FlowOfHumidAir inletAir, RelativeHumidity targetRelativeHumidity) {
-        return new HeatingFromRH(inletAir, targetRelativeHumidity);
+    static HeatingStrategy of(FlowOfHumidAir inletAirFlow, RelativeHumidity targetRelativeHumidity) {
+        Validators.requireNotNull(inletAirFlow);
+        Validators.requireNotNull(targetRelativeHumidity);
+        Validators.requireBetweenBoundsInclusive(targetRelativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.ofPercentage(98));
+        if (targetRelativeHumidity.isGreaterThan(inletAirFlow.relativeHumidity())) {
+            throw new InvalidArgumentException("Heating process cannot increase relative humidity. "
+                    + "RH_in = " + inletAirFlow.relativeHumidity() + " RH_target = " + targetRelativeHumidity);
+        }
+        return new HeatingFromRH(inletAirFlow, targetRelativeHumidity);
     }
 
-    static HeatingStrategy of(FlowOfHumidAir inletAir, Temperature targetTemperature) {
-        return new HeatingFromTemperature(inletAir, targetTemperature);
+    static HeatingStrategy of(FlowOfHumidAir inletAirFlow, Temperature targetTemperature) {
+        Validators.requireNotNull(inletAirFlow);
+        Validators.requireNotNull(targetTemperature);
+        Validators.requireBelowUpperBoundInclusive(targetTemperature, HumidAir.TEMPERATURE_MAX_LIMIT);
+        if (targetTemperature.isLowerThan(inletAirFlow.temperature())) {
+            throw new InvalidArgumentException("Expected outlet temperature must be greater than inlet for cooling process. "
+                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.temperature());
+        }
+        return new HeatingFromTemperature(inletAirFlow, targetTemperature);
     }
 
 }

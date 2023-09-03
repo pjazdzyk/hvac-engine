@@ -1,6 +1,5 @@
 package com.synerset.hvaclib.process.procedures;
 
-import com.synerset.hvaclib.exceptionhandling.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.flows.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.HumidAir;
 import com.synerset.hvaclib.fluids.euqations.HumidAirEquations;
@@ -97,9 +96,6 @@ public final class AirHeatingProcedures {
      */
     public static AirHeatingResult processOfHeating(FlowOfHumidAir inletFlow, RelativeHumidity targetOutRH) {
         double RH_out = targetOutRH.getInPercent();
-        if (RH_out > 100.0 || RH_out <= 0.0) {
-            throw new InvalidArgumentException("Relative Humidity outside acceptable values.");
-        }
 
         HumidAir inletHumidAir = inletFlow.fluid();
         double RH_in = inletHumidAir.relativeHumidity().getInPercent();
@@ -107,9 +103,6 @@ public final class AirHeatingProcedures {
 
         if (RH_out == RH_in) {
             return new AirHeatingResult(inletFlow, Power.ofWatts(Q_heat));
-        }
-        if (RH_out > RH_in) {
-            throw new InvalidArgumentException("Expected RH must be smaller than initial value. If this was intended - use methods dedicated for cooling.");
         }
 
         double x_in = inletHumidAir.humidityRatio().getInKilogramPerKilogram();

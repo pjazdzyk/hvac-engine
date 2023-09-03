@@ -25,7 +25,7 @@ class SolidLimitsTest {
         Temperature temperatureMinLimit = Temperature.ofCelsius(-150);
 
         assertThatThrownBy(() -> Ice.of(pressureMaxLimit, Temperature.ofCelsius(-20)));
-        assertThatThrownBy(() -> Ice.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMinLimit.subtract(1)));
+        assertThatThrownBy(() -> Ice.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit.subtract(1)));
     }
 
 }

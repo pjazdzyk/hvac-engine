@@ -11,10 +11,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static com.synerset.hvaclib.fluids.equations.FluidsTestConstants.MATH_ACCURACY;
+import static com.synerset.hvaclib.fluids.equations.FluidsTestConstants.PHYS_ATMOSPHERE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class DryAirEquationsTest implements FluidsTestConstants {
+class DryAirEquationsTest {
 
     double DYN_VIS_ACCURACY = 0.00000007;
     double CP_DA_ACCURACY = 0.00047;

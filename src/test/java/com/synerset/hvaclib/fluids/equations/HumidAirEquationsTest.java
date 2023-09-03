@@ -18,10 +18,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static com.synerset.hvaclib.fluids.equations.FluidsTestConstants.MATH_ACCURACY;
+import static com.synerset.hvaclib.fluids.equations.FluidsTestConstants.PHYS_ATMOSPHERE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class HumidAirEquationsTest implements FluidsTestConstants {
+class HumidAirEquationsTest {
 
     double LIMITED_MATH_ACCURACY = 1.0E-6;
     double PS_LOW_TEMP_ACCURACY = 0.03;

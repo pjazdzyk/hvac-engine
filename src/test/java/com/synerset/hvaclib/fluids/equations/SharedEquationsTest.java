@@ -7,10 +7,11 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.synerset.hvaclib.fluids.equations.FluidsTestConstants.PHYS_ATMOSPHERE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class SharedEquationsTest implements FluidsTestConstants {
+class SharedEquationsTest {
 
     double TH_DIFF_ACCURACY = 0.021E-5;
     double PRANDTL_ACCURACY = 0.009;

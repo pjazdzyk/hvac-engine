@@ -2,6 +2,7 @@ package com.synerset.hvaclib.fluids.euqations;
 
 
 import com.synerset.brentsolver.BrentSolver;
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.hvaclib.solids.equations.IceEquations;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
@@ -106,6 +107,7 @@ public final class HumidAirEquations {
     }
 
     public static Pressure saturationPressure(Temperature dryBulbTemp) {
+        Validators.requireNotNull(dryBulbTemp);
         double saturationPressVal = saturationPressure(dryBulbTemp.getInCelsius());
         return Pressure.ofPascal(saturationPressVal);
     }
@@ -123,6 +125,8 @@ public final class HumidAirEquations {
     }
 
     public static Pressure saturationPressure(HumidityRatio humRatio, RelativeHumidity relHum, Pressure absPressure) {
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(relHum);
         double saturationPressVal = saturationPressure(humRatio.getInKilogramPerKilogram(),
                 relHum.getInPercent(),
                 absPressure.getInPascals());
@@ -180,6 +184,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dewPointTemperature(Temperature dryBulbTemp, RelativeHumidity relHum, Pressure absPressure) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(absPressure);
         double dewPointTempVal = dewPointTemperature(dryBulbTemp.getInCelsius(),
                 relHum.getInPercent(),
                 absPressure.getInPascals());
@@ -223,6 +230,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature wetBulbTemperature(Temperature dryBulbTemp, RelativeHumidity relHum, Pressure absPressure) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(absPressure);
         double wetBulbTempVal = wetBulbTemperature(dryBulbTemp.getInCelsius(),
                 relHum.getInPercent(),
                 absPressure.getInPascals());
@@ -243,6 +253,8 @@ public final class HumidAirEquations {
     }
 
     public static RelativeHumidity relativeHumidity(Temperature dewPointTemp, Temperature dryBulbTemp) {
+        Validators.requireNotNull(dewPointTemp);
+        Validators.requireNotNull(dryBulbTemp);
         double relHumVal = relativeHumidity(dewPointTemp.getInCelsius(),
                 dryBulbTemp.getInCelsius());
         return RelativeHumidity.ofPercentage(relHumVal);
@@ -265,6 +277,9 @@ public final class HumidAirEquations {
     }
 
     public static RelativeHumidity relativeHumidity(Temperature dryBulbTemp, HumidityRatio humidityRatio, Pressure absPressure) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(humidityRatio);
+        Validators.requireNotNull(absPressure);
         double relHumVal = relativeHumidity(dryBulbTemp.getInCelsius(),
                 humidityRatio.getInKilogramPerKilogram(),
                 absPressure.getInPascals());
@@ -287,6 +302,9 @@ public final class HumidAirEquations {
     }
 
     public static HumidityRatio humidityRatio(RelativeHumidity relHum, Pressure saturationPressure, Pressure absPressure) {
+        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(saturationPressure);
+        Validators.requireNotNull(absPressure);
         double humRatioVal = humidityRatio(relHum.getInPercent(),
                 saturationPressure.getInPascals(),
                 absPressure.getInPascals());
@@ -306,6 +324,8 @@ public final class HumidAirEquations {
     }
 
     public static HumidityRatio maxHumidityRatio(Pressure saturationPressure, Pressure absPressure) {
+        Validators.requireNotNull(saturationPressure);
+        Validators.requireNotNull(absPressure);
         double humRatioVal = maxHumidityRatio(saturationPressure.getInPascals(),
                 absPressure.getInPascals());
         return HumidityRatio.ofKilogramPerKilogram(humRatioVal);
@@ -336,6 +356,8 @@ public final class HumidAirEquations {
     }
 
     public static DynamicViscosity dynamicViscosity(Temperature dryBulbTemp, HumidityRatio humRatio) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(humRatio);
         double dynVisVal = dynamicViscosity(dryBulbTemp.getInCelsius(),
                 humRatio.getInKilogramPerKilogram());
         return DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
@@ -358,6 +380,9 @@ public final class HumidAirEquations {
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature dryBulbTemp, HumidityRatio humRatio, Density density) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(density);
         double kinVisVal = kinematicViscosity(dryBulbTemp.getInCelsius(),
                 humRatio.getInKilogramPerKilogram(),
                 density.getInKilogramsPerCubicMeters());
@@ -403,6 +428,8 @@ public final class HumidAirEquations {
     }
 
     public static ThermalConductivity thermalConductivity(Temperature dryBulbTemp, HumidityRatio humRatio) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(humRatio);
         double thermCondVal = thermalConductivity(dryBulbTemp.getInCelsius(),
                 humRatio.getInKilogramPerKilogram());
         return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
@@ -440,6 +467,9 @@ public final class HumidAirEquations {
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature dryBulbTemp, HumidityRatio humRatio, Pressure absPressure) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(absPressure);
         double specificEnthalpyVal = specificEnthalpy(dryBulbTemp.getInCelsius(),
                 humRatio.getInKilogramPerKilogram(),
                 absPressure.getInPascals());
@@ -462,6 +492,8 @@ public final class HumidAirEquations {
     }
 
     public static SpecificHeat specificHeat(Temperature dryBulbTemp, HumidityRatio humRatio) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(humRatio);
         double specHeatVal = specificHeat(dryBulbTemp.getInCelsius(),
                 humRatio.getInKilogramPerKilogram());
         return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
@@ -489,6 +521,9 @@ public final class HumidAirEquations {
     }
 
     public static Density density(Temperature dryBulbTemp, HumidityRatio humRatio, Pressure absPressure) {
+        Validators.requireNotNull(dryBulbTemp);
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(absPressure);
         double densVal = density(dryBulbTemp.getInCelsius(),
                 humRatio.getInKilogramPerKilogram(),
                 absPressure.getInPascals());
@@ -518,6 +553,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureTdpRH(Temperature dewPointTemp, RelativeHumidity relHum, Pressure absPressure) {
+        Validators.requireNotNull(dewPointTemp);
+        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(absPressure);
         double dryBulbTemp = dryBulbTemperatureTdpRH(dewPointTemp.getInCelsius(),
                 relHum.getInPercent(),
                 absPressure.getInPascals());
@@ -538,6 +576,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureXRH(HumidityRatio humidityRatio, RelativeHumidity relHum, Pressure absPressure) {
+        Validators.requireNotNull(humidityRatio);
+        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(absPressure);
         double dryBulbTemp = dryBulbTemperatureXRH(humidityRatio.getInKilogramPerKilogram(),
                 relHum.getInPercent(),
                 absPressure.getInPascals());
@@ -559,6 +600,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureIX(SpecificEnthalpy specEnthalpy, RelativeHumidity relHum, Pressure absPressure) {
+        Validators.requireNotNull(specEnthalpy);
+        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(absPressure);
         double dryBulbTemp = dryBulbTemperatureIX(specEnthalpy.getInKiloJoulesPerKiloGram(),
                 relHum.getInPercent(),
                 absPressure.getInPascals());
@@ -580,6 +624,9 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureWbtRH(Temperature wetBulbTemperature, RelativeHumidity relHum, Pressure absPressure) {
+        Validators.requireNotNull(wetBulbTemperature);
+        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(absPressure);
         double dryBulbTemp = dryBulbTemperatureWbtRH(wetBulbTemperature.getInCelsius(),
                 relHum.getInPercent(),
                 absPressure.getInPascals());
@@ -600,6 +647,7 @@ public final class HumidAirEquations {
     }
 
     public static Temperature dryBulbTemperatureMax(Pressure absPressure) {
+        Validators.requireNotNull(absPressure);
         double dryBulbTemp = dryBulbTemperatureMax(absPressure.getInPascals());
         return Temperature.ofCelsius(dryBulbTemp);
     }

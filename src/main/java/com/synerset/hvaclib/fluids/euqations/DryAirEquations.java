@@ -1,6 +1,7 @@
 package com.synerset.hvaclib.fluids.euqations;
 
 import com.synerset.hvaclib.common.MathUtils;
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 public final class DryAirEquations {
@@ -28,6 +29,7 @@ public final class DryAirEquations {
     }
 
     public static DynamicViscosity dynamicViscosity(Temperature temperature) {
+        Validators.requireNotNull(temperature);
         double dynVisVal = dynamicViscosity(temperature.getInCelsius());
         return DynamicViscosity.ofKiloGramPerMeterSecond(dynVisVal);
     }
@@ -45,6 +47,8 @@ public final class DryAirEquations {
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature dryAirTemperature, Pressure absPressure) {
+        Validators.requireNotNull(dryAirTemperature);
+        Validators.requireNotNull(absPressure);
         double kinVisVal = kinematicViscosity(dryAirTemperature.getInCelsius(), absPressure.getInPascals());
         return KinematicViscosity.ofSquareMeterPerSecond(kinVisVal);
     }
@@ -66,6 +70,7 @@ public final class DryAirEquations {
     }
 
     public static ThermalConductivity thermalConductivity(Temperature dryAirTemperature) {
+        Validators.requireNotNull(dryAirTemperature);
         double thermCondVal = thermalConductivity(dryAirTemperature.getInCelsius());
         return ThermalConductivity.ofWattsPerMeterKelvin(thermCondVal);
     }
@@ -83,6 +88,7 @@ public final class DryAirEquations {
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature dryAirTemperature) {
+        Validators.requireNotNull(dryAirTemperature);
         double specEnthalpyVal = specificEnthalpy(dryAirTemperature.getInCelsius());
         return SpecificEnthalpy.ofKiloJoulePerKiloGram(specEnthalpyVal);
     }
@@ -125,6 +131,7 @@ public final class DryAirEquations {
     }
 
     public static SpecificHeat specificHeat(Temperature dryAirTemperature) {
+        Validators.requireNotNull(dryAirTemperature);
         double specHeatVal = specificHeat(dryAirTemperature.getInCelsius());
         return SpecificHeat.ofKiloJoulePerKiloGramKelvin(specHeatVal);
     }
@@ -142,6 +149,8 @@ public final class DryAirEquations {
     }
 
     public static Density density(Temperature dryAirTemperature, Pressure pressure) {
+        Validators.requireNotNull(dryAirTemperature);
+        Validators.requireNotNull(pressure);
         double densityVal = density(dryAirTemperature.getInCelsius(), pressure.getInPascals());
         return Density.ofKilogramPerCubicMeter(densityVal);
     }

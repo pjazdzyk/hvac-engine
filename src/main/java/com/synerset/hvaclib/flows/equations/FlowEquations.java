@@ -1,5 +1,6 @@
 package com.synerset.hvaclib.flows.equations;
 
+import com.synerset.hvaclib.exceptionhandling.Validators;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -35,6 +36,8 @@ public final class FlowEquations {
     }
 
     public static VolumetricFlow massFlowToVolFlow(Density density, MassFlow massFlow) {
+        Validators.requireNotNull(density);
+        Validators.requireNotNull(massFlow);
         double volFlowVal = massFlowToVolFlow(density.getInKilogramsPerCubicMeters(), massFlow.getInKilogramsPerSecond());
         return VolumetricFlow.ofCubicMetersPerSecond(volFlowVal);
     }
@@ -51,6 +54,8 @@ public final class FlowEquations {
     }
 
     public static MassFlow volFlowToMassFlow(Density density, VolumetricFlow volFlow) {
+        Validators.requireNotNull(density);
+        Validators.requireNotNull(volFlow);
         double massFlowVal = volFlowToMassFlow(density.getInKilogramsPerCubicMeters(), volFlow.getInCubicMetersPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
     }
@@ -70,6 +75,8 @@ public final class FlowEquations {
     }
 
     public static MassFlow massFlowHaToMassFlowDa(HumidityRatio humRatio, MassFlow massFlowHa) {
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(massFlowHa);
         double massFlowVal = massFlowHaToMassFlowDa(humRatio.getInKilogramPerKilogram(),
                 massFlowHa.getInKilogramsPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
@@ -88,6 +95,8 @@ public final class FlowEquations {
     }
 
     public static MassFlow massFlowDaToMassFlowHa(HumidityRatio humRatio, MassFlow massFlowDa) {
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(massFlowDa);
         double massFlowVal = massFlowDaToMassFlowHa(humRatio.getInKilogramPerKilogram(),
                 massFlowDa.getInKilogramsPerSecond());
         return MassFlow.ofKilogramsPerSecond(massFlowVal);
@@ -107,6 +116,9 @@ public final class FlowEquations {
     }
 
     public static MassFlow massFlowDaToVolFlowHa(Density density, HumidityRatio humRatio, MassFlow massFlowDa) {
+        Validators.requireNotNull(density);
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(massFlowDa);
         double massFlowVal = massFlowDaToVolFlowHa(density.getInKilogramsPerCubicMeters(),
                 humRatio.getInKilogramPerKilogram(),
                 massFlowDa.getInKilogramsPerSecond());
@@ -127,6 +139,9 @@ public final class FlowEquations {
     }
 
     public static MassFlow volFlowHaToMassFlowDa(Density density, HumidityRatio humRatio, VolumetricFlow volFlowHa) {
+        Validators.requireNotNull(density);
+        Validators.requireNotNull(humRatio);
+        Validators.requireNotNull(volFlowHa);
         double massFlowVal = volFlowHaToMassFlowDa(density.getInKilogramsPerCubicMeters(),
                 humRatio.getInKilogramPerKilogram(),
                 volFlowHa.getInCubicMetersPerSecond());

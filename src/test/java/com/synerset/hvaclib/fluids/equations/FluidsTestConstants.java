@@ -1,7 +1,7 @@
 package com.synerset.hvaclib.fluids.equations;
 
-interface FluidsTestConstants {
-    double MATH_ACCURACY = 1.0E-11;
-    double PHYS_ATMOSPHERE = 100_000.0;
+class FluidsTestConstants {
+    public static double MATH_ACCURACY = 1.0E-11;
+    public static double PHYS_ATMOSPHERE = 100_000.0;
 
 }

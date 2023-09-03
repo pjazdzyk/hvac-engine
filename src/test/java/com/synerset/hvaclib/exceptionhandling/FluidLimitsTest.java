@@ -44,8 +44,8 @@ class FluidLimitsTest {
         Temperature temperatureMaxLimit = Temperature.ofCelsius(1000);
 
         assertThatThrownBy(() -> DryAir.of(pressureMaxLimit, Temperature.ofCelsius(20)));
-        assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMinLimit.subtract(1)));
-        assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMaxLimit.add(1)));
+        assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit.subtract(1)));
+        assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit.add(1)));
     }
 
     @Test
@@ -57,7 +57,7 @@ class FluidLimitsTest {
 
         assertThatThrownBy(() -> LiquidWater.of(pressureMaxLimit, Temperature.ofCelsius(20)));
         assertThatThrownBy(() -> LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit));
-        assertThatThrownBy(() -> LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMaxLimit.add(1)));
+        assertThatThrownBy(() -> LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit.add(1)));
     }
 
     @Test
@@ -70,13 +70,13 @@ class FluidLimitsTest {
 
         // Without RH
         assertThatThrownBy(() -> WaterVapour.of(pressureMinLimit, Temperature.ofCelsius(20)));
-        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMinLimit.subtract(1)));
-        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMaxLimit.add(1)));
+        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit.subtract(1)));
+        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit.add(1)));
 
         // With RH
-        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), (RelativeHumidity) RelativeHumidity.RH_MAX_LIMIT.add(1)));
-        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), (RelativeHumidity) RelativeHumidity.RH_MIN_LIMIT.subtract(1)));
-        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMaxLimitWithRH.add(1), RelativeHumidity.ofPercentage(50)));
+        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), RelativeHumidity.RH_MAX_LIMIT.add(1)));
+        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), RelativeHumidity.RH_MIN_LIMIT.subtract(1)));
+        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimitWithRH.add(1), RelativeHumidity.ofPercentage(50)));
     }
 
     @Test
@@ -89,18 +89,17 @@ class FluidLimitsTest {
         HumidityRatio humidityRatioMinLimit = HumidityRatio.ofKilogramPerKilogram(0);
         HumidityRatio humidityRatioMaxLimit = HumidityRatio.ofKilogramPerKilogram(3);
 
-        assertThatThrownBy(() -> HumidAir.of((Pressure) pressureMinLimit.subtract(1), Temperature.ofCelsius(20), HumidityRatio.ofKilogramPerKilogram(0.1)));
-        assertThatThrownBy(() -> HumidAir.of((Pressure) pressureMaxLimit.add(1), Temperature.ofCelsius(20), HumidityRatio.ofKilogramPerKilogram(0.1)));
-        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMinLimit.subtract(1), HumidityRatio.ofKilogramPerKilogram(0.1)));
-        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, (Temperature) temperatureMaxLimit.add(1), HumidityRatio.ofKilogramPerKilogram(0.1)));
-        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), (HumidityRatio) humidityRatioMinLimit.subtract(1)));
-        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), (HumidityRatio) humidityRatioMaxLimit.add(1)));
-        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), (RelativeHumidity) RelativeHumidity.RH_MAX_LIMIT.add(1)));
-        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), (RelativeHumidity) RelativeHumidity.RH_MIN_LIMIT.subtract(1)));
+        assertThatThrownBy(() -> HumidAir.of(pressureMinLimit.subtract(1), Temperature.ofCelsius(20), HumidityRatio.ofKilogramPerKilogram(0.1)));
+        assertThatThrownBy(() -> HumidAir.of(pressureMaxLimit.add(1), Temperature.ofCelsius(20), HumidityRatio.ofKilogramPerKilogram(0.1)));
+        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit.subtract(1), HumidityRatio.ofKilogramPerKilogram(0.1)));
+        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit.add(1), HumidityRatio.ofKilogramPerKilogram(0.1)));
+        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), humidityRatioMinLimit.subtract(1)));
+        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), humidityRatioMaxLimit.add(1)));
+        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), RelativeHumidity.RH_MAX_LIMIT.add(1)));
+        assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(20), RelativeHumidity.RH_MIN_LIMIT.subtract(1)));
 
         // Saturation pressure condition not met
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Temperature.ofCelsius(100), RelativeHumidity.RH_MAX_LIMIT));
-
     }
 
 }
