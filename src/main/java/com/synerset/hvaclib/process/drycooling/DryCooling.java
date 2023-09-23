@@ -1,12 +1,9 @@
-package com.synerset.hvaclib.process.cooling;
+package com.synerset.hvaclib.process.drycooling;
 
 import com.synerset.hvaclib.common.Validators;
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
-import com.synerset.hvaclib.fluids.liquidwater.FlowOfLiquidWater;
-import com.synerset.hvaclib.process.cooling.dataobjects.AirCoolingResult;
-import com.synerset.hvaclib.process.cooling.dataobjects.CoolantData;
-import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
+import com.synerset.hvaclib.process.drycooling.dataobjects.DryAirCoolingResult;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
@@ -16,12 +13,10 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 import java.util.Objects;
 
-public class Cooling {
-    private final CoolingStrategy coolingStrategy;
+public class DryCooling {
+    private final DryCoolingStrategy dryCoolingStrategy;
     private final FlowOfHumidAir inputInletAir;
-    private final CoolantData coolantData;
     private Power heatOfProcess;
-    private BypassFactor bypassFactor;
     private FlowOfHumidAir outletFlow;
     private HumidAir outletAir;
     private Pressure outPressure;
@@ -29,53 +24,37 @@ public class Cooling {
     private RelativeHumidity outRelativeHumidity;
     private HumidityRatio outHumidityRatio;
     private SpecificEnthalpy outSpecificEnthalpy;
-    private FlowOfLiquidWater condensateFlow;
-    private Temperature condensateTemperature;
-    private SpecificEnthalpy condensateEnthalpy;
-    private AirCoolingResult coolingBulkResults;
+    private DryAirCoolingResult dryCoolingBulkResult;
 
-    public Cooling(CoolingStrategy coolingStrategy) {
-        Validators.requireNotNull(coolingStrategy);
-        this.coolingStrategy = coolingStrategy;
-        this.inputInletAir = coolingStrategy.inletAir();
-        this.coolantData = coolingStrategy.inletCoolantData();
+    public DryCooling(DryCoolingStrategy dryCoolingStrategy) {
+        Validators.requireNotNull(dryCoolingStrategy);
+        this.dryCoolingStrategy = dryCoolingStrategy;
+        this.inputInletAir = dryCoolingStrategy.inletAir();
         applyProcess();
     }
 
     private void applyProcess() {
-        coolingBulkResults = coolingStrategy.applyCooling();
-        heatOfProcess = coolingBulkResults.heatOfProcess();
-        bypassFactor = coolingBulkResults.bypassFactor();
-        outletFlow = coolingBulkResults.outletFlow();
+        dryCoolingBulkResult = dryCoolingStrategy.applyDryCooling();
+        heatOfProcess = dryCoolingBulkResult.heatOfProcess();
+        outletFlow = dryCoolingBulkResult.outletFlow();
         outletAir = outletFlow.fluid();
         outPressure = outletFlow.pressure();
         outTemperature = outletFlow.temperature();
         outRelativeHumidity = outletFlow.relativeHumidity();
         outHumidityRatio = outletFlow.humidityRatio();
         outSpecificEnthalpy = outletFlow.specificEnthalpy();
-        condensateFlow = coolingBulkResults.condensateFlow();
-        condensateTemperature = condensateFlow.temperature();
-        condensateEnthalpy = condensateFlow.specificEnthalpy();
     }
 
-    public CoolingStrategy getCoolingStrategy() {
-        return coolingStrategy;
+    public DryCoolingStrategy getDryCoolingStrategy() {
+        return dryCoolingStrategy;
     }
 
     public FlowOfHumidAir getInputInletAir() {
         return inputInletAir;
     }
 
-    public CoolantData getCoolantData() {
-        return coolantData;
-    }
-
     public Power getHeatOfProcess() {
         return heatOfProcess;
-    }
-
-    public BypassFactor getBypassFactor() {
-        return bypassFactor;
     }
 
     public FlowOfHumidAir getOutletFlow() {
@@ -106,71 +85,49 @@ public class Cooling {
         return outSpecificEnthalpy;
     }
 
-    public FlowOfLiquidWater getCondensateFlow() {
-        return condensateFlow;
-    }
-
-    public Temperature getCondensateTemperature() {
-        return condensateTemperature;
-    }
-
-    public SpecificEnthalpy getCondensateEnthalpy() {
-        return condensateEnthalpy;
-    }
-
-    public AirCoolingResult getCoolingBulkResults() {
-        return coolingBulkResults;
+    public DryAirCoolingResult getDryCoolingBulkResult() {
+        return dryCoolingBulkResult;
     }
 
     public String toFormattedString() {
         FlowOfHumidAir inputInletAir = getInputInletAir();
-        return "PROCESS OF COOLING:\n\t" +
+        return "PROCESS OF DRY COOLING:\n\t" +
                 "INPUT FLOW:\n\t" +
                 inputInletAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "in", "| ") +
                 inputInletAir.temperature().toFormattedString("DBT", "in", "| ") +
                 inputInletAir.relativeHumidity().toFormattedString("RH", "in", "| ") +
                 inputInletAir.humidityRatio().toFormattedString("x", "in", "| ") +
                 inputInletAir.specificEnthalpy().toFormattedString("i", "in") + "\n\t" +
-                "COOLANT DATA:\n\t" +
-                coolantData.getSupplyTemperature().toFormattedString("t", "su", "| ") +
-                coolantData.getReturnTemperature().toFormattedString("t", "rt", "| ") +
-                coolantData.getAverageTemperature().toFormattedString("t", "m") + "\n\t" +
                 "HEAT OF PROCESS:\n\t" +
-                heatOfProcess.toFormattedString("Q", "cool", "| ") +
-                bypassFactor.toFormattedString("BF", "") + "\n\t" +
+                heatOfProcess.toFormattedString("Q", "cool", "| ") + "\n\t" +
                 "OUTLET FLOW:\n\t" +
                 outletFlow.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "out", "| ") +
                 outTemperature.toFormattedString("DBT", "out", "| ") +
                 outRelativeHumidity.toFormattedString("RH", "out", "| ") +
                 outHumidityRatio.toFormattedString("x", "out", "| ") +
-                outSpecificEnthalpy.toFormattedString("i", "out") + "\n\t" +
-                "CONDENSATE:\n\t" +
-                condensateFlow.massFlow().toFormattedString("G", "cond", "| ") +
-                condensateTemperature.toFormattedString("t", "cond", "| ") +
-                condensateEnthalpy.toFormattedString("i", "cond");
+                outSpecificEnthalpy.toFormattedString("i", "out") + "\n\t";
     }
 
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        Cooling cooling = (Cooling) object;
-        return Objects.equals(coolingStrategy, cooling.coolingStrategy) && Objects.equals(inputInletAir, cooling.inputInletAir) && Objects.equals(coolantData, cooling.coolantData);
+        DryCooling cooling = (DryCooling) object;
+        return Objects.equals(dryCoolingStrategy, cooling.dryCoolingStrategy) &&
+                Objects.equals(inputInletAir, cooling.inputInletAir);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(coolingStrategy, inputInletAir, coolantData);
+        return Objects.hash(dryCoolingStrategy, inputInletAir);
     }
 
     @Override
     public String toString() {
         return "Cooling{" +
-                "coolingStrategy=" + coolingStrategy +
+                "coolingStrategy=" + dryCoolingStrategy +
                 ", inputInletAir=" + inputInletAir +
-                ", coolantData=" + coolantData +
                 ", heatOfProcess=" + heatOfProcess +
-                ", bypassFactor=" + bypassFactor +
                 ", outletFlow=" + outletFlow +
                 ", outletAir=" + outletAir +
                 ", outPressure=" + outPressure +
@@ -178,13 +135,11 @@ public class Cooling {
                 ", outRelativeHumidity=" + outRelativeHumidity +
                 ", outHumidityRatio=" + outHumidityRatio +
                 ", outSpecificEnthalpy=" + outSpecificEnthalpy +
-                ", condensateFlow=" + condensateFlow +
-                ", condensateTemperature=" + condensateTemperature +
-                ", condensateEnthalpy=" + condensateEnthalpy +
                 '}';
     }
 
-    public static Cooling of(CoolingStrategy coolingStrategy) {
-        return new Cooling(coolingStrategy);
+    public static DryCooling of(DryCoolingStrategy dryCoolingStrategy) {
+        return new DryCooling(dryCoolingStrategy);
     }
+
 }
