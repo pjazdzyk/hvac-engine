@@ -4,7 +4,6 @@ import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAirEquations;
 import com.synerset.hvaclib.fluids.liquidwater.LiquidWaterEquations;
-import com.synerset.hvaclib.process.cooling.dataobjects.CoolantData;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;

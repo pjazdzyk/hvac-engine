@@ -3,8 +3,6 @@ package com.synerset.hvaclib.process.drycooling;
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAirEquations;
-import com.synerset.hvaclib.fluids.liquidwater.FlowOfLiquidWater;
-import com.synerset.hvaclib.process.drycooling.dataobjects.DryAirCoolingResult;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
@@ -37,12 +35,11 @@ record DryCoolingFromTemperature(FlowOfHumidAir inletAir,
             return new DryAirCoolingResult(inletAir, Power.ofWatts(0));
         }
 
-        HumidAir inletHumidAir = inletAir.fluid();
-        double x_in = inletHumidAir.humidityRatio().getInKilogramPerKilogram();
+        double x_in = inletAir.humidityRatio().getInKilogramPerKilogram();
         double mda_in = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
         double t_out = outletTemperature.getInCelsius();
-        double p_in = inletHumidAir.pressure().getInPascals();
-        double i_in = inletHumidAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double p_in = inletAir.pressure().getInPascals();
+        double i_in = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
         double i2 = HumidAirEquations.specificEnthalpy(t_out, x_in, p_in);
         double Q_heat = (mda_in * i2 - mda_in * i_in) * 1000d;
         Power requiredHeat = Power.ofWatts(Q_heat);

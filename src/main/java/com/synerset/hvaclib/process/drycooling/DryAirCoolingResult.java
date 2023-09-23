@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.process.drycooling.dataobjects;
+package com.synerset.hvaclib.process.drycooling;
 
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;

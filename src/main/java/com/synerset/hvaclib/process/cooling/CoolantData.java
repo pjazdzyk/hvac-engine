@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.process.cooling.dataobjects;
+package com.synerset.hvaclib.process.cooling;
 
 import com.synerset.hvaclib.common.Validators;
 import com.synerset.hvaclib.utils.MathUtils;

@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.process.cooling.dataobjects;
+package com.synerset.hvaclib.process.cooling;
 
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.liquidwater.FlowOfLiquidWater;

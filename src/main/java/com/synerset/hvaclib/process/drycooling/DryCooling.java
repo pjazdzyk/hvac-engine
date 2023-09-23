@@ -3,7 +3,6 @@ package com.synerset.hvaclib.process.drycooling;
 import com.synerset.hvaclib.common.Validators;
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
-import com.synerset.hvaclib.process.drycooling.dataobjects.DryAirCoolingResult;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;

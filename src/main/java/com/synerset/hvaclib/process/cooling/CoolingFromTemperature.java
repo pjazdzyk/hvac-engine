@@ -6,8 +6,6 @@ import com.synerset.hvaclib.fluids.humidair.HumidAirEquations;
 import com.synerset.hvaclib.fluids.liquidwater.FlowOfLiquidWater;
 import com.synerset.hvaclib.fluids.liquidwater.LiquidWater;
 import com.synerset.hvaclib.fluids.liquidwater.LiquidWaterEquations;
-import com.synerset.hvaclib.process.cooling.dataobjects.AirCoolingResult;
-import com.synerset.hvaclib.process.cooling.dataobjects.CoolantData;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -15,16 +13,18 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
- * Real cooling coil process. Returns real cooling coil process result as double array, to achieve expected outlet temperature.<p>
- * This method represents real cooling coil, where additional energy is used to discharge more condensate compared to ideal coil.<p>
+ * Real cooling coil process. Returns real cooling coil process result as double array, to achieve expected outlet
+ * temperature.<p>
+ * This method represents real cooling coil, where additional energy is used to discharge more condensate compared to
+ * ideal coil.<p>
  * REFERENCE SOURCE: [1] [t2,oC] (-) [37]<p>
  *
  * @param inletAir             initial {@link FlowOfHumidAir}
- * @param inletCoolantData     average cooling coil wall {@link CoolantData}
+ * @param coolantData          average cooling coil wall {@link CoolantData}
  * @param targetOutTemperature target outlet {@link Temperature}
  */
 record CoolingFromTemperature(FlowOfHumidAir inletAir,
-                              CoolantData inletCoolantData,
+                              CoolantData coolantData,
                               Temperature targetOutTemperature) implements CoolingStrategy {
 
     @Override
@@ -37,7 +37,7 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
         double m_cond = 0.0;
         LiquidWater liquidWater = LiquidWater.of(inletAir.temperature());
         FlowOfLiquidWater condensateFlow = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(m_cond));
-        Temperature averageWallTemp = inletCoolantData.getAverageTemperature();
+        Temperature averageWallTemp = coolantData.getAverageTemperature();
 
         if (t_out == t_in) {
             return new AirCoolingResult(inletAir, Power.ofWatts(0.0), condensateFlow,
@@ -87,10 +87,7 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
 
         FlowOfHumidAir outletFlow = inletAir.withHumidAir(outletHumidAir);
 
-        return new AirCoolingResult(outletFlow,
-                Power.ofKiloWatts(Q_cool),
-                condensateFlow,
-                BF);
+        return new AirCoolingResult(outletFlow, Power.ofKiloWatts(Q_cool), condensateFlow, BF);
     }
 
 }
