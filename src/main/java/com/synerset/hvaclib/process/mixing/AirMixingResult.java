@@ -1,4 +1,4 @@
-package com.synerset.hvaclib.process.mixing.dataobjects;
+package com.synerset.hvaclib.process.mixing;
 
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 

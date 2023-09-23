@@ -3,7 +3,6 @@ package com.synerset.hvaclib.process.drycooling;
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAirEquations;
-import com.synerset.hvaclib.process.drycooling.dataobjects.DryAirCoolingResult;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
@@ -29,12 +28,11 @@ record DryCoolingFromPower(FlowOfHumidAir inletAir,
             return new DryAirCoolingResult(inletAir, inputPower.createNewWithValue(0));
         }
 
-        HumidAir inletHumidAir = inletAir.fluid();
         double Q_cool = inputPower.getInKiloWatts();
-        double x_in = inletHumidAir.humidityRatio().getInKilogramPerKilogram();
+        double x_in = inletAir.humidityRatio().getInKilogramPerKilogram();
         double mda_in = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double p_in = inletHumidAir.pressure().getInPascals();
-        double i_in = inletHumidAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double p_in = inletAir.pressure().getInPascals();
+        double i_in = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
         double i_out = (mda_in * i_in + Q_cool) / mda_in;
         double t_out = HumidAirEquations.dryBulbTemperatureIX(i_out, x_in, p_in);
 

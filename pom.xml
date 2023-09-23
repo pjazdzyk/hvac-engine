@@ -18,7 +18,7 @@
         <unitility.version>1.2.0</unitility.version>
         <!-- Dependency versions -->
         <junit.version>5.9.0</junit.version>
-        <assertJ.version>3.23.1</assertJ.version>
+        <assertJ.version>3.24.2</assertJ.version>
         <junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
     </properties>
 

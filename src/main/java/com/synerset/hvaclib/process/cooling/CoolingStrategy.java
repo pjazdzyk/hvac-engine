@@ -3,8 +3,6 @@ package com.synerset.hvaclib.process.cooling;
 import com.synerset.hvaclib.common.Validators;
 import com.synerset.hvaclib.common.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
-import com.synerset.hvaclib.process.cooling.dataobjects.AirCoolingResult;
-import com.synerset.hvaclib.process.cooling.dataobjects.CoolantData;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
@@ -15,7 +13,7 @@ public interface CoolingStrategy {
 
     FlowOfHumidAir inletAir();
 
-    CoolantData inletCoolantData();
+    CoolantData coolantData();
 
     static CoolingStrategy of(FlowOfHumidAir inletAirFlow, CoolantData inletCoolantData, Power inputPower) {
         Validators.requireNotNull(inletAirFlow);

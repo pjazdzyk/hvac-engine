@@ -2,10 +2,8 @@ package com.synerset.hvaclib.process.cooling;
 
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
-import com.synerset.hvaclib.process.cooling.dataobjects.AirCoolingResult;
-import com.synerset.hvaclib.process.cooling.dataobjects.CoolantData;
+import com.synerset.hvaclib.process.drycooling.DryAirCoolingResult;
 import com.synerset.hvaclib.process.drycooling.DryCoolingStrategy;
-import com.synerset.hvaclib.process.drycooling.dataobjects.DryAirCoolingResult;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;

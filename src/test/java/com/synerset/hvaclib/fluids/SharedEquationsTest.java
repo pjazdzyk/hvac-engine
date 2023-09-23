@@ -1,6 +1,5 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.SharedEquations;
 import com.synerset.hvaclib.fluids.dryair.DryAirEquations;
 import com.synerset.unitility.unitsystem.common.Distance;
 import com.synerset.unitility.unitsystem.thermodynamic.*;

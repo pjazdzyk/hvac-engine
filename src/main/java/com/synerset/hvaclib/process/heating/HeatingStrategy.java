@@ -5,7 +5,6 @@ import com.synerset.hvaclib.common.exceptions.InvalidArgumentException;
 import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAirEquations;
-import com.synerset.hvaclib.process.heating.dataobjects.AirHeatingResult;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.SpecificEnthalpy;
@@ -20,9 +19,11 @@ public interface HeatingStrategy {
     static HeatingStrategy of(FlowOfHumidAir inletAirFlow, Power inputPower) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inputPower);
+
         if (inputPower.isNegative()) {
             throw new InvalidArgumentException("Heating power must be positive value. Q_in = " + inputPower);
         }
+
         // Mox heating power estimate to reach t_max: Qheat.max= G * (imax - i_in)
         Temperature t_max = HumidAirEquations.dryBulbTemperatureMax(inletAirFlow.pressure()).multiply(0.98);
         SpecificEnthalpy i_max = HumidAirEquations.specificEnthalpy(t_max, inletAirFlow.humidityRatio(),

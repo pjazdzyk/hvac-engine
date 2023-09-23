@@ -1,6 +1,5 @@
 package com.synerset.hvaclib.fluids;
 
-import com.synerset.hvaclib.fluids.FlowEquations;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
 import com.synerset.hvaclib.fluids.liquidwater.LiquidWater;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
