@@ -57,7 +57,7 @@ class CoolingTest {
         SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
         assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
         // Cooling specific assertions
-        BypassFactor expectedBypassFactor = AirCoolingProcedures.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
+        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
         assertThat(cooling.getBypassFactor()).isEqualTo(expectedBypassFactor);
         assertThat(cooling.getCoolantData()).isEqualTo(coolantData);
         // Condensate specific assertions
@@ -100,7 +100,7 @@ class CoolingTest {
         SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
         assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
         // Cooling specific assertions
-        BypassFactor expectedBypassFactor = AirCoolingProcedures.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
+        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
         assertThat(cooling.getBypassFactor()).isEqualTo(expectedBypassFactor);
         assertThat(cooling.getCoolantData()).isEqualTo(coolantData);
         // Condensate specific assertions
@@ -142,7 +142,7 @@ class CoolingTest {
         SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
         assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
         // Cooling specific assertions
-        BypassFactor expectedBypassFactor = AirCoolingProcedures.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
+        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
         assertThat(cooling.getBypassFactor()).isEqualTo(expectedBypassFactor);
         assertThat(cooling.getCoolantData()).isEqualTo(coolantData);
         // Condensate specific assertions

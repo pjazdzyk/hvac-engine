@@ -37,7 +37,7 @@ class AirHeatingEquationsTest {
         Temperature expectedOutTemp = Temperature.ofCelsius(30d);
 
         // When
-        AirHeatingResult airHeatingResult = AirHeatingProcedures.processOfHeating(inletFlow, inputHeat);
+        AirHeatingResult airHeatingResult = HeatingStrategy.of(inletFlow, inputHeat).applyHeating();
 
         Power actualProcessHeat = airHeatingResult.heatOfProcess();
         Temperature actualOutAirTemp = airHeatingResult.outletFlow().temperature();
@@ -55,7 +55,7 @@ class AirHeatingEquationsTest {
         Power inputHeat = Power.ofWatts(56093.07605668045);
 
         // When
-        AirHeatingResult airHeatingResult = AirHeatingProcedures.processOfHeating(inletFlow, targetOutTemp);
+        AirHeatingResult airHeatingResult = HeatingStrategy.of(inletFlow, targetOutTemp).applyHeating();
         Power actualHeatPower = airHeatingResult.heatOfProcess();
         Temperature actualOutTemp = airHeatingResult.outletFlow().temperature();
 
@@ -73,7 +73,7 @@ class AirHeatingEquationsTest {
         Temperature expectedOutTemp = Temperature.ofCelsius(30d);
 
         // Act
-        AirHeatingResult airHeatingResult = AirHeatingProcedures.processOfHeating(inletFlow, expectedOutRH);
+        AirHeatingResult airHeatingResult = HeatingStrategy.of(inletFlow, expectedOutRH).applyHeating();
         Power actualHeatOfProcess = airHeatingResult.heatOfProcess();
         Temperature actualOutAirTemp = airHeatingResult.outletFlow().temperature();
 

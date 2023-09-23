@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class AirMixingProceduresTest {
+class AirMixingStrategiesTest {
 
     @Test
     @DisplayName("should return results for mixing of two different moist air flows")

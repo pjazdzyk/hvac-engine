@@ -4,6 +4,8 @@ import com.synerset.hvaclib.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvaclib.fluids.humidair.HumidAir;
 import com.synerset.hvaclib.process.cooling.dataobjects.AirCoolingResult;
 import com.synerset.hvaclib.process.cooling.dataobjects.CoolantData;
+import com.synerset.hvaclib.process.drycooling.DryCoolingStrategy;
+import com.synerset.hvaclib.process.drycooling.dataobjects.DryAirCoolingResult;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -18,9 +20,9 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
-class AirCoolingProceduresTest {
+class AirCoolingStrategiesTest {
 
-    private static final Temperature AVERAGE_COIL_WALL_TEMP = Temperature.ofCelsius(11.5);
+    private static final CoolantData COOLANT_DATA = CoolantData.of(Temperature.ofCelsius(9), Temperature.ofCelsius(14));
     private static FlowOfHumidAir inletFlow;
 
     @BeforeAll
@@ -43,22 +45,16 @@ class AirCoolingProceduresTest {
 
         HumidityRatio expectedOutHumRatio = inletFlow.humidityRatio();
         Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
-        Temperature expectedCondensateTemp = expectedOutAirTemp;
-        MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0);
 
         // When
-        AirCoolingResult airCoolingResult = AirCoolingProcedures.processOfDryCooling(inletFlow, expectedOutAirTemp);
+        DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedOutAirTemp).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
-        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().temperature();
-        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().massFlow();
 
         // Then
         assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
         assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
-        assertThat(actualCondensateTemp).isEqualTo(expectedCondensateTemp);
-        assertThat(actualCondensateFlow).isEqualTo(expectedCondensateFlow);
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
     }
 
@@ -73,18 +69,14 @@ class AirCoolingProceduresTest {
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0);
 
         // When
-        AirCoolingResult airCoolingResult = AirCoolingProcedures.processOfDryCooling(inletFlow, expectedHeatOfProcess);
+        DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedHeatOfProcess).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
-        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().temperature();
-        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().massFlow();
 
         // Then
         assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
         assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
-        assertThat(actualCondensateTemp).isEqualTo(expectedOutAirTemp);
-        assertThat(actualCondensateFlow).isEqualTo(expectedCondensateFlow);
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
     }
 
@@ -100,7 +92,7 @@ class AirCoolingProceduresTest {
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.0037604402299109005);
 
         // When
-        AirCoolingResult airCoolingResult = AirCoolingProcedures.processOfRealCooling(inletFlow, AVERAGE_COIL_WALL_TEMP, expectedOutAirTemp);
+        AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedOutAirTemp).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
@@ -111,7 +103,7 @@ class AirCoolingProceduresTest {
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
         assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
         assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
-        assertThat(actualCondensateTemp).isEqualTo(AVERAGE_COIL_WALL_TEMP);
+        assertThat(actualCondensateTemp).isEqualTo(COOLANT_DATA.getAverageTemperature());
         assertThat(actualCondensateFlow).isEqualTo(expectedCondensateFlow);
     }
 
@@ -127,7 +119,7 @@ class AirCoolingProceduresTest {
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.0037604402299109005);
 
         // When
-        AirCoolingResult airCoolingResult = AirCoolingProcedures.processOfRealCooling(inletFlow, AVERAGE_COIL_WALL_TEMP, expectedRelativeHumidity);
+        AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedRelativeHumidity).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
         RelativeHumidity actualRelativeHumidity = airCoolingResult.outletFlow().relativeHumidity();
@@ -140,7 +132,7 @@ class AirCoolingProceduresTest {
         assertThat(actualOutAirTemp.getValue()).isEqualTo(expectedOutAirTemp.getValue(), withPrecision(1E-13));
         assertThat(actualRelativeHumidity.getInPercent()).isEqualTo(expectedRelativeHumidity.getInPercent(), withPrecision(1E-13));
         assertThat(actualHumRatio.getValue()).isEqualTo(expectedOutHumRatio.getValue(), withPrecision(1E-16));
-        assertThat(actualCondensateTemp).isEqualTo(AVERAGE_COIL_WALL_TEMP);
+        assertThat(actualCondensateTemp).isEqualTo(COOLANT_DATA.getAverageTemperature());
         assertThat(actualCondensateFlow.getInKilogramsPerSecond()).isEqualTo(expectedCondensateFlow.getInKilogramsPerSecond(), withPrecision(1E-16));
     }
 
@@ -155,7 +147,7 @@ class AirCoolingProceduresTest {
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.0037604402299109005);
 
         // When
-        AirCoolingResult airCoolingResult = AirCoolingProcedures.processOfRealCooling(inletFlow, AVERAGE_COIL_WALL_TEMP, expectedHeatOfProcess);
+        AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedHeatOfProcess).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
@@ -166,7 +158,7 @@ class AirCoolingProceduresTest {
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
         assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
         assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
-        assertThat(actualCondensateTemp).isEqualTo(AVERAGE_COIL_WALL_TEMP);
+        assertThat(actualCondensateTemp).isEqualTo(COOLANT_DATA.getAverageTemperature());
         assertThat(actualCondensateFlow).isEqualTo(expectedCondensateFlow);
     }
 
@@ -196,7 +188,7 @@ class AirCoolingProceduresTest {
         BypassFactor expectedBypassFactor = BypassFactor.of(0.0952380952380952380952380952381);
 
         // When
-        BypassFactor actualBypassFactor = AirCoolingProcedures.coilBypassFactor(expectedCoilAverageTemp, inletAirTemperature, expectedOutTemp);
+        BypassFactor actualBypassFactor = CoolingHelpers.coilBypassFactor(expectedCoilAverageTemp, inletAirTemperature, expectedOutTemp);
 
         // Then
         assertThat(actualBypassFactor).isEqualTo(expectedBypassFactor);
@@ -212,7 +204,7 @@ class AirCoolingProceduresTest {
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.03015);
 
         // When
-        MassFlow actualCondensateFlow = AirCoolingProcedures.condensateDischarge(dryAirMassFlow, inletHumidityRatio, outletHumidityRatio);
+        MassFlow actualCondensateFlow = CoolingHelpers.condensateDischarge(dryAirMassFlow, inletHumidityRatio, outletHumidityRatio);
 
         // Then
         assertThat(actualCondensateFlow).isEqualTo(expectedCondensateFlow);

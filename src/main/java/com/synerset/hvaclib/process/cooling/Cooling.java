@@ -32,6 +32,7 @@ public class Cooling {
     private FlowOfLiquidWater condensateFlow;
     private Temperature condensateTemperature;
     private SpecificEnthalpy condensateEnthalpy;
+    private AirCoolingResult coolingBulkResults;
 
     public Cooling(CoolingStrategy coolingStrategy) {
         Validators.requireNotNull(coolingStrategy);
@@ -42,17 +43,17 @@ public class Cooling {
     }
 
     private void applyProcess() {
-        AirCoolingResult airCoolingResult = coolingStrategy.applyCooling();
-        heatOfProcess = airCoolingResult.heatOfProcess();
-        bypassFactor = airCoolingResult.bypassFactor();
-        outletFlow = airCoolingResult.outletFlow();
+        coolingBulkResults = coolingStrategy.applyCooling();
+        heatOfProcess = coolingBulkResults.heatOfProcess();
+        bypassFactor = coolingBulkResults.bypassFactor();
+        outletFlow = coolingBulkResults.outletFlow();
         outletAir = outletFlow.fluid();
         outPressure = outletFlow.pressure();
         outTemperature = outletFlow.temperature();
         outRelativeHumidity = outletFlow.relativeHumidity();
         outHumidityRatio = outletFlow.humidityRatio();
         outSpecificEnthalpy = outletFlow.specificEnthalpy();
-        condensateFlow = airCoolingResult.condensateFlow();
+        condensateFlow = coolingBulkResults.condensateFlow();
         condensateTemperature = condensateFlow.temperature();
         condensateEnthalpy = condensateFlow.specificEnthalpy();
     }
@@ -115,6 +116,10 @@ public class Cooling {
 
     public SpecificEnthalpy getCondensateEnthalpy() {
         return condensateEnthalpy;
+    }
+
+    public AirCoolingResult getCoolingBulkResults() {
+        return coolingBulkResults;
     }
 
     public String toFormattedString() {

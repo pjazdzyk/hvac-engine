@@ -24,6 +24,7 @@ public class Heating {
     private RelativeHumidity outRelativeHumidity;
     private HumidityRatio outHumidityRatio;
     private SpecificEnthalpy outSpecificEnthalpy;
+    private AirHeatingResult heatingBulkResults;
 
     public Heating(HeatingStrategy heatingStrategy) {
         Validators.requireNotNull(heatingStrategy);
@@ -33,9 +34,9 @@ public class Heating {
     }
 
     private void applyProcess() {
-        AirHeatingResult airHeatingResult = heatingStrategy.applyHeating();
-        heatOfProcess = airHeatingResult.heatOfProcess();
-        outletFlow = airHeatingResult.outletFlow();
+        heatingBulkResults = heatingStrategy.applyHeating();
+        heatOfProcess = heatingBulkResults.heatOfProcess();
+        outletFlow = heatingBulkResults.outletFlow();
         outPressure = outletFlow.pressure();
         outletAir = outletFlow.fluid();
         outTemperature = outletFlow.temperature();
@@ -82,6 +83,10 @@ public class Heating {
 
     public SpecificEnthalpy getOutSpecificEnthalpy() {
         return outSpecificEnthalpy;
+    }
+
+    public AirHeatingResult getHeatingBulkResults() {
+        return heatingBulkResults;
     }
 
     public String toFormattedString() {
