@@ -1,4 +1,4 @@
-## HVAC|LIB - Psychrometrics Analysis Library.<br> Thermodynamics of Humid Air for MEP/HVAC Engineers.<br>
+## HVAC|Engine - Psychrometrics Analysis Library.<br> Thermodynamics of Humid Air for MEP/HVAC Engineers.<br>
 ### USER GUDE
 
 > Author: **Piotr Jażdżyk**, M.Sc.Eng.<br>
@@ -9,7 +9,7 @@
 
 ---
 
-HVAC|LIB library is composed of two main packages: 'fluids' and 'process.' The 'fluids' package comprises algorithms for 
+HVAC|Engine library is composed of two main packages: 'fluids' and 'process.' The 'fluids' package comprises algorithms for 
 calculating properties of dry air, humid air, water vapor, liquid water, and solid ice. The 'process' package includes 
 calculation procedures for obtaining results related to various thermodynamic processes typical in the HVAC industry, 
 such as heating, cooling, and mixing. Additional processes will be incorporated in the upcoming stages of development.<br>

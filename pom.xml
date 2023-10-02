@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.synerset</groupId>
-    <artifactId>hvac-lib</artifactId>
+    <artifactId>hvac-engine</artifactId>
     <version>1.0.0</version>
-    <name>hvac-lib</name>
+    <name>hvac-engine</name>
     <description>
-        HVAC-LIB is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic processes
+        HVAC|Engine is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic processes
         such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air streams, and more.
         Our goal is to provide a straightforward and efficient psychrometrics library, ideal for integration into any HVAC software
         development project.
