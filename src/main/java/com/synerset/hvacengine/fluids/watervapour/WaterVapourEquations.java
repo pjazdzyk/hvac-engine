@@ -8,9 +8,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 public final class WaterVapourEquations {
 
-    public final static double WATER_VAPOUR_MOLECULAR_MASS = 18.01528;           // [kg/mol]            - Water vapour molecular mass
-    public final static double WATER_VAPOUR_SPEC_GAS_CONSTANT = 461.52;          // [J/(kg*K)]          - Water vapour specific gas constant
-    public final static double WATER_VAPOUR_SUTHERLAND_CONSTANT = 961.0;         // [K]                 - water vapour Sutherland Constant
+    public static final double WATER_VAPOUR_MOLECULAR_MASS = 18.01528;           // [kg/mol]            - Water vapour molecular mass
+    public static final double WATER_VAPOUR_SPEC_GAS_CONSTANT = 461.52;          // [J/(kg*K)]          - Water vapour specific gas constant
+    public static final double WATER_VAPOUR_SUTHERLAND_CONSTANT = 961.0;         // [K]                 - water vapour Sutherland Constant
 
     private WaterVapourEquations() {
     }
