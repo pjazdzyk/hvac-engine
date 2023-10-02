@@ -1,4 +1,4 @@
-## HVAC|LIB - Psychrometrics Analysis Library.<br> Thermodynamics of Humid Air for MEP/HVAC Engineers.
+## HVAC|Engine - Psychrometrics Analysis Library.<br> Thermodynamics of Humid Air for MEP/HVAC Engineers.
 
 > Author: **Piotr Jażdżyk**, M.Sc.Eng.<br>
 > LinkedIn: https://www.linkedin.com/in/pjazdzyk <br>
@@ -9,7 +9,7 @@
 
 ---
 
-HVAC-LIB is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic processes 
+HVAC|Engine is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic processes 
 such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air streams, and more. 
 Our goal is to provide a straightforward and efficient psychrometrics library, ideal for integration into any HVAC software 
 development project.<p>
@@ -28,17 +28,17 @@ compromising data integrity through the utilization of immutable objects.
 ### INSTALLATION AND TECH
 
 Just copy Maven dependency provided below to your pom.xml file, and you are ready to go. For other package managers, check maven central repository:
-[HVAC|LIB](https://search.maven.org/artifact/com.synerset/hvac-lib/1.0.0/jar?eh=).
+[HVAC|Engine](https://search.maven.org/artifact/com.synerset/hvac-engine/1.0.0/jar?eh=).
 
 ```xml
 <dependency>
     <groupId>com.synerset</groupId>
-    <artifactId>hvac-lib</artifactId>
+    <artifactId>hvac-engine</artifactId>
     <version>1.0.0</version>
 </dependency>
 ```
 
-<strong>HVAC|LIB</strong> is developed using following technologies: <br>
+<strong>HVAC|Engine</strong> is developed using following technologies: <br>
 
 Core: <br>
 ![image](https://img.shields.io/badge/21-Java-orange?style=for-the-badge) &nbsp;
