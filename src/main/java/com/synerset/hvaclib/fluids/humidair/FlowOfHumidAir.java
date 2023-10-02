@@ -122,7 +122,7 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         return "FlowOfHumidAir:\n\t" +
                 massFlow.toFormattedString("G", "", "| ") +
                 massFlow.toKiloGramPerHour().toFormattedString("G", "", "| ") +
-                volFlow.toFormattedString("V", "| ") +
+                volFlow.toFormattedString("V", "","| ") +
                 volFlow.toCubicMetersPerHour().toFormattedString("V", "") +
                 "\n\t" +
                 dryAirMassFlow().toFormattedString("G", "da", "| ") +

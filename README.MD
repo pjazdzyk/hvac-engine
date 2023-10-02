@@ -1,47 +1,56 @@
-## HVAC-LIB - Psychrometrics Analysis Library <br> Thermodynamics of humid air for MEP/HVAC engineers
+## HVAC|LIB - Psychrometrics Analysis Library.<br> Thermodynamics of Humid Air for MEP/HVAC Engineers.
 
-> VERSION: 1.1 - SNAPSHOT <br>
-> AUTHOR: <b>Piotr Jażdżyk</b> <br>
-> LINKEDIN: https://www.linkedin.com/in/pjazdzyk <br>
-
----
-
-### [USER GUIDE](README_GUIDE.MD) &nbsp;|&nbsp; [FUNCTIONALITY](#functionality) &nbsp;|&nbsp; [LEGAL DISCLAIMER](#legal-disclaimer) &nbsp;|&nbsp; [RESOURCES](#reference-sources)
+> Author: **Piotr Jażdżyk**, M.Sc.Eng.<br>
+> LinkedIn: https://www.linkedin.com/in/pjazdzyk <br>
 
 ---
 
-HVAC-LIB is a set of libraries for moist air properties calculations including typical air thermodynamic processes in
-HVAC industry.
-The aim of this project is to create easy to use psychrometrics library, to be further used as an engine for any type of
-HVAC software development.
-All output and input values within this library are in SI units, with small exception to specific heat (kJ/kgK) instead
-of (J/kgK) and specific enthalpy is in (kJ/kg) instead of (J/kg).
-Temperature is used in Celsius (oC) for simplicity, as this library is dedicated mainly for MEP engineers.
+### [USER GUIDE](README_GUIDE.MD) &nbsp;|&nbsp; [FUNCTIONALITY](#functionality) &nbsp;|&nbsp; [REFERENCES](#reference-sources)
 
-LAST CHANGES (2022.12.11):<br>
+---
 
-* provided Spring-Boot service (hvac-api) module,
-* provided first simple REST-API for retrieving water and moist air physical properties
+HVAC-LIB is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic processes 
+such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air streams, and more. 
+Our goal is to provide a straightforward and efficient psychrometrics library, ideal for integration into any HVAC software 
+development project.<p>
+**<span style="color: green;">Thread-Safe Architecture:</span>** This library is developed to ensure thread safety, allowing for concurrent access without 
+compromising data integrity through the utilization of immutable objects.
 
-The library is organized into following modules:
+// TO ADJUST TO HVAC-LIB<br>
+[![HVAC|Lib](https://img.shields.io/github/v/release/pjazdzyk/Unitility?label=Unitility&color=13ADF3&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMi41bW0iIGhlaWdodD0iMTQuNW1tIiB2aWV3Qm94PSIwIDAgMjI1MCAxNDUwIj4NCiAgPHBvbHlnb24gZmlsbD0iIzUwN0QxNCIgcG9pbnRzPSIyMjQxLjAzLDE1Ljg4IDExMzYuMzgsMTUuODQgOTA1Ljg4LDQxNS4xIDIwMTAuNTMsNDE1LjA5IiAvPg0KICA8cG9seWdvbiBmaWxsPSIjNzFBQjIzIiBwb2ludHM9IjExMTYuMzgsMTUuODQgNjU1Ljk5LDE1Ljg0IDQ5NC4xNSwyOTYuMTcgNzI0LjM1LDY5NC44OCIgLz4NCiAgPHBvbHlnb24gZmlsbD0iIzhBQzkzNCIgcG9pbnRzPSI0ODQuMTUsMzA2LjE3IDI1NS4wNiw3MDIuOTYgMzg3LjY2LDkzMi42NCA4NDUuODMsOTMyLjYzIiAvPg0KICA8cG9seWdvbiBmaWxsPSIjNThEMEZGIiBwb2ludHM9Ii03LjE3LDE0NDAuMDkgMTA5Ny45NywxNDQwLjA4IDEzMjguNDcsMTA0MC44MyAyMjMuMzIsMTA0MC44NSIgLz4NCiAgPHBvbHlnb24gZmlsbD0iIzEzQURGMyIgcG9pbnRzPSIxNzM5LjA0LDExNjAuOTEgMTUwOS4wOSw3NjIuNjQgMTExNy45NywxNDQwLjA4IDExODYuOTMsMTQ0MC4wOCAxNTc3Ljg3LDE0NDAuMDgiIC8+DQogIDxwb2x5Z29uIGZpbGw9IiMwMzkzRDAiIHBvaW50cz0iMTk3OC44LDc1Mi45NiAxODQ2LjIsNTIzLjMgMTM4Ni42OCw1MjMuMyAxNzQ5LjA0LDExNTAuOTEiIC8+DQo8L3N2Zz4=)](https://github.com/pjazdzyk/Unitility) &nbsp;
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.synerset/unitility/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.synerset/unitility) &nbsp;
+![Build And Test](https://github.com/pjazdzyk/unitility/actions/workflows/build-test-analyze.yml/badge.svg) <br>
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=pjazdzyk_unitility&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=pjazdzyk_unitility) &nbsp;
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=pjazdzyk_unitility&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=pjazdzyk_unitility) &nbsp;
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=pjazdzyk_unitility&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=pjazdzyk_unitility) &nbsp;
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=pjazdzyk_unitility&metric=coverage)](https://sonarcloud.io/summary/new_code?id=pjazdzyk_unitility) &nbsp;
 
-* _fluids module_ - includes classes dedicated to fluidOld property representation and calculation
-* _flows module_ - includes classes representing fluidOld or humid gas flow handling<br>
+### INSTALLATION AND TECH
 
-<a href="https://raw.githubusercontent.com/pjazdzyk/hvac-lib/main/architecture/ARCH_1_FluidAndFlow.png"><img src="architecture/ARCH_1_FluidAndFlow.png" width="850"/><br></a>
+Just copy Maven dependency provided below to your pom.xml file, and you are ready to go. For other package managers, check maven central repository:
+[HVAC|LIB](https://search.maven.org/artifact/com.synerset/hvac-lib/1.0.0/jar?eh=).
 
-* _process module_ - includes classes representing each thermodynamic process implemented so far in the library<br>
+```xml
+<dependency>
+    <groupId>com.synerset</groupId>
+    <artifactId>hvac-lib</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
-<a href="https://raw.githubusercontent.com/pjazdzyk/hvac-lib/main/architecture/ARCH_2_Process.png"><img src="architecture/ARCH_2_Process.png" width="850"/><br></a>
+<strong>HVAC|LIB</strong> is developed using following technologies: <br>
 
-* _tests_ - includes all tests representing how to properly use each of library components
+Core: <br>
+![image](https://img.shields.io/badge/21-Java-orange?style=for-the-badge) &nbsp;
+![image](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white) &nbsp; ![image](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white) &nbsp;
 
-## TECH
+Engineering: <br>
+[![Unitility](https://img.shields.io/badge/UNITILITY-v1.2.0-13ADF3?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMi41bW0iIGhlaWdodD0iMTQuNW1tIiB2aWV3Qm94PSIwIDAgMjI1MCAxNDUwIj4NCiAgPHBvbHlnb24gZmlsbD0iIzUwN0QxNCIgcG9pbnRzPSIyMjQxLjAzLDE1Ljg4IDExMzYuMzgsMTUuODQgOTA1Ljg4LDQxNS4xIDIwMTAuNTMsNDE1LjA5IiAvPg0KICA8cG9seWdvbiBmaWxsPSIjNzFBQjIzIiBwb2ludHM9IjExMTYuMzgsMTUuODQgNjU1Ljk5LDE1Ljg0IDQ5NC4xNSwyOTYuMTcgNzI4LjM1LDY5NC44OCIgLz4NCiAgPHBvbHlnb24gZmlsbD0iIzhBQzkzNCIgcG9pbnRzPSI0ODQuMTUsMzA2LjE3IDI1NS4wNiw3MDIuOTYgMzg3LjY2LDkzMi42NCA4NDUuODMsOTMyLjYzIiAvPg0KICA8cG9seWdvbiBmaWxsPSIjNThEMEZGIiBwb2ludHM9Ii03LjE3LDE0NDAuMDkgMTA5Ny45NywxNDQwLjA4IDEzMjguNDcsMTA0MC44MyAyMjMuMzIsMTA0MC44NSIgLz4NCiAgPHBvbHlnb24gZmlsbD0iIzEzQURGMyIgcG9pbnRzPSIxNzM5LjA0LDExNjAuOTEgMTUwOS4wOSw3NjIuNjQgMTExNy45NywxNDQwLjA4IDExODYuOTMsMTQ0MC4wOCAxNTc3Ljg3LDE0NDAuMDgiIC8+DQogIDxwb2x5Z29uIGZpbGw9IiMwMzkzRDAiIHBvaW50cz0iMTk3OC44LDc1Mi45NiAxODQ2LjIsNTIzLjMgMTM4Ni42OCw1MjMuMyAxNzQ5LjA0LDExNTAuOTEiIC8+DQo8L3N2Zz4=)](https://github.com/pjazdzyk/Unitility) &nbsp;
+[![Brent-Dekker-Solver](https://img.shields.io/badge/Brent_Dekker%20solver-v1.1.4-13ADF3?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMi41bW0iIGhlaWdodD0iMTQuNW1tIiB2aWV3Qm94PSIwIDAgMjI1MCAxNDUwIj4NCiAgPHBvbHlnb24gZmlsbD0iIzUwN0QxNCIgcG9pbnRzPSIyMjQxLjAzLDE1Ljg4IDExMzYuMzgsMTUuODQgOTA1Ljg4LDQxNS4xIDIwMTAuNTMsNDE1LjA5IiAvPg0KICA8cG9seWdvbiBmaWxsPSIjNzFBQjIzIiBwb2ludHM9IjExMTYuMzgsMTUuODQgNjU1Ljk5LDE1Ljg0IDQ5NC4xNSwyOTYuMTcgNzI4LjM1LDY5NC44OCIgLz4NCiAgPHBvbHlnb24gZmlsbD0iIzhBQzkzNCIgcG9pbnRzPSI0ODQuMTUsMzA2LjE3IDI1NS4wNiw3MDIuOTYgMzg3LjY2LDkzMi42NCA4NDUuODMsOTMyLjYzIiAvPg0KICA8cG9seWdvbiBmaWxsPSIjNThEMEZGIiBwb2ludHM9Ii03LjE3LDE0NDAuMDkgMTA5Ny45NywxNDQwLjA4IDEzMjguNDcsMTA0MC44MyAyMjMuMzIsMTA0MC44NSIgLz4NCiAgPHBvbHlnb24gZmlsbD0iIzEzQURGMyIgcG9pbnRzPSIxNzM5LjA0LDExNjAuOTEgMTUwOS4wOSw3NjIuNjQgMTExNy45NywxNDQwLjA4IDExODYuOTMsMTQ0MC4wOCAxNTc3Ljg3LDE0NDAuMDgiIC8+DQogIDxwb2x5Z29uIGZpbGw9IiMwMzkzRDAiIHBvaW50cz0iMTk3OC44LDc1Mi45NiAxODQ2LjIsNTIzLjMgMTM4Ni42OCw1MjMuMyAxNzQ5LjA0LDExNTAuOTEiIC8+DQo8L3N2Zz4=)](https://github.com/pjazdzyk/brent-dekker-solver) &nbsp;
 
-![image](https://img.shields.io/badge/17-Java-orange?style=for-the-badge) &nbsp;
-![image](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring) &nbsp;
-![image](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white) &nbsp;
-![image](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white) &nbsp;
+CI/CD:<br>
+![image](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white) &nbsp;
+![image](https://img.shields.io/badge/Sonar%20cloud-F3702A?style=for-the-badge&logo=sonarcloud&logoColor=white) &nbsp;
 
 ## FUNCTIONALITY
 
@@ -62,13 +71,11 @@ The library is organized into following modules:
 * Prandtl number.
 
 #### Liquid water properties:
-
 * specific heat,
 * density,
 * specific enthalpy.
 
 #### Physics of flow:
-
 * mass flow,
 * volumetric flow,
 * mass flow of dry air component,
@@ -76,58 +83,29 @@ The library is organized into following modules:
 * based on flow type specified during instance creation, other flows will be recalculated accordingly for specified
   Fluid properties,
 
-#### Air heating and cooling with condensate discharge:
+#### Air heating:
+* heating process for input heat,
+* heating process for target outlet air temperature,
+* heating process for target outlet air relative humidity,
 
-* heating & cooling process driven by heat input / output,
-* heating & cooling process driven by target outlet temperature,
-* heating & cooling process driven by target relative humidity,
+#### Air cooling:
+* dry cooling process for input heat,
+* dry cooling process for target outlet air temperature,
+* real cooling process with condensate discharge process for input heat,
+* real cooling process with condensate discharge process for target outlet temperature,
+* real cooling process with condensate discharge process for target outlet relative humidity,
 
 #### Air stream mixing:
-
 * simple mixing of two flows with humidity content,
 * mixing of multiple flows with humidity content,
 * mixing algorithm which will try to adjust inlet and recirculation flow accordingly, to meet target output dry air mass
   flow and target outlet temperature.
 
-## LEGAL DISCLAIMER
-
-This code is my intellectual property. Please have respect for this. You can use it freely in any academic or
-non-commercial use if you
-properly include the source and author in your references or documentation. For commercial use, please contact me first
-to discuss the license fee.
-
-## PHYSICS NAMING CONVENTION
-
-Naming style in Physics classes is shortened. Typical property abbreviations are used, matching this popular occurrence
-in technical scripts or literature.
-Please find the example below:
-
-```
-calcMaTaTdpRH(){}
-```
-
-- a first fragment - "calc": stands for calculation type method of a given property. "Set" is for setters, "get" for
-  getters.
-- a second fragment - next part is a type of fluidOld: Ma - moist air, Da - dry air, Wv - water vapour, Wt - water
-- a third fragment - is a name of variable returned by this function, Ta means that this function outputs air
-  temperature as the result,
-- a fourth part - are the variables needed as an input.
-
-The approach presented above, which probably may cause a serious headache to any professional programmer, helps me
-organize all methods into a clear
-structure, where corresponding methods are sorting themselves while writing a code using this library.
-
-Do you have a special request what this library should do to help you in your calculations? Just let me know!
-
 ## REFERENCE SOURCES
 
-Each physical property has provided a reference source as well as the argument limit range for which the result is still
-reliable. There are also several methods allowing for calculations of some properties if others are available.
-All methods accept arguments and output results in SI units. However, please read method java-doc to make sure that you
-are aware of what unit output value is represented. Some properties for example specific enthalpy,
-outputs in kJ/kgK not in J/kgK.
+In the JavaDoc, you'll find linked references to specific papers and technical literature listed below.
 
-AIR AND WATER VAPOUR PROPERTIES:
+#### AIR AND WATER VAPOUR PROPERTIES:
 
 * [1] - ASHRAE FUNDAMENTALS 2002, CHAPTER 6 "Psychrometrics"
 * [2] - Buck, Arden L. "New Equations for Computing Vapour Pressure and Enhancement Factor". Journal of Applied
@@ -147,7 +125,7 @@ AIR AND WATER VAPOUR PROPERTIES:
     2000)
 * [10] - M. Wanielista, R. Kersten, R. Eaglin. "Hydrology Water Quantity and Quality Control. 2nd ed." (1997).
 
-LIQUID WATER PROPERTIES:
+#### LIQUID WATER PROPERTIES:
 
 * [1] - F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards' calibration. Journal of
   Research of the National Institute of Standards and Technology (1992)

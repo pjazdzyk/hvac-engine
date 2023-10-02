@@ -54,7 +54,6 @@ public class LiquidWater implements Fluid {
     @Override
     public String toFormattedString() {
         return "LiquidWater:\n\t" +
-                "\n\t" +
                 pressure.toFormattedString("P", "abs", "| ") +
                 temperature.toFormattedString("t", "w") +
                 "\n\t" +
