@@ -218,7 +218,7 @@ public final class HumidAirEquations {
         double h = specificEnthalpy(ta, x, Pat);
         BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
         solver.setCounterpartPoints(estimatedWbt * SOLVER_A_COEF, estimatedWbt * SOLVER_B_COEF);
-        double exactWbt = solver.calcForFunction(temp -> {
+        return solver.calcForFunction(temp -> {
             double Ps1 = saturationPressure(temp);
             double x1 = maxHumidityRatio(Ps1, Pat);
             double h1 = specificEnthalpy(temp, x1, Pat);
@@ -229,7 +229,6 @@ public final class HumidAirEquations {
                 hw1 = LiquidWaterEquations.specificEnthalpy(temp);
             return h + (x1 - x) * hw1 - h1;
         });
-        return exactWbt;
     }
 
     public static Temperature wetBulbTemperature(Temperature dryBulbTemp, RelativeHumidity relHum, Pressure absPressure) {
@@ -299,8 +298,6 @@ public final class HumidAirEquations {
      * @return humidity ratio, kg.wv/kg.da
      */
     public static double humidityRatio(double RH, double Ps, double Pat) {
-        if (RH == 0)
-            return 0.0;
         return WG_RATIO * (RH / 100.0 * Ps) / (Pat - (RH / 100.0) * Ps);
     }
 
@@ -661,7 +658,7 @@ public final class HumidAirEquations {
         //Coefficient used for Arden-Buck equation for calculating saturation pressure Ps, Pa
         double b = 0;
         double c = 0;
-        double d = 0;
+        double d = 1;
         if (ta > 0) {
             b = 18.678;
             c = 257.14;
