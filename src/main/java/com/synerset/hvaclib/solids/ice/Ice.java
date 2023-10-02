@@ -50,12 +50,12 @@ public class Ice {
 
     public String toFormattedString() {
         return "Ice:\n\t" +
-                pressure.toFormattedString("Pabs", "| ") +
-                temperature.toFormattedString("t_ice") +
+                pressure.toFormattedString("P", "abs", "| ") +
+                temperature.toFormattedString("t", "ice") +
                 "\n\t" +
-                specificEnthalpy.toFormattedString("i_ice", "| ") +
-                density.toFormattedString("ρ_ice", "| ") +
-                specificHeat.toFormattedString("cp_ice") +
+                specificEnthalpy.toFormattedString("i", "ice", "| ") +
+                density.toFormattedString("ρ", "ice", "| ") +
+                specificHeat.toFormattedString("cp", "ice") +
                 "\n";
     }
 

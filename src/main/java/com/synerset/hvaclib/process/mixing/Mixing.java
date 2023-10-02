@@ -105,6 +105,8 @@ public class Mixing {
     private String toFormattedStringGenericForFlow(FlowOfHumidAir flowOfAir, String title, String suffix) {
         return title + "\n\t" +
                 flowOfAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", suffix, "| ") +
+                flowOfAir.massFlow().toFormattedString("G", suffix, "| ") +
+                flowOfAir.dryAirMassFlow().toFormattedString("G", "suffix" + ".da") + "\n\t" +
                 flowOfAir.temperature().toFormattedString("DBT", suffix, "| ") +
                 flowOfAir.relativeHumidity().toFormattedString("RH", suffix, "| ") +
                 flowOfAir.humidityRatio().toFormattedString("x", suffix, "| ") +

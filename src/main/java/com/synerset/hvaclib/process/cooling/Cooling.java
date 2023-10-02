@@ -125,6 +125,8 @@ public class Cooling {
         return "PROCESS OF COOLING:\n\t" +
                 "INPUT FLOW:\n\t" +
                 inputInletAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "in", "| ") +
+                inputInletAir.massFlow().toFormattedString("G", "in", "| ") +
+                inputInletAir.dryAirMassFlow().toFormattedString("G", "in.da" ) + "\n\t" +
                 inputInletAir.temperature().toFormattedString("DBT", "in", "| ") +
                 inputInletAir.relativeHumidity().toFormattedString("RH", "in", "| ") +
                 inputInletAir.humidityRatio().toFormattedString("x", "in", "| ") +
@@ -138,6 +140,8 @@ public class Cooling {
                 bypassFactor.toFormattedString("BF", "") + "\n\t" +
                 "OUTLET FLOW:\n\t" +
                 outletFlow.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "out", "| ") +
+                outletFlow.massFlow().toFormattedString("G", "out", "| ") +
+                outletFlow.dryAirMassFlow().toFormattedString("G", "out.da" ) + "\n\t" +
                 outTemperature.toFormattedString("DBT", "out", "| ") +
                 outRelativeHumidity.toFormattedString("RH", "out", "| ") +
                 outHumidityRatio.toFormattedString("x", "out", "| ") +

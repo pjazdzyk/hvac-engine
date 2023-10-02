@@ -162,11 +162,12 @@ public class HumidAir implements Fluid {
                 dryBulbTemperature.toFormattedString("DBT", "", "| ") +
                 relativeHumidity.toFormattedString("RH", "", "| ") +
                 humidityRatio.toFormattedString("x", "", "| ") +
-                "Vapour status: " + vapourState +
+                maxHumidityRatio.toFormattedString("x\"") +
                 "\n\t" +
                 saturationPressure.toFormattedString("Ps", "", "| ") +
                 dewPointTemperature.toFormattedString("WBT", "", "| ") +
-                wetBulbTemperature.toFormattedString("TDP") +
+                wetBulbTemperature.toFormattedString("TDP", "", "| ") +
+                "Vapour status: " + vapourState +
                 "\n\t" +
                 specificEnthalpy.toFormattedString("i", "", "| ") +
                 density.toFormattedString("ρ", "", "| ") +

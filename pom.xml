@@ -4,9 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.synerset</groupId>
     <artifactId>hvac-lib</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>hvac-lib</name>
-    <description>Psychrometrics (Humid Air) analysis library.</description>
+    <description>
+        HVAC-LIB is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic processes
+        such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air streams, and more.
+        Our goal is to provide a straightforward and efficient psychrometrics library, ideal for integration into any HVAC software
+        development project.
+    </description>
 
     <properties>
         <!-- Java specific versions -->
