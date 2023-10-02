@@ -2,53 +2,56 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-    <groupId>io.github.pjazdzyk</groupId>
-    <artifactId>hvaclib</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>hvaclib</name>
-    <description>Psychrometrics (Humid Air) analysis library.</description>
+    <groupId>com.synerset</groupId>
+    <artifactId>hvac-engine</artifactId>
+    <version>1.0.0</version>
+    <name>hvac-engine</name>
+    <description>
+        HVAC|Engine is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic
+        processes such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air
+        streams, and more. Our goal is to provide a straightforward and efficient psychrometrics library, ideal for
+        integration into any HVAC software development project.
+    </description>
 
     <properties>
-        <java.version>17</java.version>
+        <!-- Java specific versions -->
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Synerset library versions -->
+        <brent-solver.version>1.1.4</brent-solver.version>
+        <unitility.version>1.2.0</unitility.version>
+        <!-- Dependency versions -->
         <junit.version>5.9.0</junit.version>
-        <assertJ.version>3.23.1</assertJ.version>
-        <brent-solver.version>1.1.1</brent-solver.version>
-        <validation-api.version>2.0.1.Final</validation-api.version>
+        <assertJ.version>3.24.2</assertJ.version>
+        <junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
     </properties>
 
     <dependencies>
+        <!-- Synerset dependencies -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>com.synerset</groupId>
+            <artifactId>brent-dekker-solver</artifactId>
+            <version>${brent-solver.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>com.synerset</groupId>
+            <artifactId>unitility</artifactId>
+            <version>${unitility.version}</version>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter-api.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>nz.net.ultraq.thymeleaf</groupId>
-            <artifactId>thymeleaf-layout-dialect</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${validation-api.version}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit-jupiter-api.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
@@ -56,22 +59,6 @@
             <version>${assertJ.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.github.pjazdzyk</groupId>
-            <artifactId>brent-dekker-solver</artifactId>
-            <version>${brent-solver.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
