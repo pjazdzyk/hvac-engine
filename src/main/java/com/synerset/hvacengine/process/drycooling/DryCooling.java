@@ -89,7 +89,6 @@ public class DryCooling {
     }
 
     public String toFormattedString() {
-        FlowOfHumidAir inputInletAir = getInputInletAir();
         return "PROCESS OF DRY COOLING:\n\t" +
                 "INPUT FLOW:\n\t" +
                 inputInletAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "in", "| ") +

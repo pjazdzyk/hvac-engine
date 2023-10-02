@@ -48,13 +48,13 @@ public class HumidAir implements Fluid {
         Validators.requireBetweenBoundsInclusive(absPressure, PRESSURE_MIN_LIMIT, PRESSURE_MAX_LIMIT);
         Validators.requireBetweenBoundsInclusive(dryBulbTemperature, TEMPERATURE_MIN_LIMIT, TEMPERATURE_MAX_LIMIT);
         Validators.requireBetweenBoundsInclusive(humidityRatio, HumidityRatio.HUM_RATIO_MIN_LIMIT, HUMIDITY_RATIO_MAX_LIMIT);
-        Pressure saturationPressure = HumidAirEquations.saturationPressure(dryBulbTemperature);
-        Validators.requireValidSaturationPressure(saturationPressure, absPressure, dryBulbTemperature);
+        Pressure satPressure = HumidAirEquations.saturationPressure(dryBulbTemperature);
+        Validators.requireValidSaturationPressure(satPressure, absPressure, dryBulbTemperature);
 
         this.absPressure = absPressure;
         this.dryBulbTemperature = dryBulbTemperature;
         this.humidityRatio = humidityRatio;
-        this.saturationPressure = saturationPressure;
+        this.saturationPressure = satPressure;
         this.density = HumidAirEquations.density(dryBulbTemperature, humidityRatio, absPressure);
         this.relativeHumidity = HumidAirEquations.relativeHumidity(dryBulbTemperature, humidityRatio, absPressure);
         this.maxHumidityRatio = HumidAirEquations.maxHumidityRatio(saturationPressure, absPressure);

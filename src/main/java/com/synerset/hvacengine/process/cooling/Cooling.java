@@ -121,7 +121,6 @@ public class Cooling {
     }
 
     public String toFormattedString() {
-        FlowOfHumidAir inputInletAir = getInputInletAir();
         return "PROCESS OF COOLING:\n\t" +
                 "INPUT FLOW:\n\t" +
                 inputInletAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "in", "| ") +

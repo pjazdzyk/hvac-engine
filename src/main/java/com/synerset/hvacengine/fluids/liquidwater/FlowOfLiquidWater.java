@@ -12,8 +12,8 @@ import java.util.Objects;
 
 public class FlowOfLiquidWater implements Flow<LiquidWater> {
 
-    public static MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
-    public static MassFlow MASS_FLOW_MAX_LIMIT = MassFlow.ofKilogramsPerSecond(5E9);
+    private static final MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
+    private static final MassFlow MASS_FLOW_MAX_LIMIT = MassFlow.ofKilogramsPerSecond(5E9);
     private final LiquidWater liquidWater;
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
