@@ -6,9 +6,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 public final class DryAirEquations {
 
-    public final static double DRY_AIR_MOLECULAR_MASS = 28.96546;               // [kg/mol]             - Dry air molecular mass
-    public final static double DRY_AIR_GAS_CONSTANT = 287.055;                  // [J/(kg*K)]           - Dry air specific gas constant
-    public final static double DRY_AIR_SUTHERLAND_CONSTANT = 111.0;             // [K]                  - Dry air Sutherland Constant
+    public static final double DRY_AIR_MOLECULAR_MASS = 28.96546;               // [kg/mol]             - Dry air molecular mass
+    public static final double DRY_AIR_GAS_CONSTANT = 287.055;                  // [J/(kg*K)]           - Dry air specific gas constant
+    public static final double DRY_AIR_SUTHERLAND_CONSTANT = 111.0;             // [K]                  - Dry air Sutherland Constant
 
     private DryAirEquations() {
     }

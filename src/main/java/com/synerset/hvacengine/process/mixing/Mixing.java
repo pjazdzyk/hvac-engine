@@ -84,8 +84,6 @@ public class Mixing {
     }
 
     public String toFormattedString() {
-        FlowOfHumidAir inputInletAir = getInputInletAir();
-
         StringBuilder stringBuilder = new StringBuilder();
         List<FlowOfHumidAir> recirculationFlows = mixingStrategy.recirculationAirFlows();
         for (int i = 0; i < recirculationFlows.size(); i++) {
