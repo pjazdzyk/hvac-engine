@@ -14,19 +14,19 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 import java.util.function.DoubleFunction;
 
 /**
- * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)<p>
+ * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)
  * Set of static methods for calculating temperature dependant thermophysical air properties. Properties are calculated independently for dry air,
- * water vapour, water mist or ice mist to determine correct values for moist air.<p>
+ * water vapour, water mist or ice mist to determine correct values for moist air.
  * These equations are public, stateless, thread safe, based on primitive types. Can be used for iterative high performance computing of intermediate
  * calculations.
- * <p><p>
+ *
  * PROPERTY ABBREVIATIONS: <p>
  * WT - water <p>
  * WV - water vapour <p>
  * DA - dry air <p>
  * MA - moist air <p>
  * ST - steam <p>
- * <p><p>
+ * <p>
  * REFERENCE SOURCE: <p>
  * [1] ASHRAE Fundamentals 2002, CHAPTER 6 <p>
  * [2] Buck, Arden L. "New Equations for Computing Vapour pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981) <p>
@@ -39,7 +39,7 @@ import java.util.function.DoubleFunction;
  * [9] Tsilingiris P.T "Thermophysical and transport properties of humid air at temperature range between 0 and 100oC". Elsevier, Science Direct (September 2007) <p>
  * [10] E.W. Lemmon, R.T. Jacobsen, S.G. Penoncello, D. Friend. Thermodynamic Properties of Air and Mixtures of Nitrogen, Argon, and Oxygen from 60 to 2000 K at Pressures to 2000 MPa. J. Phys. Chem. Ref. Data, Vol. 29, No. 3, (2000) <p>
  * [11] M. Wanielista, R. Kersten,  R. Eaglin. "Hydrology Water Quantity and Quality Control. 2nd ed." (1997) <p>
- * <p><p>
+ * <p>
  * <p>
  * REFERENCES DESCRIPTION KEY: <p>
  * [reference no] [value symbology in standard, unit] (equation number) [page] <p>

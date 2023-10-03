@@ -9,12 +9,12 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
  * Calculates outlet cooling power (heat of process) for dry cooling case based on target outlet temperature.
- * Target temperature must be lower than inlet flow temp for valid cooling case.<p>
+ * Target temperature must be lower than inlet flow temp for valid cooling case.
  * IMPORTANT: Inappropriate use of dry cooling will produce significant overestimation of outlet temperature or
  * underestimation of required cooling power!
- * Real cooling methodology is recommended to use as relatively accurate representation of real world cooling process.<p>
- * <p>
- * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]<p>
+ * Real cooling methodology is recommended to use as relatively accurate representation of real world cooling process.
+ *
+ * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]
  *
  * @param inletAir          initial {@link FlowOfHumidAir}
  * @param outletTemperature target {@link Temperature}

@@ -4,6 +4,9 @@ import com.synerset.hvacengine.common.Validators;
 import com.synerset.hvacengine.utils.MathUtils;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
+/**
+ * Represents data related to a coolant used in a cooling process.
+ */
 public class CoolantData {
 
     public static final Temperature COOLANT_MIN_TEMPERATURE = Temperature.ofCelsius(0);

@@ -46,7 +46,8 @@ class AirMixingStrategiesTest {
         Temperature expectedOutTemp = Temperature.ofCelsius(expectedOutAirTempVal);
 
         // When
-        FlowOfHumidAir actualOutletFlow = AirMixingProcedures.mixTwoHumidAirFlows(airFlow_in, airFlow_rec);
+        MixingStrategy mixingStrategy = MixingStrategy.of(airFlow_in, airFlow_rec);
+        FlowOfHumidAir actualOutletFlow = mixingStrategy.applyMixing().outletFlow();
 
         MassFlow actualOutDryAirMassFlow = actualOutletFlow.dryAirMassFlow();
         Temperature actualOutAirTemp = actualOutletFlow.temperature();
@@ -73,42 +74,14 @@ class AirMixingStrategiesTest {
                 .getValue());
 
         // When
-        FlowOfHumidAir actualOutletFlow = AirMixingProcedures.mixMultipleHumidAirFlows(inletFlow, recircFlow_1, recircFlow_2);
+        MixingStrategy mixingStrategy = MixingStrategy.of(inletFlow, recircFlow_1, recircFlow_2);
+        FlowOfHumidAir actualOutletFlow = mixingStrategy.applyMixing().outletFlow();
 
         // Then
         assertThat(actualOutletFlow.temperature()).isEqualTo(expectedTemp);
         assertThat(actualOutletFlow.relativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1E-11));
         assertThat(actualOutletFlow.dryAirMassFlow()).isEqualTo(expectedDryAirMassFlow);
 
-    }
-
-    @Test
-    @DisplayName("should return adjust inlet flow and recirculation flow to match target temperature and outlet dry air mass flow")
-    void mixTwoHumidAirFlowsForTargetOutTemp() {
-        // given
-        FlowOfHumidAir inletFlow = FlowOfHumidAir.ofValues(-20.0, 99.0, 2000.0);
-        FlowOfHumidAir recircFlow = FlowOfHumidAir.ofValues(20.0, 30.0, 1000.0);
-        MassFlow minInletFlowDA = MassFlow.ofKilogramsPerSecond(0);
-        MassFlow minRecircFlowDA = MassFlow.ofKilogramsPerSecond(0);
-        Temperature targetOutletTemp = Temperature.ofCelsius(15);
-        MassFlow targetDryAirMassFlow = FlowOfHumidAir.ofValues(15, 40, 1500).massFlow();
-
-        // When
-        AirMixingResult airMixingResult = AirMixingProcedures.mixTwoHumidAirFlowsForTargetOutTemp(inletFlow,
-                recircFlow,
-                minInletFlowDA,
-                minRecircFlowDA,
-                targetDryAirMassFlow,
-                targetOutletTemp);
-        FlowOfHumidAir actualInletFlow = airMixingResult.inletFlow();
-        FlowOfHumidAir actualOutletFlow = airMixingResult.outletFlow();
-        FlowOfHumidAir actualRecircFlow = airMixingResult.recirculationFlow();
-
-        // Then
-        assertThat(actualOutletFlow.temperature().getInCelsius()).isEqualTo(targetOutletTemp.getInCelsius(), withPrecision(1E-3));
-        assertThat(actualOutletFlow.dryAirMassFlow().getInKilogramsPerSecond()).isEqualTo(targetDryAirMassFlow.getInKilogramsPerSecond(), withPrecision(1E-2));
-        assertThat(actualInletFlow.massFlow()).isLessThan(inletFlow.massFlow());
-        assertThat(actualRecircFlow.massFlow()).isGreaterThan(recircFlow.massFlow());
     }
 
 }

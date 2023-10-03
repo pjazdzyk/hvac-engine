@@ -8,12 +8,12 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
  * Calculates outlet temperature for dry cooling case based on input cooling power (inputHeat). Input heat must be
- * passed negative value.<p>
+ * passed negative value.
  * IMPORTANT: Inappropriate use of dry cooling will produce significant overestimation of outlet temperature or
  * underestimation of required cooling power! Real cooling methodology is recommended to use as relatively accurate
- * representation of real world cooling process.<p>
- * <p>
- * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]<p>
+ * representation of real world cooling process.
+ *
+ * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]
  *
  * @param inletAir   initial {@link FlowOfHumidAir}
  * @param inputPower cooling {@link Power}

@@ -14,6 +14,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 import java.util.Objects;
 
+/**
+ * Represents a cooling process, including input parameters, cooling results, and related data.
+ */
 public class Cooling {
     private final CoolingStrategy coolingStrategy;
     private final FlowOfHumidAir inputInletAir;
@@ -32,6 +35,11 @@ public class Cooling {
     private SpecificEnthalpy condensateEnthalpy;
     private AirCoolingResult coolingBulkResults;
 
+    /**
+     * Constructs a Cooling state with the specified cooling strategy.
+     *
+     * @param coolingStrategy The cooling strategy to be applied.
+     */
     public Cooling(CoolingStrategy coolingStrategy) {
         Validators.requireNotNull(coolingStrategy);
         this.coolingStrategy = coolingStrategy;
@@ -120,6 +128,12 @@ public class Cooling {
         return coolingBulkResults;
     }
 
+    /**
+     * Returns a formatted string representation of the cooling process for console output, including input and output
+     * properties.
+     *
+     * @return A formatted string representation of the cooling process.
+     */
     public String toFormattedString() {
         return "PROCESS OF COOLING:\n\t" +
                 "INPUT FLOW:\n\t" +

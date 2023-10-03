@@ -8,6 +8,10 @@ import java.util.Objects;
 
 import static com.synerset.hvacengine.utils.Defaults.STANDARD_ATMOSPHERE;
 
+/**
+ * Represents liquid water with associated thermodynamic properties.
+ * This class implements the Fluid interface.
+ */
 public class LiquidWater implements Fluid {
     public static final Pressure PRESSURE_MIN_LIMIT = Pressure.ofPascal(0);
     public static final Temperature TEMPERATURE_MIN_LIMIT = Temperature.ofCelsius(0);
@@ -18,6 +22,13 @@ public class LiquidWater implements Fluid {
     private final SpecificHeat specificHeat;
     private final SpecificEnthalpy specificEnthalpy;
 
+    /**
+     * Constructs a LiquidWater object with the specified pressure and temperature.
+     *
+     * @param pressure    The pressure of the liquid water.
+     * @param temperature The temperature of the liquid water.
+     * @throws IllegalArgumentException If either pressure or temperature is null or if the values are out of bounds.
+     */
     public LiquidWater(Pressure pressure, Temperature temperature) {
         Validators.requireNotNull(pressure);
         Validators.requireNotNull(temperature);
@@ -51,6 +62,11 @@ public class LiquidWater implements Fluid {
         return specificEnthalpy;
     }
 
+    /**
+     * Returns a formatted string for console output, representation of the LiquidWater object.
+     *
+     * @return A formatted string representation.
+     */
     @Override
     public String toFormattedString() {
         return "LiquidWater:\n\t" +
@@ -92,10 +108,24 @@ public class LiquidWater implements Fluid {
     }
 
     // Static factory methods
+
+    /**
+     * Creates a new LiquidWater object with the specified pressure and temperature.
+     *
+     * @param pressure    The pressure of the liquid water.
+     * @param temperature The temperature of the liquid water.
+     * @return A new LiquidWater object.
+     */
     public static LiquidWater of(Pressure pressure, Temperature temperature) {
         return new LiquidWater(pressure, temperature);
     }
 
+    /**
+     * Creates a new LiquidWater object with the specified temperature at standard atmosphere pressure.
+     *
+     * @param temperature The temperature of the liquid water.
+     * @return A new LiquidWater object.
+     */
     public static LiquidWater of(Temperature temperature) {
         return new LiquidWater(STANDARD_ATMOSPHERE, temperature);
     }

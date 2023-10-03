@@ -12,6 +12,11 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 import java.util.Objects;
 
+/**
+ * The DryCooling class represents a dry cooling process state applied to a flow of humid air using a specific strategy.
+ * It calculates the resulting air properties after the cooling process and provides various getters to access
+ * these properties.
+ */
 public class DryCooling {
     private final DryCoolingStrategy dryCoolingStrategy;
     private final FlowOfHumidAir inputInletAir;
@@ -25,6 +30,12 @@ public class DryCooling {
     private SpecificEnthalpy outSpecificEnthalpy;
     private DryAirCoolingResult dryCoolingBulkResult;
 
+    /**
+     * Constructs a DryCooling instance with the specified dry cooling strategy.
+     *
+     * @param dryCoolingStrategy The strategy for the dry cooling process.
+     * @throws NullPointerException if the dryCoolingStrategy is null.
+     */
     public DryCooling(DryCoolingStrategy dryCoolingStrategy) {
         Validators.requireNotNull(dryCoolingStrategy);
         this.dryCoolingStrategy = dryCoolingStrategy;
@@ -88,12 +99,18 @@ public class DryCooling {
         return dryCoolingBulkResult;
     }
 
+    /**
+     * Returns a formatted string representation of the dry cooling process, for console output,
+     * including input and output properties.
+     *
+     * @return A formatted string representation of the dry cooling process.
+     */
     public String toFormattedString() {
         return "PROCESS OF DRY COOLING:\n\t" +
                 "INPUT FLOW:\n\t" +
                 inputInletAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "in", "| ") +
                 inputInletAir.massFlow().toFormattedString("G", "in", "| ") +
-                inputInletAir.dryAirMassFlow().toFormattedString("G", "in.da" ) + "\n\t" +
+                inputInletAir.dryAirMassFlow().toFormattedString("G", "in.da") + "\n\t" +
                 inputInletAir.temperature().toFormattedString("DBT", "in", "| ") +
                 inputInletAir.relativeHumidity().toFormattedString("RH", "in", "| ") +
                 inputInletAir.humidityRatio().toFormattedString("x", "in", "| ") +
@@ -103,7 +120,7 @@ public class DryCooling {
                 "OUTLET FLOW:\n\t" +
                 outletFlow.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "out", "| ") +
                 outletFlow.massFlow().toFormattedString("G", "out", "| ") +
-                outletFlow.dryAirMassFlow().toFormattedString("G", "out.da" ) + "\n\t" +
+                outletFlow.dryAirMassFlow().toFormattedString("G", "out.da") + "\n\t" +
                 outTemperature.toFormattedString("DBT", "out", "| ") +
                 outRelativeHumidity.toFormattedString("RH", "out", "| ") +
                 outHumidityRatio.toFormattedString("x", "out", "| ") +
@@ -140,6 +157,12 @@ public class DryCooling {
                 '}';
     }
 
+    /**
+     * Create a DryCooling instance with the specified dry cooling strategy.
+     *
+     * @param dryCoolingStrategy The strategy for the dry cooling process.
+     * @return A new DryCooling instance.
+     */
     public static DryCooling of(DryCoolingStrategy dryCoolingStrategy) {
         return new DryCooling(dryCoolingStrategy);
     }

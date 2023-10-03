@@ -13,6 +13,9 @@ import java.util.Objects;
 
 import static com.synerset.hvacengine.utils.Defaults.STANDARD_ATMOSPHERE;
 
+/**
+ * A class representing the properties of humid air, including temperature, pressure, humidity, and more.
+ */
 public class HumidAir implements Fluid {
     public static final Pressure PRESSURE_MIN_LIMIT = Pressure.ofPascal(50_000);
     public static final Pressure PRESSURE_MAX_LIMIT = Pressure.ofBar(50);
@@ -38,6 +41,13 @@ public class HumidAir implements Fluid {
     private final PrandtlNumber prandtlNumber;
     private final DryAir dryAirComponent;
 
+    /**
+     * Constructs a `HumidAir` instance with the specified absolute pressure, dry bulb temperature, and humidity ratio.
+     *
+     * @param absPressure        The absolute pressure of the humid air in pascals (Pa).
+     * @param dryBulbTemperature The dry bulb temperature of the humid air in degrees Celsius (°C).
+     * @param humidityRatio      The humidity ratio of the humid air in kilograms of water vapor per kilogram of dry air (kg/kg).
+     */
     public HumidAir(Pressure absPressure,
                     Temperature dryBulbTemperature,
                     HumidityRatio humidityRatio) {
@@ -69,18 +79,6 @@ public class HumidAir implements Fluid {
         this.thermalDiffusivity = SharedEquations.thermalDiffusivity(density, thermalConductivity, specificHeat);
         this.prandtlNumber = SharedEquations.prandtlNumber(dynamicViscosity, thermalConductivity, specificHeat);
         this.dryAirComponent = DryAir.of(absPressure, dryBulbTemperature);
-    }
-
-    public static VapourState determineVapourState(Temperature dryBulbTemperature, HumidityRatio humidityRatio, HumidityRatio maxHumidityRatio) {
-        if (humidityRatio == maxHumidityRatio) {
-            return VapourState.SATURATED;
-        } else if ((humidityRatio.isGreaterThan(maxHumidityRatio)) && dryBulbTemperature.isPositive()) {
-            return VapourState.WATER_MIST;
-        } else if ((humidityRatio.isGreaterThan(maxHumidityRatio)) && dryBulbTemperature.isNegativeOrZero()) {
-            return VapourState.ICE_FOG;
-        } else {
-            return VapourState.UNSATURATED;
-        }
     }
 
     public Temperature temperature() {
@@ -234,15 +232,51 @@ public class HumidAir implements Fluid {
         }
     }
 
+    private static VapourState determineVapourState(Temperature dryBulbTemperature, HumidityRatio humidityRatio, HumidityRatio maxHumidityRatio) {
+        if (humidityRatio == maxHumidityRatio) {
+            return VapourState.SATURATED;
+        } else if ((humidityRatio.isGreaterThan(maxHumidityRatio)) && dryBulbTemperature.isPositive()) {
+            return VapourState.WATER_MIST;
+        } else if ((humidityRatio.isGreaterThan(maxHumidityRatio)) && dryBulbTemperature.isNegativeOrZero()) {
+            return VapourState.ICE_FOG;
+        } else {
+            return VapourState.UNSATURATED;
+        }
+    }
+
     // Static factory methods
-    public static HumidAir of(Pressure pressure, Temperature temperature, HumidityRatio humidityRatio) {
-        return new HumidAir(pressure, temperature, humidityRatio);
+
+    /**
+     * Returns a `HumidAir` instance with the specified properties.
+     *
+     * @param pressure           The absolute pressure of the humid air.
+     * @param dryBulbTemperature The dry bulb temperature of the humid air.
+     * @param humidityRatio      The humidity ratio of the humid air.
+     * @return A `HumidAir` instance.
+     */
+    public static HumidAir of(Pressure pressure, Temperature dryBulbTemperature, HumidityRatio humidityRatio) {
+        return new HumidAir(pressure, dryBulbTemperature, humidityRatio);
     }
 
-    public static HumidAir of(Temperature temperature, HumidityRatio humidityRatio) {
-        return new HumidAir(STANDARD_ATMOSPHERE, temperature, humidityRatio);
+    /**
+     * Returns a `HumidAir` instance with the specified properties, with default absolute pressure of 101325 Pa.
+     *
+     * @param dryBulbTemperature The dry bulb temperature of the humid air.
+     * @param humidityRatio      The humidity ratio of the humid air.
+     * @return A `HumidAir` instance.
+     */
+    public static HumidAir of(Temperature dryBulbTemperature, HumidityRatio humidityRatio) {
+        return new HumidAir(STANDARD_ATMOSPHERE, dryBulbTemperature, humidityRatio);
     }
 
+    /**
+     * Returns a `HumidAir` instance with the specified properties.
+     *
+     * @param pressure           The absolute pressure of the humid air.
+     * @param dryBulbTemperature The dry bulb temperature of the humid air.
+     * @param relativeHumidity   The relativeHumidity of the humid air.
+     * @return A `HumidAir` instance.
+     */
     public static HumidAir of(Pressure pressure, Temperature dryBulbTemperature, RelativeHumidity relativeHumidity) {
         Validators.requireBetweenBoundsInclusive(relativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.RH_MAX_LIMIT);
         Pressure satPressure = HumidAirEquations.saturationPressure(dryBulbTemperature);
@@ -251,9 +285,15 @@ public class HumidAir implements Fluid {
         return new HumidAir(pressure, dryBulbTemperature, humRatio);
     }
 
+    /**
+     * Returns a `HumidAir` instance with the specified properties, with default absolute pressure of 101325 Pa.
+     *
+     * @param dryBulbTemperature The dry bulb temperature of the humid air.
+     * @param relativeHumidity   The relativeHumidity of the humid air.
+     * @return A `HumidAir` instance.
+     */
     public static HumidAir of(Temperature dryBulbTemperature, RelativeHumidity relativeHumidity) {
         return HumidAir.of(STANDARD_ATMOSPHERE, dryBulbTemperature, relativeHumidity);
     }
-
 
 }

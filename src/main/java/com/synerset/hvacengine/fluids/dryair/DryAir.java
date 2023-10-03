@@ -10,6 +10,9 @@ import java.util.Objects;
 
 import static com.synerset.hvacengine.utils.Defaults.STANDARD_ATMOSPHERE;
 
+/**
+ * A class representing dry air as a fluid, providing access to various properties of dry air.
+ */
 public class DryAir implements Fluid {
 
     public static final Pressure PRESSURE_MIN_LIMIT = Pressure.ofPascal(0);
@@ -25,6 +28,12 @@ public class DryAir implements Fluid {
     private final ThermalConductivity thermalConductivity;
     private final PrandtlNumber prandtlNumber;
 
+    /**
+     * Construct a `DryAir` instance with the specified pressure and temperature.
+     *
+     * @param pressure    The pressure of dry air in pascals (Pa).
+     * @param temperature The temperature of dry air in degrees Celsius (°C).
+     */
     public DryAir(Pressure pressure, Temperature temperature) {
         Validators.requireNotNull(pressure);
         Validators.requireNotNull(temperature);
@@ -123,21 +132,25 @@ public class DryAir implements Fluid {
                 '}';
     }
 
-    // Custom equality check
-
-    public boolean isEqualsWithPrecision(DryAir dryAir, double epsilon) {
-        if (this == dryAir) return true;
-        if (dryAir == null) return false;
-        return pressure.isEqualsWithPrecision(dryAir.pressure, epsilon)
-                && temperature.isEqualsWithPrecision(dryAir.temperature, epsilon);
-    }
-
     // Static factory methods
 
+    /**
+     * Create a `DryAir` instance with the specified pressure and temperature.
+     *
+     * @param pressure    The pressure of dry air in pascals (Pa).
+     * @param temperature The temperature of dry air in degrees Celsius (°C).
+     * @return A new `DryAir` instance.
+     */
     public static DryAir of(Pressure pressure, Temperature temperature) {
         return new DryAir(pressure, temperature);
     }
 
+    /**
+     * Create a `DryAir` instance with the specified temperature at standard atmospheric pressure.
+     *
+     * @param temperature The temperature of dry air in degrees Celsius (°C).
+     * @return A new `DryAir` instance at standard atmospheric pressure.
+     */
     public static DryAir of(Temperature temperature) {
         return new DryAir(STANDARD_ATMOSPHERE, temperature);
     }

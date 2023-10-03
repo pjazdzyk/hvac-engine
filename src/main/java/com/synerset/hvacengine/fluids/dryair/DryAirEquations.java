@@ -137,7 +137,7 @@ public final class DryAirEquations {
     }
 
     /**
-     * Returns dry air density, kg/m3
+     * Returns dry air density, kg/m3 <p>
      *
      * @param ta   air temperature, oC
      * @param absP atmospheric pressure, Pa

@@ -14,10 +14,10 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
  * Real cooling coil process. Returns real cooling coil process result as double array, to achieve expected outlet
- * temperature.<p>
+ * temperature.
  * This method represents real cooling coil, where additional energy is used to discharge more condensate compared to
- * ideal coil.<p>
- * REFERENCE SOURCE: [1] [t2,oC] (-) [37]<p>
+ * ideal coil.
+ * REFERENCE SOURCE: [1] [t2,oC] (-) [37]
  *
  * @param inletAir             initial {@link FlowOfHumidAir}
  * @param coolantData          average cooling coil wall {@link CoolantData}

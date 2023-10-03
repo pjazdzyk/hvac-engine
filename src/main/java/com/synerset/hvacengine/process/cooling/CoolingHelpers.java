@@ -7,6 +7,9 @@ import com.synerset.unitility.unitsystem.flows.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
+/**
+ * Additional tool functions used in cooling process.
+ */
 final class CoolingHelpers {
 
     private CoolingHelpers() {

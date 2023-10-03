@@ -10,6 +10,10 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
 
+/**
+ * Represents a flow of liquid water state with associated properties.
+ * This class implements the Flow interface for LiquidWater.
+ */
 public class FlowOfLiquidWater implements Flow<LiquidWater> {
 
     private static final MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
@@ -18,6 +22,13 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
 
+    /**
+     * Constructs a FlowOfLiquidWater object with the specified liquid water and mass flow rate.
+     *
+     * @param liquidWater The liquid water.
+     * @param massFlow    The mass flow rate.
+     * @throws IllegalArgumentException If either liquidWater or massFlow is null or if massFlow is out of bounds.
+     */
     public FlowOfLiquidWater(LiquidWater liquidWater, MassFlow massFlow) {
         Validators.requireNotNull(liquidWater);
         Validators.requireNotNull(massFlow);
@@ -67,6 +78,11 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
         return liquidWater.specificEnthalpy();
     }
 
+    /**
+     * Returns a formatted string representation for console output of the FlowOfLiquidWater object.
+     *
+     * @return A formatted string representation.
+     */
     @Override
     public String toFormattedString() {
         return "FlowOfLiquidWater:\n\t" +
@@ -102,23 +118,58 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
     }
 
     // Class factory methods
+
+    /**
+     * Creates a new FlowOfLiquidWater object with the specified mass flow rate.
+     *
+     * @param massFlow The new mass flow rate.
+     * @return A new FlowOfLiquidWater object with the specified mass flow rate.
+     */
     public FlowOfLiquidWater withMassFlow(MassFlow massFlow) {
         return FlowOfLiquidWater.of(liquidWater, massFlow);
     }
 
+    /**
+     * Creates a new FlowOfLiquidWater object with the specified volumetric flow rate.
+     *
+     * @param volFlow The new volumetric flow rate.
+     * @return A new FlowOfLiquidWater object with the specified volumetric flow rate.
+     */
     public FlowOfLiquidWater withVolFlow(VolumetricFlow volFlow) {
         return FlowOfLiquidWater.of(liquidWater, volFlow);
     }
 
+    /**
+     * Creates a new FlowOfLiquidWater object with the specified liquid water.
+     *
+     * @param liquidWater The new liquid water.
+     * @return A new FlowOfLiquidWater object with the specified liquid water.
+     */
     public FlowOfLiquidWater withHumidAir(LiquidWater liquidWater) {
         return FlowOfLiquidWater.of(liquidWater, massFlow);
     }
 
     // Static factory methods
+
+    /**
+     * Static factory method to create a new FlowOfLiquidWater object with the specified liquid water and mass flow rate.
+     *
+     * @param liquidWater The liquid water.
+     * @param massFlow    The mass flow rate.
+     * @return A new FlowOfLiquidWater object.
+     */
     public static FlowOfLiquidWater of(LiquidWater liquidWater, MassFlow massFlow) {
         return new FlowOfLiquidWater(liquidWater, massFlow);
     }
 
+    /**
+     * Static factory method to create a new FlowOfLiquidWater object with the specified liquid water and volumetric flow rate.
+     *
+     * @param liquidWater The liquid water.
+     * @param volFlow     The volumetric flow rate.
+     * @return A new FlowOfLiquidWater object.
+     * @throws IllegalArgumentException If either liquidWater or volFlow is null.
+     */
     public static FlowOfLiquidWater of(LiquidWater liquidWater, VolumetricFlow volFlow) {
         Validators.requireNotNull(liquidWater);
         Validators.requireNotNull(volFlow);

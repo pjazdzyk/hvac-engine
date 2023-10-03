@@ -10,6 +10,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
 
+/**
+ * A class representing the flow of dry air, providing access to various properties of the flow.
+ */
 public class FlowOfDryAir implements Flow<DryAir> {
 
     private static final MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
@@ -18,6 +21,12 @@ public class FlowOfDryAir implements Flow<DryAir> {
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
 
+    /**
+     * Construct a `FlowOfDryAir` instance with the specified dry air and mass flow rate.
+     *
+     * @param dryAir   The dry air associated with the flow.
+     * @param massFlow The mass flow rate of dry air in appropriate units.
+     */
     public FlowOfDryAir(DryAir dryAir, MassFlow massFlow) {
         Validators.requireNotNull(dryAir);
         Validators.requireNotNull(massFlow);
@@ -102,29 +111,72 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     // Class factory methods
+    // Class factory methods
+
+    /**
+     * Create a new `FlowOfDryAir` instance with the specified mass flow rate.
+     *
+     * @param massFlow The mass flow rate of dry air in appropriate units.
+     * @return A new `FlowOfDryAir` instance.
+     */
     public FlowOfDryAir withMassFlow(MassFlow massFlow) {
         return FlowOfDryAir.of(dryAir, massFlow);
     }
 
+    /**
+     * Create a new `FlowOfDryAir` instance with the specified volumetric flow rate.
+     *
+     * @param volFlow The volumetric flow rate of dry air in appropriate units.
+     * @return A new `FlowOfDryAir` instance.
+     */
     public FlowOfDryAir withVolFlow(VolumetricFlow volFlow) {
         return FlowOfDryAir.of(dryAir, volFlow);
     }
 
+    /**
+     * Create a new `FlowOfDryAir` instance with the specified dry air.
+     *
+     * @param dryAir The dry air associated with the flow.
+     * @return A new `FlowOfDryAir` instance.
+     */
     public FlowOfDryAir withHumidAir(DryAir dryAir) {
         return FlowOfDryAir.of(dryAir, massFlow);
     }
 
     // Static factory methods
+
+    /**
+     * Create a new `FlowOfDryAir` instance with the specified dry air and mass flow rate.
+     *
+     * @param dryAir   The dry air associated with the flow.
+     * @param massFlow The mass flow rate of dry air in appropriate units.
+     * @return A new `FlowOfDryAir` instance.
+     */
     public static FlowOfDryAir of(DryAir dryAir, MassFlow massFlow) {
         return new FlowOfDryAir(dryAir, massFlow);
     }
 
+    /**
+     * Create a new `FlowOfDryAir` instance with the specified dry air and volumetric flow rate.
+     *
+     * @param dryAir  The dry air associated with the flow.
+     * @param volFlow The volumetric flow rate of dry air in appropriate units.
+     * @return A new `FlowOfDryAir` instance.
+     */
     public static FlowOfDryAir of(DryAir dryAir, VolumetricFlow volFlow) {
         Validators.requireNotNull(volFlow);
         MassFlow massFlow = FlowEquations.volFlowToMassFlow(dryAir.density(), volFlow);
         return new FlowOfDryAir(dryAir, massFlow);
     }
 
+    /**
+     * Create a new `FlowOfDryAir` instance with specified absolute pressure, temperature, and volumetric flow rate.
+     *
+     * @param absPressure The absolute pressure of dry air in pascals (Pa).
+     * @param temperature The temperature of dry air in degrees Celsius (°C).
+     * @param m3hVolFlow  The volumetric flow rate of dry air in cubic meters per hour (m³/h).
+     * @return A new `FlowOfDryAir` instance.
+     */
     public static FlowOfDryAir ofValues(double absPressure, double temperature, double m3hVolFlow) {
         Pressure absPress = Pressure.ofPascal(absPressure);
         Temperature temp = Temperature.ofCelsius(temperature);
@@ -133,6 +185,13 @@ public class FlowOfDryAir implements Flow<DryAir> {
         return of(dryAir, volFlow);
     }
 
+    /**
+     * Create a new `FlowOfDryAir` instance with specified temperature and volumetric flow rate at standard atmosphere pressure.
+     *
+     * @param temperature The temperature of dry air in degrees Celsius (°C).
+     * @param m3hVolFlow  The volumetric flow rate of dry air in cubic meters per hour (m³/h).
+     * @return A new `FlowOfDryAir` instance.
+     */
     public static FlowOfDryAir ofValues(double temperature, double m3hVolFlow) {
         double pressure = Defaults.STANDARD_ATMOSPHERE.getInPascals();
         return ofValues(pressure, temperature, m3hVolFlow);
