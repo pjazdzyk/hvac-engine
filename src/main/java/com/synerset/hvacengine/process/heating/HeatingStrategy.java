@@ -10,12 +10,35 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.SpecificEnthalpy;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
+/**
+ * The HeatingStrategy interface defines methods for applying heating processes to a flow of humid air.
+ * Implementations of this interface represent different strategies for heating the incoming air using either
+ * input power, a target relative humidity, or a target temperature.
+ */
 public interface HeatingStrategy {
 
+    /**
+     * Apply the heating process and calculate the resulting air properties.
+     *
+     * @return An AirHeatingResult object containing the properties of the heated air.
+     */
     AirHeatingResult applyHeating();
 
+    /**
+     * Get the inlet air flow properties.
+     *
+     * @return The FlowOfHumidAir representing the properties of the incoming air.
+     */
     FlowOfHumidAir inletAir();
 
+    /**
+     * Create a HeatingStrategy instance based on the specified input parameters representing heating power.
+     *
+     * @param inletAirFlow The incoming air flow properties.
+     * @param inputPower   The heating power (positive value).
+     * @return A HeatingStrategy instance for heating based on input power.
+     * @throws InvalidArgumentException If the input parameters are invalid.
+     */
     static HeatingStrategy of(FlowOfHumidAir inletAirFlow, Power inputPower) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inputPower);
@@ -38,6 +61,14 @@ public interface HeatingStrategy {
         return new HeatingFromPower(inletAirFlow, inputPower);
     }
 
+    /**
+     * Create a HeatingStrategy instance based on the specified input parameters representing target relative humidity.
+     *
+     * @param inletAirFlow           The incoming air flow properties.
+     * @param targetRelativeHumidity The desired target relative humidity.
+     * @return A HeatingStrategy instance for heating based on a target relative humidity.
+     * @throws InvalidArgumentException If the input parameters are invalid.
+     */
     static HeatingStrategy of(FlowOfHumidAir inletAirFlow, RelativeHumidity targetRelativeHumidity) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetRelativeHumidity);
@@ -49,6 +80,14 @@ public interface HeatingStrategy {
         return new HeatingFromRH(inletAirFlow, targetRelativeHumidity);
     }
 
+    /**
+     * Create a HeatingStrategy instance based on the specified input parameters representing target temperature.
+     *
+     * @param inletAirFlow      The incoming air flow properties.
+     * @param targetTemperature The desired target temperature.
+     * @return A HeatingStrategy instance for heating based on a target temperature.
+     * @throws InvalidArgumentException If the input parameters are invalid.
+     */
     static HeatingStrategy of(FlowOfHumidAir inletAirFlow, Temperature targetTemperature) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetTemperature);

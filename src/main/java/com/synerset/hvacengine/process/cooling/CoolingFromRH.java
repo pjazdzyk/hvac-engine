@@ -13,10 +13,10 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
  * Returns real cooling coil process result as double array, to achieve expected outlet Relative Humidity.
- * Results in the array are organized as following:<p>
+ * Results in the array are organized as following:
  * result: [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC),
- * condensate mass flow (kg/s)]<p>
- * REFERENCE SOURCE: [1] [t2,oC] (-) [37]<p>
+ * condensate mass flow (kg/s)]
+ * REFERENCE SOURCE: [1] [t2,oC] (-) [37]
  *
  * @param inletAir               initial {@link FlowOfHumidAir}
  * @param coolantData            average cooling coil wall {@link CoolantData}

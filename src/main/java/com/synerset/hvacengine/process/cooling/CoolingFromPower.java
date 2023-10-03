@@ -11,9 +11,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
- * Real cooling coil process result as double array, for provided cooling power. Results in the array are organized as following:<p>
- * result: [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]<p>
- * REFERENCE SOURCE: [1] [Q, W] (-) [37]<p>
+ * Real cooling coil process result as double array, for provided cooling power. Results in the array are organized as following:
+ * result: [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
+ * REFERENCE SOURCE: [1] [Q, W] (-) [37]
  *
  * @param inletAir         initial {@link FlowOfHumidAir}
  * @param coolantData coolant data {@link CoolantData}

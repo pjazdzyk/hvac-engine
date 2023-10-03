@@ -3,14 +3,14 @@ package com.synerset.hvacengine.solids.ice;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 /**
- * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)<p>
+ * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)
  * Set of static methods for calculating temperature dependant thermophysical ice properties.
  * <p>
- * REFERENCE SOURCE: <p>
- * [1] https://www.engineeringtoolbox.com/ice-thermal-properties-d_576.html <p>
- * <p>
- * REFERENCES DESCRIPTION KEY: <p>
- * [reference no] [value symbology in standard, unit] (equation number) [page] <p>
+ * REFERENCE SOURCE:
+ * [1] https://www.engineeringtoolbox.com/ice-thermal-properties-d_576.html
+ *
+ * REFERENCES DESCRIPTION KEY:
+ * [reference no] [value symbology in standard, unit] (equation number) [page]
  *
  * @author Piotr Jażdżyk, MScEng
  */
@@ -22,10 +22,10 @@ public final class IceEquations {
     public static final double HEAT_OF_ICE_MELT = 334.1;                     // [kJ/kg]              - Heat of ice melt
 
     /**
-     * Returns ice enthalpy at provided temperature and constant pressure at atmospheric pressure.<p>
+     * Returns ice enthalpy at provided temperature and constant pressure at atmospheric pressure.
      * It already includes the heat of ice melting, for the reference temperature of 0oC.
      * It will output 0 for positive temperatures.
-     * REFERENCE SOURCE: [1] (-) [kJ/kgK]<p>
+     * REFERENCE SOURCE: [1] (-) [kJ/kgK]
      *
      * @param tx ice thermal , oC
      * @return ice specific enthalpy, kJ/kgK
@@ -40,9 +40,9 @@ public final class IceEquations {
     }
 
     /**
-     * Returns ice specific heat at provided temperature and constant pressure at atmospheric pressure<p>
-     * REFERENCE SOURCE: [1] (-) [kJ/kgK]<p>
-     * EQUATION LIMITS: {-100.0 oC, 0.0 oC} at Pat=atmospheric <p>
+     * Returns ice specific heat at provided temperature and constant pressure at atmospheric pressure
+     * REFERENCE SOURCE: [1] (-) [kJ/kgK]
+     * EQUATION LIMITS: {-100.0 oC, 0.0 oC} at Pat=atmospheric
      *
      * @param tx ice temperature, oC
      * @return ice specific heat, kJ/kgK
@@ -60,8 +60,8 @@ public final class IceEquations {
 
     /**
      * Returns ice thermal conductivity at provided temperature and constant pressure at atmospheric pressure<p>
-     * REFERENCE SOURCE: [1] (-) [W/mK]<p>
-     * EQUATION LIMITS: {-100.0 oC, 0.0 oC} at Pat=atmospheric <p>
+     * REFERENCE SOURCE: [1] (-) [W/mK]
+     * EQUATION LIMITS: {-100.0 oC, 0.0 oC} at Pat=atmospheric
      *
      * @param tx ice thermal , oC
      * @return ice specific heat, W/mK
@@ -78,9 +78,9 @@ public final class IceEquations {
     }
 
     /**
-     * Returns density at provided temperature and constant pressure at atmospheric pressure<p>
-     * REFERENCE SOURCE: [1] (-) [kg/m3]<p>
-     * EQUATION LIMITS: {-100.0 oC, 0.0 oC} at Pat=atmospheric <p>
+     * Returns density at provided temperature and constant pressure at atmospheric pressure
+     * REFERENCE SOURCE: [1] (-) [kg/m3]
+     * EQUATION LIMITS: {-100.0 oC, 0.0 oC} at Pat=atmospheric
      *
      * @param tx ice temperature, oC
      * @return ice specific heat, kg/m3

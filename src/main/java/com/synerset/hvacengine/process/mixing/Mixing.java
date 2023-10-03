@@ -5,7 +5,6 @@ import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
-import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.SpecificEnthalpy;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
@@ -13,10 +12,14 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The Mixing class represents a mixing process involving humid air flows. It utilizes a MixingStrategy to perform the
+ * mixing operation and calculates properties of the resulting mixed air flow, such as temperature, relative humidity,
+ * humidity ratio, and specific enthalpy.
+ */
 public class Mixing {
     private final MixingStrategy mixingStrategy;
     private final FlowOfHumidAir inputInletAir;
-    private Power heatOfProcess;
     private FlowOfHumidAir outletFlow;
     private HumidAir outletAir;
     private Pressure outPressure;
@@ -24,7 +27,13 @@ public class Mixing {
     private RelativeHumidity outRelativeHumidity;
     private HumidityRatio outHumidityRatio;
     private SpecificEnthalpy outSpecificEnthalpy;
+    private AirMixingResult airMixingBulkResult;
 
+    /**
+     * Constructs a Mixing instance with the specified MixingStrategy.
+     *
+     * @param mixingStrategy The mixing strategy to be used for the mixing process.
+     */
     public Mixing(MixingStrategy mixingStrategy) {
         Validators.requireNotNull(mixingStrategy);
         this.mixingStrategy = mixingStrategy;
@@ -33,8 +42,8 @@ public class Mixing {
     }
 
     private void applyProcess() {
-        outletFlow = mixingStrategy.applyMixing();
-        heatOfProcess = Power.ofWatts(0.0);
+        airMixingBulkResult = mixingStrategy.applyMixing();
+        outletFlow = airMixingBulkResult.outletFlow();
         outPressure = outletFlow.pressure();
         outletAir = outletFlow.fluid();
         outTemperature = outletFlow.temperature();
@@ -49,10 +58,6 @@ public class Mixing {
 
     public FlowOfHumidAir getInputInletAir() {
         return inputInletAir;
-    }
-
-    public Power getHeatOfProcess() {
-        return heatOfProcess;
     }
 
     public FlowOfHumidAir getOutletFlow() {
@@ -83,6 +88,16 @@ public class Mixing {
         return outSpecificEnthalpy;
     }
 
+    public AirMixingResult getAirMixingBulkResult() {
+        return airMixingBulkResult;
+    }
+
+    /**
+     * Generates a formatted string representation of the mixing process for console output, including information
+     * about the input flow, recirculation air flows, and the outlet flow.
+     *
+     * @return A formatted string representing the details of the mixing process.
+     */
     public String toFormattedString() {
         StringBuilder stringBuilder = new StringBuilder();
         List<FlowOfHumidAir> recirculationFlows = mixingStrategy.recirculationAirFlows();
@@ -128,7 +143,6 @@ public class Mixing {
     public String toString() {
         return "Heating{" +
                 "inputInletAir=" + inputInletAir +
-                ", inputHeatingPower=" + heatOfProcess +
                 ", outletFlow=" + outletFlow +
                 ", outletTemperature=" + outTemperature +
                 ", outletRelativeHumidity=" + outRelativeHumidity +
@@ -137,6 +151,12 @@ public class Mixing {
                 '}';
     }
 
+    /**
+     * Creates a new instance of the Mixing class with the specified MixingStrategy.
+     *
+     * @param mixingStrategy The mixing strategy to be used for the mixing process.
+     * @return A new Mixing instance configured with the given mixing strategy.
+     */
     public static Mixing of(MixingStrategy mixingStrategy) {
         return new Mixing(mixingStrategy);
     }

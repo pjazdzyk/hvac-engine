@@ -8,9 +8,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
- * Calculates outlet temperature for heating case based on input heat of process.<p>
- * This method can be used only for heating, inputHeatQ must be passed as positive value<p>
- * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]<p>
+ * Calculates outlet temperature for heating case based on input heat of process.
+ * This method can be used only for heating, inputHeatQ must be passed as positive value
+ * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]
  *
  * @param inletAir  initial {@link FlowOfHumidAir}
  * @param inputPower heating {@link Power}

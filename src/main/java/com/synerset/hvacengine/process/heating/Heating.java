@@ -12,6 +12,11 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 import java.util.Objects;
 
+/**
+ * The Heating class represents a heating process applied to a flow of humid air using a specific strategy.
+ * It calculates the resulting air properties after the heating process and provides various getters to access
+ * these properties.
+ */
 public class Heating {
     private final HeatingStrategy heatingStrategy;
     private final FlowOfHumidAir inputInletAir;
@@ -25,6 +30,12 @@ public class Heating {
     private SpecificEnthalpy outSpecificEnthalpy;
     private AirHeatingResult heatingBulkResults;
 
+    /**
+     * Constructs a Heating instance with the specified heating strategy.
+     *
+     * @param heatingStrategy The strategy for the heating process.
+     * @throws NullPointerException if the heatingStrategy is null.
+     */
     public Heating(HeatingStrategy heatingStrategy) {
         Validators.requireNotNull(heatingStrategy);
         this.heatingStrategy = heatingStrategy;
@@ -88,12 +99,18 @@ public class Heating {
         return heatingBulkResults;
     }
 
+    /**
+     * Returns a formatted string representation of the heating process for console output, including input and output
+     * properties.
+     *
+     * @return A formatted string representation of the heating process.
+     */
     public String toFormattedString() {
         return "PROCESS OF HEATING:\n\t" +
                 "INPUT FLOW:\n\t" +
                 inputInletAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "in", "| ") +
                 inputInletAir.massFlow().toFormattedString("G", "in", "| ") +
-                inputInletAir.dryAirMassFlow().toFormattedString("G", "in.da" ) + "\n\t" +
+                inputInletAir.dryAirMassFlow().toFormattedString("G", "in.da") + "\n\t" +
                 inputInletAir.temperature().toFormattedString("DBT", "in", "| ") +
                 inputInletAir.relativeHumidity().toFormattedString("RH", "in", "| ") +
                 inputInletAir.humidityRatio().toFormattedString("x", "in", "| ") +
@@ -103,7 +120,7 @@ public class Heating {
                 "OUTLET FLOW:\n\t" +
                 outletFlow.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "out", "| ") +
                 outletFlow.massFlow().toFormattedString("G", "out", "| ") +
-                outletFlow.dryAirMassFlow().toFormattedString("G", "out.da" ) + "\n\t" +
+                outletFlow.dryAirMassFlow().toFormattedString("G", "out.da") + "\n\t" +
                 outTemperature.toFormattedString("DBT", "out", "| ") +
                 outRelativeHumidity.toFormattedString("RH_out", "out", "| ") +
                 outHumidityRatio.toFormattedString("x_out", "out", "| ") +
@@ -136,6 +153,12 @@ public class Heating {
                 '}';
     }
 
+    /**
+     * Create a Heating instance with the specified heating strategy.
+     *
+     * @param heatingStrategy The strategy for the heating process.
+     * @return A new Heating instance.
+     */
     public static Heating of(HeatingStrategy heatingStrategy) {
         return new Heating(heatingStrategy);
     }

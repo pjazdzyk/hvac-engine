@@ -14,6 +14,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;
 
+/**
+ * A class representing the flow of humid air, providing access to various properties of the flow.
+ */
 public class FlowOfHumidAir implements Flow<HumidAir> {
 
     public static MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
@@ -23,6 +26,12 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     private final VolumetricFlow volFlow;
     private final FlowOfDryAir flowOfDryAir;
 
+    /**
+     * Construct a `FlowOfHumidAir` instance with the specified humid air and mass flow rate.
+     *
+     * @param humidAir   The humid air associated with the flow.
+     * @param massFlowHa The mass flow rate of humid air in appropriate units.
+     */
     public FlowOfHumidAir(HumidAir humidAir, MassFlow massFlowHa) {
         Validators.requireNotNull(humidAir);
         Validators.requireNotNull(massFlowHa);
@@ -105,14 +114,33 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     // Class factory methods
+
+    /**
+     * Create a new `FlowOfHumidAir` instance with the specified mass flow rate.
+     *
+     * @param massFlow The mass flow rate of humid air in appropriate units.
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public FlowOfHumidAir withMassFlow(MassFlow massFlow) {
         return FlowOfHumidAir.of(humidAir, massFlow);
     }
 
+    /**
+     * Create a new `FlowOfHumidAir` instance with the specified volumetric flow rate.
+     *
+     * @param volFlow The volumetric flow rate of humid air in appropriate units.
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public FlowOfHumidAir withVolFlow(VolumetricFlow volFlow) {
         return FlowOfHumidAir.of(humidAir, volFlow);
     }
 
+    /**
+     * Create a new `FlowOfHumidAir` instance with the specified humid air.
+     *
+     * @param humidAir The humid air associated with the flow.
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public FlowOfHumidAir withHumidAir(HumidAir humidAir) {
         return FlowOfHumidAir.of(humidAir, massFlow);
     }
@@ -122,7 +150,7 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         return "FlowOfHumidAir:\n\t" +
                 massFlow.toFormattedString("G", "", "| ") +
                 massFlow.toKiloGramPerHour().toFormattedString("G", "", "| ") +
-                volFlow.toFormattedString("V", "","| ") +
+                volFlow.toFormattedString("V", "", "| ") +
                 volFlow.toCubicMetersPerHour().toFormattedString("V", "") +
                 "\n\t" +
                 dryAirMassFlow().toFormattedString("G", "da", "| ") +
@@ -156,16 +184,38 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     // Static factory methods
+
+    /**
+     * Create a new `FlowOfHumidAir` instance with the specified humid air and mass flow rate.
+     *
+     * @param humidAir   The humid air associated with the flow.
+     * @param massFlowHa The mass flow rate of humid air in appropriate units.
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public static FlowOfHumidAir of(HumidAir humidAir, MassFlow massFlowHa) {
         return new FlowOfHumidAir(humidAir, massFlowHa);
     }
 
+    /**
+     * Create a new `FlowOfHumidAir` instance with the specified humid air and volumetric flow rate.
+     *
+     * @param humidAir  The humid air associated with the flow.
+     * @param volFlowHa The volumetric flow rate of humid air in appropriate units.
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public static FlowOfHumidAir of(HumidAir humidAir, VolumetricFlow volFlowHa) {
         Validators.requireNotNull(humidAir);
         Validators.requireNotNull(volFlowHa);
         return new FlowOfHumidAir(humidAir, FlowEquations.volFlowToMassFlow(humidAir.density(), volFlowHa));
     }
 
+    /**
+     * Create a new `FlowOfHumidAir` instance with specified dry air mass flow rate.
+     *
+     * @param humidAir   The humid air associated with the flow.
+     * @param massFlowDa The mass flow rate of dry air in appropriate units.
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public static FlowOfHumidAir ofDryAirMassFlow(HumidAir humidAir, MassFlow massFlowDa) {
         Validators.requireNotNull(humidAir);
         Validators.requireNotNull(massFlowDa);
@@ -175,6 +225,16 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         return FlowOfHumidAir.of(humidAir, humidAirMassFlow);
     }
 
+    /**
+     * Create a new `FlowOfHumidAir` instance with specified absolute pressure, dry bulb temperature, relative humidity,
+     * and volumetric flow rate.
+     *
+     * @param absPressure The absolute pressure of humid air in pascals (Pa).
+     * @param dryBulbTemp The dry bulb temperature of humid air in degrees Celsius (°C).
+     * @param relHum      The relative humidity of humid air in percentage.
+     * @param m3hVolFlow  The volumetric flow rate of humid air in cubic meters per hour (m³/h).
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public static FlowOfHumidAir ofValues(double absPressure, double dryBulbTemp, double relHum, double m3hVolFlow) {
         Pressure pAbs = Pressure.ofPascal(absPressure);
         Temperature DBT = Temperature.ofCelsius(dryBulbTemp);
@@ -184,6 +244,15 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         return of(humidAir, volFlow);
     }
 
+    /**
+     * Create a new `FlowOfHumidAir` instance with default absolute pressure: 101325 Pa, dry bulb temperature,
+     * relative humidity, and volumetric flow rate.
+     *
+     * @param dryBulbTemp The dry bulb temperature of humid air in degrees Celsius (°C).
+     * @param relHum      The relative humidity of humid air in percentage.
+     * @param m3hVolFlow  The volumetric flow rate of humid air in cubic meters per hour (m³/h).
+     * @return A new `FlowOfHumidAir` instance.
+     */
     public static FlowOfHumidAir ofValues(double dryBulbTemp, double relHum, double m3hVolFlow) {
         double pressure = Defaults.STANDARD_ATMOSPHERE.getInPascals();
         return ofValues(pressure, dryBulbTemp, relHum, m3hVolFlow);

@@ -8,10 +8,10 @@
     <version>1.0.0</version>
     <name>hvac-engine</name>
     <description>
-        HVAC|Engine is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic
+        HVAC|Engine is a comprehensive library for calculating moist air properties, including crucial thermodynamic
         processes such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air
-        streams, and more. Our goal is to provide a straightforward and efficient psychrometrics library, ideal for
-        integration into any HVAC software development project.
+        streams, and more. Our goal is to provide a straightforward and efficient psychrometrics analysis library,
+        for integration into any HVAC software project.
     </description>
     <url>https://github.com/pjazdzyk/hvac-engine</url>
 

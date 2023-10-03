@@ -5,6 +5,9 @@ import com.synerset.hvacengine.fluids.liquidwater.FlowOfLiquidWater;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 
+/**
+ * Represents the result of an air cooling process.
+ */
 public record AirCoolingResult(FlowOfHumidAir outletFlow,
                                Power heatOfProcess,
                                FlowOfLiquidWater condensateFlow,

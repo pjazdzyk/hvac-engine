@@ -14,4 +14,4 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          java-version: 21
+          java-version: 17

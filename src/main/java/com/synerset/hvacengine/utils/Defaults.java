@@ -5,6 +5,9 @@ import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
+/**
+ * This class contains default values for various HVAC-related parameters.
+ */
 public final class Defaults {
 
     private Defaults() {
