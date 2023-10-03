@@ -3,6 +3,34 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.synerset</groupId>
+    <artifactId>hvac-engine</artifactId>
+    <version>1.0.0</version>
+    <name>hvac-engine</name>
+    <description>
+        HVAC|Engine is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic
+        processes such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air
+        streams, and more. Our goal is to provide a straightforward and efficient psychrometrics library, ideal for
+        integration into any HVAC software development project.
+    </description>
+    <url>https://github.com/pjazdzyk/hvac-engine</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Piotr Jażdżyk</name>
+            <email>piotr.jazdzyk@o2.pl</email>
+            <organization>SYNERSET</organization>
+            <organizationUrl>https://www.synerset.com</organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
         <!-- Java specific versions -->
         <maven.compiler.source>21</maven.compiler.source>
@@ -15,6 +43,21 @@
         <junit.version>5.9.0</junit.version>
         <assertJ.version>3.24.2</assertJ.version>
         <junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
+        <!-- Plugins versions -->
+        <jacoco.version>0.8.10</jacoco.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+
+        <!-- Sonar Cloud Properties-->
+        <sonar.organization>synerset</sonar.organization>
+        <sonar.projectKey>pjazdzyk_hvac-engine</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.language>java</sonar.language>
+        <sonar.binaries>target/classes</sonar.binaries>
     </properties>
 
     <dependencies>
@@ -51,33 +94,50 @@
         </dependency>
     </dependencies>
 
-    <groupId>com.synerset</groupId>
-    <artifactId>hvac-engine</artifactId>
-    <version>1.0.0</version>
-    <name>hvac-engine</name>
-    <description>
-        HVAC|Engine is a comprehensive library for calculating moist air properties, encompassing crucial thermodynamic
-        processes such as heating, dry cooling, real cooling with condensate discharge, mixing single or multiple air
-        streams, and more. Our goal is to provide a straightforward and efficient psychrometrics library, ideal for
-        integration into any HVAC software development project.
-    </description>
-    <url>https://github.com/pjazdzyk/hvac-engine</url>
-
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>https://www.opensource.org/licenses/mit-license.php</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>Piotr Jażdżyk</name>
-            <email>piotr.jazdzyk@o2.pl</email>
-            <organization>SYNERSET</organization>
-            <organizationUrl>https://www.synerset.com</organizationUrl>
-        </developer>
-    </developers>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <formats>
+                                <format>XML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
@@ -100,7 +160,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
+                        <version>${nexus-staging-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
@@ -113,7 +173,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.2.1</version>
+                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -128,7 +188,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.4.1</version>
+                        <version>${maven-javadoc-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -163,7 +223,7 @@
             </build>
         </profile>
 
-        <!-- Profile : Github Apache Maven Packages -->
+        <!-- Profile : GitHub Apache Maven Packages -->
         <profile>
             <id>githubDeploy</id>
             <distributionManagement>
