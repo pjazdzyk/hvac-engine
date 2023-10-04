@@ -58,6 +58,8 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.language>java</sonar.language>
         <sonar.binaries>target/classes</sonar.binaries>
+
+        <additionalJOption>-Xdoclint:none</additionalJOption>
     </properties>
 
     <dependencies>
@@ -195,6 +197,9 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
