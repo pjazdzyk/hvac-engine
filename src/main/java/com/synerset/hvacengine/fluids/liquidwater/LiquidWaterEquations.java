@@ -13,7 +13,7 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
  * do not want to lose memory or performance for unnecessary object creation. <p>
  * <p>
  * REFERENCE SOURCES: <p>
- * [1] F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards calibration. Journal of Research of the National Institute of Standards and Technology (1992) <p>
+ * [1] F.E. Jones, G.L. Harris. ITS-90 Density of water formulation for volumetric standards' calibration. Journal of Research of the National Institute of Standards and Technology (1992) <p>
  * [2] Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html <p>
  * <p>
  * REFERENCES LEGEND KEY: <p>

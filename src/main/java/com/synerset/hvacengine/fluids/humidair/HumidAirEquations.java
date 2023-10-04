@@ -15,21 +15,20 @@ import java.util.function.DoubleFunction;
 
 /**
  * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)
- * Set of static methods for calculating temperature dependant thermophysical air properties. Properties are calculated independently for dry air,
- * water vapour, water mist or ice mist to determine correct values for moist air.
- * These equations are public, stateless, thread safe, based on primitive types. Can be used for iterative high performance computing of intermediate
+ * Set of static methods for calculating temperature-dependent thermophysical air properties. Properties are calculated independently for dry air,
+ * water vapor, water mist, or ice mist to determine correct values for moist air.
+ * These equations are public, stateless, thread-safe, based on primitive types. Can be used for iterative high-performance computing of intermediate
  * calculations.
+ * PROPERTY ABBREVIATIONS:<p>
+ * WT - water<p>
+ * WV - water vapor<p>
+ * DA - dry air<p>
+ * MA - moist air<p>
+ * ST - steam<p>
  *
- * PROPERTY ABBREVIATIONS: <p>
- * WT - water <p>
- * WV - water vapour <p>
- * DA - dry air <p>
- * MA - moist air <p>
- * ST - steam <p>
- * <p>
- * REFERENCE SOURCE: <p>
+ * REFERENCE SOURCE:<p>
  * [1] ASHRAE Fundamentals 2002, CHAPTER 6 <p>
- * [2] Buck, Arden L. "New Equations for Computing Vapour pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981) <p>
+ * [2] Buck, Arden L. "New Equations for Computing Vapor pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981) <p>
  * [3] Buck Research Instruments L.L.C. "MODEL CR-1A HYGROMETER WITH AUTO FILL OPERATING MANUAL" (May 2012). <p>
  * [4] Stull R. "Wet-Bulb Temperature from Relative Humidity and Air Temperature". Manuscript received 14 July 2011, in final form 28 August 2011 <p>
  * [5] Morvay Z.K, Gvozdenac D.D. "Fundamentals for analysis and calculation of energy and environmental performance". Applied Industrial Energy And Environmental Management. <p>
@@ -46,7 +45,6 @@ import java.util.function.DoubleFunction;
  *
  * @author Piotr Jażdżyk, MScEng
  */
-
 public final class HumidAirEquations {
 
     private static final double WG_RATIO = WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS / DryAirEquations.DRY_AIR_MOLECULAR_MASS;
@@ -586,8 +584,8 @@ public final class HumidAirEquations {
     }
 
     /**
-     * Returns moist air dry bulb temperature, based on ix, x and Pat, oC.
-     * LIMITS: ta < 70oC
+     * Returns moist air dry bulb temperature, based on ix, x and Pat, oC. \
+     * LIMITS: ta &lt 70oC.
      *
      * @param ix  air specific enthalpy, kJ/kg
      * @param x   air humidity ratio, kg.wv/kg.da
