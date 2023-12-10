@@ -5,7 +5,7 @@
 
     <groupId>com.synerset</groupId>
     <artifactId>hvac-engine</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>hvac-engine</name>
     <description>
         HVAC|Engine is a comprehensive library for calculating moist air properties, including crucial thermodynamic
@@ -38,17 +38,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Synerset library versions -->
         <brent-solver.version>1.1.4</brent-solver.version>
-        <unitility.version>0.0.1-SNAPSHOT</unitility.version>
+        <unitility.version>2.0.0</unitility.version>
         <!-- Dependency versions -->
-        <junit.version>5.9.0</junit.version>
         <assertJ.version>3.24.2</assertJ.version>
-        <junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
+        <junit-jupiter-api.version>5.10.1</junit-jupiter-api.version>
         <!-- Plugins versions -->
-        <jacoco.version>0.8.10</jacoco.version>
-        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <jacoco.version>0.8.11</jacoco.version>
+        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+        <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
 
         <!-- Sonar Cloud Properties-->
         <sonar.organization>synerset</sonar.organization>
@@ -58,9 +58,7 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.language>java</sonar.language>
         <sonar.binaries>target/classes</sonar.binaries>
-
         <additionalJOption>-Xdoclint:none</additionalJOption>
-        <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
     </properties>
 
     <dependencies>
