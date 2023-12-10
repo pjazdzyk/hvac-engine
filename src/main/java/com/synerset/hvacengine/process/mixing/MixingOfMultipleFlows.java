@@ -25,31 +25,31 @@ record MixingOfMultipleFlows(FlowOfHumidAir inletAir,
 
     @Override
     public AirMixingResult applyMixing() {
-        double mda_out = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double xMda = mda_out * inletAir.humidityRatio().getInKilogramPerKilogram();
-        double iMda = mda_out * inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
-        double p_out = inletAir.pressure().getInPascals();
+        double mdaOut = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double xMda = mdaOut * inletAir.humidityRatio().getInKilogramPerKilogram();
+        double iMda = mdaOut * inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double pOut = inletAir.pressure().getInPascals();
 
         for (FlowOfHumidAir flow : recirculationAirFlows) {
-            mda_out += flow.dryAirMassFlow().getInKilogramsPerSecond();
+            mdaOut += flow.dryAirMassFlow().getInKilogramsPerSecond();
             xMda += flow.dryAirMassFlow().getInKilogramsPerSecond() * flow.fluid().humidityRatio().getInKilogramPerKilogram();
             iMda += flow.dryAirMassFlow().getInKilogramsPerSecond() * flow.fluid().specificEnthalpy().getInKiloJoulesPerKiloGram();
-            p_out = Double.max(p_out, flow.pressure().getInPascals());
+            pOut = Double.max(pOut, flow.pressure().getInPascals());
         }
 
-        if (mda_out == 0) {
-            throw new InvalidArgumentException(String.format("Sum of all dry air mass recirculationFlows. %s", mda_out));
+        if (mdaOut == 0) {
+            throw new InvalidArgumentException(String.format("Sum of all dry air mass recirculationFlows. %s", mdaOut));
         }
 
-        double x_out = xMda / mda_out;
-        double i_out = iMda / mda_out;
-        double t_out = HumidAirEquations.dryBulbTemperatureIX(i_out, x_out, p_out);
+        double xOut = xMda / mdaOut;
+        double iOut = iMda / mdaOut;
+        double tOut = HumidAirEquations.dryBulbTemperatureIX(iOut, xOut, pOut);
 
-        HumidAir outletHumidAir = HumidAir.of(Pressure.ofPascal(p_out),
-                Temperature.ofCelsius(t_out),
-                HumidityRatio.ofKilogramPerKilogram(x_out));
+        HumidAir outletHumidAir = HumidAir.of(Pressure.ofPascal(pOut),
+                Temperature.ofCelsius(tOut),
+                HumidityRatio.ofKilogramPerKilogram(xOut));
 
-        FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, MassFlow.ofKilogramsPerSecond(mda_out));
+        FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, MassFlow.ofKilogramsPerSecond(mdaOut));
 
         return new AirMixingResult(inletAir, recirculationAirFlows, outletFlow);
     }

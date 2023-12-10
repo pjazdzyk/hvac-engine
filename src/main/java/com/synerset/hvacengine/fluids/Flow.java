@@ -72,7 +72,7 @@ public interface Flow<F extends Fluid> {
      *
      * @return A formatted string representation of the flow properties.
      */
-    String toFormattedString();
+    String toConsoleOutput();
 
     /**
      * Compare this flow with another flow of the same type for equality within a specified precision.
@@ -88,6 +88,6 @@ public interface Flow<F extends Fluid> {
         if (this.getClass() != flowOfFluid.getClass()) return false;
 
         return fluid().isEqualsWithPrecision(flowOfFluid.fluid(), epsilon)
-                && massFlow().isEqualsWithPrecision(flowOfFluid.massFlow(), epsilon);
+                && massFlow().equalsWithPrecision(flowOfFluid.massFlow(), epsilon);
     }
 }

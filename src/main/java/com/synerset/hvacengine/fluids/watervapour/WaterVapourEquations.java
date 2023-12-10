@@ -8,9 +8,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 public final class WaterVapourEquations {
 
-    public static final double WATER_VAPOUR_MOLECULAR_MASS = 18.01528;           // [kg/mol]            - Water vapour molecular mass
-    public static final double WATER_VAPOUR_SPEC_GAS_CONSTANT = 461.52;          // [J/(kg*K)]          - Water vapour specific gas constant
-    public static final double WATER_VAPOUR_SUTHERLAND_CONSTANT = 961.0;         // [K]                 - water vapour Sutherland Constant
+    public static final double WATER_VAPOUR_MOLECULAR_MASS = 18.01528;     // [kg/mol]   Water vapour molecular mass
+    public static final double WATER_VAPOUR_SPEC_GAS_CONSTANT = 461.52;    // [J/(kg*K)] Water vapour specific gas constant
+    public static final double WATER_VAPOUR_SUTHERLAND_CONSTANT = 961.0;   // [K]        water vapour Sutherland Constant
 
     private WaterVapourEquations() {
     }
@@ -20,13 +20,13 @@ public final class WaterVapourEquations {
      * REFERENCE SOURCE: [4] [u,kg/(m*s)] (6.14) [4]<p>
      * EQUATION LIMITS: {-40oC,+300oC},{1atm (1.013bar)}<p>
      *
-     * @param ta air temperature, oC
+     * @param tvw water vapour temperature, oC
      * @return water vapour dynamic viscosity, kg/(m*s)
      */
-    public static double dynamicViscosity(double ta) {
-        double T = ta + 273.15;
-        double aNum = Math.sqrt(T / 647.27);
-        double bAux = 647.27 / T;
+    public static double dynamicViscosity(double tvw) {
+        double tk = tvw + 273.15;
+        double aNum = Math.sqrt(tk / 647.27);
+        double bAux = 647.27 / tk;
         double cDnum = 0.0181583 + 0.0177624 * bAux + 0.0105287 * Math.pow(bAux, 2) - 0.0036744 * Math.pow(bAux, 3);
         return (aNum / cDnum) * Math.pow(10, -6);
     }
@@ -40,12 +40,12 @@ public final class WaterVapourEquations {
     /**
      * Returns water vapour kinematic viscosity, m^2/s<p>
      *
-     * @param ta     air temperature, oC
-     * @param rho_Wv dry air density, kg/m3
+     * @param tw    water vapour temperature, oC
+     * @param rhoWv dry air density, kg/m3
      * @return kinematic viscosity, m^2/s
      */
-    public static double kinematicViscosity(double ta, double rho_Wv) {
-        return dynamicViscosity(ta) / rho_Wv;
+    public static double kinematicViscosity(double tw, double rhoWv) {
+        return dynamicViscosity(tw) / rhoWv;
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature temperature, Density waterVapourDensity) {
@@ -60,15 +60,15 @@ public final class WaterVapourEquations {
      * REFERENCE SOURCE: [4] [k,W/(m*K)] (6.17) [5]<p>
      * EQUATION LIMITS: {0oC,+220oC},{1atm (1.013bar)}<p>
      *
-     * @param ta air temperature, oC
+     * @param tw water vapour temperature, oC
      * @return dry air thermal conductivity, W/(m*K)
      */
-    public static double thermalConductivity(double ta) {
+    public static double thermalConductivity(double tw) {
         return 1.74822 * Math.pow(10, -2) + 7.69127
-                * Math.pow(10, -5) * ta - 3.23464
-                * Math.pow(10, -7) * Math.pow(ta, 2) + 2.59524
-                * Math.pow(10, -9) * Math.pow(ta, 3) - 3.1765
-                * Math.pow(10, -12) * Math.pow(ta, 4);
+                * Math.pow(10, -5) * tw - 3.23464
+                * Math.pow(10, -7) * Math.pow(tw, 2) + 2.59524
+                * Math.pow(10, -9) * Math.pow(tw, 3) - 3.1765
+                * Math.pow(10, -12) * Math.pow(tw, 4);
     }
 
     public static ThermalConductivity thermalConductivity(Temperature temperature) {
@@ -80,12 +80,12 @@ public final class WaterVapourEquations {
     /**
      * Returns water vapour specific enthalpy, kJ/kg<p>
      *
-     * @param ta dry air temperature, oC
+     * @param tw dry water vapour temperature, oC
      * @return water vapour specific enthalpy, kJ/kg
      */
-    public static double specificEnthalpy(double ta) {
-        double cp_Wv = specificHeat(ta);
-        return cp_Wv * ta + LiquidWaterEquations.HEAT_OF_WATER_VAPORIZATION;
+    public static double specificEnthalpy(double tw) {
+        double cpWv = specificHeat(tw);
+        return cpWv * tw + LiquidWaterEquations.HEAT_OF_WATER_VAPORIZATION;
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature temperature) {
@@ -99,13 +99,13 @@ public final class WaterVapourEquations {
      * REFERENCE SOURCE: [6] [cp,kJ/(kg*K)] (-) [-]<p>
      * EQUATION LIMITS: {-40.0oC,+300oC},{1atm (0.1bar, 5.0bar)}<p>
      *
-     * @param ta air temperature, oC
+     * @param tw water vapour temperature, oC
      * @return dry air specific heat, kJ/(kg*K)
      */
-    public static double specificHeat(double ta) {
-        double tk = ta + 273.15;
+    public static double specificHeat(double tw) {
+        double tk = tw + 273.15;
         double c0, c1, c2, c3, c4, c5, c6;
-        if (ta <= -48.15) {
+        if (tw <= -48.15) {
             c0 = 1.8429999999889115e+000;
             c1 = 4.0000000111904223e-005;
             c2 = -2.7939677238430251e-016;
@@ -134,16 +134,16 @@ public final class WaterVapourEquations {
     /**
      * Returns water vapour density, based on partial vapour pressure derived from relative humidity, kg/m3
      *
-     * @param ta   air temperature, oC
-     * @param RH   relative humidity, %
+     * @param tw   water vapour temperature, oC
+     * @param rh   relative humidity, %
      * @param pAbs absolute pressure, Pa
      * @return water vapour density, kg/m3
      */
-    public static double density(double ta, double RH, double pAbs) {
-        double tk = ta + 273.15;
-        double P_Da = (RH / 100) * HumidAirEquations.saturationPressure(ta);
-        double P_Wv = pAbs - P_Da;
-        return P_Wv / (WATER_VAPOUR_SPEC_GAS_CONSTANT * tk);
+    public static double density(double tw, double rh, double pAbs) {
+        double tk = tw + 273.15;
+        double pDa = (rh / 100) * HumidAirEquations.saturationPressure(tw);
+        double pWv = pAbs - pDa;
+        return pWv / (WATER_VAPOUR_SPEC_GAS_CONSTANT * tk);
     }
 
     public static Density density(Temperature temperature, RelativeHumidity relativeHumidity, Pressure pressure) {
@@ -159,12 +159,12 @@ public final class WaterVapourEquations {
     /**
      * Returns water vapour density, kg/m3
      *
-     * @param ta   air temperature, oC
+     * @param tw   water vapour temperature, oC
      * @param pAbs absolute pressure, Pa
      * @return water vapour density, kg/m3
      */
-    public static double density(double ta, double pAbs) {
-        double tk = ta + 273.15;
+    public static double density(double tw, double pAbs) {
+        double tk = tw + 273.15;
         return pAbs / (WATER_VAPOUR_SPEC_GAS_CONSTANT * tk);
     }
 

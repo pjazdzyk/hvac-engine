@@ -1,5 +1,6 @@
 package com.synerset.hvacengine.common;
 
+import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
 import com.synerset.hvacengine.common.exceptions.MissingArgumentException;
 import com.synerset.hvacengine.fluids.dryair.DryAir;
 import com.synerset.hvacengine.fluids.dryair.FlowOfDryAir;
@@ -54,33 +55,36 @@ class FlowLimitsTest {
     @DisplayName("FlowOfDryAir: should throw exception when arguments exceeds limits")
     void shouldThrowExceptionWhenArgumentsExceedsLimitsDryAir() {
         DryAir dryAir = DryAir.of(Pressure.STANDARD_ATMOSPHERE, Defaults.INDOOR_SUMMER_TEMP);
-        MassFlow massFlowMinLimit = MassFlow.ofKilogramsPerSecond(0);
-        MassFlow massFlowMaxLimit = MassFlow.ofKilogramsPerSecond(5E9);
-
-        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, massFlowMinLimit.subtract(1)));
-        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, massFlowMaxLimit.add(1)));
+        MassFlow exceededMinLimit = MassFlow.ofKilogramsPerSecond(-1);
+        MassFlow exceededMaxLimit = MassFlow.ofKilogramsPerSecond(5E9 + 1);
+        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, exceededMinLimit))
+                .isInstanceOf(InvalidArgumentException.class);
+        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, exceededMaxLimit))
+                .isInstanceOf(InvalidArgumentException.class);
     }
 
     @Test
     @DisplayName("FlowOfWater: should throw exception when arguments exceeds limits")
     void shouldThrowExceptionWhenArgumentsExceedsLimitsWater() {
         LiquidWater liquidWater = LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, Defaults.INDOOR_SUMMER_TEMP);
-        MassFlow massFlowMinLimit = MassFlow.ofKilogramsPerSecond(0);
-        MassFlow massFlowMaxLimit = MassFlow.ofKilogramsPerSecond(5E9);
-
-        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, massFlowMinLimit.subtract(1)));
-        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, massFlowMaxLimit.add(1)));
+        MassFlow exceededMinLimit = MassFlow.ofKilogramsPerSecond(-1);
+        MassFlow exceededMaxLimit = MassFlow.ofKilogramsPerSecond(5E9 + 1);
+        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, exceededMinLimit))
+                .isInstanceOf(InvalidArgumentException.class);
+        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, exceededMaxLimit))
+                .isInstanceOf(InvalidArgumentException.class);
     }
 
     @Test
     @DisplayName("HumidAir: should throw exception when arguments exceeds limits")
     void shouldThrowExceptionWhenArgumentsExceedsLimitsHumidAir() {
         HumidAir humidAir = HumidAir.of(Pressure.STANDARD_ATMOSPHERE, Defaults.INDOOR_SUMMER_TEMP, Defaults.INDOOR_SUMMER_RH);
-        MassFlow massFlowMinLimit = MassFlow.ofKilogramsPerSecond(0);
-        MassFlow massFlowMaxLimit = MassFlow.ofKilogramsPerSecond(5E9);
-
-        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, massFlowMinLimit.subtract(1)));
-        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, massFlowMaxLimit.add(1)));
+        MassFlow exceededMinLimit = MassFlow.ofKilogramsPerSecond(-1);
+        MassFlow exceededMaxLimit = MassFlow.ofKilogramsPerSecond(5E9 + 1);
+        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, exceededMinLimit))
+                .isInstanceOf(InvalidArgumentException.class);
+        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, exceededMaxLimit))
+                .isInstanceOf(InvalidArgumentException.class);
     }
 
 }

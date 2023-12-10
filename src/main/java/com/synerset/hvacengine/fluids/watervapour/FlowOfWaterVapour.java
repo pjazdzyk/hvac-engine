@@ -67,15 +67,16 @@ public class FlowOfWaterVapour implements Flow<WaterVapour> {
     }
 
     @Override
-    public String toFormattedString() {
-        return "FlowOfWaterVapour:\n\t" +
-                massFlow.toFormattedString("G", "wv", "| ") +
-                massFlow.toKiloGramPerHour().toFormattedString("G", "wv", "| ") +
-                volFlow.toFormattedString("V", "| ") +
-                volFlow.toCubicMetersPerHour().toFormattedString("V", "wv") +
-                "\n\t" +
-                waterVapour.toFormattedString() +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "FlowOfWaterVapour:" + end +
+                massFlow.toEngineeringFormat("G_wv", digits) + separator +
+                massFlow.toKiloGramPerHour().toEngineeringFormat("G_wv", digits) + separator +
+                volFlow.toEngineeringFormat("V_wv", digits) +
+                volFlow.toCubicMetersPerHour().toEngineeringFormat("V_wv", digits) + end +
+                waterVapour.toConsoleOutput();
     }
 
     @Override

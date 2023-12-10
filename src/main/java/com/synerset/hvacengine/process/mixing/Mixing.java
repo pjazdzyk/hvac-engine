@@ -98,32 +98,34 @@ public class Mixing {
      *
      * @return A formatted string representing the details of the mixing process.
      */
-    public String toFormattedString() {
+    public String toConsoleOutput() {
+        String end = "\n\t";
         StringBuilder stringBuilder = new StringBuilder();
         List<FlowOfHumidAir> recirculationFlows = mixingStrategy.recirculationAirFlows();
         for (int i = 0; i < recirculationFlows.size(); i++) {
-            String flowAsString = toFormattedStringGenericForFlow(recirculationFlows.get(i), "RECIRCULATION AIR_" + i + ":", "rec_" + i);
-            stringBuilder.append(flowAsString).append("\n\t");
+            String flowAsString = toConsoleOutputGenericForFlow(recirculationFlows.get(i), "RECIRCULATION AIR_" + i + ":", "rec_" + i);
+            stringBuilder.append(flowAsString).append(end);
         }
         String recirculationFlowsPart = stringBuilder.toString();
 
-        return "PROCESS OF MIXING:" +
-                "\n\t" +
-                toFormattedStringGenericForFlow(inputInletAir, "INPUT FLOW:", "in") +
-                "\n\t" +
+        return "PROCESS OF MIXING:" + end +
+                toConsoleOutputGenericForFlow(inputInletAir, "INPUT FLOW:", "in") + end +
                 recirculationFlowsPart +
-                toFormattedStringGenericForFlow(outletFlow, "OUTLET FLOW:", "out");
+                toConsoleOutputGenericForFlow(outletFlow, "OUTLET FLOW:", "out") + end;
     }
 
-    private String toFormattedStringGenericForFlow(FlowOfHumidAir flowOfAir, String title, String suffix) {
-        return title + "\n\t" +
-                flowOfAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", suffix, "| ") +
-                flowOfAir.massFlow().toFormattedString("G", suffix, "| ") +
-                flowOfAir.dryAirMassFlow().toFormattedString("G", "suffix" + ".da") + "\n\t" +
-                flowOfAir.temperature().toFormattedString("DBT", suffix, "| ") +
-                flowOfAir.relativeHumidity().toFormattedString("RH", suffix, "| ") +
-                flowOfAir.humidityRatio().toFormattedString("x", suffix, "| ") +
-                flowOfAir.specificEnthalpy().toFormattedString("i", suffix);
+    private String toConsoleOutputGenericForFlow(FlowOfHumidAir flowOfAir, String title, String suffix) {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return title + end +
+                flowOfAir.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_" + suffix, digits) + separator +
+                flowOfAir.massFlow().toEngineeringFormat("G_" + suffix, digits) + separator +
+                flowOfAir.dryAirMassFlow().toEngineeringFormat("G_" + suffix + ".da", digits) + end +
+                flowOfAir.temperature().toEngineeringFormat("DBT_" + suffix, digits) + separator +
+                flowOfAir.relativeHumidity().toEngineeringFormat("RH_" + suffix, digits) + separator +
+                flowOfAir.humidityRatio().toEngineeringFormat("x_" + suffix, digits) + separator +
+                flowOfAir.specificEnthalpy().toEngineeringFormat("i_" + suffix, digits);
     }
 
     @Override
