@@ -95,21 +95,20 @@ public class WaterVapour implements Fluid {
     }
 
     @Override
-    public String toFormattedString() {
-        return "WaterVapour:\n\t" +
-                "\n\t" +
-                pressure.toFormattedString("P", "abs", "| ") +
-                temperature.toFormattedString("t", "wv") +
-                "\n\t" +
-                specificEnthalpy.toFormattedString("i", "wv", "| ") +
-                density.toFormattedString("ρ", "wv", "| ") +
-                specificHeat.toFormattedString("cp", "wv") +
-                "\n\t" +
-                kinematicViscosity.toFormattedString("ν", "wv", "| ") +
-                dynamicViscosity.toFormattedString("μ", "wv", "| ") +
-                thermalConductivity.toFormattedString("k", "wv", "| ") +
-                prandtlNumber.toFormattedString("Pr", "wv") +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "WaterVapour: " + end +
+                pressure.toEngineeringFormat("P_abs", digits) + separator +
+                temperature.toEngineeringFormat("t_wv", digits) + end +
+                specificEnthalpy.toEngineeringFormat("i_wv", digits) + separator +
+                density.toEngineeringFormat("ρ_wv", digits) + separator +
+                specificHeat.toEngineeringFormat("cp_wv", digits) + end +
+                kinematicViscosity.toEngineeringFormat("ν_wv", digits) + separator +
+                dynamicViscosity.toEngineeringFormat("μ_wv", digits) + separator +
+                thermalConductivity.toEngineeringFormat("k_wv", digits) + separator +
+                prandtlNumber.toEngineeringFormat("Pr_wv", digits) + end;
     }
 
     @Override

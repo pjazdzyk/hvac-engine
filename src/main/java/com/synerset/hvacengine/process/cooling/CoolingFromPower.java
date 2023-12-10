@@ -11,13 +11,13 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
- * Real cooling coil process result as double array, for provided cooling power. Results in the array are organized as following:
+ * Real cooling coil process result as a double array, for provided cooling power. Results in the array are organized as following:
  * result: [heat in (W), outlet air temperature (oC), outlet humidity ratio x (kgWv/kgDa), condensate temperature (oC), condensate mass flow (kg/s)]
  * REFERENCE SOURCE: [1] [Q, W] (-) [37]
  *
- * @param inletAir         initial {@link FlowOfHumidAir}
+ * @param inletAir    initial {@link FlowOfHumidAir}
  * @param coolantData coolant data {@link CoolantData}
- * @param inputPower       cooling {@link Power}
+ * @param inputPower  cooling {@link Power}
  */
 record CoolingFromPower(FlowOfHumidAir inletAir,
                         CoolantData coolantData,
@@ -26,7 +26,7 @@ record CoolingFromPower(FlowOfHumidAir inletAir,
     @Override
     public AirCoolingResult applyCooling() {
 
-        if (inputPower.isZero()) {
+        if (inputPower.equalsZero()) {
             LiquidWater liquidWater = LiquidWater.of(inletAir.temperature());
             FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(0.0));
             new AirCoolingResult(inletAir, inputPower, flowOfLiquidWater,
@@ -35,10 +35,10 @@ record CoolingFromPower(FlowOfHumidAir inletAir,
 
         // For the provided inputHeat, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
         DryCooling dryCooling = DryCooling.of(DryCoolingStrategy.of(inletAir, inputPower));
-        double t_min = inletAir.temperature().getInCelsius();
-        double t_max = dryCooling.getOutTemperature().getInCelsius();
+        double tmin = inletAir.temperature().getInCelsius();
+        double tmax = dryCooling.getOutTemperature().getInCelsius();
         BrentSolver solver = new BrentSolver("[CoolingFromPower]");
-        solver.setCounterpartPoints(t_min, t_max);
+        solver.setCounterpartPoints(tmin, tmax);
         Cooling[] coolingResults = new Cooling[1];
         solver.calcForFunction(outTemp -> {
             Cooling tempCooling = Cooling.of(CoolingStrategy.of(inletAir, coolantData, Temperature.ofCelsius(outTemp)));

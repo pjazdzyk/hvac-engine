@@ -47,7 +47,7 @@ public interface Fluid {
      *
      * @return A formatted string representation of the fluid properties.
      */
-    String toFormattedString();
+    String toConsoleOutput();
 
     /**
      * Compare this fluid with another fluid of the same type for equality within a specified precision.
@@ -62,7 +62,7 @@ public interface Fluid {
         if (fluid == null) return false;
         if (this.getClass() != fluid.getClass()) return false;
 
-        return pressure().isEqualsWithPrecision(fluid.pressure(), epsilon)
-                && temperature().isEqualsWithPrecision(fluid.temperature(), epsilon);
+        return pressure().equalsWithPrecision(fluid.pressure(), epsilon)
+                && temperature().equalsWithPrecision(fluid.temperature(), epsilon);
     }
 }

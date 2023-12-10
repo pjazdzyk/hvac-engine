@@ -87,21 +87,20 @@ public class DryAir implements Fluid {
     }
 
     @Override
-    public String toFormattedString() {
-        return "DryAir:" +
-                "\n\t" +
-                pressure.toFormattedString("P", "abs", "| ") +
-                temperature.toFormattedString("DBT") +
-                "\n\t" +
-                specificEnthalpy.toFormattedString("i", "da", "| ") +
-                density.toFormattedString("ρ", "da", "| ") +
-                specificHeat.toFormattedString("cp", "da") +
-                "\n\t" +
-                kinematicViscosity.toFormattedString("ν", "da", "| ") +
-                dynamicViscosity.toFormattedString("μ", "da", "| ") +
-                thermalConductivity.toFormattedString("k", "da", "| ") +
-                prandtlNumber.toFormattedString("Pr", "da") +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "DryAir:" + end +
+                pressure.toEngineeringFormat("P_abs", digits) + separator +
+                temperature.toEngineeringFormat("DBT", digits) + end +
+                specificEnthalpy.toEngineeringFormat("i_da", digits) + separator +
+                density.toEngineeringFormat("ρ_da", digits) + separator +
+                specificHeat.toEngineeringFormat("cp_da", digits) + end +
+                kinematicViscosity.toEngineeringFormat("ν_da", digits) + separator +
+                dynamicViscosity.toEngineeringFormat("μ_da", digits) + separator +
+                thermalConductivity.toEngineeringFormat("k_da", digits) + separator +
+                prandtlNumber.toEngineeringFormat("Pr_da", digits) + "\n";
     }
 
     @Override

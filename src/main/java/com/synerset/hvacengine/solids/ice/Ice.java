@@ -62,15 +62,17 @@ public class Ice {
      *
      * @return A formatted string representing the properties of ice.
      */
-    public String toFormattedString() {
-        return "Ice:\n\t" +
-                pressure.toFormattedString("P", "abs", "| ") +
-                temperature.toFormattedString("t", "ice") +
-                "\n\t" +
-                specificEnthalpy.toFormattedString("i", "ice", "| ") +
-                density.toFormattedString("ρ", "ice", "| ") +
-                specificHeat.toFormattedString("cp", "ice") +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "Ice:" + end +
+                pressure.toEngineeringFormat("P_abs", digits) + separator +
+                temperature.toEngineeringFormat("t_ice", digits) + end +
+
+                specificEnthalpy.toEngineeringFormat("i_ice",digits) + separator +
+                density.toEngineeringFormat("ρ_ice", digits) + separator +
+                specificHeat.toEngineeringFormat("cp_ice", digits);
     }
 
     @Override

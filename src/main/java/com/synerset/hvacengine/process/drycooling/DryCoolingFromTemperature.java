@@ -8,12 +8,12 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
 /**
- * Calculates outlet cooling power (heat of process) for dry cooling case based on target outlet temperature.
- * Target temperature must be lower than inlet flow temp for valid cooling case.
+ * Calculates outlet cooling power (heat of a process) for dry cooling case based on target outlet temperature.
+ * The Target temperature must be lower than inlet flow temp for a valid cooling case.
  * IMPORTANT: Inappropriate use of dry cooling will produce significant overestimation of outlet temperature or
  * underestimation of required cooling power!
- * Real cooling methodology is recommended to use as relatively accurate representation of real world cooling process.
- *
+ * Real cooling methodology is recommended to use as a relatively accurate representation of a real world cooling process.
+ * <p>
  * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]
  *
  * @param inletAir          initial {@link FlowOfHumidAir}
@@ -25,27 +25,27 @@ record DryCoolingFromTemperature(FlowOfHumidAir inletAir,
     @Override
     public DryAirCoolingResult applyDryCooling() {
 
-        // Target temperature must be lower than inlet temperature for valid cooling case.
-        if (outletTemperature.isEqualOrGreaterThan(inletAir.temperature())) {
+        // The Target temperature must be lower than inlet temperature for a valid cooling case.
+        if (outletTemperature.equalsOrGreaterThan(inletAir.temperature())) {
             return new DryAirCoolingResult(inletAir, Power.ofWatts(0));
         }
 
-        // If target temperature is below dew point temperature it is certain that this is no longer dry cooling
-        if (outletTemperature.isLowerThan(inletAir.fluid().dewPointTemperature())) {
+        // If the target temperature is below dew point temperature, it is certain that this is no longer dry cooling
+        if (outletTemperature.lowerThan(inletAir.fluid().dewPointTemperature())) {
             return new DryAirCoolingResult(inletAir, Power.ofWatts(0));
         }
 
-        double x_in = inletAir.humidityRatio().getInKilogramPerKilogram();
-        double mda_in = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double t_out = outletTemperature.getInCelsius();
-        double p_in = inletAir.pressure().getInPascals();
-        double i_in = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
-        double i2 = HumidAirEquations.specificEnthalpy(t_out, x_in, p_in);
-        double Q_heat = (mda_in * i2 - mda_in * i_in) * 1000d;
-        Power requiredHeat = Power.ofWatts(Q_heat);
+        double xIn = inletAir.humidityRatio().getInKilogramPerKilogram();
+        double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double tOut = outletTemperature.getInCelsius();
+        double pIn = inletAir.pressure().getInPascals();
+        double iIn = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double i2 = HumidAirEquations.specificEnthalpy(tOut, xIn, pIn);
+        double qHeat = (mdaIn * i2 - mdaIn * iIn) * 1000d;
+        Power requiredHeat = Power.ofWatts(qHeat);
 
-        HumidAir outletHumidAir = HumidAir.of(inletAir.pressure(), Temperature.ofCelsius(t_out), inletAir.humidityRatio());
-        FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, MassFlow.ofKilogramsPerSecond(mda_in));
+        HumidAir outletHumidAir = HumidAir.of(inletAir.pressure(), Temperature.ofCelsius(tOut), inletAir.humidityRatio());
+        FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, MassFlow.ofKilogramsPerSecond(mdaIn));
 
         return new DryAirCoolingResult(outletFlow, requiredHeat);
 

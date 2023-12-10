@@ -105,26 +105,34 @@ public class Heating {
      *
      * @return A formatted string representation of the heating process.
      */
-    public String toFormattedString() {
-        return "PROCESS OF HEATING:\n\t" +
-                "INPUT FLOW:\n\t" +
-                inputInletAir.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "in", "| ") +
-                inputInletAir.massFlow().toFormattedString("G", "in", "| ") +
-                inputInletAir.dryAirMassFlow().toFormattedString("G", "in.da") + "\n\t" +
-                inputInletAir.temperature().toFormattedString("DBT", "in", "| ") +
-                inputInletAir.relativeHumidity().toFormattedString("RH", "in", "| ") +
-                inputInletAir.humidityRatio().toFormattedString("x", "in", "| ") +
-                inputInletAir.specificEnthalpy().toFormattedString("i") + "\n\t" +
-                "HEAT OF PROCESS:\n\t" +
-                heatOfProcess.toFormattedString("Q", "heat") + "\n\t" +
-                "OUTLET FLOW:\n\t" +
-                outletFlow.volumetricFlow().toCubicMetersPerHour().toFormattedString("V", "out", "| ") +
-                outletFlow.massFlow().toFormattedString("G", "out", "| ") +
-                outletFlow.dryAirMassFlow().toFormattedString("G", "out.da") + "\n\t" +
-                outTemperature.toFormattedString("DBT", "out", "| ") +
-                outRelativeHumidity.toFormattedString("RH_out", "out", "| ") +
-                outHumidityRatio.toFormattedString("x_out", "out", "| ") +
-                outSpecificEnthalpy.toFormattedString("i_out");
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "PROCESS OF HEATING:" + end +
+
+                "INPUT FLOW:" + end +
+                inputInletAir.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_in", digits) + separator +
+                inputInletAir.massFlow().toEngineeringFormat("G_in", digits) + separator +
+                inputInletAir.dryAirMassFlow().toEngineeringFormat("G_in.da", digits) + end +
+
+                inputInletAir.temperature().toEngineeringFormat("DBT_in", digits) + separator +
+                inputInletAir.relativeHumidity().toEngineeringFormat("RH_in", digits) + separator +
+                inputInletAir.humidityRatio().toEngineeringFormat("x_in", digits) + separator +
+                inputInletAir.specificEnthalpy().toEngineeringFormat("i_in", digits) + end +
+
+                "HEAT OF PROCESS:" + end +
+                heatOfProcess.toEngineeringFormat("Q_heat", digits) + end +
+
+                "OUTLET FLOW:" + end +
+                outletFlow.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_out", digits) + separator +
+                outletFlow.massFlow().toEngineeringFormat("G_out", digits) + separator +
+                outletFlow.dryAirMassFlow().toEngineeringFormat("G_out.da", digits) + end +
+
+                outTemperature.toEngineeringFormat("DBT_out", digits) + separator +
+                outRelativeHumidity.toEngineeringFormat("RH_out", digits) + separator +
+                outHumidityRatio.toEngineeringFormat("x_out", digits) + separator +
+                outSpecificEnthalpy.toEngineeringFormat("i_out", digits) + end;
     }
 
     @Override

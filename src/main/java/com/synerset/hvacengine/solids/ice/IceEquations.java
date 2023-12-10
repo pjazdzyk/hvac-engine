@@ -19,7 +19,7 @@ public final class IceEquations {
     private IceEquations() {
     }
 
-    public static final double HEAT_OF_ICE_MELT = 334.1;                     // [kJ/kg]              - Heat of ice melt
+    public static final double HEAT_OF_ICE_MELT = 334.1;                     // [kJ/kg] Heat of ice melt
 
     /**
      * Returns ice enthalpy at provided temperature and constant pressure at atmospheric pressure.
