@@ -179,7 +179,7 @@ public class HumidAir implements Fluid {
                 thermalConductivity.toEngineeringFormat("k", digits) + end +
 
                 thermalDiffusivity.toEngineeringFormat("α", digits) + separator +
-                prandtlNumber.toEngineeringFormat("Pr", digits) +
+                prandtlNumber.toEngineeringFormat("Pr", digits) + end +
 
                 dryAirComponent.toConsoleOutput();
     }

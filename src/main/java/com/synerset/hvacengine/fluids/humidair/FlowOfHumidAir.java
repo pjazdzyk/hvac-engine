@@ -156,7 +156,7 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
                 volFlow.toEngineeringFormat("V", digits) + separator +
                 volFlow.toCubicMetersPerHour().toEngineeringFormat("V", digits) + end +
                 dryAirMassFlow().toEngineeringFormat("G_da", digits) + separator +
-                dryAirMassFlow().toKiloGramPerHour().toEngineeringFormat("G_da", digits) +
+                dryAirMassFlow().toKiloGramPerHour().toEngineeringFormat("G_da", digits) + end +
                 humidAir.toConsoleOutput();
     }
 
