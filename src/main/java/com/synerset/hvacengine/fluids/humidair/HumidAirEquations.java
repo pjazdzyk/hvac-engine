@@ -14,10 +14,10 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 import java.util.function.DoubleFunction;
 
 /**
- * MOIST AIR PROPERTY EQUATIONS LIBRARY (PSYCHROMETRICS)
+ * MOIST AIR PROPERTY EQUATIONS LIBRARY (psYCHROMETRICS)
  * Set of static methods for calculating temperature-dependent thermophysical air properties. Properties are calculated independently for dry air,
  * water vapor, water mist, or ice mist to determine correct values for moist air.
- * These equations are public, stateless, thread-safe, based on primitive types. Can be used for iterative high-performance computing of intermediate
+ * These equations are public, stateless, thread-safe, based on primitive types. It Can be used for iterative high-performance computing of intermediate
  * calculations.
  * PROPERTY ABBREVIATIONS:<p>
  * WT - water<p>
@@ -25,7 +25,7 @@ import java.util.function.DoubleFunction;
  * DA - dry air<p>
  * MA - moist air<p>
  * ST - steam<p>
- *
+ * <p>
  * REFERENCE SOURCE:<p>
  * [1] ASHRAE Fundamentals 2002, CHAPTER 6 <p>
  * [2] Buck, Arden L. "New Equations for Computing Vapor pressure and Enhancement Factor". Journal of Applied Meteorology and Climatology (December 1981) <p>
@@ -36,12 +36,12 @@ import java.util.function.DoubleFunction;
  * [7] https://www.engineeringtoolbox.com <p>
  * [8] Stull R. "Wet-Bulb Temperature from Relative Humidity and Air Temperature". Manuscript received 14 July 2011, in final form 28 August 2011 <p>
  * [9] Tsilingiris P.T "Thermophysical and transport properties of humid air at temperature range between 0 and 100oC". Elsevier, Science Direct (September 2007) <p>
- * [10] E.W. Lemmon, R.T. Jacobsen, S.G. Penoncello, D. Friend. Thermodynamic Properties of Air and Mixtures of Nitrogen, Argon, and Oxygen from 60 to 2000 K at Pressures to 2000 MPa. J. Phys. Chem. Ref. Data, Vol. 29, No. 3, (2000) <p>
- * [11] M. Wanielista, R. Kersten,  R. Eaglin. "Hydrology Water Quantity and Quality Control. 2nd ed." (1997) <p>
+ * [10] E.W. Lemmon, R.T. Jacobsen, S.G. Penoncello, D. Friend. Thermodynamic Properties of Air and Mixtures of Nitrogen, Argon, and Oxygen from 60 to 2000 K at Pressures to 2000 MPa. J.Phys. Chem. Ref. Data, Vol. 29, No. 3, (2000) <p>
+ * [11] M. Wanielista, R. Kersten, R. Eaglin. "Hydrology Water Quantity and Quality Control. 2nd ed." (1997) <p>
  * <p>
  * <p>
  * REFERENCES DESCRIPTION KEY: <p>
- * [reference no] [value symbology in standard, unit] (equation number) [page] <p>
+ * [reference no] [value symbology in a standard, unit] (equation number) [page] <p>
  *
  * @author Piotr Jażdżyk, MScEng
  */
@@ -58,7 +58,7 @@ public final class HumidAirEquations {
 
     /**
      * Returns moist air saturation vapour pressure, Pa<p>
-     * REFERENCE SOURCE: [1] [Ps,Pa] (5,6) [6.2]<p>
+     * REFERENCE SOURCE: [1] [ps,Pa] (5,6) [6.2]<p>
      * EQUATION LIMITS: {-100oC,+200oC}<p>
      *
      * @param ta air temperature, oC
@@ -117,12 +117,12 @@ public final class HumidAirEquations {
      * Returns moist air saturation vapour pressure, Pa<p>
      *
      * @param x   humidity ratio, kg.wv/kg.da
-     * @param RH  relative humidity, %
-     * @param Pat atmospheric pressure, Pa
+     * @param rh  relative humidity, %
+     * @param pat atmospheric pressure, Pa
      * @return saturation vapour pressure, Pa
      */
-    public static double saturationPressure(double x, double RH, double Pat) {
-        return x * Pat / ((WG_RATIO * RH / 100.0) + x * RH / 100.0);
+    public static double saturationPressure(double x, double rh, double pat) {
+        return x * pat / ((WG_RATIO * rh / 100.0) + x * rh / 100.0);
     }
 
     public static Pressure saturationPressure(HumidityRatio humRatio, RelativeHumidity relHum, Pressure absPressure) {
@@ -135,23 +135,23 @@ public final class HumidAirEquations {
     }
 
     /**
-     * Returns moist air dew point temperature based on air temperature <i>ta</i> and relative humidity <i>RH<i/>, oC<p>
+     * Returns moist air dew point temperature based on air temperature <i>ta</i> and relative humidity <i>rh<i/>, oC<p>
      * REFERENCE SOURCE: [1,2,3] [Tdp,Pa] (-) [-]<p>
      * EQUATION LIMITS: {-80oc,+50oC}<p>
      *
      * @param ta air temperature, oC
-     * @param RH relative humidity, %
+     * @param rh relative humidity, %
      * @return dew point temperature, oC
      */
-    public static double dewPointTemperature(double ta, double RH, double Pat) {
-        if (RH >= 100)
+    public static double dewPointTemperature(double ta, double rh, double pat) {
+        if (rh >= 100)
             return ta;
-        if (RH == 0.0)
+        if (rh == 0.0)
             return Double.NEGATIVE_INFINITY;
-        // Arden-Buck procedure tdP estimation (used for RH>25)
+        // Arden-Buck procedure tdP estimation (used for rh>25)
         double tdpEstimated;
         double a, b, c, d;
-        double beta_TRH, b_TRH, c_TRH;
+        double betaTrh, bTrh, cTrh;
         if (ta > 0.0) {
             b = 18.678;
             c = 257.14;
@@ -162,20 +162,21 @@ public final class HumidAirEquations {
             d = 333.70;
         }
         a = 2.0 / d;
-        beta_TRH = Math.log(RH / 100.0) + calcAlfaT(ta);
-        b_TRH = b - beta_TRH;
-        c_TRH = -c * beta_TRH;
-        tdpEstimated = 1.0 / a * (b_TRH - Math.sqrt(b_TRH * b_TRH + 2.0 * a * c_TRH));
-        if (RH < 25.0) {
-            double Ps = saturationPressure(ta);
-            double x = humidityRatio(RH, Ps, Pat);
+        betaTrh = Math.log(rh / 100.0) + calcAlfaT(ta);
+        bTrh = b - betaTrh;
+        cTrh = -c * betaTrh;
+        tdpEstimated = 1.0 / a * (bTrh - Math.sqrt(bTrh * bTrh + 2.0 * a * cTrh));
+        if (rh < 25.0) {
+            double ps = saturationPressure(ta);
+            double x = humidityRatio(rh, ps, pat);
             BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
             solver.setCounterpartPoints(tdpEstimated * SOLVER_A_COEF, tdpEstimated * SOLVER_B_COEF);
-            if (RH < 1.0)
+            if (rh < 1.0) {
                 solver.setAccuracy(0.0000001);
+            }
             double tdpExact = solver.calcForFunction(temp -> {
-                double Ps1 = saturationPressure(temp);
-                double x1 = maxHumidityRatio(Ps1, Pat);
+                double ps1 = saturationPressure(temp);
+                double x1 = maxHumidityRatio(ps1, pat);
                 return x1 - x;
 
             });
@@ -200,26 +201,26 @@ public final class HumidAirEquations {
      * EQUATION LIMITS: {-100oC,+200oC}<p>
      *
      * @param ta  air temperature, oC
-     * @param RH  air relative humidity, oC
-     * @param Pat atmospheric pressure, Pa
+     * @param rh  air relative humidity, oC
+     * @param pat atmospheric pressure, Pa
      * @return moist air wet bulb temperature, oC
      */
-    public static double wetBulbTemperature(double ta, double RH, double Pat) {
-        if (RH >= 100.0)
+    public static double wetBulbTemperature(double ta, double rh, double pat) {
+        if (rh >= 100.0)
             return ta;
-        double estimatedWbt = ta * Math.atan(0.151977 * Math.pow(RH + 8.313659, 0.5))
-                + Math.atan(ta + RH) - Math.atan(RH - 1.676331)
-                + 0.00391838 * Math.pow(RH, 1.5) * Math.atan(0.023101 * RH)
+        double estimatedWbt = ta * Math.atan(0.151977 * Math.pow(rh + 8.313659, 0.5))
+                + Math.atan(ta + rh) - Math.atan(rh - 1.676331)
+                + 0.00391838 * Math.pow(rh, 1.5) * Math.atan(0.023101 * rh)
                 - 4.686035;
-        double Ps = saturationPressure(ta);
-        double x = humidityRatio(RH, Ps, Pat);
-        double h = specificEnthalpy(ta, x, Pat);
+        double ps = saturationPressure(ta);
+        double x = humidityRatio(rh, ps, pat);
+        double h = specificEnthalpy(ta, x, pat);
         BrentSolver solver = new BrentSolver("T_SOLVER", 2, 5);
         solver.setCounterpartPoints(estimatedWbt * SOLVER_A_COEF, estimatedWbt * SOLVER_B_COEF);
         return solver.calcForFunction(temp -> {
-            double Ps1 = saturationPressure(temp);
-            double x1 = maxHumidityRatio(Ps1, Pat);
-            double h1 = specificEnthalpy(temp, x1, Pat);
+            double ps1 = saturationPressure(temp);
+            double x1 = maxHumidityRatio(ps1, pat);
+            double h1 = specificEnthalpy(temp, x1, pat);
             double hw1;
             if (temp <= 0.0)
                 hw1 = IceEquations.specificEnthalpy(temp);
@@ -240,8 +241,8 @@ public final class HumidAirEquations {
     }
 
     /**
-     * Returns moist air relative humidity RH from dew point temperature "tdp" and air temperature "ta", %<p>
-     * REFERENCE SOURCE: [2,3] [RH,%] (-) [-]<p>
+     * Returns moist air relative humidity rh from dew point temperature "tdp" and air temperature "ta", %<p>
+     * REFERENCE SOURCE: [2,3] [rh,%] (-) [-]<p>
      * EQUATION LIMITS: {-80oc,+50oC}<p>
      *
      * @param ta  air temperature, oC
@@ -261,19 +262,19 @@ public final class HumidAirEquations {
     }
 
     /**
-     * Returns moist air relative humidity RH from air temperature <i>ta</i> and humidity ratio <i>x</i>, %<p>
+     * Returns moist air relative humidity rh from air temperature <i>ta</i> and humidity ratio <i>x</i>, %<p>
      *
      * @param ta  air temperature, oC
      * @param x   relative humidity, kg.wv/kg.da
-     * @param Pat atmospheric pressure, Pa
+     * @param pat atmospheric pressure, Pa
      * @return relative humidity, %
      */
-    public static double relativeHumidity(double ta, double x, double Pat) {
+    public static double relativeHumidity(double ta, double x, double pat) {
         if (x == 0.0)
             return 0.0;
-        double Ps = HumidAirEquations.saturationPressure(ta);
-        double RH = x * Pat / (WG_RATIO * Ps + x * Ps);
-        return RH > 1 ? 100 : RH * 100;
+        double ps = HumidAirEquations.saturationPressure(ta);
+        double rh = x * pat / (WG_RATIO * ps + x * ps);
+        return rh > 1 ? 100 : rh * 100;
     }
 
     public static RelativeHumidity relativeHumidity(Temperature dryBulbTemp, HumidityRatio humidityRatio, Pressure absPressure) {
@@ -290,13 +291,13 @@ public final class HumidAirEquations {
      * Returns moist air humidity ratio<p>
      * REFERENCE SOURCE: [1] [x,kg.wv/kg.da] (23a) [6.10]<p>
      *
-     * @param RH  air relative humidity, %
-     * @param Ps  air saturation pressure, Pa
-     * @param Pat atmospheric pressure, Pa
+     * @param rh  air relative humidity, %
+     * @param ps  air saturation pressure, Pa
+     * @param pat atmospheric pressure, Pa
      * @return humidity ratio, kg.wv/kg.da
      */
-    public static double humidityRatio(double RH, double Ps, double Pat) {
-        return WG_RATIO * (RH / 100.0 * Ps) / (Pat - (RH / 100.0) * Ps);
+    public static double humidityRatio(double rh, double ps, double pat) {
+        return WG_RATIO * (rh / 100.0 * ps) / (pat - (rh / 100.0) * ps);
     }
 
     public static HumidityRatio humidityRatio(RelativeHumidity relHum, Pressure saturationPressure, Pressure absPressure) {
@@ -313,12 +314,12 @@ public final class HumidAirEquations {
      * Returns moist air maximum humidity ratio, kg.wv/kg.da<p>
      * REFERENCE SOURCE: [1] [xMax,kg.wv/kg.da] (23) [6.8]<p>
      *
-     * @param Ps  air saturation pressure, Pa
-     * @param Pat atmospheric pressure, Pa
+     * @param ps  air saturation pressure, Pa
+     * @param pat atmospheric pressure, Pa
      * @return humidity ratio, kg.wv/kg.da
      */
-    public static double maxHumidityRatio(double Ps, double Pat) {
-        return humidityRatio(100.0, Ps, Pat);
+    public static double maxHumidityRatio(double ps, double pat) {
+        return humidityRatio(100.0, ps, pat);
     }
 
     public static HumidityRatio maxHumidityRatio(Pressure saturationPressure, Pressure absPressure) {
@@ -341,16 +342,20 @@ public final class HumidAirEquations {
      * @return dynamic viscosity, kg/(m*s)
      */
     public static double dynamicViscosity(double ta, double x) {
-        double dynVis_Da = DryAirEquations.dynamicViscosity(ta);
+        double dynVisDa = DryAirEquations.dynamicViscosity(ta);
         if (x == 0)
-            return dynVis_Da;
+            return dynVisDa;
         double xm = x * 1.61;
-        double dynVis_Wv = WaterVapourEquations.dynamicViscosity(ta);
-        double fi_AV = Math.pow(1 + Math.pow(dynVis_Da / dynVis_Wv, 0.5) * Math.pow(WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS / DryAirEquations.DRY_AIR_MOLECULAR_MASS, 0.25), 2)
+        double dynVisWv = WaterVapourEquations.dynamicViscosity(ta);
+        double fiAV = Math.pow(1 + Math.pow(dynVisDa / dynVisWv, 0.5)
+                * Math.pow(WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS / DryAirEquations.DRY_AIR_MOLECULAR_MASS, 0.25), 2)
                 / (2 * Math.sqrt(2) * Math.pow(1 + (DryAirEquations.DRY_AIR_MOLECULAR_MASS / WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS), 0.5));
-        double fi_VA = Math.pow(1 + Math.pow(dynVis_Wv / dynVis_Da, 0.5) * Math.pow(DryAirEquations.DRY_AIR_MOLECULAR_MASS / WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS, 0.25), 2)
+
+        double fiVA = Math.pow(1 + Math.pow(dynVisWv / dynVisDa, 0.5)
+                * Math.pow(DryAirEquations.DRY_AIR_MOLECULAR_MASS / WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS, 0.25), 2)
                 / (2 * Math.sqrt(2) * Math.pow(1 + (WaterVapourEquations.WATER_VAPOUR_MOLECULAR_MASS / DryAirEquations.DRY_AIR_MOLECULAR_MASS), 0.5));
-        return (dynVis_Da / (1 + fi_AV * xm)) + (dynVis_Wv / (1 + fi_VA / xm));
+
+        return (dynVisDa / (1 + fiAV * xm)) + (dynVisWv / (1 + fiVA / xm));
     }
 
     public static DynamicViscosity dynamicViscosity(Temperature dryBulbTemp, HumidityRatio humRatio) {
@@ -366,15 +371,15 @@ public final class HumidAirEquations {
     /**
      * Returns moist air kinematic viscosity, m^2/s<p>
      *
-     * @param ta     air temperature, oC
-     * @param x      air humidity ratio, kg.wv/kg.da
-     * @param rho_Ma humid air density, kg/m3
+     * @param ta    air temperature, oC
+     * @param x     air humidity ratio, kg.wv/kg.da
+     * @param rhoMa humid air density, kg/m3
      * @return kinematic viscosity, m^2/s
      */
-    public static double kinematicViscosity(double ta, double x, double rho_Ma) {
+    public static double kinematicViscosity(double ta, double x, double rhoMa) {
         return x == 0.0
-                ? DryAirEquations.dynamicViscosity(ta) / rho_Ma
-                : dynamicViscosity(ta, x) / rho_Ma;
+                ? DryAirEquations.dynamicViscosity(ta) / rhoMa
+                : dynamicViscosity(ta, x) / rhoMa;
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature dryBulbTemp, HumidityRatio humRatio, Density density) {
@@ -401,28 +406,28 @@ public final class HumidAirEquations {
     public static double thermalConductivity(double ta, double x) {
         double dynVisDa = DryAirEquations.dynamicViscosity(ta);
         double dynVisWv = WaterVapourEquations.dynamicViscosity(ta);
-        double k_Da = DryAirEquations.thermalConductivity(ta);
+        double kDa = DryAirEquations.thermalConductivity(ta);
         if (x == 0.0)
-            return k_Da;
-        double sut_Da = DryAirEquations.DRY_AIR_SUTHERLAND_CONSTANT;
-        double sut_Wv = WaterVapourEquations.WATER_VAPOUR_SUTHERLAND_CONSTANT;
+            return kDa;
+        double sutDa = DryAirEquations.DRY_AIR_SUTHERLAND_CONSTANT;
+        double sutWv = WaterVapourEquations.WATER_VAPOUR_SUTHERLAND_CONSTANT;
         double tk = ta + 273.15;
-        double sutAv = 0.733 * Math.sqrt(sut_Da * sut_Wv);
-        double k_Wv = WaterVapourEquations.thermalConductivity(ta);
+        double sutAv = 0.733 * Math.sqrt(sutDa * sutWv);
+        double kWv = WaterVapourEquations.thermalConductivity(ta);
         double xm = 1.61 * x;
-        double alfa_AV;
-        double alfa_VA;
-        double beta_AV;
-        double beta_VA;
-        double A_AV;
-        double A_VA;
-        alfa_AV = (dynVisDa / dynVisWv) * Math.pow(WG_RATIO, 0.75) * ((1.0 + sut_Da / tk) / (1.0 + sut_Wv / tk));
-        alfa_VA = (dynVisWv / dynVisDa) * Math.pow(WG_RATIO, 0.75) * ((1.0 + sut_Wv / tk) / (1.0 + sut_Da / tk));
-        beta_AV = (1.0 + sutAv / tk) / (1.0 + sut_Da / tk);
-        beta_VA = (1.0 + sutAv / tk) / (1.0 + sut_Wv / tk);
-        A_AV = 0.25 * Math.pow(1.0 + alfa_AV, 2.0) * beta_AV;
-        A_VA = 0.25 * Math.pow(1.0 + alfa_VA, 2.0) * beta_VA;
-        return (k_Da / (1.0 + A_AV * xm)) + (k_Wv / (1.0 + A_VA / xm));
+        double alfaAV;
+        double alfaVA;
+        double betaAV;
+        double betaVA;
+        double aAV;
+        double aVA;
+        alfaAV = (dynVisDa / dynVisWv) * Math.pow(WG_RATIO, 0.75) * ((1.0 + sutDa / tk) / (1.0 + sutWv / tk));
+        alfaVA = (dynVisWv / dynVisDa) * Math.pow(WG_RATIO, 0.75) * ((1.0 + sutWv / tk) / (1.0 + sutDa / tk));
+        betaAV = (1.0 + sutAv / tk) / (1.0 + sutDa / tk);
+        betaVA = (1.0 + sutAv / tk) / (1.0 + sutWv / tk);
+        aAV = 0.25 * Math.pow(1.0 + alfaAV, 2.0) * betaAV;
+        aVA = 0.25 * Math.pow(1.0 + alfaVA, 2.0) * betaVA;
+        return (kDa / (1.0 + aAV * xm)) + (kWv / (1.0 + aVA / xm));
     }
 
     public static ThermalConductivity thermalConductivity(Temperature dryBulbTemp, HumidityRatio humRatio) {
@@ -443,25 +448,25 @@ public final class HumidAirEquations {
      *
      * @param ta  air temperature, oC
      * @param x   air humidity ratio, kg.wv/kg.da
-     * @param Pat atmospheric pressure, Pa
+     * @param pat atmospheric pressure, Pa
      * @return humid air specific enthalpy
      */
-    public static double specificEnthalpy(double ta, double x, double Pat) {
-        double i_Da = DryAirEquations.specificEnthalpy(ta);
+    public static double specificEnthalpy(double ta, double x, double pat) {
+        double iDa = DryAirEquations.specificEnthalpy(ta);
         // Case1: no humidity = dry air only
         if (x == 0.0)
-            return i_Da;
+            return iDa;
         // Case2: x <= xMax, unsaturated air
-        double Ps = HumidAirEquations.saturationPressure(ta);
-        double xMax = maxHumidityRatio(Ps, Pat);
-        double i_Wv = WaterVapourEquations.specificEnthalpy(ta) * x;
+        double ps = HumidAirEquations.saturationPressure(ta);
+        double xMax = maxHumidityRatio(ps, pat);
+        double iWv = WaterVapourEquations.specificEnthalpy(ta) * x;
         if (x <= xMax)
-            return i_Da + i_Wv;
+            return iDa + iWv;
         // Case3: x > XMax, saturated air with water or ice fog
-        i_Wv = WaterVapourEquations.specificEnthalpy(ta) * xMax;
-        double i_Wt = LiquidWaterEquations.specificEnthalpy(ta) * (x - xMax);
-        double i_Ice = IceEquations.specificEnthalpy(ta) * (x - xMax);
-        return i_Da + i_Wv + i_Wt + i_Ice;
+        iWv = WaterVapourEquations.specificEnthalpy(ta) * xMax;
+        double iWt = LiquidWaterEquations.specificEnthalpy(ta) * (x - xMax);
+        double iIce = IceEquations.specificEnthalpy(ta) * (x - xMax);
+        return iDa + iWv + iWt + iIce;
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature dryBulbTemp, HumidityRatio humRatio, Pressure absPressure) {
@@ -477,7 +482,7 @@ public final class HumidAirEquations {
     // SPECIFIC HEAT CALCULATION
 
     /**
-     * Returns moist air specific heat at constant pressure, J/(kg*K)<p>
+     * Returns moist air-specific heat at constant pressure, J/(kg*K)<p>
      * REFERENCE SOURCE: [6] [cp,kJ/(kg*K)] (6.10) [4]<p>
      * EQUATION LIMITS: {0.0oC,+200oC},{1atm (0.1bar, 5.0bar)}<p>
      *
@@ -506,16 +511,16 @@ public final class HumidAirEquations {
      *
      * @param ta  air temperature, oC
      * @param x   air humidity ratio, kg.wv/kg/da
-     * @param Pat atmospheric pressure, Pa
+     * @param pat atmospheric pressure, Pa
      * @return air density, kg/m3
      */
-    public static double density(double ta, double x, double Pat) {
+    public static double density(double ta, double x, double pat) {
         if (x == 0.0) {
-            return DryAirEquations.density(ta, Pat);
+            return DryAirEquations.density(ta, pat);
         }
-        double PatKpa = Pat / 1000.0;
+        double patKpa = pat / 1000.0;
         double tk = ta + 273.15;
-        return 1.0 / ((0.2871 * tk * (1.0 + 1.6078 * x)) / PatKpa);
+        return 1.0 / ((0.2871 * tk * (1.0 + 1.6078 * x)) / patKpa);
     }
 
     public static Density density(Temperature dryBulbTemp, HumidityRatio humRatio, Pressure absPressure) {
@@ -531,23 +536,23 @@ public final class HumidAirEquations {
     // DRY BULB TEMPERATURE CALCULATION FROM OTHER QUANTITIES
 
     /**
-     * Returns moist air dry bulb temperature based on tdp and RH.
+     * Returns moist air dry bulb temperature based on tdp and rh.
      * REFERENCE SOURCE: [10] [oC] (-) [-]<p>
      *
      * @param tdp air dew point temperature, oC
-     * @param RH  air relative humidity, %
+     * @param rh  air relative humidity, %
      * @return air dry bulb temperature, oC
      */
-    public static double dryBulbTemperatureTdpRH(double tdp, double RH, double Pat) {
-        if (RH == 0.0) {
+    public static double dryBulbTemperatureTdpRH(double tdp, double rh, double pat) {
+        if (rh == 0.0) {
             return Double.POSITIVE_INFINITY;
         }
-        double taEstimated = (tdp - 112.0 * Math.pow(RH / 100.0, 1.0 / 8.0) + 112.0) / (0.9 * Math.pow(RH / 100.0, 1.0 / 8.0) + 0.1);
+        double taEstimated = (tdp - 112.0 * Math.pow(rh / 100.0, 1.0 / 8.0) + 112.0) / (0.9 * Math.pow(rh / 100.0, 1.0 / 8.0) + 0.1);
         //New instance of BrentSolver is required, to avoid clash between two methods using P_SOLVER
         //at the same time.
         BrentSolver solver = new BrentSolver();
         solver.setCounterpartPoints(taEstimated * SOLVER_A_COEF, taEstimated * SOLVER_B_COEF);
-        return solver.calcForFunction(temp -> tdp - dewPointTemperature(temp, RH, Pat));
+        return solver.calcForFunction(temp -> tdp - dewPointTemperature(temp, rh, pat));
     }
 
     public static Temperature dryBulbTemperatureTdpRH(Temperature dewPointTemp, RelativeHumidity relHum, Pressure absPressure) {
@@ -561,16 +566,16 @@ public final class HumidAirEquations {
     }
 
     /**
-     * Returns moist air dry bulb temperature, based on x, Rh and Pat, oC.
+     * Returns moist air dry bulb temperature, based on x, rh and pat, oC.
      *
      * @param x   - humidity ratio, kg.wv/kg.da
-     * @param RH  - relative humidity, %
-     * @param Pat - atmospheric pressure, Pa
+     * @param rh  - relative humidity, %
+     * @param pat - atmospheric pressure, Pa
      * @return dry bulb air temperature, oC
      */
-    public static double dryBulbTemperatureXRH(double x, double RH, double Pat) {
-        BrentSolver solver = new BrentSolver("T_XRH_SOLVER", 2, 5);
-        return solver.calcForFunction(tx -> saturationPressure(x, RH, Pat) - saturationPressure(tx));
+    public static double dryBulbTemperatureXRH(double x, double rh, double pat) {
+        BrentSolver solver = new BrentSolver("T_Xrh_SOLVER", 2, 5);
+        return solver.calcForFunction(tx -> saturationPressure(x, rh, pat) - saturationPressure(tx));
     }
 
     public static Temperature dryBulbTemperatureXRH(HumidityRatio humidityRatio, RelativeHumidity relHum, Pressure absPressure) {
@@ -584,17 +589,17 @@ public final class HumidAirEquations {
     }
 
     /**
-     * Returns moist air dry bulb temperature, based on ix, x and Pat, oC. \
+     * Returns moist air dry bulb temperature, based on ix, x and pat, oC. \
      * LIMITS: ta &lt 70oC.
      *
      * @param ix  air specific enthalpy, kJ/kg
      * @param x   air humidity ratio, kg.wv/kg.da
-     * @param Pat atmospheric pressure, Pat
+     * @param pat atmospheric pressure, pat
      * @return air dry bulb temperature, oC
      */
-    public static double dryBulbTemperatureIX(double ix, double x, double Pat) {
+    public static double dryBulbTemperatureIX(double ix, double x, double pat) {
         BrentSolver solver = new BrentSolver("T_IX_SOLVER", 2, 5);
-        return solver.calcForFunction(tx -> ix - HumidAirEquations.specificEnthalpy(tx, x, Pat));
+        return solver.calcForFunction(tx -> ix - HumidAirEquations.specificEnthalpy(tx, x, pat));
     }
 
     public static Temperature dryBulbTemperatureIX(SpecificEnthalpy specEnthalpy, RelativeHumidity relHum, Pressure absPressure) {
@@ -610,15 +615,15 @@ public final class HumidAirEquations {
     // OTHER FUNCTIONS
 
     /**
-     * Returns moist air dry bulb temperature based on wbt and RH, oC
+     * Returns moist air dry bulb temperature based on wbt and rh, oC
      *
      * @param wbt wet bulb temperature, oC
-     * @param RH  relative humidity, %
+     * @param rh  relative humidity, %
      * @return air dry bulb temperature, oC
      */
-    public static double dryBulbTemperatureWbtRH(double wbt, double RH, double Pat) {
+    public static double dryBulbTemperatureWbtRH(double wbt, double rh, double pat) {
         BrentSolver solver = new BrentSolver("T_WbtRH_SOLVER");
-        return solver.calcForFunction(temp -> wbt - wetBulbTemperature(temp, RH, Pat));
+        return solver.calcForFunction(temp -> wbt - wetBulbTemperature(temp, rh, pat));
     }
 
     public static Temperature dryBulbTemperatureWbtRH(Temperature wetBulbTemperature, RelativeHumidity relHum, Pressure absPressure) {
@@ -632,7 +637,7 @@ public final class HumidAirEquations {
     }
 
     /**
-     * Returns maximum dry bulb air temperature, for which condition Pat>Ps is met for RH=100% oC
+     * Returns maximum dry bulb air temperature, for which condition pat>ps is met for rh=100% oC
      *
      * @param inPat atmospheric pressure, Pa
      * @return maximum dry bulb air temperature, oC
@@ -653,7 +658,7 @@ public final class HumidAirEquations {
     // TOOL METHODS
 
     private static double calcAlfaT(double ta) {
-        //Coefficient used for Arden-Buck equation for calculating saturation pressure Ps, Pa
+        //Coefficient used for Arden-Buck equation for calculating saturation pressure ps, Pa
         double b = 0;
         double c = 0;
         double d = 1;

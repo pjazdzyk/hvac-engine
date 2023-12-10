@@ -11,7 +11,7 @@ import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
  * passed negative value.
  * IMPORTANT: Inappropriate use of dry cooling will produce significant overestimation of outlet temperature or
  * underestimation of required cooling power! Real cooling methodology is recommended to use as relatively accurate
- * representation of real world cooling process.
+ * representation of a real working cooling process.
  *
  * REFERENCE SOURCE: [1][2] [t2,oC] (42)(2.2) [6.12][37]
  *
@@ -24,19 +24,19 @@ record DryCoolingFromPower(FlowOfHumidAir inletAir,
     @Override
     public DryAirCoolingResult applyDryCooling() {
 
-        if (inputPower.isZero() || inletAir.massFlow().isZero()) {
-            return new DryAirCoolingResult(inletAir, inputPower.createNewWithValue(0));
+        if (inputPower.equalsZero() || inletAir.massFlow().equalsZero()) {
+            return new DryAirCoolingResult(inletAir, inputPower.withValue(0));
         }
 
-        double Q_cool = inputPower.getInKiloWatts();
-        double x_in = inletAir.humidityRatio().getInKilogramPerKilogram();
-        double mda_in = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double p_in = inletAir.pressure().getInPascals();
-        double i_in = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
-        double i_out = (mda_in * i_in + Q_cool) / mda_in;
-        double t_out = HumidAirEquations.dryBulbTemperatureIX(i_out, x_in, p_in);
+        double qCool = inputPower.getInKiloWatts();
+        double xIn = inletAir.humidityRatio().getInKilogramPerKilogram();
+        double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double pIn = inletAir.pressure().getInPascals();
+        double iIn = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double iOut = (mdaIn * iIn + qCool) / mdaIn;
+        double tOut = HumidAirEquations.dryBulbTemperatureIX(iOut, xIn, pIn);
 
-        HumidAir outletHumidAir = HumidAir.of(inletAir.pressure(), Temperature.ofCelsius(t_out), inletAir.humidityRatio());
+        HumidAir outletHumidAir = HumidAir.of(inletAir.pressure(), Temperature.ofCelsius(tOut), inletAir.humidityRatio());
         FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, inletAir.dryAirMassFlow());
 
         return new DryAirCoolingResult(outletFlow, inputPower);

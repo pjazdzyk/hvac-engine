@@ -26,8 +26,7 @@ class SharedEquationsTest {
         double actualPressure = SharedEquations.atmAltitudePressure(altitude);
 
         // Assert
-        assertThat(actualPressure).isEqualTo(expectedPressure);
-        assertThat(actualPressure).isLessThan(PHYS_ATMOSPHERE);
+        assertThat(actualPressure).isEqualTo(expectedPressure).isLessThan(PHYS_ATMOSPHERE);
     }
 
     @Test
@@ -42,8 +41,8 @@ class SharedEquationsTest {
         var actualTemp = SharedEquations.altitudeTemperature(tempAtSea, altitude);
 
         // Assert
-        assertThat(actualTemp).isEqualTo(expectedTemp);
-        assertThat(actualTemp).isLessThan(tempAtSea);
+        assertThat(actualTemp).isEqualTo(expectedTemp).isLessThan(tempAtSea);
+
     }
 
     @Test

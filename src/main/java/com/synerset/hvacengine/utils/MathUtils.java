@@ -31,14 +31,14 @@ public final class MathUtils {
      * Performs linear interpolation to estimate a value at a given point.
      *
      * @param x1   The first x-coordinate.
-     * @param f_x1 The function value at x1.
+     * @param fx1 The function value at x1.
      * @param x2   The second x-coordinate.
-     * @param f_x2 The function value at x2.
+     * @param fx2 The function value at x2.
      * @param x    The x-coordinate at which to estimate the function value.
      * @return The estimated function value at x using linear interpolation.
      */
-    public static double linearInterpolation(double x1, double f_x1, double x2, double f_x2, double x) {
-        return f_x1 + ((x - x1) / (x2 - x1)) * (f_x2 - f_x1);
+    public static double linearInterpolation(double x1, double fx1, double x2, double fx2, double x) {
+        return fx1 + ((x - x1) / (x2 - x1)) * (fx2 - fx1);
     }
 
 }

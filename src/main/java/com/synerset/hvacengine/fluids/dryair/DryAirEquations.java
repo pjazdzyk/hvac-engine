@@ -6,9 +6,9 @@ import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 public final class DryAirEquations {
 
-    public static final double DRY_AIR_MOLECULAR_MASS = 28.96546;               // [kg/mol]             - Dry air molecular mass
-    public static final double DRY_AIR_GAS_CONSTANT = 287.055;                  // [J/(kg*K)]           - Dry air specific gas constant
-    public static final double DRY_AIR_SUTHERLAND_CONSTANT = 111.0;             // [K]                  - Dry air Sutherland Constant
+    public static final double DRY_AIR_MOLECULAR_MASS = 28.96546;           // [kg/mol] Dry air molecular mass
+    public static final double DRY_AIR_GAS_CONSTANT = 287.055;              // [J/(kg*K)] Dry air specific gas constant
+    public static final double DRY_AIR_SUTHERLAND_CONSTANT = 111.0;         // [K] Dry air Sutherland Constant
 
     private DryAirEquations() {
     }
@@ -42,8 +42,8 @@ public final class DryAirEquations {
      * @return kinematic viscosity, m^2/s
      */
     public static double kinematicViscosity(double ta, double absP) {
-        double rho_Da = density(ta, absP);
-        return dynamicViscosity(ta) / rho_Da;
+        double rhoDa = density(ta, absP);
+        return dynamicViscosity(ta) / rhoDa;
     }
 
     public static KinematicViscosity kinematicViscosity(Temperature dryAirTemperature, Pressure absPressure) {
@@ -83,8 +83,8 @@ public final class DryAirEquations {
      * @return dry air specific enthalpy, kJ/kg
      */
     public static double specificEnthalpy(double ta) {
-        double cp_Da = specificHeat(ta);
-        return cp_Da * ta;
+        double cpDa = specificHeat(ta);
+        return cpDa * ta;
     }
 
     public static SpecificEnthalpy specificEnthalpy(Temperature dryAirTemperature) {

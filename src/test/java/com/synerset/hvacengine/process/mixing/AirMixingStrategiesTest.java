@@ -69,8 +69,8 @@ class AirMixingStrategiesTest {
         Temperature expectedTemp = Temperature.ofCelsius(-1.0000413789265845);
         RelativeHumidity expectedRH = RelativeHumidity.ofPercentage(99.48335594756662);
         MassFlow expectedDryAirMassFlow = MassFlow.ofKilogramsPerSecond(inletFlow.dryAirMassFlow()
-                .add(recircFlow_1.dryAirMassFlow())
-                .add(recircFlow_2.dryAirMassFlow())
+                .plus(recircFlow_1.dryAirMassFlow())
+                .plus(recircFlow_2.dryAirMassFlow())
                 .getValue());
 
         // When

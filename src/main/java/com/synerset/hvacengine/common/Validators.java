@@ -28,13 +28,13 @@ public final class Validators {
     }
 
     public static <K extends Unit> void requireAboveLowerBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> lowerBoundLimit) {
-        if (quantityToCheck.isEqualOrLowerThan(lowerBoundLimit)) {
+        if (quantityToCheck.equalsOrLowerThan(lowerBoundLimit)) {
             throw new InvalidArgumentException(String.format("Lower bound limit exceeded: Quantity: %s, Limit: %s", quantityToCheck, lowerBoundLimit));
         }
     }
 
     public static <K extends Unit> void requireBelowUpperBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> upperBoundLimit) {
-        if (quantityToCheck.isEqualOrGreaterThan(upperBoundLimit)) {
+        if (quantityToCheck.equalsOrGreaterThan(upperBoundLimit)) {
             throw new InvalidArgumentException(String.format("Upper bound limit exceeded: Quantity: %s, Limit: %s", quantityToCheck, upperBoundLimit));
         }
     }
@@ -45,13 +45,13 @@ public final class Validators {
     }
 
     public static <K extends Unit> void requireAboveLowerBoundInclusive(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> lowerBoundLimit) {
-        if (quantityToCheck.isLowerThan(lowerBoundLimit)) {
+        if (quantityToCheck.lowerThan(lowerBoundLimit)) {
             throw new InvalidArgumentException(String.format("Lower bound limit reached or exceeded: Quantity: %s, Limit: %s", quantityToCheck, lowerBoundLimit));
         }
     }
 
     public static <K extends Unit> void requireBelowUpperBoundInclusive(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> upperBoundLimit) {
-        if (quantityToCheck.isGreaterThan(upperBoundLimit)) {
+        if (quantityToCheck.greaterThan(upperBoundLimit)) {
             throw new InvalidArgumentException(String.format("Upper bound limit reached or exceeded: Quantity: %s, Limit: %s", quantityToCheck, upperBoundLimit));
         }
     }
@@ -62,7 +62,7 @@ public final class Validators {
     }
 
     public static void requireValidSaturationPressure(Pressure saturationPressure, Pressure humidAirAbsolutePressure, Temperature temperature) {
-        if (saturationPressure.isEqualOrGreaterThan(humidAirAbsolutePressure)) {
+        if (saturationPressure.equalsOrGreaterThan(humidAirAbsolutePressure)) {
             throw new InvalidArgumentException(
                     String.format("Water vapour saturation pressure exceeds humid air absolute pressure. Calculations are not possible. " +
                                     " Psat=%s, Pabs=%s, Temp=%s",

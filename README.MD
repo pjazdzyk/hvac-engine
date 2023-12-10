@@ -1,6 +1,6 @@
 ## HVAC|Engine - Psychrometrics Analysis Library.<br> Thermodynamics of Humid Air for MEP/HVAC Engineers.
 
-> Author: **Piotr Jazdzyk**, M.Sc.Eng.<br>
+> Author: **Piotr Jazdzyk**, MScEng<br>
 > LinkedIn: https://www.linkedin.com/in/pjazdzyk <br>
 
 ---
@@ -28,21 +28,21 @@ compromising data integrity through the utilization of immutable objects.
 
 ### INSTALLATION AND TECH
 
-Just copy Maven dependency provided below to your pom.xml file, and you are ready to go. For other package managers, check maven central repository:
+Copy the Maven dependency provided below to your pom.xml file, and you are ready to go. For other package managers, check maven central repository:
 [HVAC|Engine](https://search.maven.org/artifact/com.synerset/hvac-engine/1.0.0/jar?eh=).
 
 ```xml
 <dependency>
     <groupId>com.synerset</groupId>
     <artifactId>hvac-engine</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
-<strong>HVAC|Engine</strong> is developed using following technologies: <br>
+<strong>HVAC|Engine</strong> is developed using the following technologies: <br>
 
 Core: <br>
-![image](https://img.shields.io/badge/21-Java-orange?style=for-the-badge) &nbsp;
+![image](https://img.shields.io/badge/17-Java-orange?style=for-the-badge) &nbsp;
 ![image](https://img.shields.io/badge/apache_maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white) &nbsp; ![image](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white) &nbsp;
 
 Engineering: <br>

@@ -154,32 +154,34 @@ public class HumidAir implements Fluid {
     }
 
     @Override
-    public String toFormattedString() {
-        return "HumidAir:\n\t" +
-                absPressure.toFormattedString("P", "abs", "| ") +
-                dryBulbTemperature.toFormattedString("DBT", "", "| ") +
-                relativeHumidity.toFormattedString("RH", "", "| ") +
-                humidityRatio.toFormattedString("x", "", "| ") +
-                maxHumidityRatio.toFormattedString("x\"") +
-                "\n\t" +
-                saturationPressure.toFormattedString("Ps", "", "| ") +
-                dewPointTemperature.toFormattedString("WBT", "", "| ") +
-                wetBulbTemperature.toFormattedString("TDP", "", "| ") +
-                "Vapour status: " + vapourState +
-                "\n\t" +
-                specificEnthalpy.toFormattedString("i", "", "| ") +
-                density.toFormattedString("ρ", "", "| ") +
-                specificHeat.toFormattedString("cp") +
-                "\n\t" +
-                kinematicViscosity.toFormattedString("ν", "", "| ") +
-                dynamicViscosity.toFormattedString("μ", "", "| ") +
-                thermalConductivity.toFormattedString("k") +
-                "\n\t" +
-                thermalDiffusivity.toFormattedString("α", "", "| ") +
-                prandtlNumber.toFormattedString("Pr") +
-                "\n\t" +
-                dryAirComponent.toFormattedString() +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "HumidAir:" + end +
+                absPressure.toEngineeringFormat("P_abs", digits) + separator +
+                dryBulbTemperature.toEngineeringFormat("DBT", digits) + separator +
+                relativeHumidity.toEngineeringFormat("RH", digits) + separator +
+                humidityRatio.toEngineeringFormat("x", digits) + separator +
+                maxHumidityRatio.toEngineeringFormat("x\"", digits) + end +
+
+                saturationPressure.toEngineeringFormat("Ps", digits) + separator +
+                dewPointTemperature.toEngineeringFormat("WBT", digits) + separator +
+                wetBulbTemperature.toEngineeringFormat("TDP", digits) + separator +
+                "Vapour status: " + vapourState + end +
+
+                specificEnthalpy.toEngineeringFormat("i", digits) + separator +
+                density.toEngineeringFormat("ρ", digits) + separator +
+                specificHeat.toEngineeringFormat("cp", digits) + end +
+
+                kinematicViscosity.toEngineeringFormat("ν", digits) + separator +
+                dynamicViscosity.toEngineeringFormat("μ", digits) + separator +
+                thermalConductivity.toEngineeringFormat("k", digits) + end +
+
+                thermalDiffusivity.toEngineeringFormat("α", digits) + separator +
+                prandtlNumber.toEngineeringFormat("Pr", digits) +
+
+                dryAirComponent.toConsoleOutput();
     }
 
     @Override
@@ -226,7 +228,7 @@ public class HumidAir implements Fluid {
     public <K extends Fluid> boolean isEqualsWithPrecision(K fluid, double epsilon) {
         if (fluid instanceof HumidAir humidAir) {
             return Fluid.super.isEqualsWithPrecision(fluid, epsilon)
-                    && humidityRatio.isEqualsWithPrecision(humidAir.humidityRatio, epsilon);
+                    && humidityRatio.equalsWithPrecision(humidAir.humidityRatio, epsilon);
         } else {
             return Fluid.super.isEqualsWithPrecision(fluid, epsilon);
         }
@@ -235,9 +237,9 @@ public class HumidAir implements Fluid {
     private static VapourState determineVapourState(Temperature dryBulbTemperature, HumidityRatio humidityRatio, HumidityRatio maxHumidityRatio) {
         if (humidityRatio == maxHumidityRatio) {
             return VapourState.SATURATED;
-        } else if ((humidityRatio.isGreaterThan(maxHumidityRatio)) && dryBulbTemperature.isPositive()) {
+        } else if ((humidityRatio.greaterThan(maxHumidityRatio)) && dryBulbTemperature.positive()) {
             return VapourState.WATER_MIST;
-        } else if ((humidityRatio.isGreaterThan(maxHumidityRatio)) && dryBulbTemperature.isNegativeOrZero()) {
+        } else if ((humidityRatio.greaterThan(maxHumidityRatio)) && dryBulbTemperature.negativeOrZero()) {
             return VapourState.ICE_FOG;
         } else {
             return VapourState.UNSATURATED;

@@ -19,8 +19,8 @@ import java.util.Objects;
  */
 public class FlowOfHumidAir implements Flow<HumidAir> {
 
-    public static MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
-    public static MassFlow MASS_FLOW_MAX_LIMIT = MassFlow.ofKilogramsPerSecond(5E9);
+    public static final MassFlow MASS_FLOW_MIN_LIMIT = MassFlow.ofKilogramsPerSecond(0);
+    public static final MassFlow MASS_FLOW_MAX_LIMIT = MassFlow.ofKilogramsPerSecond(5E9);
     private final HumidAir humidAir;
     private final MassFlow massFlow;
     private final VolumetricFlow volFlow;
@@ -146,18 +146,18 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     @Override
-    public String toFormattedString() {
-        return "FlowOfHumidAir:\n\t" +
-                massFlow.toFormattedString("G", "", "| ") +
-                massFlow.toKiloGramPerHour().toFormattedString("G", "", "| ") +
-                volFlow.toFormattedString("V", "", "| ") +
-                volFlow.toCubicMetersPerHour().toFormattedString("V", "") +
-                "\n\t" +
-                dryAirMassFlow().toFormattedString("G", "da", "| ") +
-                dryAirMassFlow().toKiloGramPerHour().toFormattedString("G", "da") +
-                "\n\t" +
-                humidAir.toFormattedString() +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "FlowOfHumidAir:" + end +
+                massFlow.toEngineeringFormat("G", digits) + separator +
+                massFlow.toKiloGramPerHour().toEngineeringFormat("G", digits) + separator +
+                volFlow.toEngineeringFormat("V", digits) + separator +
+                volFlow.toCubicMetersPerHour().toEngineeringFormat("V", digits) + end +
+                dryAirMassFlow().toEngineeringFormat("G_da", digits) + separator +
+                dryAirMassFlow().toKiloGramPerHour().toEngineeringFormat("G_da", digits) +
+                humidAir.toConsoleOutput();
     }
 
     @Override
@@ -238,9 +238,9 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     public static FlowOfHumidAir ofValues(double absPressure, double dryBulbTemp, double relHum, double m3hVolFlow) {
         Pressure pAbs = Pressure.ofPascal(absPressure);
         Temperature DBT = Temperature.ofCelsius(dryBulbTemp);
-        RelativeHumidity RH = RelativeHumidity.ofPercentage(relHum);
+        RelativeHumidity rh = RelativeHumidity.ofPercentage(relHum);
         VolumetricFlow volFlow = VolumetricFlow.ofCubicMetersPerHour(m3hVolFlow);
-        HumidAir humidAir = HumidAir.of(pAbs, DBT, RH);
+        HumidAir humidAir = HumidAir.of(pAbs, DBT, rh);
         return of(humidAir, volFlow);
     }
 
