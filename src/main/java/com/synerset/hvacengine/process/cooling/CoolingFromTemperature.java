@@ -31,63 +31,63 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
     public AirCoolingResult applyCooling() {
         // Determining Bypass Factor and direct near-wall contact airflow and bypassing airflow
         HumidAir inletHumidAir = inletAir.fluid();
-        double t_in = inletHumidAir.temperature().getInCelsius();
-        double t_out = targetOutTemperature.getInCelsius();
+        double tIn = inletHumidAir.temperature().getInCelsius();
+        double tOut = targetOutTemperature.getInCelsius();
 
-        double m_cond = 0.0;
+        double mCond = 0.0;
         LiquidWater liquidWater = LiquidWater.of(inletAir.temperature());
-        FlowOfLiquidWater condensateFlow = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(m_cond));
+        FlowOfLiquidWater condensateFlow = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(mCond));
         Temperature averageWallTemp = coolantData.getAverageTemperature();
 
-        if (t_out == t_in) {
+        if (tOut == tIn) {
             return new AirCoolingResult(inletAir, Power.ofWatts(0.0), condensateFlow,
                     CoolingHelpers.coilBypassFactor(averageWallTemp, inletHumidAir.temperature(), targetOutTemperature));
         }
 
-        double mda_in = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double x_in = inletHumidAir.humidityRatio().getInKilogramPerKilogram();
-        double p_in = inletHumidAir.pressure().getInPascals();
-        double tm_wall = averageWallTemp.getInCelsius();
-        double t_cond = tm_wall;
-        BypassFactor BF = CoolingHelpers.coilBypassFactor(averageWallTemp, inletHumidAir.temperature(), targetOutTemperature);
-        double mDa_DirectContact = (1.0 - BF.getValue()) * mda_in;
-        double mDa_Bypassing = mda_in - mDa_DirectContact;
+        double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double xIn = inletHumidAir.humidityRatio().getInKilogramPerKilogram();
+        double pIn = inletHumidAir.pressure().getInPascals();
+        double tmWall = averageWallTemp.getInCelsius();
+        double tCond = tmWall;
+        BypassFactor bf = CoolingHelpers.coilBypassFactor(averageWallTemp, inletHumidAir.temperature(), targetOutTemperature);
+        double mDaDirectContact = (1.0 - bf.getValue()) * mdaIn;
+        double mDaBypassing = mdaIn - mDaDirectContact;
 
         // Determining direct near-wall air properties
-        double tdp_in = inletHumidAir.dewPointTemperature().getInCelsius();
-        double ps_tm = HumidAirEquations.saturationPressure(tm_wall);
-        double x_tm = tm_wall >= tdp_in ? x_in : HumidAirEquations.maxHumidityRatio(ps_tm, p_in);
-        double i_tm = HumidAirEquations.specificEnthalpy(tm_wall, x_tm, p_in);
+        double tdpIn = inletHumidAir.dewPointTemperature().getInCelsius();
+        double psTm = HumidAirEquations.saturationPressure(tmWall);
+        double xTm = tmWall >= tdpIn ? xIn : HumidAirEquations.maxHumidityRatio(psTm, pIn);
+        double iTm = HumidAirEquations.specificEnthalpy(tmWall, xTm, pIn);
 
         // Determining condensate discharge and properties
-        m_cond = tm_wall >= tdp_in
+        mCond = tmWall >= tdpIn
                 ? 0.0
                 : CoolingHelpers.condensateDischarge(
-                        MassFlow.ofKilogramsPerSecond(mDa_DirectContact),
+                        MassFlow.ofKilogramsPerSecond(mDaDirectContact),
                         inletHumidAir.humidityRatio(),
-                        HumidityRatio.ofKilogramPerKilogram(x_tm))
+                        HumidityRatio.ofKilogramPerKilogram(xTm))
                 .getInKilogramsPerSecond();
 
         // Determining required cooling performance
-        double i_cond = LiquidWaterEquations.specificEnthalpy(t_cond);
-        double i_in = inletHumidAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
-        double Q_cond = m_cond * i_cond;
-        double Q_cool = (mDa_DirectContact * (i_tm - i_in) + Q_cond);
+        double iCond = LiquidWaterEquations.specificEnthalpy(tCond);
+        double iIn = inletHumidAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double qCond = mCond * iCond;
+        double qCool = (mDaDirectContact * (iTm - iIn) + qCond);
 
-        // Determining outlet humidity ratio
-        double x_out = (x_tm * mDa_DirectContact + x_in * mDa_Bypassing) / mda_in;
+        // Determining an outlet humidity ratio
+        double xOut = (xTm * mDaDirectContact + xIn * mDaBypassing) / mdaIn;
 
-        liquidWater = LiquidWater.of(Temperature.ofCelsius(t_cond));
-        condensateFlow = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(m_cond));
+        liquidWater = LiquidWater.of(Temperature.ofCelsius(tCond));
+        condensateFlow = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(mCond));
         HumidAir outletHumidAir = HumidAir.of(
                 inletAir.pressure(),
-                Temperature.ofCelsius(t_out),
-                HumidityRatio.ofKilogramPerKilogram(x_out)
+                Temperature.ofCelsius(tOut),
+                HumidityRatio.ofKilogramPerKilogram(xOut)
         );
 
         FlowOfHumidAir outletFlow = inletAir.withHumidAir(outletHumidAir);
 
-        return new AirCoolingResult(outletFlow, Power.ofKiloWatts(Q_cool), condensateFlow, BF);
+        return new AirCoolingResult(outletFlow, Power.ofKiloWatts(qCool), condensateFlow, bf);
     }
 
 }

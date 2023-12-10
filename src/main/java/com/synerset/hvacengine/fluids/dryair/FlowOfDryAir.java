@@ -77,15 +77,16 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     @Override
-    public String toFormattedString() {
-        return "FlowOfDryAir:\n\t" +
-                massFlow.toFormattedString("G", "da", "| ") +
-                massFlow.toKiloGramPerHour().toFormattedString("G", "da", "| ") +
-                volFlow.toFormattedString("V", "da", "| ") +
-                volFlow.toCubicMetersPerHour().toFormattedString("V", "da") +
-                "\n\t" +
-                dryAir.toFormattedString() +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "FlowOfDryAir:" + end +
+                massFlow.toEngineeringFormat("G_da", digits) + separator +
+                massFlow.toKiloGramPerHour().toEngineeringFormat("G_da", digits) + separator +
+                volFlow.toEngineeringFormat("V_da", digits) + separator +
+                volFlow.toCubicMetersPerHour().toEngineeringFormat("V_da", digits) + end +
+                dryAir.toConsoleOutput();
     }
 
     @Override

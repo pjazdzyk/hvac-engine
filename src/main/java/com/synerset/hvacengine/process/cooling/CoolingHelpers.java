@@ -24,11 +24,11 @@ final class CoolingHelpers {
      * @return cooling coil {@link BypassFactor}
      */
     public static BypassFactor coilBypassFactor(Temperature averageWallTemp, Temperature inletAirTemp, Temperature outletAirTemp) {
-        Temperature tav_wall = averageWallTemp.toCelsius();
-        Temperature t_in = inletAirTemp.toCelsius();
-        Temperature t_out = outletAirTemp.toCelsius();
-        double bypassFactorVal = t_out.subtract(tav_wall)
-                .divide(t_in.subtract(tav_wall));
+        Temperature tAvgWall = averageWallTemp.toCelsius();
+        Temperature tIn = inletAirTemp.toCelsius();
+        Temperature tOut = outletAirTemp.toCelsius();
+        double bypassFactorVal = tOut.minus(tAvgWall)
+                .div(tIn.minus(tAvgWall));
 
         return BypassFactor.of(bypassFactorVal);
     }
@@ -42,14 +42,14 @@ final class CoolingHelpers {
      * @return condensate {@link MassFlow}
      */
     public static MassFlow condensateDischarge(MassFlow dryAirMassFlow, HumidityRatio inletHumRatio, HumidityRatio outletHumRatio) {
-        double mda_in = dryAirMassFlow.getInKilogramsPerSecond();
-        double x_in = inletHumRatio.getInKilogramPerKilogram();
-        double x_out = outletHumRatio.getInKilogramPerKilogram();
-        if (mda_in < 0 || x_in < 0 || x_out < 0)
+        double mdaIn = dryAirMassFlow.getInKilogramsPerSecond();
+        double xIn = inletHumRatio.getInKilogramPerKilogram();
+        double xOut = outletHumRatio.getInKilogramPerKilogram();
+        if (mdaIn < 0 || xIn < 0 || xOut < 0)
             throw new InvalidArgumentException(String.format("Negative values of mda, x1 or x2 passed as method argument. %s, %s, %s", dryAirMassFlow, inletHumRatio, outletHumRatio));
-        if (x_in == 0)
+        if (xIn == 0)
             return MassFlow.ofKilogramsPerSecond(0.0);
-        return MassFlow.ofKilogramsPerSecond(mda_in * (x_in - x_out));
+        return MassFlow.ofKilogramsPerSecond(mdaIn * (xIn - xOut));
     }
 
 }

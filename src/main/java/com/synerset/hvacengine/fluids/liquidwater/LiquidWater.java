@@ -68,15 +68,16 @@ public class LiquidWater implements Fluid {
      * @return A formatted string representation.
      */
     @Override
-    public String toFormattedString() {
-        return "LiquidWater:\n\t" +
-                pressure.toFormattedString("P", "abs", "| ") +
-                temperature.toFormattedString("t", "w") +
-                "\n\t" +
-                specificEnthalpy.toFormattedString("i", "w", "| ") +
-                density.toFormattedString("ρ", "w", "| ") +
-                specificHeat.toFormattedString("cp", "w") +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "LiquidWater:" + end +
+                pressure.toEngineeringFormat("P_abs", digits) + separator +
+                temperature.toEngineeringFormat("t_w", digits) + end +
+                specificEnthalpy.toEngineeringFormat("i_w", digits) + separator +
+                density.toEngineeringFormat("ρ_w", digits) + separator +
+                specificHeat.toEngineeringFormat("cp_w", digits) + end;
     }
 
     @Override

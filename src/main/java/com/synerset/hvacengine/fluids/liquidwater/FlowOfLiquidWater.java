@@ -84,15 +84,16 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
      * @return A formatted string representation.
      */
     @Override
-    public String toFormattedString() {
-        return "FlowOfLiquidWater:\n\t" +
-                massFlow.toFormattedString("G", "w", "| ") +
-                massFlow.toKiloGramPerHour().toFormattedString("G", "w", "| ") +
-                volFlow.toFormattedString("V", "| ") +
-                volFlow.toCubicMetersPerHour().toFormattedString("V", "w") +
-                "\n\t" +
-                liquidWater.toFormattedString() +
-                "\n";
+    public String toConsoleOutput() {
+        String separator = " | ";
+        String end = "\n\t";
+        int digits = 3;
+        return "FlowOfLiquidWater:" + end +
+                massFlow.toEngineeringFormat("G_w", digits) + separator +
+                massFlow.toKiloGramPerHour().toEngineeringFormat("G_w", digits) + separator +
+                volFlow.toEngineeringFormat("V_w", digits) + separator +
+                volFlow.toCubicMetersPerHour().toEngineeringFormat("V_w", digits) + end +
+                liquidWater.toConsoleOutput();
     }
 
     @Override

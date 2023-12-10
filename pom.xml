@@ -38,7 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Synerset library versions -->
         <brent-solver.version>1.1.4</brent-solver.version>
-        <unitility.version>1.2.0</unitility.version>
+        <unitility.version>0.0.1-SNAPSHOT</unitility.version>
         <!-- Dependency versions -->
         <junit.version>5.9.0</junit.version>
         <assertJ.version>3.24.2</assertJ.version>
@@ -72,7 +72,7 @@
         </dependency>
         <dependency>
             <groupId>com.synerset</groupId>
-            <artifactId>unitility</artifactId>
+            <artifactId>unitility-core</artifactId>
             <version>${unitility.version}</version>
         </dependency>
 
@@ -99,6 +99,21 @@
 
     <build>
         <plugins>
+            <!-- Maven Source Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Maven Surefire Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -113,6 +128,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- Maven Jacoco Plugin -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -140,6 +156,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Maven Flatten Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
@@ -171,7 +188,6 @@
     <profiles>
         <profile>
             <id>ossrhDeploy</id>
-
             <distributionManagement>
                 <snapshotRepository>
                     <id>ossrh</id>
@@ -182,7 +198,6 @@
                     <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
-
             <build>
                 <plugins>
                     <!-- Sonatype Plugin -->
@@ -197,22 +212,6 @@
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
-
-                    <!-- Maven Source Plugin -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>${maven-source-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
                     <!-- Maven javadoc plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -230,7 +229,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                     <!-- Maven GPG Plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -254,7 +252,6 @@
                 </plugins>
             </build>
         </profile>
-
         <!-- Profile : GitHub Apache Maven Packages -->
         <profile>
             <id>githubDeploy</id>
@@ -266,14 +263,11 @@
                 </repository>
             </distributionManagement>
         </profile>
-
     </profiles>
-
     <scm>
         <connection>scm:git:git://github.com/pjazdzyk/hvac-engine.git</connection>
         <developerConnection>scm:git:ssh://github.com:pjazdzyk/hvac-engine.git</developerConnection>
         <url>https://github.com/pjazdzyk/hvac-engine</url>
         <tag>HEAD</tag>
     </scm>
-
 </project>

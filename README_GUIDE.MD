@@ -71,7 +71,7 @@ HumidAir summerAir = HumidAir.of(
         RelativeHumidity.ofPercentage(45)
 );
 ```
-For users or developers utilizing the console for result output, we have provided a dedicated method, _toFormattedString()_, 
+For users or developers utilizing the console for result output, we have provided a dedicated method, _toConsoleOutput()_, 
 which will display the air state in a readable and structured format. This method also automatically rounds values to four relevant digits
 
 ```text
@@ -111,7 +111,7 @@ Example of creating liquid water state for a condensate:
 LiquidWater condensate = LiquidWater.of(Temperature.ofCelsius(30));
 ```
 
-Using toFormattedString() method will result in following output:
+Using toConsoleOutput() method will result in following output:
 
 ```text
 LiquidWater:
@@ -199,7 +199,7 @@ The heating process, upon creation, will invoke calculation procedures stored in
 determining the heating power. Like all other process classes, the Heating class encapsulates the most relevant outlet 
 air properties, including temperature, pressure, humidity, enthalpy, and others, for simplified value extraction when 
 necessary.<br>
-For quick console output, you can use the toFormattedString() method:
+For quick console output, you can use the toConsoleOutput() method:
 
 ```text
 PROCESS OF HEATING:
