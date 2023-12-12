@@ -43,13 +43,12 @@
         <assertJ.version>3.24.2</assertJ.version>
         <junit-jupiter-api.version>5.10.1</junit-jupiter-api.version>
         <!-- Plugins versions -->
-        <jacoco.version>0.8.11</jacoco.version>
-        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
+        <jacoco.version>0.8.9</jacoco.version>
+        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-
         <!-- Sonar Cloud Properties-->
         <sonar.organization>synerset</sonar.organization>
         <sonar.projectKey>pjazdzyk_hvac-engine</sonar.projectKey>
@@ -111,13 +110,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Maven javadoc plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Maven Surefire Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>-Dfile.encoding=UTF-8</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
@@ -135,7 +147,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>prepare-agent</id>
+                        <id>default-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -160,12 +172,13 @@
                 <artifactId>flatten-maven-plugin</artifactId>
                 <version>${flatten-maven-plugin.version}</version>
                 <configuration>
+                    <flattenMode>oss</flattenMode>
                 </configuration>
                 <executions>
                     <!-- enable flattening -->
                     <execution>
                         <id>flatten</id>
-                        <phase>process-resources</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>flatten</goal>
                         </goals>
@@ -210,23 +223,6 @@
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
-                    <!-- Maven javadoc plugin -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven-javadoc-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <failOnError>false</failOnError>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <!-- Maven GPG Plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -249,17 +245,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <!-- Profile : GitHub Apache Maven Packages -->
-        <profile>
-            <id>githubDeploy</id>
-            <distributionManagement>
-                <repository>
-                    <id>github</id>
-                    <name>pjazdzyk</name>
-                    <url>https://maven.pkg.github.com/pjazdzyk/hvac-engine</url>
-                </repository>
-            </distributionManagement>
         </profile>
     </profiles>
     <scm>
