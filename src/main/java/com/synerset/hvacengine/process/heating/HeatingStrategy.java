@@ -43,7 +43,7 @@ public interface HeatingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inputPower);
 
-        if (inputPower.negative()) {
+        if (inputPower.isNegative()) {
             throw new InvalidArgumentException("Heating power must be positive value. Q_in = " + inputPower);
         }
 
@@ -54,7 +54,7 @@ public interface HeatingStrategy {
         double qMax = iMax.minus(inletAirFlow.specificEnthalpy())
                 .multiply(inletAirFlow.massFlow().toKilogramsPerSecond());
         Power estimatedPowerLimit = Power.ofKiloWatts(qMax);
-        if (inputPower.greaterThan(estimatedPowerLimit)) {
+        if (inputPower.isGreaterThan(estimatedPowerLimit)) {
             throw new InvalidArgumentException("To large heating power for provided flow. "
                     + "Q_in = " + inputPower + " Q_limit = " + estimatedPowerLimit);
         }
@@ -73,7 +73,7 @@ public interface HeatingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetRelativeHumidity);
         Validators.requireBetweenBoundsInclusive(targetRelativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.ofPercentage(98));
-        if (targetRelativeHumidity.greaterThan(inletAirFlow.relativeHumidity())) {
+        if (targetRelativeHumidity.isGreaterThan(inletAirFlow.relativeHumidity())) {
             throw new InvalidArgumentException("Heating process cannot increase relative humidity. "
                     + "RH_in = " + inletAirFlow.relativeHumidity() + " RH_target = " + targetRelativeHumidity);
         }
@@ -92,7 +92,7 @@ public interface HeatingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetTemperature);
         Validators.requireBelowUpperBoundInclusive(targetTemperature, HumidAir.TEMPERATURE_MAX_LIMIT);
-        if (targetTemperature.lowerThan(inletAirFlow.temperature())) {
+        if (targetTemperature.isLowerThan(inletAirFlow.temperature())) {
             throw new InvalidArgumentException("Expected outlet temperature must be greater than inlet for cooling process. "
                     + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.temperature());
         }
