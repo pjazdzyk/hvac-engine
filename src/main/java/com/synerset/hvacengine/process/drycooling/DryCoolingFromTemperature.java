@@ -31,7 +31,7 @@ record DryCoolingFromTemperature(FlowOfHumidAir inletAir,
         }
 
         // If the target temperature is below dew point temperature, it is certain that this is no longer dry cooling
-        if (outletTemperature.lowerThan(inletAir.fluid().dewPointTemperature())) {
+        if (outletTemperature.isLowerThan(inletAir.fluid().dewPointTemperature())) {
             return new DryAirCoolingResult(inletAir, Power.ofWatts(0));
         }
 

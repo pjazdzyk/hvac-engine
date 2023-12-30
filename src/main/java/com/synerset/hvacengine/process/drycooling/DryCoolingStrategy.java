@@ -39,7 +39,7 @@ public interface DryCoolingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inputPower);
 
-        if (inputPower.positive()) {
+        if (inputPower.isPositive()) {
             throw new InvalidArgumentException("Cooling power must be negative value. Q_in = " + inputPower);
         }
 
@@ -58,7 +58,7 @@ public interface DryCoolingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetTemperature);
 
-        if (targetTemperature.greaterThan(inletAirFlow.temperature())) {
+        if (targetTemperature.isGreaterThan(inletAirFlow.temperature())) {
             throw new InvalidArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
                     + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.temperature());
         }

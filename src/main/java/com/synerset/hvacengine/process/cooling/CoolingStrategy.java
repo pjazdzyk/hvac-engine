@@ -48,7 +48,7 @@ public interface CoolingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inletCoolantData);
         Validators.requireNotNull(inputPower);
-        if (inputPower.positive()) {
+        if (inputPower.isPositive()) {
             throw new InvalidArgumentException("Cooling power must be negative value. Q_in = " + inputPower);
         }
         // Mox cooling power quick estimate to reach 0 degrees Qcool.max= G * (i_0 - i_in)
@@ -56,7 +56,7 @@ public interface CoolingStrategy {
                 .minusFromValue(0)
                 .multiply(inletAirFlow.massFlow().toKilogramsPerSecond());
         Power estimatedPowerLimit = Power.ofKiloWatts(estimatedMaxPowerKw);
-        if (inputPower.lowerThan(estimatedPowerLimit)) {
+        if (inputPower.isLowerThan(estimatedPowerLimit)) {
             throw new InvalidArgumentException("To large cooling power for provided flow. "
                     + "Q_in = " + inputPower + " Q_limit = " + estimatedPowerLimit);
         }
@@ -77,7 +77,7 @@ public interface CoolingStrategy {
         Validators.requireNotNull(inletCoolantData);
         Validators.requireNotNull(targetRelativeHumidity);
         Validators.requireBetweenBoundsInclusive(targetRelativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.ofPercentage(98));
-        if (targetRelativeHumidity.lowerThan(inletAirFlow.relativeHumidity())) {
+        if (targetRelativeHumidity.isLowerThan(inletAirFlow.relativeHumidity())) {
             throw new InvalidArgumentException("Cooling process cannot decrease relative humidity. "
                     + "RH_in = " + inletAirFlow.relativeHumidity() + " RH_target = " + targetRelativeHumidity);
         }
@@ -98,7 +98,7 @@ public interface CoolingStrategy {
         Validators.requireNotNull(inletCoolantData);
         Validators.requireNotNull(targetTemperature);
         Validators.requireAboveLowerBound(targetTemperature, Temperature.ofCelsius(0));
-        if (targetTemperature.greaterThan(inletAirFlow.temperature())) {
+        if (targetTemperature.isGreaterThan(inletAirFlow.temperature())) {
             throw new InvalidArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
                     + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.temperature());
         }
