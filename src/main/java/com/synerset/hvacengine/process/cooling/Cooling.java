@@ -54,14 +54,14 @@ public class Cooling {
         bypassFactor = coolingBulkResults.bypassFactor();
         outletFlow = coolingBulkResults.outletFlow();
         outletAir = outletFlow.fluid();
-        outPressure = outletFlow.pressure();
-        outTemperature = outletFlow.temperature();
+        outPressure = outletFlow.getPressure();
+        outTemperature = outletFlow.getTemperature();
         outRelativeHumidity = outletFlow.relativeHumidity();
         outHumidityRatio = outletFlow.humidityRatio();
-        outSpecificEnthalpy = outletFlow.specificEnthalpy();
+        outSpecificEnthalpy = outletFlow.getSpecificEnthalpy();
         condensateFlow = coolingBulkResults.condensateFlow();
-        condensateTemperature = condensateFlow.temperature();
-        condensateEnthalpy = condensateFlow.specificEnthalpy();
+        condensateTemperature = condensateFlow.getTemperature();
+        condensateEnthalpy = condensateFlow.getSpecificEnthalpy();
     }
 
     public CoolingStrategy getCoolingStrategy() {
@@ -141,14 +141,14 @@ public class Cooling {
         return "PROCESS OF COOLING:" + end +
 
                 "INPUT FLOW:" + end +
-                inputInletAir.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_in", digits) + separator +
-                inputInletAir.massFlow().toEngineeringFormat("G_in", digits) + separator +
+                inputInletAir.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_in", digits) + separator +
+                inputInletAir.getMassFlow().toEngineeringFormat("G_in", digits) + separator +
                 inputInletAir.dryAirMassFlow().toEngineeringFormat("G_in.da", digits) + end +
 
-                inputInletAir.temperature().toEngineeringFormat("DBT_in", digits) + separator +
+                inputInletAir.getTemperature().toEngineeringFormat("DBT_in", digits) + separator +
                 inputInletAir.relativeHumidity().toEngineeringFormat("RH_in", digits) + separator +
                 inputInletAir.humidityRatio().toEngineeringFormat("x_in", digits) + separator +
-                inputInletAir.specificEnthalpy().toEngineeringFormat("i", digits) + end +
+                inputInletAir.getSpecificEnthalpy().toEngineeringFormat("i", digits) + end +
 
                 "COOLANT DATA:" + end +
                 coolantData.getSupplyTemperature().toEngineeringFormat("t_su", digits) + separator +
@@ -161,8 +161,8 @@ public class Cooling {
                 bypassFactor.toEngineeringFormat("BF", digits) + end +
 
                 "OUTLET FLOW:" + end +
-                outletFlow.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_out", digits) + separator +
-                outletFlow.massFlow().toEngineeringFormat("G_out", digits) + separator +
+                outletFlow.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_out", digits) + separator +
+                outletFlow.getMassFlow().toEngineeringFormat("G_out", digits) + separator +
                 outletFlow.dryAirMassFlow().toEngineeringFormat("G_out.da", digits) + end +
 
                 outTemperature.toEngineeringFormat("DBT_out", digits) + separator +
@@ -170,7 +170,7 @@ public class Cooling {
                 outHumidityRatio.toEngineeringFormat("x_out", digits) + separator +
                 outSpecificEnthalpy.toEngineeringFormat("i", digits) + end +
                 "CONDENSATE:" + end +
-                condensateFlow.massFlow().toEngineeringFormat("G_cond", digits) + separator +
+                condensateFlow.getMassFlow().toEngineeringFormat("G_cond", digits) + separator +
                 condensateTemperature.toEngineeringFormat("t_cond", digits) + separator +
                 condensateEnthalpy.toEngineeringFormat("i_cond", digits) + end;
     }

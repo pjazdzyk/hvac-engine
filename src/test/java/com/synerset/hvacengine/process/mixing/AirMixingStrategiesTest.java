@@ -35,11 +35,11 @@ class AirMixingStrategiesTest {
                 RelativeHumidity.ofPercentage(55.0));
         FlowOfHumidAir airFlow_rec = FlowOfHumidAir.ofDryAirMassFlow(air_rec, MassFlow.ofKilogramsPerSecond(mda_rec));
 
-        double x_in = air_in.humidityRatio().getValue();
-        double x_rec = air_rec.humidityRatio().getValue();
+        double x_in = air_in.getHumidityRatio().getValue();
+        double x_rec = air_rec.getHumidityRatio().getValue();
         double x_out = (mda_in * x_in + mda_rec * x_rec) / mda_out;
-        double i_in = air_in.specificEnthalpy().getValue();
-        double i_rec = air_rec.specificEnthalpy().getValue();
+        double i_in = air_in.getSpecificEnthalpy().getValue();
+        double i_rec = air_rec.getSpecificEnthalpy().getValue();
         double i_out = (mda_in * i_in + mda_rec * i_rec) / mda_out;
         double expectedOutAirTempVal = HumidAirEquations.dryBulbTemperatureIX(i_out, x_out, p_atm);
         HumidityRatio expectedHumidityRatio = HumidityRatio.ofKilogramPerKilogram(x_out);
@@ -50,7 +50,7 @@ class AirMixingStrategiesTest {
         FlowOfHumidAir actualOutletFlow = mixingStrategy.applyMixing().outletFlow();
 
         MassFlow actualOutDryAirMassFlow = actualOutletFlow.dryAirMassFlow();
-        Temperature actualOutAirTemp = actualOutletFlow.temperature();
+        Temperature actualOutAirTemp = actualOutletFlow.getTemperature();
         HumidityRatio actualOutHumidityRatio = actualOutletFlow.humidityRatio();
 
         // Then
@@ -78,7 +78,7 @@ class AirMixingStrategiesTest {
         FlowOfHumidAir actualOutletFlow = mixingStrategy.applyMixing().outletFlow();
 
         // Then
-        assertThat(actualOutletFlow.temperature()).isEqualTo(expectedTemp);
+        assertThat(actualOutletFlow.getTemperature()).isEqualTo(expectedTemp);
         assertThat(actualOutletFlow.relativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1E-11));
         assertThat(actualOutletFlow.dryAirMassFlow()).isEqualTo(expectedDryAirMassFlow);
 

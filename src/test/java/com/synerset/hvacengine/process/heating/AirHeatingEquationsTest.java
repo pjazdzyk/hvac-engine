@@ -39,7 +39,7 @@ class AirHeatingEquationsTest {
         AirHeatingResult airHeatingResult = HeatingStrategy.of(inletFlow, inputHeat).applyHeating();
 
         Power actualProcessHeat = airHeatingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airHeatingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airHeatingResult.outletFlow().getTemperature();
 
         // Then
         assertThat(actualOutAirTemp).isEqualTo(expectedOutTemp);
@@ -56,7 +56,7 @@ class AirHeatingEquationsTest {
         // When
         AirHeatingResult airHeatingResult = HeatingStrategy.of(inletFlow, targetOutTemp).applyHeating();
         Power actualHeatPower = airHeatingResult.heatOfProcess();
-        Temperature actualOutTemp = airHeatingResult.outletFlow().temperature();
+        Temperature actualOutTemp = airHeatingResult.outletFlow().getTemperature();
 
         // Then
         assertThat(actualHeatPower).isEqualTo(inputHeat);
@@ -74,7 +74,7 @@ class AirHeatingEquationsTest {
         // Act
         AirHeatingResult airHeatingResult = HeatingStrategy.of(inletFlow, expectedOutRH).applyHeating();
         Power actualHeatOfProcess = airHeatingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airHeatingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airHeatingResult.outletFlow().getTemperature();
 
         // Assert
         assertThat(actualHeatOfProcess.equalsWithPrecision(expectedHeatOfProcess, 1E-9)).isTrue();

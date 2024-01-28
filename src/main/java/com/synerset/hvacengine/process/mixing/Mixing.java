@@ -44,12 +44,12 @@ public class Mixing {
     private void applyProcess() {
         airMixingBulkResult = mixingStrategy.applyMixing();
         outletFlow = airMixingBulkResult.outletFlow();
-        outPressure = outletFlow.pressure();
+        outPressure = outletFlow.getPressure();
         outletAir = outletFlow.fluid();
-        outTemperature = outletFlow.temperature();
+        outTemperature = outletFlow.getTemperature();
         outRelativeHumidity = outletFlow.relativeHumidity();
         outHumidityRatio = outletFlow.humidityRatio();
-        outSpecificEnthalpy = outletFlow.specificEnthalpy();
+        outSpecificEnthalpy = outletFlow.getSpecificEnthalpy();
     }
 
     public MixingStrategy getMixingStrategy() {
@@ -119,13 +119,13 @@ public class Mixing {
         String end = "\n\t";
         int digits = 3;
         return title + end +
-                flowOfAir.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_" + suffix, digits) + separator +
-                flowOfAir.massFlow().toEngineeringFormat("G_" + suffix, digits) + separator +
+                flowOfAir.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_" + suffix, digits) + separator +
+                flowOfAir.getMassFlow().toEngineeringFormat("G_" + suffix, digits) + separator +
                 flowOfAir.dryAirMassFlow().toEngineeringFormat("G_" + suffix + ".da", digits) + end +
-                flowOfAir.temperature().toEngineeringFormat("DBT_" + suffix, digits) + separator +
+                flowOfAir.getTemperature().toEngineeringFormat("DBT_" + suffix, digits) + separator +
                 flowOfAir.relativeHumidity().toEngineeringFormat("RH_" + suffix, digits) + separator +
                 flowOfAir.humidityRatio().toEngineeringFormat("x_" + suffix, digits) + separator +
-                flowOfAir.specificEnthalpy().toEngineeringFormat("i_" + suffix, digits);
+                flowOfAir.getSpecificEnthalpy().toEngineeringFormat("i_" + suffix, digits);
     }
 
     @Override

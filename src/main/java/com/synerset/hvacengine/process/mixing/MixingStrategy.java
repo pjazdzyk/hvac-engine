@@ -46,7 +46,7 @@ public interface MixingStrategy {
     static MixingStrategy of(FlowOfHumidAir inletAir, List<FlowOfHumidAir> recirculationAirFlows) {
         Validators.requireNotNull(inletAir);
         Validators.requireNotEmpty(recirculationAirFlows);
-        MassFlow totalMassFlow = sumOfAllFlows(recirculationAirFlows).plus(inletAir.massFlow());
+        MassFlow totalMassFlow = sumOfAllFlows(recirculationAirFlows).plus(inletAir.getMassFlow());
         Validators.requireBelowUpperBoundInclusive(totalMassFlow, FlowOfHumidAir.MASS_FLOW_MAX_LIMIT);
         return new MixingOfMultipleFlows(inletAir, recirculationAirFlows);
     }
@@ -74,7 +74,7 @@ public interface MixingStrategy {
     static MixingStrategy of(FlowOfHumidAir inletAir, FlowOfHumidAir recirculationAirFlow) {
         Validators.requireNotNull(inletAir);
         Validators.requireNotNull(recirculationAirFlow);
-        MassFlow totalMassFlow = inletAir.massFlow().plus(recirculationAirFlow.massFlow());
+        MassFlow totalMassFlow = inletAir.getMassFlow().plus(recirculationAirFlow.getMassFlow());
         Validators.requireBelowUpperBoundInclusive(totalMassFlow, FlowOfHumidAir.MASS_FLOW_MAX_LIMIT);
         return new MixingOfTwoFlows(inletAir, recirculationAirFlow);
     }
@@ -82,7 +82,7 @@ public interface MixingStrategy {
     private static MassFlow sumOfAllFlows(List<FlowOfHumidAir> airFlows) {
         MassFlow resultingFlow = MassFlow.ofKilogramsPerSecond(0);
         for (FlowOfHumidAir flow : airFlows) {
-            resultingFlow = resultingFlow.plus(flow.massFlow());
+            resultingFlow = resultingFlow.plus(flow.getMassFlow());
         }
         return resultingFlow;
     }

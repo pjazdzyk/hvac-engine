@@ -25,11 +25,11 @@ class IceTest {
                 Temperature.ofCelsius(inputAirTemp)
         );
 
-        double actualPressure = ice.pressure().getValue();
-        double actualTemperature = ice.temperature().getValue();
-        double actualSpecHeat = ice.specificHeat().getValue();
-        double actualSpecEnthalpy = ice.specificEnthalpy().getValue();
-        double actualDensity = ice.density().getValue();
+        double actualPressure = ice.getPressure().getValue();
+        double actualTemperature = ice.getTemperature().getValue();
+        double actualSpecHeat = ice.getSpecificHeat().getValue();
+        double actualSpecEnthalpy = ice.getSpecificEnthalpy().getValue();
+        double actualDensity = ice.getDensity().getValue();
 
         // Then
         assertThat(actualPressure).isEqualTo(inputPressure);

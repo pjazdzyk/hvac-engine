@@ -12,35 +12,35 @@ public interface Fluid {
      *
      * @return The temperature in appropriate units.
      */
-    Temperature temperature();
+    Temperature getTemperature();
 
     /**
      * Get the pressure of the fluid.
      *
      * @return The pressure in appropriate units.
      */
-    Pressure pressure();
+    Pressure getPressure();
 
     /**
      * Get the density of the fluid.
      *
      * @return The density in appropriate units.
      */
-    Density density();
+    Density getDensity();
 
     /**
      * Get the specific heat capacity of the fluid.
      *
      * @return The specific heat capacity in appropriate units.
      */
-    SpecificHeat specificHeat();
+    SpecificHeat getSpecificHeat();
 
     /**
      * Get the specific enthalpy of the fluid.
      *
      * @return The specific enthalpy in appropriate units.
      */
-    SpecificEnthalpy specificEnthalpy();
+    SpecificEnthalpy getSpecificEnthalpy();
 
     /**
      * Convert the fluid properties to a formatted string.
@@ -62,7 +62,7 @@ public interface Fluid {
         if (fluid == null) return false;
         if (this.getClass() != fluid.getClass()) return false;
 
-        return pressure().equalsWithPrecision(fluid.pressure(), epsilon)
-                && temperature().equalsWithPrecision(fluid.temperature(), epsilon);
+        return getPressure().equalsWithPrecision(fluid.getPressure(), epsilon)
+                && getTemperature().equalsWithPrecision(fluid.getTemperature(), epsilon);
     }
 }

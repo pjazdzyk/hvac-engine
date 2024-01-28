@@ -37,23 +37,23 @@ public class Ice {
         this.specificEnthalpy = IceEquations.specificEnthalpy(temperature);
     }
 
-    public Temperature temperature() {
+    public Temperature getTemperature() {
         return temperature;
     }
 
-    public Pressure pressure() {
+    public Pressure getPressure() {
         return pressure;
     }
 
-    public Density density() {
+    public Density getDensity() {
         return density;
     }
 
-    public SpecificHeat specificHeat() {
+    public SpecificHeat getSpecificHeat() {
         return specificHeat;
     }
 
-    public SpecificEnthalpy specificEnthalpy() {
+    public SpecificEnthalpy getSpecificEnthalpy() {
         return specificEnthalpy;
     }
 

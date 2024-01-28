@@ -58,39 +58,39 @@ public class WaterVapour implements Fluid {
         this.prandtlNumber = SharedEquations.prandtlNumber(dynamicViscosity, thermalConductivity, specificHeat);
     }
 
-    public Temperature temperature() {
+    public Temperature getTemperature() {
         return temperature;
     }
 
-    public Pressure pressure() {
+    public Pressure getPressure() {
         return pressure;
     }
 
-    public Density density() {
+    public Density getDensity() {
         return density;
     }
 
-    public SpecificHeat specificHeat() {
+    public SpecificHeat getSpecificHeat() {
         return specificHeat;
     }
 
-    public SpecificEnthalpy specificEnthalpy() {
+    public SpecificEnthalpy getSpecificEnthalpy() {
         return specificEnthalpy;
     }
 
-    public DynamicViscosity dynamicViscosity() {
+    public DynamicViscosity getDynamicViscosity() {
         return dynamicViscosity;
     }
 
-    public KinematicViscosity kinematicViscosity() {
+    public KinematicViscosity getKinematicViscosity() {
         return kinematicViscosity;
     }
 
-    public ThermalConductivity thermalConductivity() {
+    public ThermalConductivity getThermalConductivity() {
         return thermalConductivity;
     }
 
-    public PrandtlNumber prandtlNumber() {
+    public PrandtlNumber getPrandtlNumber() {
         return prandtlNumber;
     }
 
