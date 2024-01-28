@@ -3,23 +3,34 @@
 
 > Author: **Piotr Jażdżyk**, M.Sc.Eng.<br>
 > LinkedIn: https://www.linkedin.com/in/pjazdzyk <br>
----
 
-#### [HOME](README.MD) &nbsp;|&nbsp; [AIR PROPERTIES](#air-properties) &nbsp;|&nbsp; [WATER PROPERTIES](#liquid-water-properties) &nbsp;|&nbsp; [FLOW OF FLUID](#flow-of-fluid) &nbsp;|&nbsp; [HEATING](#air-heating) &nbsp;|&nbsp; [COOLING](#air-cooling) &nbsp;|&nbsp; [AIR MIXING](#air-mixing) |&nbsp; [SYMBOLS](#symbols-and-abbreviations)
+#### [\[ BACK TO HOME \]](README.MD) 
 
----
-
-HVAC|Engine library is composed of two main packages: 'fluids' and 'process.' The 'fluids' package comprises algorithms for 
-calculating properties of dry air, humid air, water vapor, liquid water, and solid ice. The 'process' package includes 
-calculation procedures for obtaining results related to various thermodynamic processes typical in the HVAC industry, 
+HVAC|Engine library is composed of two main packages: 'fluids' and 'process.' The 'fluids' package comprises algorithms for
+calculating properties of dry air, humid air, water vapor, liquid water, and solid ice. The 'process' package includes
+calculation procedures for obtaining results related to various thermodynamic processes typical in the HVAC industry,
 such as heating, cooling, and mixing. Additional processes will be incorporated in the upcoming stages of development.<br>
-Thermophysical and thermodynamic properties are readily available through a collection of static methods based on 
-primitive types or by using Utility's physical units value objects. Public access to primitive types is provided to 
+Thermophysical and thermodynamic properties are readily available through a collection of static methods based on
+primitive types or by using Utility's physical units value objects. Public access to primitive types is provided to
 facilitate iterative calculations, enhancing speed and reducing memory requirements.<br>
-For developing your own application using this library, dedicated classes are available to represent the thermodynamic 
+For developing your own application using this library, dedicated classes are available to represent the thermodynamic
 state of fluids with all associated calculated parameters, along with proper input argument validation and physical units.
 
-### AIR PROPERTIES
+## TABLE OF CONTENTS
+1. [Physical properties](#1-physical-properties) <br>
+1.1 [Dry and humid air](#11-dry-and-humid-air) <br>
+1.2 [Liquid water and ice](#12-liquid-water-and-ice) <br>
+2. [Flow of fluid](#2-flow-of-fluid) <br>
+3. [Thermodynamic processes](#3-thermodynamic-processes) <br>
+3.1 [Air heating](#31-air-heating) <br>
+3.2 [Air cooling](#32-air-cooling) <br>
+3.3 [Air mixing](#33-air-mixing) <br>
+4. [Symbols and abbreviations](#4-symbols-and-abbreviations) <br>
+
+### 1. PHYSICAL PROPERTIES
+
+#### 1.1 DRY AND HUMID AIR
+
 Air properties, whether for dry air or humid air, can be calculated independently using the provided equations or as 
 a thermodynamic state representing all properties based on the given temperature, pressure, and humidity for humid air.
 Below is an example of direct property calculation for the humidity ratio of humid air using primitive argument types 
@@ -91,7 +102,7 @@ to commonly accepted practices in the engineering field. However, if you have an
 section for clarification.<br>
 Using the DryAir state class is analogous, with the distinction that humidity is not required as an argument.
 
-### LIQUID WATER AND ICE PROPERTIES
+#### 1.2 LIQUID WATER AND ICE
 Water properties can be computed directly using the equation class or initiated as a liquid water state with specific 
 temperature and pressure values. It's important to note that, at this stage, all liquid properties are not considered
 pressure-dependent, which is sufficient for psychrometric calculations. However, it's possible that this feature will 
@@ -139,7 +150,7 @@ Ice:
 	i_ice = -356.035 [kJ/kg] | ρ_ice = 918.831 [kg/m³] | cp_ice = 1.994 [kJ/(kg·K)]
 ```
 
-### FLOW OF FLUID
+### 2. FLOW OF FLUID
 Supported fluids have dedicated classes to represent the fluid flow. An instance of this class is constructed by 
 providing an instance of a fluid and one of the flow components, such as mass flow or volumetric flow. Based on this 
 input, all other flows are calculated using the fluid properties. The Flow class encapsulates the most relevant properties 
@@ -176,7 +187,9 @@ FlowOfHumidAir:
 The result above includes all flow values and additionally humid air properties and humid air dry air component properties.
 Handling flows for the dry air or liquid water is analogous.
 
-### AIR HEATING
+### 3. THERMODYNAMIC PROCESSES
+
+#### 3.1. AIR HEATING
 There are three humid air heating strategies:
 - based on input heating power,
 - based on target output temperature,
@@ -217,7 +230,7 @@ As you can observe, the resulting volumetric flow is greater than inlet flow. Th
 than cold ambient air, resulting in increased volume of air after the heater. Mass flow on the other hand, as expected, 
 remained unchanged.
 
-### AIR COOLING
+#### 3.2. AIR COOLING
 There are two main procedures available: dry cooling and real cooling coil with condensate discharge.
 There are the following strategies cooling available:
 - based on input heating power,
@@ -260,7 +273,7 @@ dehumidification. Additionally, the condensate flow has been calculated, along w
 factor. It's worth noting that the outlet volumetric flow is smaller than the inlet flow due to the lower density after 
 cooling, but mass flow is conserved.
 
-### AIR MIXING
+#### 3.3. AIR MIXING
 There are two strategies available for a mixing process:
 - mixing inlet flow with one recirculation flow
 - mixing inlet flow with multiple recirculation flows
@@ -293,7 +306,7 @@ PROCESS OF MIXING:
 
 As expected, the resulting temperature is approximately 9°C, including all other parameters of the outlet flow.
 
-### SYMBOLS AND ABBREVIATIONS
+### 4. SYMBOLS AND ABBREVIATIONS
 
 Property symbols used in console as formatted values:
 

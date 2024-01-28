@@ -29,13 +29,13 @@ compromising data integrity through the utilization of immutable objects.
 ### INSTALLATION AND TECH
 
 Copy the Maven dependency provided below to your pom.xml file, and you are ready to go. For other package managers, check maven central repository:
-[HVAC|Engine](https://search.maven.org/artifact/com.synerset/hvac-engine/1.0.1/jar?eh=).
+[HVAC|Engine](https://search.maven.org/artifact/com.synerset/hvac-engine/1.1.0/jar?eh=).
 
 ```xml
 <dependency>
     <groupId>com.synerset</groupId>
     <artifactId>hvac-engine</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
