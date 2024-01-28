@@ -48,11 +48,11 @@ public interface HeatingStrategy {
         }
 
         // Mox heating power estimate to reach t_max: Qheat.max= G * (imax - i_in)
-        Temperature tMax = HumidAirEquations.dryBulbTemperatureMax(inletAirFlow.pressure()).multiply(0.98);
+        Temperature tMax = HumidAirEquations.dryBulbTemperatureMax(inletAirFlow.getPressure()).multiply(0.98);
         SpecificEnthalpy iMax = HumidAirEquations.specificEnthalpy(tMax, inletAirFlow.humidityRatio(),
-                inletAirFlow.pressure());
-        double qMax = iMax.minus(inletAirFlow.specificEnthalpy())
-                .multiply(inletAirFlow.massFlow().toKilogramsPerSecond());
+                inletAirFlow.getPressure());
+        double qMax = iMax.minus(inletAirFlow.getSpecificEnthalpy())
+                .multiply(inletAirFlow.getMassFlow().toKilogramsPerSecond());
         Power estimatedPowerLimit = Power.ofKiloWatts(qMax);
         if (inputPower.isGreaterThan(estimatedPowerLimit)) {
             throw new InvalidArgumentException("To large heating power for provided flow. "
@@ -92,9 +92,9 @@ public interface HeatingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetTemperature);
         Validators.requireBelowUpperBoundInclusive(targetTemperature, HumidAir.TEMPERATURE_MAX_LIMIT);
-        if (targetTemperature.isLowerThan(inletAirFlow.temperature())) {
+        if (targetTemperature.isLowerThan(inletAirFlow.getTemperature())) {
             throw new InvalidArgumentException("Expected outlet temperature must be greater than inlet for cooling process. "
-                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.temperature());
+                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
         return new HeatingFromTemperature(inletAirFlow, targetTemperature);
     }

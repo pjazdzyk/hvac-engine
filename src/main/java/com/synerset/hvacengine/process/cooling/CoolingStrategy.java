@@ -52,9 +52,9 @@ public interface CoolingStrategy {
             throw new InvalidArgumentException("Cooling power must be negative value. Q_in = " + inputPower);
         }
         // Mox cooling power quick estimate to reach 0 degrees Qcool.max= G * (i_0 - i_in)
-        double estimatedMaxPowerKw = inletAirFlow.specificEnthalpy().toKiloJoulePerKiloGram()
+        double estimatedMaxPowerKw = inletAirFlow.getSpecificEnthalpy().toKiloJoulePerKiloGram()
                 .minusFromValue(0)
-                .multiply(inletAirFlow.massFlow().toKilogramsPerSecond());
+                .multiply(inletAirFlow.getMassFlow().toKilogramsPerSecond());
         Power estimatedPowerLimit = Power.ofKiloWatts(estimatedMaxPowerKw);
         if (inputPower.isLowerThan(estimatedPowerLimit)) {
             throw new InvalidArgumentException("To large cooling power for provided flow. "
@@ -98,9 +98,9 @@ public interface CoolingStrategy {
         Validators.requireNotNull(inletCoolantData);
         Validators.requireNotNull(targetTemperature);
         Validators.requireAboveLowerBound(targetTemperature, Temperature.ofCelsius(0));
-        if (targetTemperature.isGreaterThan(inletAirFlow.temperature())) {
+        if (targetTemperature.isGreaterThan(inletAirFlow.getTemperature())) {
             throw new InvalidArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
-                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.temperature());
+                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
         return new CoolingFromTemperature(inletAirFlow, inletCoolantData, targetTemperature);
     }

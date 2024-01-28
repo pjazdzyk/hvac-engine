@@ -33,7 +33,7 @@ public class FlowOfDryAir implements Flow<DryAir> {
         Validators.requireBetweenBoundsInclusive(massFlow, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.dryAir = dryAir;
         this.massFlow = massFlow;
-        this.volFlow = FlowEquations.massFlowToVolFlow(dryAir.density(), massFlow);
+        this.volFlow = FlowEquations.massFlowToVolFlow(dryAir.getDensity(), massFlow);
     }
 
     @Override
@@ -42,38 +42,38 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     @Override
-    public MassFlow massFlow() {
+    public MassFlow getMassFlow() {
         return massFlow;
     }
 
     @Override
-    public VolumetricFlow volumetricFlow() {
+    public VolumetricFlow getVolumetricFlow() {
         return volFlow;
     }
 
     @Override
-    public Temperature temperature() {
-        return dryAir.temperature();
+    public Temperature getTemperature() {
+        return dryAir.getTemperature();
     }
 
     @Override
-    public Pressure pressure() {
-        return dryAir.pressure();
+    public Pressure getPressure() {
+        return dryAir.getPressure();
     }
 
     @Override
-    public Density density() {
-        return dryAir.density();
+    public Density getDensity() {
+        return dryAir.getDensity();
     }
 
     @Override
-    public SpecificHeat specificHeat() {
-        return dryAir.specificHeat();
+    public SpecificHeat getSpecificHeat() {
+        return dryAir.getSpecificHeat();
     }
 
     @Override
-    public SpecificEnthalpy specificEnthalpy() {
-        return dryAir.specificEnthalpy();
+    public SpecificEnthalpy getSpecificEnthalpy() {
+        return dryAir.getSpecificEnthalpy();
     }
 
     @Override
@@ -166,7 +166,7 @@ public class FlowOfDryAir implements Flow<DryAir> {
      */
     public static FlowOfDryAir of(DryAir dryAir, VolumetricFlow volFlow) {
         Validators.requireNotNull(volFlow);
-        MassFlow massFlow = FlowEquations.volFlowToMassFlow(dryAir.density(), volFlow);
+        MassFlow massFlow = FlowEquations.volFlowToMassFlow(dryAir.getDensity(), volFlow);
         return new FlowOfDryAir(dryAir, massFlow);
     }
 

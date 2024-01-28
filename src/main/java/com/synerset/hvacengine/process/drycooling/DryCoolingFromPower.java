@@ -24,19 +24,19 @@ record DryCoolingFromPower(FlowOfHumidAir inletAir,
     @Override
     public DryAirCoolingResult applyDryCooling() {
 
-        if (inputPower.equalsZero() || inletAir.massFlow().equalsZero()) {
+        if (inputPower.equalsZero() || inletAir.getMassFlow().equalsZero()) {
             return new DryAirCoolingResult(inletAir, inputPower.withValue(0));
         }
 
         double qCool = inputPower.getInKiloWatts();
         double xIn = inletAir.humidityRatio().getInKilogramPerKilogram();
         double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double pIn = inletAir.pressure().getInPascals();
-        double iIn = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double pIn = inletAir.getPressure().getInPascals();
+        double iIn = inletAir.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
         double iOut = (mdaIn * iIn + qCool) / mdaIn;
         double tOut = HumidAirEquations.dryBulbTemperatureIX(iOut, xIn, pIn);
 
-        HumidAir outletHumidAir = HumidAir.of(inletAir.pressure(), Temperature.ofCelsius(tOut), inletAir.humidityRatio());
+        HumidAir outletHumidAir = HumidAir.of(inletAir.getPressure(), Temperature.ofCelsius(tOut), inletAir.humidityRatio());
         FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, inletAir.dryAirMassFlow());
 
         return new DryAirCoolingResult(outletFlow, inputPower);

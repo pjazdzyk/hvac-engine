@@ -19,9 +19,9 @@ class FlowOfHumidAirTest {
         // Arrange
         HumidAir sampleAir = HumidAir.of(Temperature.ofCelsius(45.0), RelativeHumidity.ofPercentage(60.1));
 
-        double densityMa = sampleAir.density().getInKilogramsPerCubicMeters();
-        double densityDa = sampleAir.dryAirComponent().density().getInKilogramsPerCubicMeters();
-        double humidRatio = sampleAir.humidityRatio().getInKilogramPerKilogram();
+        double densityMa = sampleAir.getDensity().getInKilogramsPerCubicMeters();
+        double densityDa = sampleAir.getDryAirComponent().getDensity().getInKilogramsPerCubicMeters();
+        double humidRatio = sampleAir.getHumidityRatio().getInKilogramPerKilogram();
         double expectedVolFlow_Ma = INIT_MASS_FLOW_MA / densityMa;
         double expectedMassFlow_Da = FlowEquations.massFlowHaToMassFlowDa(humidRatio, INIT_MASS_FLOW_MA);
         double expectedVolFlow_Da = expectedMassFlow_Da / densityDa;
@@ -30,8 +30,8 @@ class FlowOfHumidAirTest {
         FlowOfHumidAir flowAir = FlowOfHumidAir.of(sampleAir, MassFlow.ofKilogramsPerSecond(INIT_MASS_FLOW_MA));
         HumidAir humidAir = flowAir.fluid();
 
-        double actualMassFlowMa = flowAir.massFlow().getInKilogramsPerSecond();
-        double actualVolFlowMa = flowAir.volumetricFlow().getInCubicMetersPerSecond();
+        double actualMassFlowMa = flowAir.getMassFlow().getInKilogramsPerSecond();
+        double actualVolFlowMa = flowAir.getVolumetricFlow().getInCubicMetersPerSecond();
         double actualMassFlowDa = flowAir.dryAirMassFlow().getInKilogramsPerSecond();
         double actualVolFlowDa = flowAir.dryAirVolumetricFlow().getInCubicMetersPerSecond();
 
@@ -42,13 +42,13 @@ class FlowOfHumidAirTest {
         assertThat(actualVolFlowDa).isEqualTo(expectedVolFlow_Da);
         assertThat(flowAir.fluid()).isEqualTo(sampleAir);
 
-        assertThat(flowAir.temperature()).isEqualTo(humidAir.temperature());
-        assertThat(flowAir.relativeHumidity()).isEqualTo(humidAir.relativeHumidity());
-        assertThat(flowAir.humidityRatio()).isEqualTo(humidAir.humidityRatio());
-        assertThat(flowAir.pressure()).isEqualTo(humidAir.pressure());
-        assertThat(flowAir.density()).isEqualTo(humidAir.density());
-        assertThat(flowAir.specificHeat()).isEqualTo(humidAir.specificHeat());
-        assertThat(flowAir.specificEnthalpy()).isEqualTo(humidAir.specificEnthalpy());
-        assertThat(flowAir.saturationPressure()).isEqualTo(humidAir.saturationPressure());
+        assertThat(flowAir.getTemperature()).isEqualTo(humidAir.getTemperature());
+        assertThat(flowAir.relativeHumidity()).isEqualTo(humidAir.getRelativeHumidity());
+        assertThat(flowAir.humidityRatio()).isEqualTo(humidAir.getHumidityRatio());
+        assertThat(flowAir.getPressure()).isEqualTo(humidAir.getPressure());
+        assertThat(flowAir.getDensity()).isEqualTo(humidAir.getDensity());
+        assertThat(flowAir.getSpecificHeat()).isEqualTo(humidAir.getSpecificHeat());
+        assertThat(flowAir.getSpecificEnthalpy()).isEqualTo(humidAir.getSpecificEnthalpy());
+        assertThat(flowAir.saturationPressure()).isEqualTo(humidAir.getSaturationPressure());
     }
 }

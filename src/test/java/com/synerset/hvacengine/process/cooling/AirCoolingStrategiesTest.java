@@ -47,7 +47,7 @@ class AirCoolingStrategiesTest {
         // When
         DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedOutAirTemp).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
 
         // Then
@@ -69,7 +69,7 @@ class AirCoolingStrategiesTest {
         // When
         DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedHeatOfProcess).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
 
         // Then
@@ -92,10 +92,10 @@ class AirCoolingStrategiesTest {
         // When
         AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedOutAirTemp).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
-        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().temperature();
-        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().massFlow();
+        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().getTemperature();
+        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().getMassFlow();
 
         // Then
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
@@ -119,11 +119,11 @@ class AirCoolingStrategiesTest {
         // When
         AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedRelativeHumidity).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
         RelativeHumidity actualRelativeHumidity = airCoolingResult.outletFlow().relativeHumidity();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
-        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().temperature();
-        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().massFlow();
+        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().getTemperature();
+        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().getMassFlow();
 
         // Then
         assertThat(actualHeatOfProcess.getInWatts()).isEqualTo(expectedHeatOfProcess.getInWatts(), withPrecision(1E-10));
@@ -147,10 +147,10 @@ class AirCoolingStrategiesTest {
         // When
         AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedHeatOfProcess).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
-        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().temperature();
-        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().massFlow();
+        Temperature actualCondensateTemp = airCoolingResult.condensateFlow().getTemperature();
+        MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().getMassFlow();
 
         // Then
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);

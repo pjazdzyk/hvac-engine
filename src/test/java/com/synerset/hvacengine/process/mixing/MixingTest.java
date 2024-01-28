@@ -56,7 +56,7 @@ class MixingTest {
         assertThat(mixing.getOutletAir()).isNotNull();
         assertThat(mixing.getInputInletAir()).isEqualTo(inletFlow);
         assertThat(mixing.getMixingStrategy()).isEqualTo(mixingStrategy);
-        assertThat(mixing.getOutPressure()).isEqualTo(inletAir.pressure());
+        assertThat(mixing.getOutPressure()).isEqualTo(inletAir.getPressure());
         assertThat(mixing.getOutTemperature().getInCelsius()).isEqualTo(expectedTemperature.getInCelsius(), withPrecision(3.5E-2));
         assertThat(mixing.getOutRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1E-2));
         assertThat(mixing.getOutHumidityRatio().getInKilogramPerKilogram()).isEqualTo(expectedHumRatio.getInKilogramPerKilogram(), withPrecision(5E-5));
@@ -103,7 +103,7 @@ class MixingTest {
         assertThat(mixing.getOutletAir()).isNotNull();
         assertThat(mixing.getInputInletAir()).isEqualTo(inletFlow);
         assertThat(mixing.getMixingStrategy()).isEqualTo(mixingStrategy);
-        assertThat(mixing.getOutPressure()).isEqualTo(inletAir.pressure());
+        assertThat(mixing.getOutPressure()).isEqualTo(inletAir.getPressure());
         assertThat(mixing.getOutTemperature().getInCelsius()).isEqualTo(expectedTemperature.getInCelsius(), withPrecision(3.5E-2));
         assertThat(mixing.getOutRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1E-2));
         assertThat(mixing.getOutHumidityRatio().getInKilogramPerKilogram()).isEqualTo(expectedHumRatio.getInKilogramPerKilogram(), withPrecision(5E-5));

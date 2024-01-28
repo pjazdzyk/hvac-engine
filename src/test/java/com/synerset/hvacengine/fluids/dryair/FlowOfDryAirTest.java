@@ -16,24 +16,24 @@ class FlowOfDryAirTest {
     @DisplayName("FlowOfDryAir: should create instance with properly calculated flows when valid input is given")
     void flowOfFluidInstance_shouldCreateValidFlowOfFluidInstance_whenValidSampleInputIsGiven() {
         // Given
-        double waterDensity = SAMPLE_AIR.density().getInKilogramsPerCubicMeters();
+        double waterDensity = SAMPLE_AIR.getDensity().getInKilogramsPerCubicMeters();
         double expectedVolFlow = SAMPLE_MASS_FLOW_RATE / waterDensity;
 
         // When
         FlowOfDryAir flowOfDryAir = FlowOfDryAir.of(SAMPLE_AIR, MassFlow.ofKilogramsPerSecond(SAMPLE_MASS_FLOW_RATE));
         DryAir dryAir = flowOfDryAir.fluid();
-        double actualMassFlow = flowOfDryAir.massFlow().getInKilogramsPerSecond();
-        double actualVolFlow = flowOfDryAir.volumetricFlow().getInCubicMetersPerSecond();
+        double actualMassFlow = flowOfDryAir.getMassFlow().getInKilogramsPerSecond();
+        double actualVolFlow = flowOfDryAir.getVolumetricFlow().getInCubicMetersPerSecond();
 
         // Then
         assertThat(actualMassFlow).isEqualTo(SAMPLE_MASS_FLOW_RATE);
         assertThat(actualVolFlow).isEqualTo(expectedVolFlow);
 
-        assertThat(flowOfDryAir.temperature()).isEqualTo(dryAir.temperature());
-        assertThat(flowOfDryAir.pressure()).isEqualTo(dryAir.pressure());
-        assertThat(flowOfDryAir.density()).isEqualTo(dryAir.density());
-        assertThat(flowOfDryAir.specificHeat()).isEqualTo(dryAir.specificHeat());
-        assertThat(flowOfDryAir.specificEnthalpy()).isEqualTo(dryAir.specificEnthalpy());
+        assertThat(flowOfDryAir.getTemperature()).isEqualTo(dryAir.getTemperature());
+        assertThat(flowOfDryAir.getPressure()).isEqualTo(dryAir.getPressure());
+        assertThat(flowOfDryAir.getDensity()).isEqualTo(dryAir.getDensity());
+        assertThat(flowOfDryAir.getSpecificHeat()).isEqualTo(dryAir.getSpecificHeat());
+        assertThat(flowOfDryAir.getSpecificEnthalpy()).isEqualTo(dryAir.getSpecificEnthalpy());
     }
 
 }
