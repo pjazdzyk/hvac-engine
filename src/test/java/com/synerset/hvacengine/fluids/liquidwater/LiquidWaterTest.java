@@ -25,11 +25,11 @@ class LiquidWaterTest {
                 Temperature.ofCelsius(inputAirTemp)
         );
 
-        double actualPressure = liquidWater.pressure().getValue();
-        double actualTemperature = liquidWater.temperature().getValue();
-        double actualSpecHeat = liquidWater.specificHeat().getValue();
-        double actualSpecEnthalpy = liquidWater.specificEnthalpy().getValue();
-        double actualDensity = liquidWater.density().getValue();
+        double actualPressure = liquidWater.getPressure().getValue();
+        double actualTemperature = liquidWater.getTemperature().getValue();
+        double actualSpecHeat = liquidWater.getSpecificHeat().getValue();
+        double actualSpecEnthalpy = liquidWater.getSpecificEnthalpy().getValue();
+        double actualDensity = liquidWater.getDensity().getValue();
 
         // Then
         assertThat(actualPressure).isEqualTo(inputPressure);

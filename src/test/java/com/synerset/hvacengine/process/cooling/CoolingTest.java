@@ -50,18 +50,18 @@ class CoolingTest {
         assertThat(cooling.getInputInletAir()).isEqualTo(inletAir);
         assertThat(cooling.getHeatOfProcess().getInWatts()).isEqualTo(expectedPower.getInWatts(), withPrecision(1E-9));
         assertThat(cooling.getCoolingStrategy()).isEqualTo(coolingStrategy);
-        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.pressure());
+        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.getPressure());
         assertThat(cooling.getOutTemperature().getInCelsius()).isEqualTo(targetTemperature.getInCelsius(), withPrecision(3.5E-2));
         assertThat(cooling.getOutRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1.5E-2));
         SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
         assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
         // Cooling specific assertions
-        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
+        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.getTemperature(), cooling.getOutTemperature());
         assertThat(cooling.getBypassFactor()).isEqualTo(expectedBypassFactor);
         assertThat(cooling.getCoolantData()).isEqualTo(coolantData);
         // Condensate specific assertions
         assertThat(cooling.getCondensateTemperature()).isEqualTo(coolantData.getAverageTemperature());
-        assertThat(cooling.getCondensateFlow().massFlow()).isEqualTo(expectedCondensateFlow);
+        assertThat(cooling.getCondensateFlow().getMassFlow()).isEqualTo(expectedCondensateFlow);
         assertThat(cooling.getCondensateEnthalpy()).isEqualTo(LiquidWaterEquations.specificEnthalpy(coolantData.getAverageTemperature()));
     }
 
@@ -93,18 +93,18 @@ class CoolingTest {
         assertThat(cooling.getInputInletAir()).isEqualTo(inletAir);
         assertThat(cooling.getHeatOfProcess()).isEqualTo(inputPower);
         assertThat(cooling.getCoolingStrategy()).isEqualTo(coolingStrategy);
-        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.pressure());
+        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.getPressure());
         assertThat(cooling.getOutTemperature().getValue()).isEqualTo(expectedTemperature.getValue(), withPrecision(3.5E-2));
         assertThat(cooling.getOutRelativeHumidity()).isEqualTo(expectedRH);
         SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
         assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
         // Cooling specific assertions
-        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
+        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.getTemperature(), cooling.getOutTemperature());
         assertThat(cooling.getBypassFactor()).isEqualTo(expectedBypassFactor);
         assertThat(cooling.getCoolantData()).isEqualTo(coolantData);
         // Condensate specific assertions
         assertThat(cooling.getCondensateTemperature()).isEqualTo(coolantData.getAverageTemperature());
-        assertThat(cooling.getCondensateFlow().massFlow()).isEqualTo(expectedCondensateFlow);
+        assertThat(cooling.getCondensateFlow().getMassFlow()).isEqualTo(expectedCondensateFlow);
         assertThat(cooling.getCondensateEnthalpy()).isEqualTo(LiquidWaterEquations.specificEnthalpy(coolantData.getAverageTemperature()));
     }
 
@@ -135,18 +135,18 @@ class CoolingTest {
         assertThat(cooling.getInputInletAir()).isEqualTo(inletAir);
         assertThat(cooling.getHeatOfProcess().getInWatts()).isEqualTo(expectedPower.getInWatts(), withPrecision(1.8E-6));
         assertThat(cooling.getCoolingStrategy()).isEqualTo(coolingStrategy);
-        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.pressure());
+        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.getPressure());
         assertThat(cooling.getOutTemperature().getInCelsius()).isEqualTo(expectedTemperature.getInCelsius(), withPrecision(3.5E-2));
         assertThat(cooling.getOutRelativeHumidity().getInPercent()).isEqualTo(targetRH.getInPercent(), withPrecision(1.5E-2));
         SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
         assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
         // Cooling specific assertions
-        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.temperature(), cooling.getOutTemperature());
+        BypassFactor expectedBypassFactor = CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), humidAir.getTemperature(), cooling.getOutTemperature());
         assertThat(cooling.getBypassFactor()).isEqualTo(expectedBypassFactor);
         assertThat(cooling.getCoolantData()).isEqualTo(coolantData);
         // Condensate specific assertions
         assertThat(cooling.getCondensateTemperature()).isEqualTo(coolantData.getAverageTemperature());
-        assertThat(cooling.getCondensateFlow().massFlow().getInKilogramsPerSecond()).isEqualTo(expectedCondensateFlow.getInKilogramsPerSecond(), withPrecision(1E-8));
+        assertThat(cooling.getCondensateFlow().getMassFlow().getInKilogramsPerSecond()).isEqualTo(expectedCondensateFlow.getInKilogramsPerSecond(), withPrecision(1E-8));
         assertThat(cooling.getCondensateEnthalpy()).isEqualTo(LiquidWaterEquations.specificEnthalpy(coolantData.getAverageTemperature()));
     }
 

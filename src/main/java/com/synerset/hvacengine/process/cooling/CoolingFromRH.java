@@ -28,21 +28,21 @@ record CoolingFromRH(FlowOfHumidAir inletAir,
 
     @Override
     public AirCoolingResult applyCooling() {
-        double pIn = inletAir.pressure().getInPascals();
+        double pIn = inletAir.getPressure().getInPascals();
 
         Temperature averageWallTemp = coolantData.getAverageTemperature();
 
         if (inletAir.relativeHumidity().equals(targetRelativeHumidity)) {
-            LiquidWater liquidWater = LiquidWater.of(inletAir.temperature());
+            LiquidWater liquidWater = LiquidWater.of(inletAir.getTemperature());
             FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(0.0));
-            BypassFactor bypassFactor = CoolingHelpers.coilBypassFactor(averageWallTemp, inletAir.temperature(), inletAir.temperature());
+            BypassFactor bypassFactor = CoolingHelpers.coilBypassFactor(averageWallTemp, inletAir.getTemperature(), inletAir.getTemperature());
             return new AirCoolingResult(inletAir, Power.ofWatts(0.0), flowOfLiquidWater, bypassFactor);
         }
 
         // Iterative procedure to determine which outlet temperature will result in expected RH.
         BrentSolver solver = new BrentSolver("calcCoolingFromOutletRH SOLVER");
-        double tIn = inletAir.temperature().getInCelsius();
-        double tdpIn = inletAir.temperature().getInCelsius();
+        double tIn = inletAir.getTemperature().getInCelsius();
+        double tdpIn = inletAir.getTemperature().getInCelsius();
         solver.setCounterpartPoints(tIn, tdpIn);
         double rhOut = targetRelativeHumidity.getInPercent();
         Cooling[] coolingResults = new Cooling[1];

@@ -42,23 +42,23 @@ class HumidAirTest {
                 HumidityRatio.ofKilogramPerKilogram(inputHumidRatio)
         );
 
-        double actualPressure = humidAir.pressure().getValue();
-        double actualDryBulbTemp = humidAir.temperature().getValue();
-        double actualHumRatio = humidAir.humidityRatio().getValue();
-        double actualRhoVal = humidAir.density().getValue();
-        double actualRHVal = humidAir.relativeHumidity().getValue();
-        double actualSatPressureVal = humidAir.saturationPressure().getValue();
-        double actualMaxHumRatioVal = humidAir.maxHumidityRatio().getValue();
-        double actualWBTVal = humidAir.wetBulbTemperature().getValue();
-        double actualDPTVal = humidAir.dewPointTemperature().getValue();
-        double actualCpVal = humidAir.specificHeat().getValue();
-        double actualSpecEnthalpyVal = humidAir.specificEnthalpy().getValue();
-        double actualDynVisVal = humidAir.dynamicViscosity().getValue();
-        double actualKinVisVal = humidAir.kinematicViscosity().getValue();
-        double actualKVal = humidAir.thermalConductivity().getValue();
-        double actualThDiffVal = humidAir.thermalDiffusivity().getValue();
-        double actualPrandtlVal = humidAir.prandtlNumber().getValue();
-        VapourState actualVapourState = humidAir.vapourState();
+        double actualPressure = humidAir.getPressure().getValue();
+        double actualDryBulbTemp = humidAir.getTemperature().getValue();
+        double actualHumRatio = humidAir.getHumidityRatio().getValue();
+        double actualRhoVal = humidAir.getDensity().getValue();
+        double actualRHVal = humidAir.getRelativeHumidity().getValue();
+        double actualSatPressureVal = humidAir.getSaturationPressure().getValue();
+        double actualMaxHumRatioVal = humidAir.getMaxHumidityRatio().getValue();
+        double actualWBTVal = humidAir.getWetBulbTemperature().getValue();
+        double actualDPTVal = humidAir.getDewPointTemperature().getValue();
+        double actualCpVal = humidAir.getSpecificHeat().getValue();
+        double actualSpecEnthalpyVal = humidAir.getSpecificEnthalpy().getValue();
+        double actualDynVisVal = humidAir.getDynamicViscosity().getValue();
+        double actualKinVisVal = humidAir.getKinematicViscosity().getValue();
+        double actualKVal = humidAir.getThermalConductivity().getValue();
+        double actualThDiffVal = humidAir.getThermalDiffusivity().getValue();
+        double actualPrandtlVal = humidAir.getPrandtlNumber().getValue();
+        VapourState actualVapourState = humidAir.getVapourState();
 
         // Then
         assertThat(actualPressure).isEqualTo(inputPressure);

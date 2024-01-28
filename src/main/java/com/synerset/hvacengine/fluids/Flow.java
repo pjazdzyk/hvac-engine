@@ -23,49 +23,49 @@ public interface Flow<F extends Fluid> {
      *
      * @return The mass flow rate in appropriate units.
      */
-    MassFlow massFlow();
+    MassFlow getMassFlow();
 
     /**
      * Get the volumetric flow rate of the fluid flow.
      *
      * @return The volumetric flow rate in appropriate units.
      */
-    VolumetricFlow volumetricFlow();
+    VolumetricFlow getVolumetricFlow();
 
     /**
      * Get the temperature of the fluid flow.
      *
      * @return The temperature in appropriate units.
      */
-    Temperature temperature();
+    Temperature getTemperature();
 
     /**
      * Get the pressure of the fluid flow.
      *
      * @return The pressure in appropriate units.
      */
-    Pressure pressure();
+    Pressure getPressure();
 
     /**
      * Get the density of the fluid flow.
      *
      * @return The density in appropriate units.
      */
-    Density density();
+    Density getDensity();
 
     /**
      * Get the specific heat capacity of the fluid flow.
      *
      * @return The specific heat capacity in appropriate units.
      */
-    SpecificHeat specificHeat();
+    SpecificHeat getSpecificHeat();
 
     /**
      * Get the specific enthalpy of the fluid flow.
      *
      * @return The specific enthalpy in appropriate units.
      */
-    SpecificEnthalpy specificEnthalpy();
+    SpecificEnthalpy getSpecificEnthalpy();
 
     /**
      * Convert the flow properties to a formatted string.
@@ -88,6 +88,6 @@ public interface Flow<F extends Fluid> {
         if (this.getClass() != flowOfFluid.getClass()) return false;
 
         return fluid().isEqualsWithPrecision(flowOfFluid.fluid(), epsilon)
-                && massFlow().equalsWithPrecision(flowOfFluid.massFlow(), epsilon);
+                && getMassFlow().equalsWithPrecision(flowOfFluid.getMassFlow(), epsilon);
     }
 }

@@ -35,7 +35,7 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
         Validators.requireBetweenBoundsInclusive(massFlow, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.liquidWater = liquidWater;
         this.massFlow = massFlow;
-        this.volFlow = FlowEquations.massFlowToVolFlow(liquidWater.density(), massFlow);
+        this.volFlow = FlowEquations.massFlowToVolFlow(liquidWater.getDensity(), massFlow);
     }
 
     @Override
@@ -44,38 +44,38 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
     }
 
     @Override
-    public MassFlow massFlow() {
+    public MassFlow getMassFlow() {
         return massFlow;
     }
 
     @Override
-    public VolumetricFlow volumetricFlow() {
+    public VolumetricFlow getVolumetricFlow() {
         return volFlow;
     }
 
     @Override
-    public Temperature temperature() {
-        return liquidWater.temperature();
+    public Temperature getTemperature() {
+        return liquidWater.getTemperature();
     }
 
     @Override
-    public Pressure pressure() {
-        return liquidWater.pressure();
+    public Pressure getPressure() {
+        return liquidWater.getPressure();
     }
 
     @Override
-    public Density density() {
-        return liquidWater.density();
+    public Density getDensity() {
+        return liquidWater.getDensity();
     }
 
     @Override
-    public SpecificHeat specificHeat() {
-        return liquidWater.specificHeat();
+    public SpecificHeat getSpecificHeat() {
+        return liquidWater.getSpecificHeat();
     }
 
     @Override
-    public SpecificEnthalpy specificEnthalpy() {
-        return liquidWater.specificEnthalpy();
+    public SpecificEnthalpy getSpecificEnthalpy() {
+        return liquidWater.getSpecificEnthalpy();
     }
 
     /**
@@ -174,7 +174,7 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
     public static FlowOfLiquidWater of(LiquidWater liquidWater, VolumetricFlow volFlow) {
         Validators.requireNotNull(liquidWater);
         Validators.requireNotNull(volFlow);
-        MassFlow massFlow = FlowEquations.volFlowToMassFlow(liquidWater.density(), volFlow);
+        MassFlow massFlow = FlowEquations.volFlowToMassFlow(liquidWater.getDensity(), volFlow);
         return new FlowOfLiquidWater(liquidWater, massFlow);
     }
 

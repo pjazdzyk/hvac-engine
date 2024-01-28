@@ -27,15 +27,15 @@ record CoolingFromPower(FlowOfHumidAir inletAir,
     public AirCoolingResult applyCooling() {
 
         if (inputPower.equalsZero()) {
-            LiquidWater liquidWater = LiquidWater.of(inletAir.temperature());
+            LiquidWater liquidWater = LiquidWater.of(inletAir.getTemperature());
             FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(0.0));
             new AirCoolingResult(inletAir, inputPower, flowOfLiquidWater,
-                    CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), inletAir.temperature(), inletAir.temperature()));
+                    CoolingHelpers.coilBypassFactor(coolantData.getAverageTemperature(), inletAir.getTemperature(), inletAir.getTemperature()));
         }
 
         // For the provided inputHeat, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
         DryCooling dryCooling = DryCooling.of(DryCoolingStrategy.of(inletAir, inputPower));
-        double tmin = inletAir.temperature().getInCelsius();
+        double tmin = inletAir.getTemperature().getInCelsius();
         double tmax = dryCooling.getOutTemperature().getInCelsius();
         BrentSolver solver = new BrentSolver("[CoolingFromPower]");
         solver.setCounterpartPoints(tmin, tmax);

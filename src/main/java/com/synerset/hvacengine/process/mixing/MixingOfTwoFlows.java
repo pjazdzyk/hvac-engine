@@ -38,9 +38,9 @@ record MixingOfTwoFlows(FlowOfHumidAir inletAir,
 
         double xIn = inletAir.humidityRatio().getInKilogramPerKilogram();
         double xRec = recirculationAirFlow.humidityRatio().getInKilogramPerKilogram();
-        double pIn = inletAir.pressure().getInPascals();
-        double iIn = inletAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
-        double iRec = recirculationAirFlow.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double pIn = inletAir.getPressure().getInPascals();
+        double iIn = inletAir.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
+        double iRec = recirculationAirFlow.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
 
         double xOut = (mdaIn * xIn + mdaRec * xRec) / mdaOut;
         double iOut = (mdaIn * iIn + mdaRec * iRec) / mdaOut;
