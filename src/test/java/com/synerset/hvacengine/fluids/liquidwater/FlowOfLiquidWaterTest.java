@@ -16,24 +16,24 @@ class FlowOfLiquidWaterTest {
     @DisplayName("FlowOfWater: should create instance with properly calculated flows when valid input is given")
     void flowOfFluidInstance_shouldCreateValidFlowOfFluidInstance_whenValidSampleInputIsGiven() {
         // Given
-        double waterDensity = SAMPLE_WATER.density().getInKilogramsPerCubicMeters();
+        double waterDensity = SAMPLE_WATER.getDensity().getInKilogramsPerCubicMeters();
         double expectedVolFlow = SAMPLE_MASS_FLOW_RATE / waterDensity;
 
         // When
         FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(SAMPLE_WATER, MassFlow.ofKilogramsPerSecond(SAMPLE_MASS_FLOW_RATE));
         LiquidWater water = flowOfLiquidWater.fluid();
-        double actualMassFlow = flowOfLiquidWater.massFlow().getInKilogramsPerSecond();
-        double actualVolFlow = flowOfLiquidWater.volumetricFlow().getInCubicMetersPerSecond();
+        double actualMassFlow = flowOfLiquidWater.getMassFlow().getInKilogramsPerSecond();
+        double actualVolFlow = flowOfLiquidWater.getVolumetricFlow().getInCubicMetersPerSecond();
 
         // Then
         assertThat(actualMassFlow).isEqualTo(SAMPLE_MASS_FLOW_RATE);
         assertThat(actualVolFlow).isEqualTo(expectedVolFlow);
 
-        assertThat(flowOfLiquidWater.temperature()).isEqualTo(water.temperature());
-        assertThat(flowOfLiquidWater.pressure()).isEqualTo(water.pressure());
-        assertThat(flowOfLiquidWater.density()).isEqualTo(water.density());
-        assertThat(flowOfLiquidWater.specificHeat()).isEqualTo(water.specificHeat());
-        assertThat(flowOfLiquidWater.specificEnthalpy()).isEqualTo(water.specificEnthalpy());
+        assertThat(flowOfLiquidWater.getTemperature()).isEqualTo(water.getTemperature());
+        assertThat(flowOfLiquidWater.getPressure()).isEqualTo(water.getPressure());
+        assertThat(flowOfLiquidWater.getDensity()).isEqualTo(water.getDensity());
+        assertThat(flowOfLiquidWater.getSpecificHeat()).isEqualTo(water.getSpecificHeat());
+        assertThat(flowOfLiquidWater.getSpecificEnthalpy()).isEqualTo(water.getSpecificEnthalpy());
     }
 
 }

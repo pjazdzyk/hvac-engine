@@ -602,12 +602,13 @@ public final class HumidAirEquations {
         return solver.calcForFunction(tx -> ix - HumidAirEquations.specificEnthalpy(tx, x, pat));
     }
 
-    public static Temperature dryBulbTemperatureIX(SpecificEnthalpy specEnthalpy, RelativeHumidity relHum, Pressure absPressure) {
+    public static Temperature dryBulbTemperatureIX(SpecificEnthalpy specEnthalpy, HumidityRatio humidityRatio, Pressure absPressure) {
         Validators.requireNotNull(specEnthalpy);
-        Validators.requireNotNull(relHum);
+        Validators.requireNotNull(humidityRatio);
         Validators.requireNotNull(absPressure);
-        double dryBulbTemp = dryBulbTemperatureIX(specEnthalpy.getInKiloJoulesPerKiloGram(),
-                relHum.getInPercent(),
+        double dryBulbTemp = dryBulbTemperatureIX(
+                specEnthalpy.getInKiloJoulesPerKiloGram(),
+                humidityRatio.getInKilogramPerKilogram(),
                 absPressure.getInPascals());
         return Temperature.ofCelsius(dryBulbTemp);
     }

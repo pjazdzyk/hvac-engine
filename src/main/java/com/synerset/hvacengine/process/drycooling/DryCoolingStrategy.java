@@ -58,9 +58,9 @@ public interface DryCoolingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetTemperature);
 
-        if (targetTemperature.isGreaterThan(inletAirFlow.temperature())) {
+        if (targetTemperature.isGreaterThan(inletAirFlow.getTemperature())) {
             throw new InvalidArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
-                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.temperature());
+                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
 
         return new DryCoolingFromTemperature(inletAirFlow, targetTemperature);

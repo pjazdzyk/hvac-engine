@@ -21,20 +21,20 @@ record HeatingFromPower(FlowOfHumidAir inletAir,
     @Override
     public AirHeatingResult applyHeating() {
 
-        if (inputPower.equalsZero() || inletAir.massFlow().equalsZero()) {
+        if (inputPower.equalsZero() || inletAir.getMassFlow().equalsZero()) {
             return new AirHeatingResult(inletAir, inputPower);
         }
 
         HumidAir inletHumidAir = inletAir.fluid();
         double qHeat = inputPower.getInKiloWatts();
-        double xIn = inletHumidAir.humidityRatio().getInKilogramPerKilogram();
+        double xIn = inletHumidAir.getHumidityRatio().getInKilogramPerKilogram();
         double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double pIn = inletHumidAir.pressure().getInPascals();
-        double iIn = inletHumidAir.specificEnthalpy().getInKiloJoulesPerKiloGram();
+        double pIn = inletHumidAir.getPressure().getInPascals();
+        double iIn = inletHumidAir.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
         double iOut = (mdaIn * iIn + qHeat) / mdaIn;
         double tOut = HumidAirEquations.dryBulbTemperatureIX(iOut, xIn, pIn);
 
-        HumidAir outletHumidAir = HumidAir.of(inletAir.pressure(), Temperature.ofCelsius(tOut), inletAir.humidityRatio());
+        HumidAir outletHumidAir = HumidAir.of(inletAir.getPressure(), Temperature.ofCelsius(tOut), inletAir.humidityRatio());
         FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, MassFlow.ofKilogramsPerSecond(mdaIn));
 
         return new AirHeatingResult(outletFlow, inputPower);

@@ -27,13 +27,13 @@ class DryAirTest {
                 Temperature.ofCelsius(inputAirTemp)
         );
 
-        double actualPressure = dryAir.pressure().getValue();
-        double actualTemperature = dryAir.temperature().getValue();
-        double actualSpecHeat = dryAir.specificHeat().getValue();
-        double actualSpecEnthalpy = dryAir.specificEnthalpy().getValue();
-        double actualDynVis = dryAir.dynamicViscosity().getValue();
-        double actualKinViscosity = dryAir.kinematicViscosity().getValue();
-        double actualThermalConductivity = dryAir.thermalConductivity().getValue();
+        double actualPressure = dryAir.getPressure().getValue();
+        double actualTemperature = dryAir.getTemperature().getValue();
+        double actualSpecHeat = dryAir.getSpecificHeat().getValue();
+        double actualSpecEnthalpy = dryAir.getSpecificEnthalpy().getValue();
+        double actualDynVis = dryAir.getDynamicViscosity().getValue();
+        double actualKinViscosity = dryAir.getKinematicViscosity().getValue();
+        double actualThermalConductivity = dryAir.getThermalConductivity().getValue();
 
         // Then
         assertThat(actualPressure).isEqualTo(inputPressure);

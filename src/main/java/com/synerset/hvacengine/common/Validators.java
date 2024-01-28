@@ -29,13 +29,13 @@ public final class Validators {
 
     public static <K extends Unit> void requireAboveLowerBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> lowerBoundLimit) {
         if (quantityToCheck.equalsOrLowerThan(lowerBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Lower bound limit exceeded: Quantity: %s, Limit: %s", quantityToCheck, lowerBoundLimit));
+            throw new InvalidArgumentException(String.format("Lower bound limit exceeded. Actual: %s, limit: %s", quantityToCheck, lowerBoundLimit));
         }
     }
 
     public static <K extends Unit> void requireBelowUpperBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> upperBoundLimit) {
         if (quantityToCheck.equalsOrGreaterThan(upperBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Upper bound limit exceeded: Quantity: %s, Limit: %s", quantityToCheck, upperBoundLimit));
+            throw new InvalidArgumentException(String.format("Upper bound limit exceeded. Actual:  %s, limit: %s", quantityToCheck, upperBoundLimit));
         }
     }
 
@@ -46,13 +46,13 @@ public final class Validators {
 
     public static <K extends Unit> void requireAboveLowerBoundInclusive(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> lowerBoundLimit) {
         if (quantityToCheck.isLowerThan(lowerBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Lower bound limit reached or exceeded: Quantity: %s, Limit: %s", quantityToCheck, lowerBoundLimit));
+            throw new InvalidArgumentException(String.format("Lower bound limit reached or exceeded. Actual: %s, limit: %s", quantityToCheck, lowerBoundLimit));
         }
     }
 
     public static <K extends Unit> void requireBelowUpperBoundInclusive(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> upperBoundLimit) {
         if (quantityToCheck.isGreaterThan(upperBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Upper bound limit reached or exceeded: Quantity: %s, Limit: %s", quantityToCheck, upperBoundLimit));
+            throw new InvalidArgumentException(String.format("Upper bound limit reached or exceeded: Actual: %s, limit: %s", quantityToCheck, upperBoundLimit));
         }
     }
 

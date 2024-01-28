@@ -33,13 +33,13 @@ class WaterVapourTest {
                 RelativeHumidity.ofPercentage(inputAirRH)
         );
 
-        double actualPressure = waterVapour.pressure().getValue();
-        double actualTemperature = waterVapour.temperature().getValue();
-        double actualSpecHeat = waterVapour.specificHeat().getValue();
-        double actualSpecEnthalpy = waterVapour.specificEnthalpy().getValue();
-        double actualDynVis = waterVapour.dynamicViscosity().getValue();
-        double actualKinViscosity = waterVapour.kinematicViscosity().getValue();
-        double actualThermalConductivity = waterVapour.thermalConductivity().getValue();
+        double actualPressure = waterVapour.getPressure().getValue();
+        double actualTemperature = waterVapour.getTemperature().getValue();
+        double actualSpecHeat = waterVapour.getSpecificHeat().getValue();
+        double actualSpecEnthalpy = waterVapour.getSpecificEnthalpy().getValue();
+        double actualDynVis = waterVapour.getDynamicViscosity().getValue();
+        double actualKinViscosity = waterVapour.getKinematicViscosity().getValue();
+        double actualThermalConductivity = waterVapour.getThermalConductivity().getValue();
 
         // Then
         assertThat(actualPressure).isEqualTo(inputPressure);

@@ -48,7 +48,7 @@ class HeatingTest {
         assertThat(heating.getInputInletAir()).isEqualTo(inletAir);
         assertThat(heating.getHeatOfProcess()).isEqualTo(inputPower);
         assertThat(heating.getHeatingStrategy()).isEqualTo(calculationStrategy);
-        assertThat(heating.getOutPressure()).isEqualTo(humidAir.pressure());
+        assertThat(heating.getOutPressure()).isEqualTo(humidAir.getPressure());
         assertThat(heating.getOutTemperature().getInCelsius()).isEqualTo(expectedTemperature.getInCelsius(), withPrecision(3.5E-2));
         assertThat(heating.getOutRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1.5E-2));
         assertThat(heating.getOutHumidityRatio()).isEqualTo(inletAir.humidityRatio());
@@ -82,7 +82,7 @@ class HeatingTest {
         assertThat(heating.getInputInletAir()).isEqualTo(inletAir);
         assertThat(heating.getHeatOfProcess().getInWatts()).isEqualTo(expectedPower.getInWatts(), withPrecision(1E-10));
         assertThat(heating.getHeatingStrategy()).isEqualTo(calculationStrategy);
-        assertThat(heating.getOutPressure()).isEqualTo(humidAir.pressure());
+        assertThat(heating.getOutPressure()).isEqualTo(humidAir.getPressure());
         assertThat(heating.getOutTemperature().getValue()).isEqualTo(targetTemperature.getValue(), withPrecision(1E-13));
         assertThat(heating.getOutRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent());
         assertThat(heating.getOutHumidityRatio()).isEqualTo(inletAir.humidityRatio());
@@ -116,7 +116,7 @@ class HeatingTest {
         assertThat(heating.getInputInletAir()).isEqualTo(inletAir);
         assertThat(heating.getHeatOfProcess().getValue()).isEqualTo(expectedPower.getValue(), withPrecision(1E-9));
         assertThat(heating.getHeatingStrategy()).isEqualTo(calculationStrategy);
-        assertThat(heating.getOutPressure()).isEqualTo(humidAir.pressure());
+        assertThat(heating.getOutPressure()).isEqualTo(humidAir.getPressure());
         assertThat(heating.getOutTemperature().getInCelsius()).isEqualTo(expectedTemperature.getInCelsius(), withPrecision(1E-10));
         assertThat(heating.getOutRelativeHumidity().getInPercent()).isEqualTo(targetRH.getInPercent());
         assertThat(heating.getOutHumidityRatio()).isEqualTo(inletAir.humidityRatio());

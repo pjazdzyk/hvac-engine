@@ -38,9 +38,9 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         Validators.requireBetweenBoundsInclusive(massFlowHa, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.humidAir = humidAir;
         this.massFlow = massFlowHa;
-        this.volFlow = FlowEquations.massFlowToVolFlow(humidAir.density(), massFlowHa);
-        MassFlow massFlowDa = FlowEquations.massFlowHaToMassFlowDa(humidAir.humidityRatio(), massFlowHa);
-        this.flowOfDryAir = FlowOfDryAir.of(DryAir.of(humidAir.temperature()), massFlowDa);
+        this.volFlow = FlowEquations.massFlowToVolFlow(humidAir.getDensity(), massFlowHa);
+        MassFlow massFlowDa = FlowEquations.massFlowHaToMassFlowDa(humidAir.getHumidityRatio(), massFlowHa);
+        this.flowOfDryAir = FlowOfDryAir.of(DryAir.of(humidAir.getTemperature()), massFlowDa);
     }
 
     // Primary properties
@@ -50,47 +50,47 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     @Override
-    public MassFlow massFlow() {
+    public MassFlow getMassFlow() {
         return massFlow;
     }
 
     @Override
-    public VolumetricFlow volumetricFlow() {
+    public VolumetricFlow getVolumetricFlow() {
         return volFlow;
     }
 
     public MassFlow dryAirMassFlow() {
-        return flowOfDryAir.massFlow();
+        return flowOfDryAir.getMassFlow();
     }
 
     public VolumetricFlow dryAirVolumetricFlow() {
-        return flowOfDryAir.volumetricFlow();
+        return flowOfDryAir.getVolumetricFlow();
     }
 
     // Secondary properties
     @Override
-    public Temperature temperature() {
-        return humidAir.temperature();
+    public Temperature getTemperature() {
+        return humidAir.getTemperature();
     }
 
     @Override
-    public Pressure pressure() {
-        return humidAir.pressure();
+    public Pressure getPressure() {
+        return humidAir.getPressure();
     }
 
     @Override
-    public Density density() {
-        return humidAir.density();
+    public Density getDensity() {
+        return humidAir.getDensity();
     }
 
     @Override
-    public SpecificHeat specificHeat() {
-        return humidAir.specificHeat();
+    public SpecificHeat getSpecificHeat() {
+        return humidAir.getSpecificHeat();
     }
 
     @Override
-    public SpecificEnthalpy specificEnthalpy() {
-        return humidAir.specificEnthalpy();
+    public SpecificEnthalpy getSpecificEnthalpy() {
+        return humidAir.getSpecificEnthalpy();
     }
 
     public FlowOfDryAir flowOfDryAir() {
@@ -98,19 +98,19 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     public HumidityRatio humidityRatio() {
-        return humidAir.humidityRatio();
+        return humidAir.getHumidityRatio();
     }
 
     public HumidityRatio maxHumidityRatio() {
-        return humidAir.maxHumidityRatio();
+        return humidAir.getMaxHumidityRatio();
     }
 
     public RelativeHumidity relativeHumidity() {
-        return humidAir.relativeHumidity();
+        return humidAir.getRelativeHumidity();
     }
 
     public Pressure saturationPressure() {
-        return humidAir.saturationPressure();
+        return humidAir.getSaturationPressure();
     }
 
     // Class factory methods
@@ -206,7 +206,7 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     public static FlowOfHumidAir of(HumidAir humidAir, VolumetricFlow volFlowHa) {
         Validators.requireNotNull(humidAir);
         Validators.requireNotNull(volFlowHa);
-        return new FlowOfHumidAir(humidAir, FlowEquations.volFlowToMassFlow(humidAir.density(), volFlowHa));
+        return new FlowOfHumidAir(humidAir, FlowEquations.volFlowToMassFlow(humidAir.getDensity(), volFlowHa));
     }
 
     /**
@@ -220,7 +220,7 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         Validators.requireNotNull(humidAir);
         Validators.requireNotNull(massFlowDa);
         Validators.requireBetweenBoundsInclusive(massFlowDa, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
-        HumidityRatio humRatio = humidAir.humidityRatio();
+        HumidityRatio humRatio = humidAir.getHumidityRatio();
         MassFlow humidAirMassFlow = FlowEquations.massFlowDaToMassFlowHa(humRatio, massFlowDa);
         return FlowOfHumidAir.of(humidAir, humidAirMassFlow);
     }

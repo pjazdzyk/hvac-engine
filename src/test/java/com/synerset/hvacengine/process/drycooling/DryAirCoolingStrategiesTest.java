@@ -42,7 +42,7 @@ class DryAirCoolingStrategiesTest {
         // When
         DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedOutAirTemp).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
 
         // Then
@@ -64,7 +64,7 @@ class DryAirCoolingStrategiesTest {
         // When
         DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedHeatOfProcess).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().temperature();
+        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
         HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
 
         // Then

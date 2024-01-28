@@ -28,7 +28,7 @@ class FlowEquationsTest {
     void calcVolFlowFromMassFlow_shouldReturnVolumetricFlow_whenMassFlowAndFluidDensityIsGiven() {
         // Arrange
         // ACT
-        var actualWaterVolFlow = FlowEquations.massFlowToVolFlow(SAMPLE_LIQ_WATER.density().getInKilogramsPerCubicMeters(),
+        var actualWaterVolFlow = FlowEquations.massFlowToVolFlow(SAMPLE_LIQ_WATER.getDensity().getInKilogramsPerCubicMeters(),
                 SAMPLE_MASS_FLOW);
 
         // Assert
@@ -40,7 +40,7 @@ class FlowEquationsTest {
     void calcMassFlowFromVolFlow_shouldReturnMassFlow_whenVolumetricFlowAndFluidDensityIsGiven() {
         // Arrange
         // ACT
-        var actualWaterMassFlow = FlowEquations.volFlowToMassFlow(SAMPLE_LIQ_WATER.density().getInKilogramsPerCubicMeters(),
+        var actualWaterMassFlow = FlowEquations.volFlowToMassFlow(SAMPLE_LIQ_WATER.getDensity().getInKilogramsPerCubicMeters(),
                 SAMPLE_FLUID_VOL_FLOW);
 
         // Assert
@@ -53,11 +53,11 @@ class FlowEquationsTest {
     @DisplayName("should calculate moist air mass flow when dry air mass flow and moist air density is given")
     void calcMaMassFlowFromDaMassFlow_shouldReturnMoistAirMassFlow_whenDryAirMassFlowAndMoistAirDensityIsGiven() {
         // Arrange
-        var dryAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.humidityRatio().getInKilogramPerKilogram(),
+        var dryAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.getHumidityRatio().getInKilogramPerKilogram(),
                 SAMPLE_MASS_FLOW);
 
         // ACT
-        var actualMaAirMassFlow = FlowEquations.massFlowDaToMassFlowHa(SAMPLE_AIR.humidityRatio().getInKilogramPerKilogram(),
+        var actualMaAirMassFlow = FlowEquations.massFlowDaToMassFlowHa(SAMPLE_AIR.getHumidityRatio().getInKilogramPerKilogram(),
                 dryAirMassFlow);
 
         // Assert
@@ -69,7 +69,7 @@ class FlowEquationsTest {
     void calcDaMassFlowFromMaMassFlow_shouldReturnDryAirMassFlow_whenMoistAirMassAndHumidityRatioIsGiven() {
         // Arrange
         // ACT
-        var actualDaAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.humidityRatio().getInKilogramPerKilogram(),
+        var actualDaAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.getHumidityRatio().getInKilogramPerKilogram(),
                 SAMPLE_MASS_FLOW);
 
         // Assert
@@ -83,8 +83,8 @@ class FlowEquationsTest {
         var volFlowMa = 0.8403259531006995;
 
         // Act
-        var actualDaAirMassFlow = FlowEquations.volFlowHaToMassFlowDa(SAMPLE_AIR.density().getInKilogramsPerCubicMeters(),
-                SAMPLE_AIR.humidityRatio().getInKilogramPerKilogram(), volFlowMa);
+        var actualDaAirMassFlow = FlowEquations.volFlowHaToMassFlowDa(SAMPLE_AIR.getDensity().getInKilogramsPerCubicMeters(),
+                SAMPLE_AIR.getHumidityRatio().getInKilogramPerKilogram(), volFlowMa);
 
         // Assert
         assertThat(actualDaAirMassFlow).isEqualTo(SAMPLE_AIR_DA_MASS_FLOW, withPrecision(MATH_ACCURACY));
@@ -94,11 +94,11 @@ class FlowEquationsTest {
     @DisplayName("should calculate dry air mass flow when dry air volumetric flow and dry air density is given")
     void calcDaMassFlowFromDaVolFlow_shouldReturnDryAirMassFlow_whenDryAirVolFlowAndDryAirDensityIsGiven() {
         // Arrange
-        var volFlowDa = FlowEquations.massFlowToVolFlow(SAMPLE_AIR.dryAirComponent().density().getInKilogramsPerCubicMeters(),
+        var volFlowDa = FlowEquations.massFlowToVolFlow(SAMPLE_AIR.getDryAirComponent().getDensity().getInKilogramsPerCubicMeters(),
                 SAMPLE_AIR_DA_MASS_FLOW);
 
         // Act
-        var actualDaAirMassFlow = FlowEquations.volFlowToMassFlow(SAMPLE_AIR.dryAirComponent().density().getInKilogramsPerCubicMeters(),
+        var actualDaAirMassFlow = FlowEquations.volFlowToMassFlow(SAMPLE_AIR.getDryAirComponent().getDensity().getInKilogramsPerCubicMeters(),
                 volFlowDa);
 
         // Assert
@@ -111,12 +111,12 @@ class FlowEquationsTest {
     @DisplayName("should calculate dry air volumetric flow when dry air mass flow and dry air density is given")
     void calcDaVolFlowFromDaMassFlow_shouldReturnDryAirVolumetricFlow_whenDryAirMassFlowAndDryAirDensityIsGiven() {
         // Arrange
-        var dryAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.humidityRatio().getInKilogramPerKilogram(),
+        var dryAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.getHumidityRatio().getInKilogramPerKilogram(),
                 SAMPLE_MASS_FLOW);
         var expectedDryAirVolFlow = 0.8245101441496746;
 
         // ACT
-        var actualDaAirMassFlow = FlowEquations.massFlowToVolFlow(SAMPLE_AIR.dryAirComponent().density().getInKilogramsPerCubicMeters(),
+        var actualDaAirMassFlow = FlowEquations.massFlowToVolFlow(SAMPLE_AIR.getDryAirComponent().getDensity().getInKilogramsPerCubicMeters(),
                 dryAirMassFlow);
 
         // Assert
@@ -127,13 +127,13 @@ class FlowEquationsTest {
     @DisplayName("should calculate moist air mass flow when dry air mass flow and moist air density is given")
     void calcMaVolFlowFromDaMassFlow_shouldReturnMoistAirVolumetricFlow_whenDryAirMassFlowAndHumidityRatioAndAndMoistAirDensityIsGiven() {
         // Arrange
-        var dryAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.humidityRatio().getInKilogramPerKilogram(),
+        var dryAirMassFlow = FlowEquations.massFlowHaToMassFlowDa(SAMPLE_AIR.getHumidityRatio().getInKilogramPerKilogram(),
                 SAMPLE_MASS_FLOW);
         var expectedMaVolFLow = 0.8403259531006995;
 
         // ACT
-        var actualMaAirMassFlow = FlowEquations.massFlowDaToVolFlowHa(SAMPLE_AIR.density().getInKilogramsPerCubicMeters(),
-                SAMPLE_AIR.humidityRatio().getInKilogramPerKilogram(), dryAirMassFlow);
+        var actualMaAirMassFlow = FlowEquations.massFlowDaToVolFlowHa(SAMPLE_AIR.getDensity().getInKilogramsPerCubicMeters(),
+                SAMPLE_AIR.getHumidityRatio().getInKilogramPerKilogram(), dryAirMassFlow);
 
         // Assert
         assertThat(actualMaAirMassFlow).isEqualTo(expectedMaVolFLow, withPrecision(MATH_ACCURACY));

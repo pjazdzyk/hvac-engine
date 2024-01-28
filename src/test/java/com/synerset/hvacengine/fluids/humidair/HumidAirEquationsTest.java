@@ -530,7 +530,7 @@ class HumidAirEquationsTest {
                 expectedRelHumFromDbT,
                 absPressureVal);
         double expectedDryBulbTempFromIX = HumidAirEquations.dryBulbTemperatureIX(expectedSpecEnthalpy,
-                expectedRelHumFromDbT,
+                expectedHumRatio,
                 absPressureVal);
         double expectedDryBulbTempFromWbtRH = HumidAirEquations.dryBulbTemperatureWbtRH(expectedWetBulbTemp,
                 expectedRelHumFromDbT,
@@ -570,7 +570,7 @@ class HumidAirEquationsTest {
                 RelativeHumidity.ofPercentage(actualRelHumFromDbT),
                 absPressure).getInCelsius();
         double actualDryBulbTempFromIX = HumidAirEquations.dryBulbTemperatureIX(SpecificEnthalpy.ofKiloJoulePerKiloGram(actualSpecEnthalpy),
-                RelativeHumidity.ofPercentage(actualRelHumFromDbT),
+                HumidityRatio.ofKilogramPerKilogram(actualHumRatio),
                 absPressure).getInCelsius();
         double actualDryBulbTempFromWbtRH = HumidAirEquations.dryBulbTemperatureWbtRH(Temperature.ofCelsius(actualWetBulbTemp),
                 RelativeHumidity.ofPercentage(actualRelHumFromDbT),

@@ -48,11 +48,11 @@ public class DryCooling {
         heatOfProcess = dryCoolingBulkResult.heatOfProcess();
         outletFlow = dryCoolingBulkResult.outletFlow();
         outletAir = outletFlow.fluid();
-        outPressure = outletFlow.pressure();
-        outTemperature = outletFlow.temperature();
+        outPressure = outletFlow.getPressure();
+        outTemperature = outletFlow.getTemperature();
         outRelativeHumidity = outletFlow.relativeHumidity();
         outHumidityRatio = outletFlow.humidityRatio();
-        outSpecificEnthalpy = outletFlow.specificEnthalpy();
+        outSpecificEnthalpy = outletFlow.getSpecificEnthalpy();
     }
 
     public DryCoolingStrategy getDryCoolingStrategy() {
@@ -112,21 +112,21 @@ public class DryCooling {
         return "PROCESS OF DRY COOLING:" + end +
 
                 "INPUT FLOW:" + end +
-                inputInletAir.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_in", digits) + separator +
-                inputInletAir.massFlow().toEngineeringFormat("G_in", digits) + separator +
+                inputInletAir.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_in", digits) + separator +
+                inputInletAir.getMassFlow().toEngineeringFormat("G_in", digits) + separator +
                 inputInletAir.dryAirMassFlow().toEngineeringFormat("G_in.da", digits) + end +
 
-                inputInletAir.temperature().toEngineeringFormat("DBT_in", digits) + separator +
+                inputInletAir.getTemperature().toEngineeringFormat("DBT_in", digits) + separator +
                 inputInletAir.relativeHumidity().toEngineeringFormat("RH_in", digits) + separator +
                 inputInletAir.humidityRatio().toEngineeringFormat("x_in", digits) + separator +
-                inputInletAir.specificEnthalpy().toEngineeringFormat("i_in", digits) + end +
+                inputInletAir.getSpecificEnthalpy().toEngineeringFormat("i_in", digits) + end +
 
                 "HEAT OF PROCESS:" + end +
                 heatOfProcess.toEngineeringFormat("Q_cool", digits) + end +
 
                 "OUTLET FLOW:" + end +
-                outletFlow.volumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_out", digits) + separator +
-                outletFlow.massFlow().toEngineeringFormat("G_out", digits) + separator +
+                outletFlow.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_out", digits) + separator +
+                outletFlow.getMassFlow().toEngineeringFormat("G_out", digits) + separator +
                 outletFlow.dryAirMassFlow().toEngineeringFormat("G_out.da", digits) + end +
                 outTemperature.toEngineeringFormat("DBT_out", digits) + separator +
                 outRelativeHumidity.toEngineeringFormat("RH_out", digits) + separator +
