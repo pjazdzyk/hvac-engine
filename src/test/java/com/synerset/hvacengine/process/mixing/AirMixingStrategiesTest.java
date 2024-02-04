@@ -3,7 +3,7 @@ package com.synerset.hvacengine.process.mixing;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAirEquations;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;

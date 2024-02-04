@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.process.cooling;
 
 import com.synerset.hvacengine.common.Validators;
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
@@ -42,14 +42,14 @@ public interface CoolingStrategy {
      * @param inletCoolantData The coolant data.
      * @param inputPower       The cooling power (negative value).
      * @return A CoolingStrategy instance for cooling based on input power.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static CoolingStrategy of(FlowOfHumidAir inletAirFlow, CoolantData inletCoolantData, Power inputPower) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inletCoolantData);
         Validators.requireNotNull(inputPower);
         if (inputPower.isPositive()) {
-            throw new InvalidArgumentException("Cooling power must be negative value. Q_in = " + inputPower);
+            throw new HvacEngineArgumentException("Cooling power must be negative value. Q_in = " + inputPower);
         }
         // Mox cooling power quick estimate to reach 0 degrees Qcool.max= G * (i_0 - i_in)
         double estimatedMaxPowerKw = inletAirFlow.getSpecificEnthalpy().toKiloJoulePerKiloGram()
@@ -57,7 +57,7 @@ public interface CoolingStrategy {
                 .multiply(inletAirFlow.getMassFlow().toKilogramsPerSecond());
         Power estimatedPowerLimit = Power.ofKiloWatts(estimatedMaxPowerKw);
         if (inputPower.isLowerThan(estimatedPowerLimit)) {
-            throw new InvalidArgumentException("To large cooling power for provided flow. "
+            throw new HvacEngineArgumentException("To large cooling power for provided flow. "
                     + "Q_in = " + inputPower + " Q_limit = " + estimatedPowerLimit);
         }
         return new CoolingFromPower(inletAirFlow, inletCoolantData, inputPower);
@@ -70,7 +70,7 @@ public interface CoolingStrategy {
      * @param inletCoolantData       The coolant data.
      * @param targetRelativeHumidity The desired target relative humidity.
      * @return A CoolingStrategy instance for cooling based on target relative humidity.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static CoolingStrategy of(FlowOfHumidAir inletAirFlow, CoolantData inletCoolantData, RelativeHumidity targetRelativeHumidity) {
         Validators.requireNotNull(inletAirFlow);
@@ -78,7 +78,7 @@ public interface CoolingStrategy {
         Validators.requireNotNull(targetRelativeHumidity);
         Validators.requireBetweenBoundsInclusive(targetRelativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.ofPercentage(98));
         if (targetRelativeHumidity.isLowerThan(inletAirFlow.relativeHumidity())) {
-            throw new InvalidArgumentException("Cooling process cannot decrease relative humidity. "
+            throw new HvacEngineArgumentException("Cooling process cannot decrease relative humidity. "
                     + "RH_in = " + inletAirFlow.relativeHumidity() + " RH_target = " + targetRelativeHumidity);
         }
         return new CoolingFromRH(inletAirFlow, inletCoolantData, targetRelativeHumidity);
@@ -91,7 +91,7 @@ public interface CoolingStrategy {
      * @param inletCoolantData  The coolant data.
      * @param targetTemperature The desired target temperature.
      * @return A CoolingStrategy instance for cooling based on target temperature.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static CoolingStrategy of(FlowOfHumidAir inletAirFlow, CoolantData inletCoolantData, Temperature targetTemperature) {
         Validators.requireNotNull(inletAirFlow);
@@ -99,7 +99,7 @@ public interface CoolingStrategy {
         Validators.requireNotNull(targetTemperature);
         Validators.requireAboveLowerBound(targetTemperature, Temperature.ofCelsius(0));
         if (targetTemperature.isGreaterThan(inletAirFlow.getTemperature())) {
-            throw new InvalidArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
+            throw new HvacEngineArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
                     + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
         return new CoolingFromTemperature(inletAirFlow, inletCoolantData, targetTemperature);

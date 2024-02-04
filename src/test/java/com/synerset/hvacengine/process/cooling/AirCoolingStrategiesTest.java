@@ -5,7 +5,7 @@ import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.hvacengine.process.drycooling.DryAirCoolingResult;
 import com.synerset.hvacengine.process.drycooling.DryCoolingStrategy;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;

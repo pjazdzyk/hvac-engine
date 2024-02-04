@@ -1,15 +1,15 @@
 package com.synerset.hvacengine.common;
 
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
-import com.synerset.hvacengine.common.exceptions.MissingArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineMissingArgumentException;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.hvacengine.process.cooling.CoolantData;
 import com.synerset.hvacengine.process.cooling.CoolingStrategy;
 import com.synerset.hvacengine.process.heating.HeatingStrategy;
 import com.synerset.hvacengine.process.mixing.MixingStrategy;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
+import com.synerset.unitility.unitsystem.flow.VolumetricFlow;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
@@ -38,16 +38,16 @@ class ProcessLimitsTest {
         Power examplePower = Power.ofWatts(100);
 
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, nullPower))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, nullTemperature))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, relativeHumidity))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
 
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, nullCoolantData, examplePower))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
         assertThatThrownBy(() -> CoolingStrategy.of(nullFlow, coolantData, exampleTemperature))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
     }
 
     @Test
@@ -59,9 +59,9 @@ class ProcessLimitsTest {
         Temperature exampleTemp14 = Temperature.ofCelsius(14);
 
         assertThatThrownBy(() -> CoolantData.of(exampleTemp5, exampleTemp90))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> CoolantData.of(exampleTemp0, exampleTemp14))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -73,28 +73,28 @@ class ProcessLimitsTest {
 
         Power lowPower = Power.ofKiloWatts(20);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, lowPower))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         Power lowNegativePower = Power.ofKiloWatts(-200);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, lowNegativePower))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         RelativeHumidity relativeHumidity49 = RelativeHumidity.ofPercentage(49);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, relativeHumidity49))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         RelativeHumidity relativeHumidity1 = RelativeHumidity.ofPercentage(-1);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, relativeHumidity1))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         RelativeHumidity relativeHumidity101 = RelativeHumidity.ofPercentage(101);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, relativeHumidity101))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         Temperature temperature36 = Temperature.ofCelsius(36);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, temperature36))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         Temperature temperature0 = Temperature.ofCelsius(0);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, temperature0))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         Temperature temperature1 = Temperature.ofCelsius(-1);
         assertThatThrownBy(() -> CoolingStrategy.of(flowOfHumidAir, coolantData, temperature1))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -105,25 +105,25 @@ class ProcessLimitsTest {
 
         Power power20 = Power.ofKiloWatts(-20);
         assertThatThrownBy(() -> HeatingStrategy.of(flowOfHumidAir, power20))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         Power power500 = Power.ofKiloWatts(500);
         assertThatThrownBy(() -> HeatingStrategy.of(flowOfHumidAir, power500))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         RelativeHumidity relativeHumidity81 = RelativeHumidity.ofPercentage(81);
         assertThatThrownBy(() -> HeatingStrategy.of(flowOfHumidAir, relativeHumidity81))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         RelativeHumidity relativeHumidity1 = RelativeHumidity.ofPercentage(-1);
         assertThatThrownBy(() -> HeatingStrategy.of(flowOfHumidAir, relativeHumidity1))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         RelativeHumidity relativeHumidity101 = RelativeHumidity.ofPercentage(101);
         assertThatThrownBy(() -> HeatingStrategy.of(flowOfHumidAir, relativeHumidity101))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         Temperature temperature21 = Temperature.ofCelsius(-21);
         assertThatThrownBy(() -> HeatingStrategy.of(flowOfHumidAir, temperature21))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         Temperature maxTemperatureLimitExceeded = HumidAir.TEMPERATURE_MAX_LIMIT.plus(1);
         assertThatThrownBy(() -> HeatingStrategy.of(flowOfHumidAir, maxTemperatureLimitExceeded))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -142,9 +142,9 @@ class ProcessLimitsTest {
         List<FlowOfHumidAir> recirculationFlows = List.of(recircFlow1, recircFlow2);
 
         assertThatThrownBy(() -> MixingStrategy.of(inletFlow, recircFlow1))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> MixingStrategy.of(inletFlow, recirculationFlows))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
 }

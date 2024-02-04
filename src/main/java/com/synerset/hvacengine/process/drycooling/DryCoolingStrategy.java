@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.process.drycooling;
 
 import com.synerset.hvacengine.common.Validators;
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
@@ -33,14 +33,14 @@ public interface DryCoolingStrategy {
      * @param inletAirFlow The incoming air flow properties.
      * @param inputPower   The cooling power (negative value).
      * @return A DryCoolingStrategy instance for dry cooling based on input power.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static DryCoolingStrategy of(FlowOfHumidAir inletAirFlow, Power inputPower) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inputPower);
 
         if (inputPower.isPositive()) {
-            throw new InvalidArgumentException("Cooling power must be negative value. Q_in = " + inputPower);
+            throw new HvacEngineArgumentException("Cooling power must be negative value. Q_in = " + inputPower);
         }
 
         return new DryCoolingFromPower(inletAirFlow, inputPower);
@@ -52,14 +52,14 @@ public interface DryCoolingStrategy {
      * @param inletAirFlow      The incoming air flow properties.
      * @param targetTemperature The desired target temperature.
      * @return A DryCoolingStrategy instance for dry cooling based on a target temperature.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static DryCoolingStrategy of(FlowOfHumidAir inletAirFlow, Temperature targetTemperature) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetTemperature);
 
         if (targetTemperature.isGreaterThan(inletAirFlow.getTemperature())) {
-            throw new InvalidArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
+            throw new HvacEngineArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
                     + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
 
