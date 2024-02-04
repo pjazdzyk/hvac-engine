@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.common;
 
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
-import com.synerset.hvacengine.common.exceptions.MissingArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineMissingArgumentException;
 import com.synerset.hvacengine.solids.ice.Ice;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
@@ -16,10 +16,10 @@ class SolidLimitsTest {
     @DisplayName("Ice: should throw exception when null passed as argument")
     void shouldThrowNullPointerExceptionWhenNullIsPassedAsArgumentSolids() {
         assertThatThrownBy(() -> Ice.of(Pressure.STANDARD_ATMOSPHERE, null))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
         Temperature temperature20 = Temperature.ofCelsius(-20);
         assertThatThrownBy(() -> Ice.of(null, temperature20))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
     }
 
     @Test
@@ -29,10 +29,10 @@ class SolidLimitsTest {
         Temperature temperatureMinLimit = Temperature.ofCelsius(-150).minus(1);
         Temperature temperature20 = Temperature.ofCelsius(-20);
         assertThatThrownBy(() -> Ice.of(pressureMaxLimit, temperature20))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
 
         assertThatThrownBy(() -> Ice.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.synerset.hvacengine.utils;
 
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
 
 import java.util.Arrays;
 import java.util.OptionalDouble;
@@ -18,13 +18,13 @@ public final class MathUtils {
      *
      * @param values The values for which to calculate the average.
      * @return The arithmetic average of the values.
-     * @throws InvalidArgumentException If no values are provided.
+     * @throws HvacEngineArgumentException If no values are provided.
      */
     public static double arithmeticAverage(double... values) {
         OptionalDouble optionalDouble = Arrays.stream(values).average();
         if (optionalDouble.isPresent())
             return optionalDouble.getAsDouble();
-        throw new InvalidArgumentException("No values are provided.");
+        throw new HvacEngineArgumentException("No values are provided.");
     }
 
     /**

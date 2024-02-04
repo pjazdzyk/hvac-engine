@@ -2,7 +2,7 @@ package com.synerset.hvacengine.process.mixing;
 
 import com.synerset.hvacengine.common.Validators;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 
 import java.util.Arrays;
 import java.util.List;

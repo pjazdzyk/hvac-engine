@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.common;
 
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
-import com.synerset.hvacengine.common.exceptions.MissingArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineMissingArgumentException;
 import com.synerset.hvacengine.fluids.dryair.DryAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.hvacengine.fluids.liquidwater.LiquidWater;
@@ -22,24 +22,24 @@ class FluidLimitsTest {
     void shouldThrowNullPointerExceptionWhenNullIsPassedAsArgumentFluids() {
         Temperature exampleTemperature = Temperature.ofCelsius(20);
         HumidityRatio exampleHumRatio = HumidityRatio.ofKilogramPerKilogram(0.01);
-        assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> DryAir.of(null, exampleTemperature)).isInstanceOf(MissingArgumentException.class);
+        assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> DryAir.of(null, exampleTemperature)).isInstanceOf(HvacEngineMissingArgumentException.class);
 
-        assertThatThrownBy(() -> LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> LiquidWater.of(null, exampleTemperature)).isInstanceOf(MissingArgumentException.class);
+        assertThatThrownBy(() -> LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> LiquidWater.of(null, exampleTemperature)).isInstanceOf(HvacEngineMissingArgumentException.class);
 
-        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> WaterVapour.of(null, exampleTemperature)).isInstanceOf(MissingArgumentException.class);
+        assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, null)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> WaterVapour.of(null, exampleTemperature)).isInstanceOf(HvacEngineMissingArgumentException.class);
 
         HumidityRatio nullHumRatio = null;
         Pressure nullPressure = null;
         Temperature nullTemperature = null;
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, exampleTemperature, nullHumRatio))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, nullTemperature, exampleHumRatio))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(nullPressure, exampleTemperature, exampleHumRatio))
-                .isInstanceOf(MissingArgumentException.class);
+                .isInstanceOf(HvacEngineMissingArgumentException.class);
     }
 
     @Test
@@ -51,11 +51,11 @@ class FluidLimitsTest {
         Temperature temperatureMaxLimit = Temperature.ofCelsius(1000).plus(1);
 
         assertThatThrownBy(() -> DryAir.of(pressureMaxLimit, exampleTemperature))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> DryAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -67,11 +67,11 @@ class FluidLimitsTest {
         Temperature temperatureMaxLimit = Temperature.ofCelsius(200).plus(1);
 
         assertThatThrownBy(() -> LiquidWater.of(pressureMaxLimit, exampleTemperature))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> LiquidWater.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -87,19 +87,19 @@ class FluidLimitsTest {
 
         // Without RH
         assertThatThrownBy(() -> WaterVapour.of(pressureMinLimit, exampleTemperature))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
 
         // With RH
         assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, exampleTemperature, rhMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, exampleTemperature, rhMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> WaterVapour.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimitWithRH, rhMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -115,26 +115,26 @@ class FluidLimitsTest {
         HumidityRatio humidityRatioMaxLimit = HumidityRatio.ofKilogramPerKilogram(3).plus(1);
 
         assertThatThrownBy(() -> HumidAir.of(pressureMinLimit, exampleTemperature, exampleHumRatio))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(pressureMaxLimit, exampleTemperature, exampleHumRatio))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMinLimit, exampleHumRatio))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, temperatureMaxLimit, exampleHumRatio))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, exampleTemperature, humidityRatioMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, exampleTemperature, humidityRatioMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, exampleTemperature, humidityRatioMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, exampleTemperature, humidityRatioMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
 
         // Saturation pressure condition isn't met
         Temperature temperature100 = Temperature.ofCelsius(100);
         assertThatThrownBy(() -> HumidAir.of(Pressure.STANDARD_ATMOSPHERE, temperature100, RelativeHumidity.RH_MAX_LIMIT))
-                .isInstanceOf(InvalidArgumentException.class);;
+                .isInstanceOf(HvacEngineArgumentException.class);;
     }
 
 }

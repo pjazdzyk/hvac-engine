@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.common;
 
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
-import com.synerset.hvacengine.common.exceptions.MissingArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineMissingArgumentException;
 import com.synerset.hvacengine.fluids.dryair.DryAir;
 import com.synerset.hvacengine.fluids.dryair.FlowOfDryAir;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
@@ -11,8 +11,8 @@ import com.synerset.hvacengine.fluids.liquidwater.LiquidWater;
 import com.synerset.hvacengine.fluids.watervapour.FlowOfWaterVapour;
 import com.synerset.hvacengine.fluids.watervapour.WaterVapour;
 import com.synerset.hvacengine.utils.Defaults;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
+import com.synerset.unitility.unitsystem.flow.VolumetricFlow;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,23 +32,23 @@ class FlowLimitsTest {
         MassFlow nullMassFlow = null;
         VolumetricFlow nullVolFlow = null;
 
-        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, nullMassFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, nullVolFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfDryAir.of(null, massFlow)).isInstanceOf(MissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, nullMassFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, nullVolFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfDryAir.of(null, massFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
 
-        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, nullMassFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, nullVolFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfLiquidWater.of(null, massFlow)).isInstanceOf(MissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, nullMassFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, nullVolFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfLiquidWater.of(null, massFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
 
-        assertThatThrownBy(() -> FlowOfWaterVapour.of(waterVapour, nullMassFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfWaterVapour.of(waterVapour, nullVolFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfWaterVapour.of(null, massFlow)).isInstanceOf(MissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfWaterVapour.of(waterVapour, nullMassFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfWaterVapour.of(waterVapour, nullVolFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfWaterVapour.of(null, massFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
 
-        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, nullMassFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, nullVolFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfHumidAir.of(null, massFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfHumidAir.ofDryAirMassFlow(null, massFlow)).isInstanceOf(MissingArgumentException.class);
-        assertThatThrownBy(() -> FlowOfHumidAir.ofDryAirMassFlow(humidAir, null)).isInstanceOf(MissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, nullMassFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, nullVolFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfHumidAir.of(null, massFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfHumidAir.ofDryAirMassFlow(null, massFlow)).isInstanceOf(HvacEngineMissingArgumentException.class);
+        assertThatThrownBy(() -> FlowOfHumidAir.ofDryAirMassFlow(humidAir, null)).isInstanceOf(HvacEngineMissingArgumentException.class);
     }
 
     @Test
@@ -58,9 +58,9 @@ class FlowLimitsTest {
         MassFlow exceededMinLimit = MassFlow.ofKilogramsPerSecond(-1);
         MassFlow exceededMaxLimit = MassFlow.ofKilogramsPerSecond(5E9 + 1);
         assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, exceededMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> FlowOfDryAir.of(dryAir, exceededMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -70,9 +70,9 @@ class FlowLimitsTest {
         MassFlow exceededMinLimit = MassFlow.ofKilogramsPerSecond(-1);
         MassFlow exceededMaxLimit = MassFlow.ofKilogramsPerSecond(5E9 + 1);
         assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, exceededMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> FlowOfLiquidWater.of(liquidWater, exceededMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
     @Test
@@ -82,9 +82,9 @@ class FlowLimitsTest {
         MassFlow exceededMinLimit = MassFlow.ofKilogramsPerSecond(-1);
         MassFlow exceededMaxLimit = MassFlow.ofKilogramsPerSecond(5E9 + 1);
         assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, exceededMinLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
         assertThatThrownBy(() -> FlowOfHumidAir.of(humidAir, exceededMaxLimit))
-                .isInstanceOf(InvalidArgumentException.class);
+                .isInstanceOf(HvacEngineArgumentException.class);
     }
 
 }

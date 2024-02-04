@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.fluids;
 
-import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
+import com.synerset.unitility.unitsystem.flow.VolumetricFlow;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 /**

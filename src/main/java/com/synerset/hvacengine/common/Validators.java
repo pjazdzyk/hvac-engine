@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.common;
 
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
-import com.synerset.hvacengine.common.exceptions.MissingArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineMissingArgumentException;
 import com.synerset.unitility.unitsystem.PhysicalQuantity;
 import com.synerset.unitility.unitsystem.Unit;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
@@ -17,25 +17,25 @@ public final class Validators {
 
     public static void requireNotNull(Object object) {
         if (Objects.isNull(object)) {
-            throw new MissingArgumentException("Argument cannot be null.");
+            throw new HvacEngineMissingArgumentException("Argument cannot be null.");
         }
     }
 
     public static void requireNotEmpty(Collection<?> collection) {
         if (Objects.isNull(collection) || collection.isEmpty()) {
-            throw new MissingArgumentException("Collection cannot be null and not empty.");
+            throw new HvacEngineMissingArgumentException("Collection cannot be null and not empty.");
         }
     }
 
     public static <K extends Unit> void requireAboveLowerBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> lowerBoundLimit) {
         if (quantityToCheck.equalsOrLowerThan(lowerBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Lower bound limit exceeded. Actual: %s, limit: %s", quantityToCheck, lowerBoundLimit));
+            throw new HvacEngineArgumentException(String.format("Lower bound limit exceeded. Actual: %s, limit: %s", quantityToCheck, lowerBoundLimit));
         }
     }
 
     public static <K extends Unit> void requireBelowUpperBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> upperBoundLimit) {
         if (quantityToCheck.equalsOrGreaterThan(upperBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Upper bound limit exceeded. Actual:  %s, limit: %s", quantityToCheck, upperBoundLimit));
+            throw new HvacEngineArgumentException(String.format("Upper bound limit exceeded. Actual:  %s, limit: %s", quantityToCheck, upperBoundLimit));
         }
     }
 
@@ -46,13 +46,13 @@ public final class Validators {
 
     public static <K extends Unit> void requireAboveLowerBoundInclusive(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> lowerBoundLimit) {
         if (quantityToCheck.isLowerThan(lowerBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Lower bound limit reached or exceeded. Actual: %s, limit: %s", quantityToCheck, lowerBoundLimit));
+            throw new HvacEngineArgumentException(String.format("Lower bound limit reached or exceeded. Actual: %s, limit: %s", quantityToCheck, lowerBoundLimit));
         }
     }
 
     public static <K extends Unit> void requireBelowUpperBoundInclusive(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> upperBoundLimit) {
         if (quantityToCheck.isGreaterThan(upperBoundLimit)) {
-            throw new InvalidArgumentException(String.format("Upper bound limit reached or exceeded: Actual: %s, limit: %s", quantityToCheck, upperBoundLimit));
+            throw new HvacEngineArgumentException(String.format("Upper bound limit reached or exceeded: Actual: %s, limit: %s", quantityToCheck, upperBoundLimit));
         }
     }
 
@@ -63,7 +63,7 @@ public final class Validators {
 
     public static void requireValidSaturationPressure(Pressure saturationPressure, Pressure humidAirAbsolutePressure, Temperature temperature) {
         if (saturationPressure.equalsOrGreaterThan(humidAirAbsolutePressure)) {
-            throw new InvalidArgumentException(
+            throw new HvacEngineArgumentException(
                     String.format("Water vapour saturation pressure exceeds humid air absolute pressure. Calculations are not possible. " +
                                     " Psat=%s, Pabs=%s, Temp=%s",
                             saturationPressure, humidAirAbsolutePressure, temperature));

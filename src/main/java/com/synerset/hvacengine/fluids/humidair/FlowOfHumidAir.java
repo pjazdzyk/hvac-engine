@@ -6,8 +6,8 @@ import com.synerset.hvacengine.fluids.FlowEquations;
 import com.synerset.hvacengine.fluids.dryair.DryAir;
 import com.synerset.hvacengine.fluids.dryair.FlowOfDryAir;
 import com.synerset.hvacengine.utils.Defaults;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
+import com.synerset.unitility.unitsystem.flow.VolumetricFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.humidity.RelativeHumidity;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
@@ -237,10 +237,10 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
      */
     public static FlowOfHumidAir ofValues(double absPressure, double dryBulbTemp, double relHum, double m3hVolFlow) {
         Pressure pAbs = Pressure.ofPascal(absPressure);
-        Temperature DBT = Temperature.ofCelsius(dryBulbTemp);
+        Temperature dryBulbTx = Temperature.ofCelsius(dryBulbTemp);
         RelativeHumidity rh = RelativeHumidity.ofPercentage(relHum);
         VolumetricFlow volFlow = VolumetricFlow.ofCubicMetersPerHour(m3hVolFlow);
-        HumidAir humidAir = HumidAir.of(pAbs, DBT, rh);
+        HumidAir humidAir = HumidAir.of(pAbs, dryBulbTx, rh);
         return of(humidAir, volFlow);
     }
 

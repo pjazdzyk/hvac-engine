@@ -1,9 +1,9 @@
 package com.synerset.hvacengine.process.cooling;
 
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
 import com.synerset.hvacengine.fluids.dryair.FlowOfDryAir;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
@@ -46,7 +46,7 @@ final class CoolingHelpers {
         double xIn = inletHumRatio.getInKilogramPerKilogram();
         double xOut = outletHumRatio.getInKilogramPerKilogram();
         if (mdaIn < 0 || xIn < 0 || xOut < 0)
-            throw new InvalidArgumentException(String.format("Negative values of mda, x1 or x2 passed as method argument. %s, %s, %s", dryAirMassFlow, inletHumRatio, outletHumRatio));
+            throw new HvacEngineArgumentException(String.format("Negative values of mda, x1 or x2 passed as method argument. %s, %s, %s", dryAirMassFlow, inletHumRatio, outletHumRatio));
         if (xIn == 0)
             return MassFlow.ofKilogramsPerSecond(0.0);
         return MassFlow.ofKilogramsPerSecond(mdaIn * (xIn - xOut));

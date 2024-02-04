@@ -1,6 +1,6 @@
 package com.synerset.hvacengine.fluids.liquidwater;
 
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
