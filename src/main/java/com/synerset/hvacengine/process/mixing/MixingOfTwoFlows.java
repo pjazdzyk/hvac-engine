@@ -4,7 +4,7 @@ import com.synerset.hvacengine.common.Validators;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAirEquations;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;

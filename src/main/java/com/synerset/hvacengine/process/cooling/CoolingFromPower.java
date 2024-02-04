@@ -6,7 +6,7 @@ import com.synerset.hvacengine.fluids.liquidwater.FlowOfLiquidWater;
 import com.synerset.hvacengine.fluids.liquidwater.LiquidWater;
 import com.synerset.hvacengine.process.drycooling.DryCooling;
 import com.synerset.hvacengine.process.drycooling.DryCoolingStrategy;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.thermodynamic.Power;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 

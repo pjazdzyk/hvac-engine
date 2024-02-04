@@ -4,8 +4,8 @@ import com.synerset.hvacengine.common.Validators;
 import com.synerset.hvacengine.fluids.Flow;
 import com.synerset.hvacengine.fluids.FlowEquations;
 import com.synerset.hvacengine.utils.Defaults;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
-import com.synerset.unitility.unitsystem.flows.VolumetricFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
+import com.synerset.unitility.unitsystem.flow.VolumetricFlow;
 import com.synerset.unitility.unitsystem.thermodynamic.*;
 
 import java.util.Objects;

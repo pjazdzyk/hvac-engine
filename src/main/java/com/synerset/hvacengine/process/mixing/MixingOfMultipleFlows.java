@@ -1,11 +1,11 @@
 package com.synerset.hvacengine.process.mixing;
 
 import com.synerset.hvacengine.common.Validators;
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAirEquations;
-import com.synerset.unitility.unitsystem.flows.MassFlow;
+import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
@@ -38,7 +38,7 @@ record MixingOfMultipleFlows(FlowOfHumidAir inletAir,
         }
 
         if (mdaOut == 0) {
-            throw new InvalidArgumentException(String.format("Sum of all dry air mass recirculationFlows. %s", mdaOut));
+            throw new HvacEngineArgumentException(String.format("Sum of all dry air mass recirculationFlows. %s", mdaOut));
         }
 
         double xOut = xMda / mdaOut;

@@ -1,7 +1,7 @@
 package com.synerset.hvacengine.process.heating;
 
 import com.synerset.hvacengine.common.Validators;
-import com.synerset.hvacengine.common.exceptions.InvalidArgumentException;
+import com.synerset.hvacengine.common.exceptions.HvacEngineArgumentException;
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAirEquations;
@@ -37,14 +37,14 @@ public interface HeatingStrategy {
      * @param inletAirFlow The incoming air flow properties.
      * @param inputPower   The heating power (positive value).
      * @return A HeatingStrategy instance for heating based on input power.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static HeatingStrategy of(FlowOfHumidAir inletAirFlow, Power inputPower) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(inputPower);
 
         if (inputPower.isNegative()) {
-            throw new InvalidArgumentException("Heating power must be positive value. Q_in = " + inputPower);
+            throw new HvacEngineArgumentException("Heating power must be positive value. Q_in = " + inputPower);
         }
 
         // Mox heating power estimate to reach t_max: Qheat.max= G * (imax - i_in)
@@ -55,7 +55,7 @@ public interface HeatingStrategy {
                 .multiply(inletAirFlow.getMassFlow().toKilogramsPerSecond());
         Power estimatedPowerLimit = Power.ofKiloWatts(qMax);
         if (inputPower.isGreaterThan(estimatedPowerLimit)) {
-            throw new InvalidArgumentException("To large heating power for provided flow. "
+            throw new HvacEngineArgumentException("To large heating power for provided flow. "
                     + "Q_in = " + inputPower + " Q_limit = " + estimatedPowerLimit);
         }
         return new HeatingFromPower(inletAirFlow, inputPower);
@@ -67,14 +67,14 @@ public interface HeatingStrategy {
      * @param inletAirFlow           The incoming air flow properties.
      * @param targetRelativeHumidity The desired target relative humidity.
      * @return A HeatingStrategy instance for heating based on a target relative humidity.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static HeatingStrategy of(FlowOfHumidAir inletAirFlow, RelativeHumidity targetRelativeHumidity) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetRelativeHumidity);
         Validators.requireBetweenBoundsInclusive(targetRelativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.ofPercentage(98));
         if (targetRelativeHumidity.isGreaterThan(inletAirFlow.relativeHumidity())) {
-            throw new InvalidArgumentException("Heating process cannot increase relative humidity. "
+            throw new HvacEngineArgumentException("Heating process cannot increase relative humidity. "
                     + "RH_in = " + inletAirFlow.relativeHumidity() + " RH_target = " + targetRelativeHumidity);
         }
         return new HeatingFromRH(inletAirFlow, targetRelativeHumidity);
@@ -86,14 +86,14 @@ public interface HeatingStrategy {
      * @param inletAirFlow      The incoming air flow properties.
      * @param targetTemperature The desired target temperature.
      * @return A HeatingStrategy instance for heating based on a target temperature.
-     * @throws InvalidArgumentException If the input parameters are invalid.
+     * @throws HvacEngineArgumentException If the input parameters are invalid.
      */
     static HeatingStrategy of(FlowOfHumidAir inletAirFlow, Temperature targetTemperature) {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetTemperature);
         Validators.requireBelowUpperBoundInclusive(targetTemperature, HumidAir.TEMPERATURE_MAX_LIMIT);
         if (targetTemperature.isLowerThan(inletAirFlow.getTemperature())) {
-            throw new InvalidArgumentException("Expected outlet temperature must be greater than inlet for cooling process. "
+            throw new HvacEngineArgumentException("Expected outlet temperature must be greater than inlet for cooling process. "
                     + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
         return new HeatingFromTemperature(inletAirFlow, targetTemperature);
