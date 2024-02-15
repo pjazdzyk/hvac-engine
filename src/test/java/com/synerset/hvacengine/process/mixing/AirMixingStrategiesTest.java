@@ -49,9 +49,9 @@ class AirMixingStrategiesTest {
         MixingStrategy mixingStrategy = MixingStrategy.of(airFlow_in, airFlow_rec);
         FlowOfHumidAir actualOutletFlow = mixingStrategy.applyMixing().outletFlow();
 
-        MassFlow actualOutDryAirMassFlow = actualOutletFlow.dryAirMassFlow();
+        MassFlow actualOutDryAirMassFlow = actualOutletFlow.getDryAirMassFlow();
         Temperature actualOutAirTemp = actualOutletFlow.getTemperature();
-        HumidityRatio actualOutHumidityRatio = actualOutletFlow.humidityRatio();
+        HumidityRatio actualOutHumidityRatio = actualOutletFlow.getHumidityRatio();
 
         // Then
         assertThat(actualOutDryAirMassFlow.getInKilogramsPerSecond()).isEqualTo(mda_out);
@@ -68,9 +68,9 @@ class AirMixingStrategiesTest {
         FlowOfHumidAir recircFlow_2 = FlowOfHumidAir.ofValues(20, 50, 1000);
         Temperature expectedTemp = Temperature.ofCelsius(-1.0000413789265845);
         RelativeHumidity expectedRH = RelativeHumidity.ofPercentage(99.48335594756662);
-        MassFlow expectedDryAirMassFlow = MassFlow.ofKilogramsPerSecond(inletFlow.dryAirMassFlow()
-                .plus(recircFlow_1.dryAirMassFlow())
-                .plus(recircFlow_2.dryAirMassFlow())
+        MassFlow expectedDryAirMassFlow = MassFlow.ofKilogramsPerSecond(inletFlow.getDryAirMassFlow()
+                .plus(recircFlow_1.getDryAirMassFlow())
+                .plus(recircFlow_2.getDryAirMassFlow())
                 .getValue());
 
         // When
@@ -79,8 +79,8 @@ class AirMixingStrategiesTest {
 
         // Then
         assertThat(actualOutletFlow.getTemperature()).isEqualTo(expectedTemp);
-        assertThat(actualOutletFlow.relativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1E-11));
-        assertThat(actualOutletFlow.dryAirMassFlow()).isEqualTo(expectedDryAirMassFlow);
+        assertThat(actualOutletFlow.getRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1E-11));
+        assertThat(actualOutletFlow.getDryAirMassFlow()).isEqualTo(expectedDryAirMassFlow);
 
     }
 

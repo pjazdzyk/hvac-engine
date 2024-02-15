@@ -23,12 +23,11 @@ public class DryCooling {
     private Power heatOfProcess;
     private FlowOfHumidAir outletFlow;
     private HumidAir outletAir;
-    private Pressure outPressure;
-    private Temperature outTemperature;
-    private RelativeHumidity outRelativeHumidity;
-    private HumidityRatio outHumidityRatio;
-    private SpecificEnthalpy outSpecificEnthalpy;
-    private DryAirCoolingResult dryCoolingBulkResult;
+    private Pressure outletPressure;
+    private Temperature outLetTemperature;
+    private RelativeHumidity outletRelativeHumidity;
+    private HumidityRatio outletHumidityRatio;
+    private SpecificEnthalpy outletSpecificEnthalpy;
 
     /**
      * Constructs a DryCooling instance with the specified dry cooling strategy.
@@ -44,15 +43,15 @@ public class DryCooling {
     }
 
     private void applyProcess() {
-        dryCoolingBulkResult = dryCoolingStrategy.applyDryCooling();
+        DryAirCoolingResult dryCoolingBulkResult = dryCoolingStrategy.applyDryCooling();
         heatOfProcess = dryCoolingBulkResult.heatOfProcess();
         outletFlow = dryCoolingBulkResult.outletFlow();
-        outletAir = outletFlow.fluid();
-        outPressure = outletFlow.getPressure();
-        outTemperature = outletFlow.getTemperature();
-        outRelativeHumidity = outletFlow.relativeHumidity();
-        outHumidityRatio = outletFlow.humidityRatio();
-        outSpecificEnthalpy = outletFlow.getSpecificEnthalpy();
+        outletAir = outletFlow.getFluid();
+        outletPressure = outletFlow.getPressure();
+        outLetTemperature = outletFlow.getTemperature();
+        outletRelativeHumidity = outletFlow.getRelativeHumidity();
+        outletHumidityRatio = outletFlow.getHumidityRatio();
+        outletSpecificEnthalpy = outletFlow.getSpecificEnthalpy();
     }
 
     public DryCoolingStrategy getDryCoolingStrategy() {
@@ -75,28 +74,24 @@ public class DryCooling {
         return outletAir;
     }
 
-    public Pressure getOutPressure() {
-        return outPressure;
+    public Pressure getOutletPressure() {
+        return outletPressure;
     }
 
-    public Temperature getOutTemperature() {
-        return outTemperature;
+    public Temperature getOutLetTemperature() {
+        return outLetTemperature;
     }
 
-    public RelativeHumidity getOutRelativeHumidity() {
-        return outRelativeHumidity;
+    public RelativeHumidity getOutletRelativeHumidity() {
+        return outletRelativeHumidity;
     }
 
-    public HumidityRatio getOutHumidityRatio() {
-        return outHumidityRatio;
+    public HumidityRatio getOutletHumidityRatio() {
+        return outletHumidityRatio;
     }
 
-    public SpecificEnthalpy getOutSpecificEnthalpy() {
-        return outSpecificEnthalpy;
-    }
-
-    public DryAirCoolingResult getDryCoolingBulkResult() {
-        return dryCoolingBulkResult;
+    public SpecificEnthalpy getOutletSpecificEnthalpy() {
+        return outletSpecificEnthalpy;
     }
 
     /**
@@ -112,26 +107,26 @@ public class DryCooling {
         return "PROCESS OF DRY COOLING:" + end +
 
                 "INPUT FLOW:" + end +
-                inputInletAir.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_in", digits) + separator +
+                inputInletAir.getVolFlow().toCubicMetersPerHour().toEngineeringFormat("V_in", digits) + separator +
                 inputInletAir.getMassFlow().toEngineeringFormat("G_in", digits) + separator +
-                inputInletAir.dryAirMassFlow().toEngineeringFormat("G_in.da", digits) + end +
+                inputInletAir.getDryAirMassFlow().toEngineeringFormat("G_in.da", digits) + end +
 
                 inputInletAir.getTemperature().toEngineeringFormat("DBT_in", digits) + separator +
-                inputInletAir.relativeHumidity().toEngineeringFormat("RH_in", digits) + separator +
-                inputInletAir.humidityRatio().toEngineeringFormat("x_in", digits) + separator +
+                inputInletAir.getRelativeHumidity().toEngineeringFormat("RH_in", digits) + separator +
+                inputInletAir.getHumidityRatio().toEngineeringFormat("x_in", digits) + separator +
                 inputInletAir.getSpecificEnthalpy().toEngineeringFormat("i_in", digits) + end +
 
                 "HEAT OF PROCESS:" + end +
                 heatOfProcess.toEngineeringFormat("Q_cool", digits) + end +
 
                 "OUTLET FLOW:" + end +
-                outletFlow.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_out", digits) + separator +
+                outletFlow.getVolFlow().toCubicMetersPerHour().toEngineeringFormat("V_out", digits) + separator +
                 outletFlow.getMassFlow().toEngineeringFormat("G_out", digits) + separator +
-                outletFlow.dryAirMassFlow().toEngineeringFormat("G_out.da", digits) + end +
-                outTemperature.toEngineeringFormat("DBT_out", digits) + separator +
-                outRelativeHumidity.toEngineeringFormat("RH_out", digits) + separator +
-                outHumidityRatio.toEngineeringFormat("x_out", digits) + separator +
-                outSpecificEnthalpy.toEngineeringFormat("i_out", digits);
+                outletFlow.getDryAirMassFlow().toEngineeringFormat("G_out.da", digits) + end +
+                outLetTemperature.toEngineeringFormat("DBT_out", digits) + separator +
+                outletRelativeHumidity.toEngineeringFormat("RH_out", digits) + separator +
+                outletHumidityRatio.toEngineeringFormat("x_out", digits) + separator +
+                outletSpecificEnthalpy.toEngineeringFormat("i_out", digits);
     }
 
     @Override
@@ -156,11 +151,11 @@ public class DryCooling {
                 ", heatOfProcess=" + heatOfProcess +
                 ", outletFlow=" + outletFlow +
                 ", outletAir=" + outletAir +
-                ", outPressure=" + outPressure +
-                ", outTemperature=" + outTemperature +
-                ", outRelativeHumidity=" + outRelativeHumidity +
-                ", outHumidityRatio=" + outHumidityRatio +
-                ", outSpecificEnthalpy=" + outSpecificEnthalpy +
+                ", outPressure=" + outletPressure +
+                ", outTemperature=" + outLetTemperature +
+                ", outRelativeHumidity=" + outletRelativeHumidity +
+                ", outHumidityRatio=" + outletHumidityRatio +
+                ", outSpecificEnthalpy=" + outletSpecificEnthalpy +
                 '}';
     }
 

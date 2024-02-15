@@ -31,12 +31,12 @@ record DryCoolingFromTemperature(FlowOfHumidAir inletAir,
         }
 
         // If the target temperature is below dew point temperature, it is certain that this is no longer dry cooling
-        if (outletTemperature.isLowerThan(inletAir.fluid().getDewPointTemperature())) {
+        if (outletTemperature.isLowerThan(inletAir.getFluid().getDewPointTemperature())) {
             return new DryAirCoolingResult(inletAir, Power.ofWatts(0));
         }
 
-        double xIn = inletAir.humidityRatio().getInKilogramPerKilogram();
-        double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double xIn = inletAir.getHumidityRatio().getInKilogramPerKilogram();
+        double mdaIn = inletAir.getDryAirMassFlow().getInKilogramsPerSecond();
         double tOut = outletTemperature.getInCelsius();
         double pIn = inletAir.getPressure().getInPascals();
         double iIn = inletAir.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
@@ -44,7 +44,7 @@ record DryCoolingFromTemperature(FlowOfHumidAir inletAir,
         double qHeat = (mdaIn * i2 - mdaIn * iIn) * 1000d;
         Power requiredHeat = Power.ofWatts(qHeat);
 
-        HumidAir outletHumidAir = HumidAir.of(inletAir.getPressure(), Temperature.ofCelsius(tOut), inletAir.humidityRatio());
+        HumidAir outletHumidAir = HumidAir.of(inletAir.getPressure(), Temperature.ofCelsius(tOut), inletAir.getHumidityRatio());
         FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, MassFlow.ofKilogramsPerSecond(mdaIn));
 
         return new DryAirCoolingResult(outletFlow, requiredHeat);
