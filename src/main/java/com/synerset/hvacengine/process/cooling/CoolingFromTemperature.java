@@ -39,7 +39,7 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
         FlowOfLiquidWater condensateFlow = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(mCond));
         Temperature averageWallTemp = coolantData.getAverageTemperature();
 
-        if (tOut == tIn) {
+        if (tOut == tIn || inletAir.getMassFlow().equalsZero()) {
             return new AirCoolingResult(inletAir, Power.ofWatts(0.0), condensateFlow,
                     CoolingHelpers.coilBypassFactor(averageWallTemp, inletHumidAir.getTemperature(), targetOutTemperature));
         }
