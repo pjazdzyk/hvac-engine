@@ -38,14 +38,14 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         Validators.requireBetweenBoundsInclusive(massFlowHa, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.humidAir = humidAir;
         this.massFlow = massFlowHa;
-        this.volFlow = FlowEquations.massFlowToVolFlow(humidAir.getDensity(), massFlowHa);
+        this.volFlow = FlowEquations.massFlowToVolFlow(humidAir.getDensity(), massFlowHa).toCubicMetersPerHour();
         MassFlow massFlowDa = FlowEquations.massFlowHaToMassFlowDa(humidAir.getHumidityRatio(), massFlowHa);
         this.flowOfDryAir = FlowOfDryAir.of(DryAir.of(humidAir.getTemperature()), massFlowDa);
     }
 
     // Primary properties
     @Override
-    public HumidAir fluid() {
+    public HumidAir getFluid() {
         return humidAir;
     }
 
@@ -55,16 +55,16 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
     }
 
     @Override
-    public VolumetricFlow getVolumetricFlow() {
+    public VolumetricFlow getVolFlow() {
         return volFlow;
     }
 
-    public MassFlow dryAirMassFlow() {
+    public MassFlow getDryAirMassFlow() {
         return flowOfDryAir.getMassFlow();
     }
 
-    public VolumetricFlow dryAirVolumetricFlow() {
-        return flowOfDryAir.getVolumetricFlow();
+    public VolumetricFlow getDryAirVolFlow() {
+        return flowOfDryAir.getVolFlow();
     }
 
     // Secondary properties
@@ -93,23 +93,23 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
         return humidAir.getSpecificEnthalpy();
     }
 
-    public FlowOfDryAir flowOfDryAir() {
+    public FlowOfDryAir getFlowOfDryAir() {
         return flowOfDryAir;
     }
 
-    public HumidityRatio humidityRatio() {
+    public HumidityRatio getHumidityRatio() {
         return humidAir.getHumidityRatio();
     }
 
-    public HumidityRatio maxHumidityRatio() {
+    public HumidityRatio getMaxHumidityRatio() {
         return humidAir.getMaxHumidityRatio();
     }
 
-    public RelativeHumidity relativeHumidity() {
+    public RelativeHumidity getRelativeHumidity() {
         return humidAir.getRelativeHumidity();
     }
 
-    public Pressure saturationPressure() {
+    public Pressure getSaturationPressure() {
         return humidAir.getSaturationPressure();
     }
 
@@ -155,8 +155,8 @@ public class FlowOfHumidAir implements Flow<HumidAir> {
                 massFlow.toKiloGramPerHour().toEngineeringFormat("G", digits) + separator +
                 volFlow.toEngineeringFormat("V", digits) + separator +
                 volFlow.toCubicMetersPerHour().toEngineeringFormat("V", digits) + end +
-                dryAirMassFlow().toEngineeringFormat("G_da", digits) + separator +
-                dryAirMassFlow().toKiloGramPerHour().toEngineeringFormat("G_da", digits) + end +
+                getDryAirMassFlow().toEngineeringFormat("G_da", digits) + separator +
+                getDryAirMassFlow().toKiloGramPerHour().toEngineeringFormat("G_da", digits) + end +
                 humidAir.toConsoleOutput();
     }
 

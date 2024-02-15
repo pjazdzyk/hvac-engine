@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The AirMixingResult record represents the result of a mixing process.
  */
-public record AirMixingResult(FlowOfHumidAir inletFlow,
+record AirMixingResult(FlowOfHumidAir inletFlow,
                               List<FlowOfHumidAir> recirculationFlows,
                               FlowOfHumidAir outletFlow) {
 }

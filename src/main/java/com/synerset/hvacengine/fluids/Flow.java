@@ -16,7 +16,7 @@ public interface Flow<F extends Fluid> {
      *
      * @return The fluid object.
      */
-    F fluid();
+    F getFluid();
 
     /**
      * Get the mass flow rate of the fluid flow.
@@ -30,7 +30,7 @@ public interface Flow<F extends Fluid> {
      *
      * @return The volumetric flow rate in appropriate units.
      */
-    VolumetricFlow getVolumetricFlow();
+    VolumetricFlow getVolFlow();
 
     /**
      * Get the temperature of the fluid flow.
@@ -87,7 +87,7 @@ public interface Flow<F extends Fluid> {
         if (flowOfFluid == null) return false;
         if (this.getClass() != flowOfFluid.getClass()) return false;
 
-        return fluid().isEqualsWithPrecision(flowOfFluid.fluid(), epsilon)
+        return getFluid().isEqualsWithPrecision(flowOfFluid.getFluid(), epsilon)
                 && getMassFlow().equalsWithPrecision(flowOfFluid.getMassFlow(), epsilon);
     }
 }

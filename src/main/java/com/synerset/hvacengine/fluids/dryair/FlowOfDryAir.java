@@ -33,11 +33,11 @@ public class FlowOfDryAir implements Flow<DryAir> {
         Validators.requireBetweenBoundsInclusive(massFlow, MASS_FLOW_MIN_LIMIT, MASS_FLOW_MAX_LIMIT);
         this.dryAir = dryAir;
         this.massFlow = massFlow;
-        this.volFlow = FlowEquations.massFlowToVolFlow(dryAir.getDensity(), massFlow);
+        this.volFlow = FlowEquations.massFlowToVolFlow(dryAir.getDensity(), massFlow).toCubicMetersPerHour();
     }
 
     @Override
-    public DryAir fluid() {
+    public DryAir getFluid() {
         return dryAir;
     }
 
@@ -47,7 +47,7 @@ public class FlowOfDryAir implements Flow<DryAir> {
     }
 
     @Override
-    public VolumetricFlow getVolumetricFlow() {
+    public VolumetricFlow getVolFlow() {
         return volFlow;
     }
 

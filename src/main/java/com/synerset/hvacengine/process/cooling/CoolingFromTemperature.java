@@ -30,7 +30,7 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
     @Override
     public AirCoolingResult applyCooling() {
         // Determining Bypass Factor and direct near-wall contact airflow and bypassing airflow
-        HumidAir inletHumidAir = inletAir.fluid();
+        HumidAir inletHumidAir = inletAir.getFluid();
         double tIn = inletHumidAir.getTemperature().getInCelsius();
         double tOut = targetOutTemperature.getInCelsius();
 
@@ -44,7 +44,7 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
                     CoolingHelpers.coilBypassFactor(averageWallTemp, inletHumidAir.getTemperature(), targetOutTemperature));
         }
 
-        double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double mdaIn = inletAir.getDryAirMassFlow().getInKilogramsPerSecond();
         double xIn = inletHumidAir.getHumidityRatio().getInKilogramPerKilogram();
         double pIn = inletHumidAir.getPressure().getInPascals();
         double tmWall = averageWallTemp.getInCelsius();

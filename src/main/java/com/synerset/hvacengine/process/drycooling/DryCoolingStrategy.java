@@ -60,7 +60,7 @@ public interface DryCoolingStrategy {
 
         if (targetTemperature.isGreaterThan(inletAirFlow.getTemperature())) {
             throw new HvacEngineArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
-                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
+                    + "DBT_in = " + inletAirFlow.getRelativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
 
         return new DryCoolingFromTemperature(inletAirFlow, targetTemperature);

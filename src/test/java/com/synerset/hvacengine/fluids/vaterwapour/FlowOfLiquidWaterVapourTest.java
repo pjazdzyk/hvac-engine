@@ -23,9 +23,9 @@ class FlowOfLiquidWaterVapourTest {
 
         // When
         FlowOfWaterVapour flowOfWaterVapour = FlowOfWaterVapour.of(SAMPLE_WATER_VAPOUR, MassFlow.ofKilogramsPerSecond(SAMPLE_MASS_FLOW_RATE));
-        WaterVapour waterVapour = flowOfWaterVapour.fluid();
+        WaterVapour waterVapour = flowOfWaterVapour.getFluid();
         double actualMassFlow = flowOfWaterVapour.getMassFlow().getInKilogramsPerSecond();
-        double actualVolFlow = flowOfWaterVapour.getVolumetricFlow().getInCubicMetersPerSecond();
+        double actualVolFlow = flowOfWaterVapour.getVolFlow().getInCubicMetersPerSecond();
 
         // Then
         assertThat(actualMassFlow).isEqualTo(SAMPLE_MASS_FLOW_RATE);

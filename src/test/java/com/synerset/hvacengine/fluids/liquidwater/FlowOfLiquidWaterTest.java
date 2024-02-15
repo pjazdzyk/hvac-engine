@@ -21,9 +21,9 @@ class FlowOfLiquidWaterTest {
 
         // When
         FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(SAMPLE_WATER, MassFlow.ofKilogramsPerSecond(SAMPLE_MASS_FLOW_RATE));
-        LiquidWater water = flowOfLiquidWater.fluid();
+        LiquidWater water = flowOfLiquidWater.getFluid();
         double actualMassFlow = flowOfLiquidWater.getMassFlow().getInKilogramsPerSecond();
-        double actualVolFlow = flowOfLiquidWater.getVolumetricFlow().getInCubicMetersPerSecond();
+        double actualVolFlow = flowOfLiquidWater.getVolFlow().getInCubicMetersPerSecond();
 
         // Then
         assertThat(actualMassFlow).isEqualTo(SAMPLE_MASS_FLOW_RATE);
