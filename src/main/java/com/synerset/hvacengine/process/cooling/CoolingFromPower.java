@@ -26,7 +26,7 @@ record CoolingFromPower(FlowOfHumidAir inletAir,
     @Override
     public AirCoolingResult applyCooling() {
 
-        if (inputPower.equalsZero()) {
+        if (inputPower.equalsZero() || inletAir.getMassFlow().equalsZero()) {
             LiquidWater liquidWater = LiquidWater.of(inletAir.getTemperature());
             FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(0.0));
             new AirCoolingResult(inletAir, inputPower, flowOfLiquidWater,

@@ -26,7 +26,7 @@ record DryCoolingFromTemperature(FlowOfHumidAir inletAir,
     public DryAirCoolingResult applyDryCooling() {
 
         // The Target temperature must be lower than inlet temperature for a valid cooling case.
-        if (outletTemperature.equalsOrGreaterThan(inletAir.getTemperature())) {
+        if (outletTemperature.equalsOrGreaterThan(inletAir.getTemperature()) || inletAir.getMassFlow().equalsZero()) {
             return new DryAirCoolingResult(inletAir, Power.ofWatts(0));
         }
 

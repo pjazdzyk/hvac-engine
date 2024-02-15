@@ -21,7 +21,7 @@ record HeatingFromRH(FlowOfHumidAir inletAir,
     @Override
     public AirHeatingResult applyHeating() {
 
-        if (inletAir.getRelativeHumidity().equals(targetRelativeHumidity)) {
+        if (inletAir.getRelativeHumidity().equals(targetRelativeHumidity) || inletAir.getMassFlow().equalsZero()) {
             return new AirHeatingResult(inletAir, Power.ofWatts(0));
         }
 
