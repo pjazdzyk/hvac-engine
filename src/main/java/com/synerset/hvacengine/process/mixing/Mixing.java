@@ -22,12 +22,11 @@ public class Mixing {
     private final FlowOfHumidAir inputInletAir;
     private FlowOfHumidAir outletFlow;
     private HumidAir outletAir;
-    private Pressure outPressure;
-    private Temperature outTemperature;
-    private RelativeHumidity outRelativeHumidity;
-    private HumidityRatio outHumidityRatio;
-    private SpecificEnthalpy outSpecificEnthalpy;
-    private AirMixingResult airMixingBulkResult;
+    private Pressure outletPressure;
+    private Temperature outletTemperature;
+    private RelativeHumidity outletRelativeHumidity;
+    private HumidityRatio outletHumidityRatio;
+    private SpecificEnthalpy outletSpecificEnthalpy;
 
     /**
      * Constructs a Mixing instance with the specified MixingStrategy.
@@ -42,14 +41,14 @@ public class Mixing {
     }
 
     private void applyProcess() {
-        airMixingBulkResult = mixingStrategy.applyMixing();
+        AirMixingResult airMixingBulkResult = mixingStrategy.applyMixing();
         outletFlow = airMixingBulkResult.outletFlow();
-        outPressure = outletFlow.getPressure();
-        outletAir = outletFlow.fluid();
-        outTemperature = outletFlow.getTemperature();
-        outRelativeHumidity = outletFlow.relativeHumidity();
-        outHumidityRatio = outletFlow.humidityRatio();
-        outSpecificEnthalpy = outletFlow.getSpecificEnthalpy();
+        outletPressure = outletFlow.getPressure();
+        outletAir = outletFlow.getFluid();
+        outletTemperature = outletFlow.getTemperature();
+        outletRelativeHumidity = outletFlow.getRelativeHumidity();
+        outletHumidityRatio = outletFlow.getHumidityRatio();
+        outletSpecificEnthalpy = outletFlow.getSpecificEnthalpy();
     }
 
     public MixingStrategy getMixingStrategy() {
@@ -68,28 +67,24 @@ public class Mixing {
         return outletAir;
     }
 
-    public Pressure getOutPressure() {
-        return outPressure;
+    public Pressure getOutletPressure() {
+        return outletPressure;
     }
 
-    public Temperature getOutTemperature() {
-        return outTemperature;
+    public Temperature getOutletTemperature() {
+        return outletTemperature;
     }
 
-    public RelativeHumidity getOutRelativeHumidity() {
-        return outRelativeHumidity;
+    public RelativeHumidity getOutletRelativeHumidity() {
+        return outletRelativeHumidity;
     }
 
-    public HumidityRatio getOutHumidityRatio() {
-        return outHumidityRatio;
+    public HumidityRatio getOutletHumidityRatio() {
+        return outletHumidityRatio;
     }
 
-    public SpecificEnthalpy getOutSpecificEnthalpy() {
-        return outSpecificEnthalpy;
-    }
-
-    public AirMixingResult getAirMixingBulkResult() {
-        return airMixingBulkResult;
+    public SpecificEnthalpy getOutletSpecificEnthalpy() {
+        return outletSpecificEnthalpy;
     }
 
     /**
@@ -119,12 +114,12 @@ public class Mixing {
         String end = "\n\t";
         int digits = 3;
         return title + end +
-                flowOfAir.getVolumetricFlow().toCubicMetersPerHour().toEngineeringFormat("V_" + suffix, digits) + separator +
+                flowOfAir.getVolFlow().toCubicMetersPerHour().toEngineeringFormat("V_" + suffix, digits) + separator +
                 flowOfAir.getMassFlow().toEngineeringFormat("G_" + suffix, digits) + separator +
-                flowOfAir.dryAirMassFlow().toEngineeringFormat("G_" + suffix + ".da", digits) + end +
+                flowOfAir.getDryAirMassFlow().toEngineeringFormat("G_" + suffix + ".da", digits) + end +
                 flowOfAir.getTemperature().toEngineeringFormat("DBT_" + suffix, digits) + separator +
-                flowOfAir.relativeHumidity().toEngineeringFormat("RH_" + suffix, digits) + separator +
-                flowOfAir.humidityRatio().toEngineeringFormat("x_" + suffix, digits) + separator +
+                flowOfAir.getRelativeHumidity().toEngineeringFormat("RH_" + suffix, digits) + separator +
+                flowOfAir.getHumidityRatio().toEngineeringFormat("x_" + suffix, digits) + separator +
                 flowOfAir.getSpecificEnthalpy().toEngineeringFormat("i_" + suffix, digits);
     }
 
@@ -146,10 +141,10 @@ public class Mixing {
         return "Heating{" +
                 "inputInletAir=" + inputInletAir +
                 ", outletFlow=" + outletFlow +
-                ", outletTemperature=" + outTemperature +
-                ", outletRelativeHumidity=" + outRelativeHumidity +
-                ", outletHumidityRatio=" + outHumidityRatio +
-                ", specificEnthalpy=" + outSpecificEnthalpy +
+                ", outletTemperature=" + outletTemperature +
+                ", outletRelativeHumidity=" + outletRelativeHumidity +
+                ", outletHumidityRatio=" + outletHumidityRatio +
+                ", specificEnthalpy=" + outletSpecificEnthalpy +
                 '}';
     }
 

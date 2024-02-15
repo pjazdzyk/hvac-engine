@@ -2,8 +2,6 @@ package com.synerset.hvacengine.process.cooling;
 
 import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.hvacengine.fluids.humidair.HumidAir;
-import com.synerset.hvacengine.process.drycooling.DryAirCoolingResult;
-import com.synerset.hvacengine.process.drycooling.DryCoolingStrategy;
 import com.synerset.unitility.unitsystem.dimensionless.BypassFactor;
 import com.synerset.unitility.unitsystem.flow.MassFlow;
 import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
@@ -34,50 +32,6 @@ class AirCoolingStrategiesTest {
         inletFlow = FlowOfHumidAir.ofDryAirMassFlow(inputAir, MassFlow.ofKilogramsPerSecond(1.0));
     }
 
-    // DRY COOLING
-    @Test
-    @DisplayName("should cool down air without humidity ratio change and without condensate discharge when target output temperature is given")
-    void processOfDryCooling_shouldCoolDownAirWithoutCondensateDischarge_whenTargetOutputTempIsGiven() {
-        // Given
-        Temperature expectedOutAirTemp = Temperature.ofCelsius(25.0);
-
-        HumidityRatio expectedOutHumRatio = inletFlow.humidityRatio();
-        Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
-
-        // When
-        DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedOutAirTemp).applyDryCooling();
-        Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
-        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
-
-        // Then
-        assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
-        assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
-        assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
-    }
-
-    @Test
-    @DisplayName("should cool down air without humidity ratio change and without condensate discharge when target output cooling power is given")
-    void processOfDryCooling_shouldCoolDownAirWithoutCondensateDischarge_whenTargetOutputCoolingPowerIsGiven() {
-        // Given
-        Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
-
-        Temperature expectedOutAirTemp = Temperature.ofCelsius(25.0);
-        HumidityRatio expectedOutHumRatio = inletFlow.humidityRatio();
-        MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0);
-
-        // When
-        DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedHeatOfProcess).applyDryCooling();
-        Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
-        Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
-        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
-
-        // Then
-        assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
-        assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
-        assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
-    }
-
     // REAL COOLING
     @Test
     @DisplayName("should cool down inlet air when target outlet temperature and average wall temperature of cooling coil is given")
@@ -93,7 +47,7 @@ class AirCoolingStrategiesTest {
         AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedOutAirTemp).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
-        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
+        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().getHumidityRatio();
         Temperature actualCondensateTemp = airCoolingResult.condensateFlow().getTemperature();
         MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().getMassFlow();
 
@@ -120,8 +74,8 @@ class AirCoolingStrategiesTest {
         AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedRelativeHumidity).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
-        RelativeHumidity actualRelativeHumidity = airCoolingResult.outletFlow().relativeHumidity();
-        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
+        RelativeHumidity actualRelativeHumidity = airCoolingResult.outletFlow().getRelativeHumidity();
+        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().getHumidityRatio();
         Temperature actualCondensateTemp = airCoolingResult.condensateFlow().getTemperature();
         MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().getMassFlow();
 
@@ -148,7 +102,7 @@ class AirCoolingStrategiesTest {
         AirCoolingResult airCoolingResult = CoolingStrategy.of(inletFlow, COOLANT_DATA, expectedHeatOfProcess).applyCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
-        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
+        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().getHumidityRatio();
         Temperature actualCondensateTemp = airCoolingResult.condensateFlow().getTemperature();
         MassFlow actualCondensateFlow = airCoolingResult.condensateFlow().getMassFlow();
 

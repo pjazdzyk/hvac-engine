@@ -27,7 +27,7 @@ public class FlowOfWaterVapour implements Flow<WaterVapour> {
     }
 
     @Override
-    public WaterVapour fluid() {
+    public WaterVapour getFluid() {
         return waterVapour;
     }
 
@@ -37,7 +37,7 @@ public class FlowOfWaterVapour implements Flow<WaterVapour> {
     }
 
     @Override
-    public VolumetricFlow getVolumetricFlow() {
+    public VolumetricFlow getVolFlow() {
         return volFlow;
     }
 

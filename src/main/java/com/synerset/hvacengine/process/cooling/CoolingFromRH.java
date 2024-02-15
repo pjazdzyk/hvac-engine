@@ -32,7 +32,7 @@ record CoolingFromRH(FlowOfHumidAir inletAir,
 
         Temperature averageWallTemp = coolantData.getAverageTemperature();
 
-        if (inletAir.relativeHumidity().equals(targetRelativeHumidity)) {
+        if (inletAir.getRelativeHumidity().equals(targetRelativeHumidity)) {
             LiquidWater liquidWater = LiquidWater.of(inletAir.getTemperature());
             FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(0.0));
             BypassFactor bypassFactor = CoolingHelpers.coilBypassFactor(averageWallTemp, inletAir.getTemperature(), inletAir.getTemperature());
@@ -45,18 +45,19 @@ record CoolingFromRH(FlowOfHumidAir inletAir,
         double tdpIn = inletAir.getTemperature().getInCelsius();
         solver.setCounterpartPoints(tIn, tdpIn);
         double rhOut = targetRelativeHumidity.getInPercent();
-        Cooling[] coolingResults = new Cooling[1];
+        AirCoolingResult[] coolingResults = new AirCoolingResult[1];
 
         solver.calcForFunction(testOutTx -> {
-            Cooling tempCooling = Cooling.of(CoolingStrategy.of(inletAir, coolantData, Temperature.ofCelsius(testOutTx)));
-            coolingResults[0] = tempCooling;
-            double outTx = tempCooling.getOutTemperature().getInCelsius();
-            double outX = tempCooling.getOutHumidityRatio().getInKilogramPerKilogram();
+            AirCoolingResult airCoolingResult = CoolingStrategy.of(inletAir, coolantData, Temperature.ofCelsius(testOutTx)).applyCooling();
+            coolingResults[0] = airCoolingResult;
+            FlowOfHumidAir outletFlow = airCoolingResult.outletFlow();
+            double outTx = outletFlow.getTemperature().getInCelsius();
+            double outX = outletFlow.getHumidityRatio().getInKilogramPerKilogram();
             double actualRH = HumidAirEquations.relativeHumidity(outTx, outX, pIn);
             return rhOut - actualRH;
         });
 
-        return coolingResults[0].getCoolingBulkResults();
+        return coolingResults[0];
     }
 
 }

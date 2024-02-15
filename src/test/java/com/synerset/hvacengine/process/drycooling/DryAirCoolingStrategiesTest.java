@@ -36,14 +36,14 @@ class DryAirCoolingStrategiesTest {
         // Given
         Temperature expectedOutAirTemp = Temperature.ofCelsius(25.0);
 
-        HumidityRatio expectedOutHumRatio = inletFlow.humidityRatio();
+        HumidityRatio expectedOutHumRatio = inletFlow.getHumidityRatio();
         Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
 
         // When
         DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedOutAirTemp).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
-        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
+        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().getHumidityRatio();
 
         // Then
         assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
@@ -58,19 +58,19 @@ class DryAirCoolingStrategiesTest {
         Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
 
         Temperature expectedOutAirTemp = Temperature.ofCelsius(25.0);
-        HumidityRatio expectedOutHumRatio = inletFlow.humidityRatio();
+        HumidityRatio expectedOutHumRatio = inletFlow.getHumidityRatio();
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0);
 
         // When
         DryAirCoolingResult airCoolingResult = DryCoolingStrategy.of(inletFlow, expectedHeatOfProcess).applyDryCooling();
         Power actualHeatOfProcess = airCoolingResult.heatOfProcess();
         Temperature actualOutAirTemp = airCoolingResult.outletFlow().getTemperature();
-        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().humidityRatio();
+        HumidityRatio actualHumRatio = airCoolingResult.outletFlow().getHumidityRatio();
 
         // Then
         assertThat(actualHumRatio).isEqualTo(expectedOutHumRatio);
         assertThat(actualOutAirTemp).isEqualTo(expectedOutAirTemp);
         assertThat(actualHeatOfProcess).isEqualTo(expectedHeatOfProcess);
+        assertThat(expectedCondensateFlow).isEqualTo(MassFlow.ofKilogramsPerSecond(0));
     }
-
 }

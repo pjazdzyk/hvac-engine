@@ -25,15 +25,15 @@ record MixingOfMultipleFlows(FlowOfHumidAir inletAir,
 
     @Override
     public AirMixingResult applyMixing() {
-        double mdaOut = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double xMda = mdaOut * inletAir.humidityRatio().getInKilogramPerKilogram();
+        double mdaOut = inletAir.getDryAirMassFlow().getInKilogramsPerSecond();
+        double xMda = mdaOut * inletAir.getHumidityRatio().getInKilogramPerKilogram();
         double iMda = mdaOut * inletAir.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
         double pOut = inletAir.getPressure().getInPascals();
 
         for (FlowOfHumidAir flow : recirculationAirFlows) {
-            mdaOut += flow.dryAirMassFlow().getInKilogramsPerSecond();
-            xMda += flow.dryAirMassFlow().getInKilogramsPerSecond() * flow.fluid().getHumidityRatio().getInKilogramPerKilogram();
-            iMda += flow.dryAirMassFlow().getInKilogramsPerSecond() * flow.fluid().getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
+            mdaOut += flow.getDryAirMassFlow().getInKilogramsPerSecond();
+            xMda += flow.getDryAirMassFlow().getInKilogramsPerSecond() * flow.getFluid().getHumidityRatio().getInKilogramPerKilogram();
+            iMda += flow.getDryAirMassFlow().getInKilogramsPerSecond() * flow.getFluid().getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
             pOut = Double.max(pOut, flow.getPressure().getInPascals());
         }
 

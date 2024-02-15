@@ -6,6 +6,6 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 /**
  * Represents the result of an air dry cooling process.
  */
-public record DryAirCoolingResult(FlowOfHumidAir outletFlow,
+record DryAirCoolingResult(FlowOfHumidAir outletFlow,
                                   Power heatOfProcess) {
 }

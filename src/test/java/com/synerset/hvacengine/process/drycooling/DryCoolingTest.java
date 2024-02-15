@@ -46,11 +46,11 @@ class DryCoolingTest {
         assertThat(cooling.getInputInletAir()).isEqualTo(inletAir);
         assertThat(cooling.getHeatOfProcess().getInWatts()).isEqualTo(expectedPower.getInWatts(), withPrecision(1E-1));
         assertThat(cooling.getDryCoolingStrategy()).isEqualTo(dryCoolingStrategy);
-        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.getPressure());
-        assertThat(cooling.getOutTemperature().getInCelsius()).isEqualTo(targetTemperature.getInCelsius(), withPrecision(3.5E-2));
-        assertThat(cooling.getOutRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1.5E-2));
-        SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
-        assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
+        assertThat(cooling.getOutletPressure()).isEqualTo(humidAir.getPressure());
+        assertThat(cooling.getOutLetTemperature().getInCelsius()).isEqualTo(targetTemperature.getInCelsius(), withPrecision(3.5E-2));
+        assertThat(cooling.getOutletRelativeHumidity().getInPercent()).isEqualTo(expectedRH.getInPercent(), withPrecision(1.5E-2));
+        SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutLetTemperature(), cooling.getOutletHumidityRatio(), cooling.getOutletPressure());
+        assertThat(cooling.getOutletSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
     }
 
 
@@ -80,11 +80,11 @@ class DryCoolingTest {
         assertThat(cooling.getInputInletAir()).isEqualTo(inletAir);
         assertThat(cooling.getHeatOfProcess()).isEqualTo(inputPower);
         assertThat(cooling.getDryCoolingStrategy()).isEqualTo(dryCoolingStrategy);
-        assertThat(cooling.getOutPressure()).isEqualTo(humidAir.getPressure());
-        assertThat(cooling.getOutTemperature().getValue()).isEqualTo(expectedTemperature.getValue(), withPrecision(3.5E-2));
-        assertThat(cooling.getOutRelativeHumidity().getValue()).isEqualTo(expectedRH.getValue(), withPrecision(1E-2));
-        SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutTemperature(), cooling.getOutHumidityRatio(), cooling.getOutPressure());
-        assertThat(cooling.getOutSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
+        assertThat(cooling.getOutletPressure()).isEqualTo(humidAir.getPressure());
+        assertThat(cooling.getOutLetTemperature().getValue()).isEqualTo(expectedTemperature.getValue(), withPrecision(3.5E-2));
+        assertThat(cooling.getOutletRelativeHumidity().getValue()).isEqualTo(expectedRH.getValue(), withPrecision(1E-2));
+        SpecificEnthalpy expectedEnthalpy = HumidAirEquations.specificEnthalpy(cooling.getOutLetTemperature(), cooling.getOutletHumidityRatio(), cooling.getOutletPressure());
+        assertThat(cooling.getOutletSpecificEnthalpy()).isEqualTo(expectedEnthalpy);
     }
 
 

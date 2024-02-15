@@ -25,9 +25,9 @@ record HeatingFromTemperature(FlowOfHumidAir inletAir,
             return new AirHeatingResult(inletAir, Power.ofWatts(0));
         }
 
-        HumidAir inletHumidAir = inletAir.fluid();
+        HumidAir inletHumidAir = inletAir.getFluid();
         double xIn = inletHumidAir.getHumidityRatio().getInKilogramPerKilogram();
-        double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
+        double mdaIn = inletAir.getDryAirMassFlow().getInKilogramsPerSecond();
         double tOut = targetTemperature.getInCelsius();
 
         double pIn = inletHumidAir.getPressure().getInPascals();
@@ -39,7 +39,7 @@ record HeatingFromTemperature(FlowOfHumidAir inletAir,
         HumidAir outletHumidAir = HumidAir.of(
                 inletAir.getPressure(),
                 Temperature.ofCelsius(tOut),
-                inletAir.humidityRatio()
+                inletAir.getHumidityRatio()
         );
         FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(
                 outletHumidAir,

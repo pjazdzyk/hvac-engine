@@ -36,18 +36,18 @@ record CoolingFromPower(FlowOfHumidAir inletAir,
         // For the provided inputHeat, maximum possible cooling will occur for completely dry air, where no energy will be used for condensate discharge
         DryCooling dryCooling = DryCooling.of(DryCoolingStrategy.of(inletAir, inputPower));
         double tmin = inletAir.getTemperature().getInCelsius();
-        double tmax = dryCooling.getOutTemperature().getInCelsius();
+        double tmax = dryCooling.getOutLetTemperature().getInCelsius();
         BrentSolver solver = new BrentSolver("[CoolingFromPower]");
         solver.setCounterpartPoints(tmin, tmax);
-        Cooling[] coolingResults = new Cooling[1];
+        AirCoolingResult[] coolingResults = new AirCoolingResult[1];
         solver.calcForFunction(outTemp -> {
-            Cooling tempCooling = Cooling.of(CoolingStrategy.of(inletAir, coolantData, Temperature.ofCelsius(outTemp)));
-            coolingResults[0] = tempCooling;
-            Power calculatedQ = tempCooling.getHeatOfProcess();
+            AirCoolingResult airCoolingResult = CoolingStrategy.of(inletAir, coolantData, Temperature.ofCelsius(outTemp)).applyCooling();
+            coolingResults[0] = airCoolingResult;
+            Power calculatedQ = airCoolingResult.heatOfProcess();
             return calculatedQ.getInWatts() - inputPower.getInWatts();
         });
 
-        return coolingResults[0].getCoolingBulkResults();
+        return coolingResults[0];
     }
 
 }

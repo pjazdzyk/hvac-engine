@@ -24,8 +24,8 @@ record MixingOfTwoFlows(FlowOfHumidAir inletAir,
 
     @Override
     public AirMixingResult applyMixing() {
-        double mdaIn = inletAir.dryAirMassFlow().getInKilogramsPerSecond();
-        double mdaRec = recirculationAirFlow.dryAirMassFlow().getInKilogramsPerSecond();
+        double mdaIn = inletAir.getDryAirMassFlow().getInKilogramsPerSecond();
+        double mdaRec = recirculationAirFlow.getDryAirMassFlow().getInKilogramsPerSecond();
         double mdaOut = mdaIn + mdaRec;
 
         if (mdaIn == 0.0) {
@@ -36,8 +36,8 @@ record MixingOfTwoFlows(FlowOfHumidAir inletAir,
             return new AirMixingResult(inletAir, recirculationAirFlows(), inletAir);
         }
 
-        double xIn = inletAir.humidityRatio().getInKilogramPerKilogram();
-        double xRec = recirculationAirFlow.humidityRatio().getInKilogramPerKilogram();
+        double xIn = inletAir.getHumidityRatio().getInKilogramPerKilogram();
+        double xRec = recirculationAirFlow.getHumidityRatio().getInKilogramPerKilogram();
         double pIn = inletAir.getPressure().getInPascals();
         double iIn = inletAir.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
         double iRec = recirculationAirFlow.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();

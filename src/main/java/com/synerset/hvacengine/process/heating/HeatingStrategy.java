@@ -49,7 +49,7 @@ public interface HeatingStrategy {
 
         // Mox heating power estimate to reach t_max: Qheat.max= G * (imax - i_in)
         Temperature tMax = HumidAirEquations.dryBulbTemperatureMax(inletAirFlow.getPressure()).multiply(0.98);
-        SpecificEnthalpy iMax = HumidAirEquations.specificEnthalpy(tMax, inletAirFlow.humidityRatio(),
+        SpecificEnthalpy iMax = HumidAirEquations.specificEnthalpy(tMax, inletAirFlow.getHumidityRatio(),
                 inletAirFlow.getPressure());
         double qMax = iMax.minus(inletAirFlow.getSpecificEnthalpy())
                 .multiply(inletAirFlow.getMassFlow().toKilogramsPerSecond());
@@ -73,9 +73,9 @@ public interface HeatingStrategy {
         Validators.requireNotNull(inletAirFlow);
         Validators.requireNotNull(targetRelativeHumidity);
         Validators.requireBetweenBoundsInclusive(targetRelativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.ofPercentage(98));
-        if (targetRelativeHumidity.isGreaterThan(inletAirFlow.relativeHumidity())) {
+        if (targetRelativeHumidity.isGreaterThan(inletAirFlow.getRelativeHumidity())) {
             throw new HvacEngineArgumentException("Heating process cannot increase relative humidity. "
-                    + "RH_in = " + inletAirFlow.relativeHumidity() + " RH_target = " + targetRelativeHumidity);
+                    + "RH_in = " + inletAirFlow.getRelativeHumidity() + " RH_target = " + targetRelativeHumidity);
         }
         return new HeatingFromRH(inletAirFlow, targetRelativeHumidity);
     }
@@ -94,7 +94,7 @@ public interface HeatingStrategy {
         Validators.requireBelowUpperBoundInclusive(targetTemperature, HumidAir.TEMPERATURE_MAX_LIMIT);
         if (targetTemperature.isLowerThan(inletAirFlow.getTemperature())) {
             throw new HvacEngineArgumentException("Expected outlet temperature must be greater than inlet for cooling process. "
-                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
+                    + "DBT_in = " + inletAirFlow.getRelativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
         return new HeatingFromTemperature(inletAirFlow, targetTemperature);
     }

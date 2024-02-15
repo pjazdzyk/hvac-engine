@@ -39,7 +39,7 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
     }
 
     @Override
-    public LiquidWater fluid() {
+    public LiquidWater getFluid() {
         return liquidWater;
     }
 
@@ -49,7 +49,7 @@ public class FlowOfLiquidWater implements Flow<LiquidWater> {
     }
 
     @Override
-    public VolumetricFlow getVolumetricFlow() {
+    public VolumetricFlow getVolFlow() {
         return volFlow;
     }
 

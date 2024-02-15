@@ -77,9 +77,9 @@ public interface CoolingStrategy {
         Validators.requireNotNull(inletCoolantData);
         Validators.requireNotNull(targetRelativeHumidity);
         Validators.requireBetweenBoundsInclusive(targetRelativeHumidity, RelativeHumidity.RH_MIN_LIMIT, RelativeHumidity.ofPercentage(98));
-        if (targetRelativeHumidity.isLowerThan(inletAirFlow.relativeHumidity())) {
+        if (targetRelativeHumidity.isLowerThan(inletAirFlow.getRelativeHumidity())) {
             throw new HvacEngineArgumentException("Cooling process cannot decrease relative humidity. "
-                    + "RH_in = " + inletAirFlow.relativeHumidity() + " RH_target = " + targetRelativeHumidity);
+                    + "RH_in = " + inletAirFlow.getRelativeHumidity() + " RH_target = " + targetRelativeHumidity);
         }
         return new CoolingFromRH(inletAirFlow, inletCoolantData, targetRelativeHumidity);
     }
@@ -100,7 +100,7 @@ public interface CoolingStrategy {
         Validators.requireAboveLowerBound(targetTemperature, Temperature.ofCelsius(0));
         if (targetTemperature.isGreaterThan(inletAirFlow.getTemperature())) {
             throw new HvacEngineArgumentException("Expected outlet temperature must be lower than inlet for cooling process. "
-                    + "DBT_in = " + inletAirFlow.relativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
+                    + "DBT_in = " + inletAirFlow.getRelativeHumidity() + " DBT_target = " + inletAirFlow.getTemperature());
         }
         return new CoolingFromTemperature(inletAirFlow, inletCoolantData, targetTemperature);
     }

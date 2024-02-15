@@ -21,9 +21,9 @@ class FlowOfDryAirTest {
 
         // When
         FlowOfDryAir flowOfDryAir = FlowOfDryAir.of(SAMPLE_AIR, MassFlow.ofKilogramsPerSecond(SAMPLE_MASS_FLOW_RATE));
-        DryAir dryAir = flowOfDryAir.fluid();
+        DryAir dryAir = flowOfDryAir.getFluid();
         double actualMassFlow = flowOfDryAir.getMassFlow().getInKilogramsPerSecond();
-        double actualVolFlow = flowOfDryAir.getVolumetricFlow().getInCubicMetersPerSecond();
+        double actualVolFlow = flowOfDryAir.getVolFlow().getInCubicMetersPerSecond();
 
         // Then
         assertThat(actualMassFlow).isEqualTo(SAMPLE_MASS_FLOW_RATE);
