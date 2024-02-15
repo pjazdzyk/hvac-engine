@@ -32,7 +32,7 @@ record CoolingFromRH(FlowOfHumidAir inletAir,
 
         Temperature averageWallTemp = coolantData.getAverageTemperature();
 
-        if (inletAir.getRelativeHumidity().equals(targetRelativeHumidity)) {
+        if (inletAir.getRelativeHumidity().equals(targetRelativeHumidity) || inletAir.getMassFlow().equalsZero()) {
             LiquidWater liquidWater = LiquidWater.of(inletAir.getTemperature());
             FlowOfLiquidWater flowOfLiquidWater = FlowOfLiquidWater.of(liquidWater, MassFlow.ofKilogramsPerSecond(0.0));
             BypassFactor bypassFactor = CoolingHelpers.coilBypassFactor(averageWallTemp, inletAir.getTemperature(), inletAir.getTemperature());

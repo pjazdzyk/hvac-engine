@@ -21,7 +21,7 @@ record HeatingFromTemperature(FlowOfHumidAir inletAir,
     @Override
     public AirHeatingResult applyHeating() {
 
-        if (inletAir.getTemperature().equals(targetTemperature)) {
+        if (inletAir.getTemperature().equals(targetTemperature) || inletAir.getMassFlow().equalsZero()) {
             return new AirHeatingResult(inletAir, Power.ofWatts(0));
         }
 
