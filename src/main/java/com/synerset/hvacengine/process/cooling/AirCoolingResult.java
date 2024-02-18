@@ -8,7 +8,7 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 /**
  * Represents the result of an air cooling process.
  */
-record AirCoolingResult(FlowOfHumidAir outletFlow,
+public record AirCoolingResult(FlowOfHumidAir outletFlow,
                                Power heatOfProcess,
                                FlowOfLiquidWater condensateFlow,
                                BypassFactor bypassFactor) {

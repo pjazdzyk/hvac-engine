@@ -6,6 +6,6 @@ import com.synerset.unitility.unitsystem.thermodynamic.Power;
 /**
  * Represents the result of an air heating process.
  */
-record AirHeatingResult(FlowOfHumidAir outletFlow,
+public record AirHeatingResult(FlowOfHumidAir outletFlow,
                                Power heatOfProcess) {
 }
