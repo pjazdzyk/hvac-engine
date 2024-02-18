@@ -10,13 +10,13 @@ import com.synerset.unitility.unitsystem.humidity.HumidityRatio;
 import com.synerset.unitility.unitsystem.thermodynamic.Pressure;
 import com.synerset.unitility.unitsystem.thermodynamic.Temperature;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Represents strategy implementation of mixing of multiple humid air flows.
  */
 record MixingOfMultipleFlows(FlowOfHumidAir inletAir,
-                             List<FlowOfHumidAir> recirculationAirFlows) implements MixingStrategy {
+                             Collection<FlowOfHumidAir> recirculationAirFlows) implements MixingStrategy {
 
     MixingOfMultipleFlows {
         Validators.requireNotNull(inletAir);

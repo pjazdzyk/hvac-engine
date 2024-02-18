@@ -96,7 +96,7 @@ public class Mixing {
     public String toConsoleOutput() {
         String end = "\n\t";
         StringBuilder stringBuilder = new StringBuilder();
-        List<FlowOfHumidAir> recirculationFlows = mixingStrategy.recirculationAirFlows();
+        List<FlowOfHumidAir> recirculationFlows = mixingStrategy.recirculationAirFlows().stream().toList();
         for (int i = 0; i < recirculationFlows.size(); i++) {
             String flowAsString = toConsoleOutputGenericForFlow(recirculationFlows.get(i), "RECIRCULATION AIR_" + i + ":", "rec_" + i);
             stringBuilder.append(flowAsString).append(end);

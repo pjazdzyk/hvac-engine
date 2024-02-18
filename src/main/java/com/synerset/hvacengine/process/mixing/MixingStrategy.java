@@ -5,7 +5,7 @@ import com.synerset.hvacengine.fluids.humidair.FlowOfHumidAir;
 import com.synerset.unitility.unitsystem.flow.MassFlow;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * The MixingStrategy interface defines methods for mixing multiple flows of humid air.
@@ -33,7 +33,7 @@ public interface MixingStrategy {
      *
      * @return A list of FlowOfHumidAir objects representing the properties of recirculation air flows.
      */
-    List<FlowOfHumidAir> recirculationAirFlows();
+    Collection<FlowOfHumidAir> recirculationAirFlows();
 
     /**
      * Create a MixingStrategy instance based on the specified input parameters representing multiple recirculation air flows.
@@ -43,7 +43,7 @@ public interface MixingStrategy {
      * @return A MixingStrategy instance for mixing with multiple recirculation air flows.
      * @throws IllegalArgumentException If the input parameters are invalid.
      */
-    static MixingStrategy of(FlowOfHumidAir inletAir, List<FlowOfHumidAir> recirculationAirFlows) {
+    static MixingStrategy of(FlowOfHumidAir inletAir, Collection<FlowOfHumidAir> recirculationAirFlows) {
         Validators.requireNotNull(inletAir);
         Validators.requireNotEmpty(recirculationAirFlows);
         MassFlow totalMassFlow = sumOfAllFlows(recirculationAirFlows).plus(inletAir.getMassFlow());
@@ -79,7 +79,7 @@ public interface MixingStrategy {
         return new MixingOfTwoFlows(inletAir, recirculationAirFlow);
     }
 
-    private static MassFlow sumOfAllFlows(List<FlowOfHumidAir> airFlows) {
+    private static MassFlow sumOfAllFlows(Collection<FlowOfHumidAir> airFlows) {
         MassFlow resultingFlow = MassFlow.ofKilogramsPerSecond(0);
         for (FlowOfHumidAir flow : airFlows) {
             resultingFlow = resultingFlow.plus(flow.getMassFlow());
