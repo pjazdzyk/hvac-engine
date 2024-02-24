@@ -46,4 +46,8 @@ public class CoolantData {
         return new CoolantData(supplyTemperature, returnTemperature);
     }
 
+    public static CoolantData ofValues(double supplyTemperatureInC, double returnTemperatureInC) {
+        return new CoolantData(Temperature.ofCelsius(supplyTemperatureInC), Temperature.ofCelsius(returnTemperatureInC));
+    }
+
 }

@@ -28,13 +28,13 @@ public final class Validators {
     }
 
     public static <K extends Unit> void requireAboveLowerBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> lowerBoundLimit) {
-        if (quantityToCheck.equalsOrLowerThan(lowerBoundLimit)) {
+        if (quantityToCheck.isEqualOrLowerThan(lowerBoundLimit)) {
             throw new HvacEngineArgumentException(String.format("Lower bound limit exceeded. Actual: %s, limit: %s", quantityToCheck, lowerBoundLimit));
         }
     }
 
     public static <K extends Unit> void requireBelowUpperBound(PhysicalQuantity<K> quantityToCheck, PhysicalQuantity<K> upperBoundLimit) {
-        if (quantityToCheck.equalsOrGreaterThan(upperBoundLimit)) {
+        if (quantityToCheck.isEqualOrGreaterThan(upperBoundLimit)) {
             throw new HvacEngineArgumentException(String.format("Upper bound limit exceeded. Actual:  %s, limit: %s", quantityToCheck, upperBoundLimit));
         }
     }
@@ -62,7 +62,7 @@ public final class Validators {
     }
 
     public static void requireValidSaturationPressure(Pressure saturationPressure, Pressure humidAirAbsolutePressure, Temperature temperature) {
-        if (saturationPressure.equalsOrGreaterThan(humidAirAbsolutePressure)) {
+        if (saturationPressure.isEqualOrGreaterThan(humidAirAbsolutePressure)) {
             throw new HvacEngineArgumentException(
                     String.format("Water vapour saturation pressure exceeds humid air absolute pressure. Calculations are not possible. " +
                                     " Psat=%s, Pabs=%s, Temp=%s. Increase pressure or change input data.",

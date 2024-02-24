@@ -62,7 +62,7 @@ public interface Fluid {
         if (fluid == null) return false;
         if (this.getClass() != fluid.getClass()) return false;
 
-        return getPressure().equalsWithPrecision(fluid.getPressure(), epsilon)
-                && getTemperature().equalsWithPrecision(fluid.getTemperature(), epsilon);
+        return getPressure().isEqualWithPrecision(fluid.getPressure(), epsilon)
+                && getTemperature().isEqualWithPrecision(fluid.getTemperature(), epsilon);
     }
 }

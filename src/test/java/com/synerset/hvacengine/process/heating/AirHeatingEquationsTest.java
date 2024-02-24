@@ -77,8 +77,8 @@ class AirHeatingEquationsTest {
         Temperature actualOutAirTemp = airHeatingResult.outletFlow().getTemperature();
 
         // Assert
-        assertThat(actualHeatOfProcess.equalsWithPrecision(expectedHeatOfProcess, 1E-9)).isTrue();
-        assertThat(actualOutAirTemp.equalsWithPrecision(expectedOutTemp, 1E-9)).isTrue();
+        assertThat(actualHeatOfProcess.isEqualWithPrecision(expectedHeatOfProcess, 1E-9)).isTrue();
+        assertThat(actualOutAirTemp.isEqualWithPrecision(expectedOutTemp, 1E-9)).isTrue();
     }
 
 }

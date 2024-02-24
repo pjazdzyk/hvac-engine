@@ -228,7 +228,7 @@ public class HumidAir implements Fluid {
     public <K extends Fluid> boolean isEqualsWithPrecision(K fluid, double epsilon) {
         if (fluid instanceof HumidAir humidAir) {
             return Fluid.super.isEqualsWithPrecision(fluid, epsilon)
-                    && humidityRatio.equalsWithPrecision(humidAir.humidityRatio, epsilon);
+                    && humidityRatio.isEqualWithPrecision(humidAir.humidityRatio, epsilon);
         } else {
             return Fluid.super.isEqualsWithPrecision(fluid, epsilon);
         }

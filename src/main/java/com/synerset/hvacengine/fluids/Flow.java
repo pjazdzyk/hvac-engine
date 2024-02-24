@@ -88,6 +88,6 @@ public interface Flow<F extends Fluid> {
         if (this.getClass() != flowOfFluid.getClass()) return false;
 
         return getFluid().isEqualsWithPrecision(flowOfFluid.getFluid(), epsilon)
-                && getMassFlow().equalsWithPrecision(flowOfFluid.getMassFlow(), epsilon);
+                && getMassFlow().isEqualWithPrecision(flowOfFluid.getMassFlow(), epsilon);
     }
 }
