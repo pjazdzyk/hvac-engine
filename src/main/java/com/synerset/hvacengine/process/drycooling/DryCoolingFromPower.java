@@ -24,7 +24,7 @@ record DryCoolingFromPower(FlowOfHumidAir inletAir,
     @Override
     public DryAirCoolingResult applyDryCooling() {
 
-        if (inputPower.equalsZero() || inletAir.getMassFlow().equalsZero()) {
+        if (inputPower.isEqualZero() || inletAir.getMassFlow().isEqualZero()) {
             return new DryAirCoolingResult(inletAir, inputPower.withValue(0));
         }
 
