@@ -85,7 +85,7 @@ record CoolingFromTemperature(FlowOfHumidAir inletAir,
                 HumidityRatio.ofKilogramPerKilogram(xOut)
         );
 
-        FlowOfHumidAir outletFlow = inletAir.withHumidAir(outletHumidAir);
+        FlowOfHumidAir outletFlow = FlowOfHumidAir.ofDryAirMassFlow(outletHumidAir, inletAir.getFlowOfDryAir().getMassFlow());
 
         return new AirCoolingResult(outletFlow, Power.ofKiloWatts(qCool), condensateFlow, bf);
     }
