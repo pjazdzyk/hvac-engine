@@ -25,7 +25,11 @@ state of fluids with all associated calculated parameters, along with proper inp
 3.1 [Air heating](#31-air-heating) <br>
 3.2 [Air cooling](#32-air-cooling) <br>
 3.3 [Air mixing](#33-air-mixing) <br>
-4. [Symbols and abbreviations](#4-symbols-and-abbreviations) <br>
+4. [HVAC Modular Dataflow Processing](#4-hvac-modular-dataflow-processing-system) <br>
+4.1 [Data model components](#41-data-model-components) <br>
+4.2 [Custom HVAC system example](#42-example-of-custom-hvac-system-calculation) <br>
+4.3 [Thread safety and mutability](#43-thread-safety-and-mutability) <br> 
+5. [Symbols and abbreviations](#5-symbols-and-abbreviations) <br>
 
 ### 1. PHYSICAL PROPERTIES
 
@@ -38,13 +42,13 @@ and physical units.
 
 ```java
 // Outputs: 0.00754
-double w_p = HumidAirEquations.humidityRatio(45, 2662, 100_000);
+double humidityRatioValue = HumidAirEquations.humidityRatio(45, 2662, 100_000);
 
 // Outputs: HumidityRatio{0.00754 kg/kg}
-HumidityRatio w_u = HumidAirEquations.humidityRatio(
-       RelativeHumidity.ofPercentage(45),
-       Pressure.ofPascal(2662),
-       Pressure.ofPascal(100_000)
+HumidityRatio humRatioWithUnits = HumidAirEquations.humidityRatio(
+        RelativeHumidity.ofPercentage(45),
+        Pressure.ofPascal(2662),
+        Pressure.ofPascal(100_000)
 );
 ```
 Methods utilizing primitive types are designed for iterative calculations to minimize server memory usage and CPU time
@@ -53,9 +57,9 @@ values in any of the supported units:
 
 ```java
 // Outputs: Pressure{2338.8 Pa}
-Pressure ps_c = HumidAirEquations.saturationPressure(Temperature.ofCelsius(20));
+Pressure saturationPressure_c = HumidAirEquations.saturationPressure(Temperature.ofCelsius(20));
 // Outputs: Pressure{2338.8 Pa}
-Pressure ps_f = HumidAirEquations.saturationPressure(Temperature.ofFahrenheit(68));
+Pressure saturationPressure_f = HumidAirEquations.saturationPressure(Temperature.ofFahrenheit(68));
 ```
 Both methods will produce the same value regardless of the unit provided as an argument. By default, the resulting value 
 is maintained in the predefined unit, but it can be readily converted to any other unit or to a value in the desired unit. 
@@ -182,7 +186,7 @@ FlowOfHumidAir:
 	DryAir:
 	P_abs = 101325 [Pa] | DBT = -20 [°C]
 	i_da = -20.06 [kJ/kg] | ρ_da = 1.394 [kg/m³] | cp_da = 1.003 [kJ/(kg·K)]
-	ν_da = 0.0000115 [m²/s] | μ_da = 0.0000161 [kg/(m·s)] | k_da = 0.0228 [W/(m·K)] | Pr_da = 0.707
+	ν_da = 0.0000115 [m²/s] | μ_da = 0.0000161 [kg/(m·s)] | k_da = 0.0228 [W/(m·K)] | α = 0.0000163 [m²/s] | Pr_da = 0.707
 ```
 The result above includes all flow values and additionally humid air properties and humid air dry air component properties.
 Handling flows for the dry air or liquid water is analogous.
@@ -199,14 +203,14 @@ Let's assume a typical winter case, when we want to heat up outdoor air up to +1
 of winter humid air, then select the correct heating strategy to create a heating process result object.
 
 ```java
-// Creating initial state of ambient air
+// Creating initial state of ambient air properties
 HumidAir winterAmbientAir = HumidAir.of(Temperature.ofCelsius(-20), RelativeHumidity.ofPercentage(99));
-// Initializing flow instance
+// Initializing flow of air instance
 FlowOfHumidAir flowOfHumidAir = FlowOfHumidAir.of(winterAmbientAir, VolumetricFlow.ofCubicMetersPerHour(5000));
 // Defining target outlet temperature
 Temperature targetOutTemperature = Temperature.ofCelsius(16);
-// Creating a heating process, Q_heat = 69928.557 W
-Heating heatingProcessState = Heating.of(HeatingStrategy.of(flowOfHumidAir, targetOutTemperature));
+// Calculating heating process, we expect as result: Q_heat = 69928.557 W
+HeatingResult heatingResult = HeatingEquations.heatingFromTargetTemperature(flowOfHumidAir, targetOutTemperature);
 ```
 The heating process, upon creation, will invoke calculation procedures stored inside the selected strategy, ultimately
 determining the heating power. Like all other process classes, the Heating class encapsulates the most relevant outlet 
@@ -219,8 +223,8 @@ PROCESS OF HEATING:
 	INPUT FLOW:
 	V_in = 5000 [m³/h] | G_in = 1.934 [kg/s] | G_in.da = 1.933 [kg/s]
 	DBT_in = -20 [°C] | RH_in = 99 [%] | x_in = 0.000628 [kg/kg] | i_in = -18.512 [kJ/kg]
-	HEAT OF PROCESS:
-	Q_heat = 69928.557 [W]
+	HEATING POWER:
+	Q_heat = 69928.557 [W] | Q_heat = 69.929 [kW]
 	OUTLET FLOW:
 	V_out = 5711.041 [m³/h] | G_out = 1.934 [kg/s] | G_out.da = 1.933 [kg/s]
 	DBT_out = 16 [°C] | RH_out = 5.622 [%] | x_out = 0.000628 [kg/kg] | i_out = 17.661 [kJ/kg]
@@ -243,27 +247,33 @@ of cooling the ambient summer air to a typical indoor temperature of 25°C. We a
 in the coil as 7/12°C:
 
 ```java
+// Creating initial state of ambient air properties
 HumidAir summerAir = HumidAir.of(Temperature.ofCelsius(35), RelativeHumidity.ofPercentage(45));
+// Initializing flow of air instance
 FlowOfHumidAir flowOfSummerAir = FlowOfHumidAir.of(summerAir, VolumetricFlow.ofCubicMetersPerHour(5000));
+// Defining coolant properties
 CoolantData chilledWater = CoolantData.of(Temperature.ofCelsius(7), Temperature.ofCelsius(12));
+// Defining target outlet temperature
 Temperature targetOutTemp = Temperature.ofCelsius(25);
-Cooling coolingProcess = Cooling.of(CoolingStrategy.of(flowOfSummerAir, chilledWater, targetOutTemp));
+// Calculating cooling process, we expect as result: Q_heat = 69928.557 W
+CoolingResult coolingResult = CoolingEquations.coolingFromTargetTemperature(flowOfSummerAir, chilledWater, targetOutTemp);
 ```
 
 This process will result in the following output:
 
 ```text
-PROCESS OF COOLING:
+PROCESS OF REAL COOLING:
 	INPUT FLOW:
 	V_in = 5000 [m³/h] | G_in = 1.551 [kg/s] | G_in.da = 1.527 [kg/s]
-	DBT_in = 35 [°C] | RH_in = 45 [%] | x_in = 0.0159 [kg/kg] | i = 76.105 [kJ/kg]
+	DBT_in = 35 [°C] | RH_in = 45 [%] | x_in = 0.0159 [kg/kg] | i_in = 76.105 [kJ/kg]
 	COOLANT DATA:
 	t_su = 7 [°C] | t_rt = 12 [°C] | t_m = 9.5 [°C]
-	HEAT OF PROCESS:
-	Q_cool = -28526.098 [W] | Q_cool = -28.526 [kW] | BF = 0.608
+	V_coolant = 4.93 [m³/h] | G_coolant = 1.369 [kg/s]
+	COOLING POWER:
+	Q_cool = 28730.585 [W] | Q_cool = 28.731 [kW]
 	OUTLET FLOW:
-	V_out = 4812.259 [m³/h] | G_out = 1.551 [kg/s] | G_out.da = 1.532 [kg/s]
-	DBT_out = 25 [°C] | RH_out = 63.403 [%] | x_out = 0.0126 [kg/kg] | i = 57.18 [kJ/kg]
+	V_out = 4796.343 [m³/h] | G_out = 1.546 [kg/s] | G_out.da = 1.527 [kg/s]
+	DBT_out = 25 [°C] | RH_out = 63.403 [%] | x_out = 0.0126 [kg/kg] | i_out = 57.18 [kJ/kg]
 	CONDENSATE:
 	G_cond = 0.00513 [kg/s] | t_cond = 9.5 [°C] | i_cond = 39.866 [kJ/kg]
 ```
@@ -292,21 +302,161 @@ Mixing mixingProcess = Mixing.of(MixingStrategy.of(inletWinterFlow, flowOfRecirc
 This process will result in the following output:
 
 ```text
-PROCESS OF MIXING:
-	INPUT FLOW:
-	V_in = 1000 [m³/h] | G_in = 0.387 [kg/s] | G_in.da = 0.387 [kg/s]
-	DBT_in = -20 [°C] | RH_in = 99 [%] | x_in = 0.000628 [kg/kg] | i_in = -18.512 [kJ/kg]
-	RECIRCULATION AIR_0:
-	V_rec_0 = 5000 [m³/h] | G_rec_0 = 1.688 [kg/s] | G_rec_0.da = 1.683 [kg/s]
-	DBT_rec_0 = 16 [°C] | RH_rec_0 = 25 [%] | x_rec_0 = 0.0028 [kg/kg] | i_rec_0 = 23.165 [kJ/kg]
-	OUTLET FLOW:
-	V_out = 5999.992 [m³/h] | G_out = 2.074 [kg/s] | G_out.da = 2.07 [kg/s]
-	DBT_out = 9.305 [°C] | RH_out = 33.188 [%] | x_out = 0.0024 [kg/kg] | i_out = 15.379 [kJ/kg]
+ // Creating initial state of ambient fresh air properties
+        HumidAir winterAmbientAir = HumidAir.of(Temperature.ofCelsius(-20), RelativeHumidity.ofPercentage(99));
+        // Initializing flow of fresh air
+        FlowOfHumidAir inletWinterFlow = FlowOfHumidAir.of(winterAmbientAir, VolumetricFlow.ofCubicMetersPerHour(1000));
+        // Creating initial state of ambient recirculation air properties
+        HumidAir recirculationAir = HumidAir.of(Temperature.ofCelsius(16), RelativeHumidity.ofPercentage(25));
+        // Initializing flow of recirculation air
+        FlowOfHumidAir flowOfRecirculationAir = FlowOfHumidAir.of(recirculationAir, VolumetricFlow.ofCubicMetersPerHour(5000));
+        // Calculating mixing process outcome
+        MixingResult mixingResult = MixingEquations.mixingOfTwoAirFlows(inletWinterFlow, flowOfRecirculationAir);
 ```
 
 As expected, the resulting temperature is approximately 9°C, including all other parameters of the outlet flow.
 
-### 4. SYMBOLS AND ABBREVIATIONS
+### 4. HVAC MODULAR DATAFLOW PROCESSING SYSTEM
+To enable calculations for any custom, user-defined HVAC device, a dedicated dataflow model was developed. This model allows users 
+to independently connect multiple processes, providing a flexible framework for constructing and customizing HVAC simulations.
+
+Users can build HVAC processes by linking various process blocks and data sources. The sequential nature of the algorithm 
+ensures that the output from one process serves as the input for the next, allowing for a structured simulation of any HVAC 
+system based on currently available and supported processes.
+
+#### 4.1. DATA MODEL COMPONENTS
+The data model consists of the following components, each represented by a dedicated class:
+- **Data Connectors**: Available as input or output connectors, these serve as interface points where data is either 
+received for calculations or provided as results after computation. Connector can be connected with other connector of 
+the same datatype. Output connector can be connected only to input connector.
+- **Source Blocks**: Represent a physical quantity or an object aggregating multiple quantities. Each source block has 
+a single output connector and defines the boundary conditions of the simulation.
+- **Process Blocks**: Can have multiple inlet and outlet connectors but must include at least one airflow input and one airflow output connector. 
+These blocks encapsulate the processing logic of specific HVAC processes. During computation, data is retrieved from input 
+connectors, processed, and then sent to output connectors. 
+
+![SequentialDiagram.png](src/main/resources/architecture/SequentialDiagram.png)
+
+The diagram above illustrates the logical interpretation of the modular processing model. At this stage, only the 
+SequentialProcessingEngine is implemented, which sequentially computes processes based on their order and generates
+the simulation output. The diagram presents an example where ambient summer air is mixed with interior recirculated air,
+then cooled to reach the target temperature, and subsequently heated to achieve the desired relative humidity.
+
+#### 4.2. EXAMPLE OF CUSTOM HVAC SYSTEM CALCULATION
+Let's try to implement the exemplary HVAC system presented on the diagram above. Following input data will be used:
+```text
+External summer inlet flow:
+te = 35°C, RH = 55%, Vin = 1000 m³/h
+Rercirculation flow:
+tr = 25°C, RH = 70%, Vrec = 1000 m³/h
+Coolant data:
+ts = 7°C, tret = 14°C, 
+Cooling target:
+tset = 25°C
+Heating target:
+tset = 30%
+```
+Now, based on this input data lets build our components. We will use SourceBlock class to define boundary conditions for
+process blocks inlet connectors. In the next step, we use correct implementation of HvacProcessBlock depending on which
+process and its variant we want to use:
+```java
+// Inlet Air data source
+FlowOfHumidAir inletFlow = FlowOfHumidAir.ofValues(35, 55, 1000);
+SimpleDataSource<FlowOfHumidAir> airFlowSource = new SimpleDataSource<>(inletFlow);
+// Recirculation air data source
+FlowOfHumidAir recirculationAir = FlowOfHumidAir.ofValues(25, 70, 1000);
+SimpleDataSource<FlowOfHumidAir> mixingFlowSource = SimpleDataSource.of(recirculationAir);
+// Mixing block config
+Mixing mixingBlock = Mixing.of(airFlowSource, List.of(mixingFlowSource));
+// Cooling data config
+Temperature targetCoolingTemperature = Temperature.ofCelsius(25);
+CoolantData coolantData = CoolantData.ofValues(7, 14);
+SimpleDataSource<CoolantData> coolantDataSource = SimpleDataSource.of(coolantData);
+SimpleDataSource<Temperature> temperatureDataSource = SimpleDataSource.of(targetCoolingTemperature);
+CoolingFromTemperature coolingBlock = CoolingFromTemperature.of(coolantDataSource, temperatureDataSource);
+// Heating block config
+RelativeHumidity targetRH = RelativeHumidity.ofPercentage(30);
+SimpleDataSource<RelativeHumidity> humiditySourceBlock = new SimpleDataSource<>(targetRH);
+HeatingFromHumidity heatingBlock = HeatingFromHumidity.of(humiditySourceBlock);
+```
+When all blocks are defined and proper boundary conditions are set, we can add our blocks to 
+processing engine. Processing engine will connect airflow outputs with airflow input connector of all
+added blocks. There is no need to manually do that.
+```java
+// Initialize processing engine, add all blocks. Order matters, in this order computation will be executed.
+SequentialProcessingEngine processComputation = SequentialProcessingEngine.of(mixingBlock, coolingBlock, heatingBlock);
+// Run calculations and collect the results at the outlet of simulation boundary (after las process)
+ProcessResult lastResult = processComputation.runCalculationsForAllNodes();
+// Tu can also extract results for each intermediate process as well
+List<ProcessResult> allResults = processComputation.getProcessResults();
+// Or print everything to console for quick check
+System.out.println(processComputation.toConsoleOutput());
+```
+Let's print results to the console:
+```text
+PROCESS OF MIXING:
+	INPUT FLOW:
+	V_in = 1000 [m³/h] | G_in = 0.308 [kg/s] | G_in.da = 0.302 [kg/s]
+	DBT_in = 35 [°C] | RH_in = 55 [%] | x_in = 0.0196 [kg/kg] | i_in = 85.484 [kJ/kg]
+	RECIRCULATION AIR_0:
+	V_rec_0 = 1000 [m³/h] | G_rec_0 = 0.322 [kg/s] | G_rec_0.da = 0.317 [kg/s]
+	DBT_rec_0 = 25 [°C] | RH_rec_0 = 70 [%] | x_rec_0 = 0.0139 [kg/kg] | i_rec_0 = 60.591 [kJ/kg]
+	OUTLET FLOW:
+	V_out = 1999.913 [m³/h] | G_out = 0.63 [kg/s] | G_out.da = 0.62 [kg/s]
+	DBT_out = 29.908 [°C] | RH_out = 62.704 [%] | x_out = 0.0167 [kg/kg] | i_out = 72.742 [kJ/kg]
+	
+PROCESS OF REAL COOLING:
+	INPUT FLOW:
+	V_in = 1999.913 [m³/h] | G_in = 0.63 [kg/s] | G_in.da = 0.62 [kg/s]
+	DBT_in = 29.908 [°C] | RH_in = 62.704 [%] | x_in = 0.0167 [kg/kg] | i_in = 72.742 [kJ/kg]
+	COOLANT DATA:
+	t_su = 7 [°C] | t_rt = 14 [°C] | t_m = 10.5 [°C]
+	V_coolant = 0.813 [m³/h] | G_coolant = 0.226 [kg/s]
+	COOLING POWER:
+	Q_cool = 6629.681 [W] | Q_cool = 6.63 [kW]
+	OUTLET FLOW:
+	V_out = 1956.376 [m³/h] | G_out = 0.629 [kg/s] | G_out.da = 0.62 [kg/s]
+	DBT_out = 25 [°C] | RH_out = 72.679 [%] | x_out = 0.0145 [kg/kg] | i_out = 61.98 [kJ/kg]
+	CONDENSATE:
+	G_cond = 0.00138 [kg/s] | t_cond = 10.5 [°C] | i_cond = 44.045 [kJ/kg]
+	
+PROCESS OF HEATING:
+	INPUT FLOW:
+	V_in = 1956.376 [m³/h] | G_in = 0.629 [kg/s] | G_in.da = 0.62 [kg/s]
+	DBT_in = 25 [°C] | RH_in = 72.679 [%] | x_in = 0.0145 [kg/kg] | i_in = 61.98 [kJ/kg]
+	HEATING POWER:
+	Q_heat = 10082.581 [W] | Q_heat = 10.083 [kW]
+	OUTLET FLOW:
+	V_out = 2059.627 [m³/h] | G_out = 0.629 [kg/s] | G_out.da = 0.62 [kg/s]
+	DBT_out = 40.735 [°C] | RH_out = 30 [%] | x_out = 0.0145 [kg/kg] | i_out = 78.25 [kJ/kg]
+```
+In the code example above, not all details of block connections are visible due to the use of a static factory method, 
+which is provided for developer convenience. However, you can manually link connectors at any time if fine-grained control 
+is required. Additionally, blocks can be connected directly to each other, in which case the connectors will be automatically 
+linked.
+
+```java
+// Inlet Air
+FlowOfHumidAir inletFlow = FlowOfHumidAir.ofValues(35, 55, 1000);
+SimpleDataSource<FlowOfHumidAir> airFlowSource = new SimpleDataSource<>(inletFlow);
+// Recirculation flow
+FlowOfHumidAir recirculationAir = FlowOfHumidAir.ofValues(25, 70, 1000);
+SimpleDataSource<FlowOfHumidAir> mixingFlowSource = SimpleDataSource.of(recirculationAir);
+// Creating empty mixin block
+Mixing mixingBlock = new Mixing();
+// Linking two connectors directly
+mixingBlock.getInputConnector().connectAndConsumeDataFrom(airFlowSource.getOutputConnector());
+// Linking two blocks
+mixingBlock.connectMixingFlowDataSource(mixingFlowSource);
+```
+
+#### 4.3. THREAD SAFETY AND MUTABILITY
+As the **exceptional case**, presented module dataflow HVAC processing system and its components **is NOT thread safe**.
+Blocks are designed to be **stateful** and **mutable** objects. Please consider this when designing a system using processing
+engine components.
+
+
+### 5. SYMBOLS AND ABBREVIATIONS
 
 Property symbols used in console as formatted values:
 
