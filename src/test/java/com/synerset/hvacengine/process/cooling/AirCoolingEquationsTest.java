@@ -42,7 +42,7 @@ class AirCoolingEquationsTest {
         Temperature expectedOutAirTemp = Temperature.ofCelsius(25.0);
 
         HumidityRatio expectedOutHumRatio = inletFlow.getHumidityRatio();
-        Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
+        Power expectedHeatOfProcess = Power.ofWatts(9287.469123327497);
 
         // When
         DryCoolingResult airCoolingResult = CoolingEquations.dryCoolingFromTemperature(inletFlow, expectedOutAirTemp);
@@ -60,7 +60,7 @@ class AirCoolingEquationsTest {
     @DisplayName("Cooling equations: should cool down air without humidity ratio change and without condensate discharge when target output cooling power is given")
     void processOfDryCooling_shouldCoolDownAirWithoutCondensateDischarge_whenTargetOutputCoolingPowerIsGiven() {
         // Given
-        Power expectedHeatOfProcess = Power.ofWatts(-9287.469123327497);
+        Power expectedHeatOfProcess = Power.ofWatts(9287.469123327497);
 
         Temperature expectedOutAirTemp = Temperature.ofCelsius(25.0);
         HumidityRatio expectedOutHumRatio = inletFlow.getHumidityRatio();
@@ -87,7 +87,7 @@ class AirCoolingEquationsTest {
         Temperature expectedOutAirTemp = Temperature.ofCelsius(17.0);
 
         HumidityRatio expectedOutHumRatio = HumidityRatio.ofKilogramPerKilogram(0.009772748723824064);
-        Power expectedHeatOfProcess = Power.ofWatts(-27016.52106432564);
+        Power expectedHeatOfProcess = Power.ofWatts(27016.52106432564);
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.0037604402299109005);
 
         // When
@@ -114,7 +114,7 @@ class AirCoolingEquationsTest {
 
         Temperature expectedOutAirTemp = Temperature.ofCelsius(17.0);
         HumidityRatio expectedOutHumRatio = HumidityRatio.ofKilogramPerKilogram(0.009772748723824064);
-        Power expectedHeatOfProcess = Power.ofWatts(-27016.521064325912);
+        Power expectedHeatOfProcess = Power.ofWatts(27016.521064325912);
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.0037604402299109005);
 
         // When
@@ -139,7 +139,7 @@ class AirCoolingEquationsTest {
     @DisplayName("Cooling equations: should cool down inlet air when input heat and average wall temperature of cooling coil is given")
     void processOfRealCooling_shouldCoolDownInletAir_whenHeatOfProcessIsGiven() {
         // Given
-        Power expectedHeatOfProcess = Power.ofWatts(-27016.521064325912);
+        Power expectedHeatOfProcess = Power.ofWatts(27016.521064325912);
 
         Temperature expectedOutAirTemp = Temperature.ofCelsius(17.0);
         HumidityRatio expectedOutHumRatio = HumidityRatio.ofKilogramPerKilogram(0.009772748723824026);

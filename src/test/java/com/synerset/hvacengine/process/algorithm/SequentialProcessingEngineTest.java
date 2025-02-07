@@ -1,4 +1,4 @@
-package com.synerset.hvacengine.process.procedure;
+package com.synerset.hvacengine.process.algorithm;
 
 import com.synerset.hvacengine.process.ProcessResult;
 import com.synerset.hvacengine.process.ProcessType;

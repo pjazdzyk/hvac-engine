@@ -30,16 +30,12 @@ public class CoolingValidators {
         return targetRelativeHumidity.isEqualOrGreaterThan(relativeHumidity);
     }
 
-    public static boolean isValidPowerForCooling(Power coolingPower) {
-        return coolingPower.isNegative();
-    }
-
     public static boolean isValidTemperatureForCoolantData(Temperature supplyTemperature, Temperature returnTemperature) {
         return supplyTemperature.isEqualOrLowerThan(returnTemperature);
     }
 
     public static boolean isValidInputPowerToGetPhysicalCoolingResult(FlowOfHumidAir inletAirFlow, Power coolingPower) {
-        return coolingPower.isGreaterThan(estimateMaxCoolingPower(inletAirFlow));
+        return coolingPower.isLowerThan(estimateMaxCoolingPower(inletAirFlow));
     }
 
     // Exception validators
@@ -79,15 +75,7 @@ public class CoolingValidators {
         }
     }
 
-    public static void requireValidInputPowerForCooling(Power inputPower) {
-        if (!isValidPowerForCooling(inputPower)) {
-            throw new HvacEngineArgumentException("Power must be provided as negative value for cooling. If this was intended, use heating process instead." +
-                                                  " Q_heat = " + inputPower);
-        }
-    }
-
     public static void requirePhysicalInputPowerForCooling(FlowOfHumidAir inletAirFlow, Power coolingPower) {
-        requireValidInputPowerForCooling(coolingPower);
         if (!isValidInputPowerToGetPhysicalCoolingResult(inletAirFlow, coolingPower)) {
             throw new HvacEngineArgumentException("Unphysical input cooling power for provided flow. Cooling power is to large. " + "Q_in = " + coolingPower
                                                   + " Q_limit = " + estimateMaxCoolingPower(inletAirFlow).toUnitFrom(coolingPower));
@@ -99,7 +87,8 @@ public class CoolingValidators {
         // Mox cooling power quick estimate to reach 0 degrees Qcool.max= G * (i_0 - i_in)
         double estimatedMaxPowerKw = inletAirFlow.getSpecificEnthalpy().toKiloJoulePerKiloGram()
                 .minusFromValue(0)
-                .multiply(inletAirFlow.getMassFlow().toKilogramsPerSecond());
+                .multiply(inletAirFlow.getMassFlow().toKilogramsPerSecond())
+                * -1;
         return Power.ofKiloWatts(estimatedMaxPowerKw);
     }
 
