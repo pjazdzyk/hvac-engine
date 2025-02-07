@@ -45,7 +45,7 @@ public class CoolingEquations {
     public static DryCoolingResult dryCoolingFromPower(FlowOfHumidAir inletAirFlow, Power inputPower) {
         requireNotNull(inletAirFlow);
         requireNotNull(inputPower);
-        requireValidInputPowerForCooling(inputPower);
+        inputPower = inputPower.abs();
         requirePhysicalInputPowerForCooling(inletAirFlow, inputPower);
 
         if (inputPower.isCloseToZero() || inletAirFlow.getMassFlow().isCloseToZero()) {
@@ -62,7 +62,7 @@ public class CoolingEquations {
         double mdaIn = inletAirFlow.getDryAirMassFlow().getInKilogramsPerSecond();
         double pIn = inletAirFlow.getPressure().getInPascals();
         double iIn = inletAirFlow.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
-        double iOut = (mdaIn * iIn + qCool) / mdaIn;
+        double iOut = (mdaIn * iIn - qCool) / mdaIn;
         double tOut = HumidAirEquations.dryBulbTemperatureIX(iOut, xIn, pIn);
 
         HumidAir outletHumidAir = HumidAir.of(inletAirFlow.getPressure(), Temperature.ofCelsius(tOut), inletAirFlow.getHumidityRatio());
@@ -103,7 +103,7 @@ public class CoolingEquations {
         double pIn = inletAirFlow.getPressure().getInPascals();
         double iIn = inletAirFlow.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
         double i2 = HumidAirEquations.specificEnthalpy(tOut, xIn, pIn);
-        double qHeat = (mdaIn * i2 - mdaIn * iIn) * 1000d;
+        double qHeat = (mdaIn * iIn - mdaIn * i2) * 1000d;
         Power requiredHeat = Power.ofWatts(qHeat);
 
         HumidAir outletHumidAir = HumidAir.of(inletAirFlow.getPressure(), Temperature.ofCelsius(tOut), inletAirFlow.getHumidityRatio());
@@ -130,7 +130,7 @@ public class CoolingEquations {
         requireNotNull(inletAirFlow);
         requireNotNull(inletCoolantData);
         requireNotNull(inputPower);
-        requireValidInputPowerForCooling(inputPower);
+        inputPower = inputPower.abs();
 
         if (inputPower.isCloseToZero() || inletAirFlow.getMassFlow().isCloseToZero() || inletCoolantData.getTemperatureDifference().isCloseToZero()) {
             LiquidWater condensate = LiquidWater.of(inletAirFlow.getTemperature());
@@ -158,10 +158,11 @@ public class CoolingEquations {
         double acceptablePowerValueInKw = nearWallAir.getSpecificEnthalpy().minus(inletAir.getSpecificEnthalpy())
                                                   .getInKiloJoulesPerKiloGram()
                                           * REALISTIC_COOLING_FACTOR
-                                          * inletAirFlow.getDryAirMassFlow().getInKilogramsPerSecond();
+                                          * inletAirFlow.getDryAirMassFlow().getInKilogramsPerSecond()
+                                          * -1;
         Power acceptablePower = Power.ofKiloWatts(acceptablePowerValueInKw);
 
-        Power powerForFurtherCalculations = inputPower.isLowerThan(acceptablePower)
+        Power powerForFurtherCalculations = inputPower.isGreaterThan(acceptablePower)
                 ? acceptablePower
                 : inputPower;
 
@@ -260,7 +261,7 @@ public class CoolingEquations {
 
         // Determining required cooling performance
         double iIn = inletHumidAir.getSpecificEnthalpy().getInKiloJoulesPerKiloGram();
-        double qCool = (mDaDirectContact * (iTm - iIn));
+        double qCool = (mDaDirectContact * (iIn - iTm));
 
         // Determining an outlet humidity ratio
         double xOut = (xTm * mDaDirectContact + xIn * mDaBypassing) / mdaIn;
@@ -388,6 +389,7 @@ public class CoolingEquations {
     }
 
     public static MassFlow massFlowFromPower(LiquidWater inletWater, Temperature outletTemperature, Power power) {
+        power = power.abs();
         SpecificHeat inletSpecificHeat = inletWater.getSpecificHeat().toJoulePerKiloGramKelvin();
         SpecificHeat outletSpecificHeat = LiquidWaterEquations.specificHeat(outletTemperature.toCelsius()).toJoulePerKiloGramKelvin();
         SpecificHeat averageSpecificHeat = inletSpecificHeat.plus(outletSpecificHeat).div(2);
