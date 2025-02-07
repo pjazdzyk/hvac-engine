@@ -28,12 +28,12 @@ import static org.assertj.core.api.Assertions.withPrecision;
  */
 class CoolingBlockTest {
 
-    public static HumidAir TEST_HUMID_AIR = HumidAir.of(
+    public static final HumidAir TEST_HUMID_AIR = HumidAir.of(
             Pressure.ofHectoPascal(987),
             Temperature.ofCelsius(34),
             RelativeHumidity.ofPercentage(40)
     );
-    public static FlowOfHumidAir TEST_INLET_AIR_FLOW = FlowOfHumidAir.of(TEST_HUMID_AIR, MassFlow.ofKilogramsPerHour(10_000));
+    public static final FlowOfHumidAir TEST_INLET_AIR_FLOW = FlowOfHumidAir.of(TEST_HUMID_AIR, MassFlow.ofKilogramsPerHour(10_000));
     private static final SimpleDataSource<FlowOfHumidAir> TEST_INLET_FLOW_SOURCE = SimpleDataSource.of(TEST_INLET_AIR_FLOW);
 
     @Test
@@ -46,7 +46,7 @@ class CoolingBlockTest {
         Temperature targetTemperature = Temperature.ofCelsius(17);
         SimpleDataSource<Temperature> temperatureDataSource = SimpleDataSource.of(targetTemperature);
 
-        Power expectedPower = Power.ofKiloWatts(-74.40105342131304).toWatts();
+        Power expectedPower = Power.ofKiloWatts(74.40105342131304).toWatts();
         RelativeHumidity expectedRH = RelativeHumidity.ofPercentage(79.82650656031903);
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.010444945743262712);
 
@@ -86,7 +86,7 @@ class CoolingBlockTest {
     @DisplayName("Cooling node: should cool air inlet air when heating power is given")
     void shouldHCoolInletAirWhenInputPowerIsGiven() {
         // Given
-        Power inputPower = Power.ofKiloWatts(-74.40105342131305).toWatts();
+        Power inputPower = Power.ofKiloWatts(74.40105342131305).toWatts();
         SimpleDataSource<Power> powerDataSource = SimpleDataSource.of(inputPower);
 
         CoolantData coolantData = CoolantData.of(Temperature.ofCelsius(9), Temperature.ofCelsius(14));
@@ -138,7 +138,7 @@ class CoolingBlockTest {
         SimpleDataSource<RelativeHumidity> relativeHumidityDataSource = SimpleDataSource.of(targetRH);
 
         Temperature expectedTemperature = Temperature.ofCelsius(17);
-        Power expectedPower = Power.ofKiloWatts(-74.40105342131304).toWatts();
+        Power expectedPower = Power.ofKiloWatts(74.40105342131304).toWatts();
         MassFlow expectedCondensateFlow = MassFlow.ofKilogramsPerSecond(0.010444945743501704);
 
         // When
@@ -176,7 +176,7 @@ class CoolingBlockTest {
     @DisplayName("Cooling node: should cool inlet air, but for unrealistic cooling power, algorithm should fall back to temperature of the coil wall with some offset")
     void shouldCoolInletAirButForToLargePowerShouldFallBackToCoilWallTemp() {
         // Given
-        Power inputPower = Power.ofKiloWatts(-200).toWatts();
+        Power inputPower = Power.ofKiloWatts(200).toWatts();
         SimpleDataSource<Power> powerDataSource = SimpleDataSource.of(inputPower);
 
         CoolantData coolantData = CoolantData.of(Temperature.ofCelsius(9), Temperature.ofCelsius(14));
@@ -184,6 +184,7 @@ class CoolingBlockTest {
 
         // When
         CoolingFromPower coolingFromPowerBlock = CoolingFromPower.of(TEST_INLET_FLOW_SOURCE, coolantDataSource, powerDataSource);
+        coolingFromPowerBlock.connectAirFlowDataSource(TEST_INLET_FLOW_SOURCE);
         CoolingResult processResults = coolingFromPowerBlock.runProcessCalculations();
 
         // Then
