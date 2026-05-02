@@ -113,9 +113,6 @@ you must provide proper attribution to the original author, [Piotr Jazdzyk](http
 in all derivative works and publications. Additionally, if you use the software over a network, you must make the 
 source code available to the users of that network.
 
-
-* [12] - Water specific heat tables: https://www.engineeringtoolbox.com/specific-heat-capacity-water-d_660.html
-
 ## Acknowledgments
 I extend my heartfelt gratitude to the [Silesian University of Technology](https://www.polsl.pl/en/) for imparting invaluable knowledge to me.<br>
 Badges used in readme: [Shields.io](https://img.shields.io) and [Badges 4 README.md](https://github.com/alexandresanlim/Badges4-README.md-Profile).
