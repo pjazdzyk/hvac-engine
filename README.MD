@@ -31,6 +31,12 @@ The **hvac-engine-pro** project will serve as the **private version**, where all
 be developed. Access to this version will be available within a paid plan. For more information or to discuss licensing details, 
 please feel free to [contact me directly](https://www.linkedin.com/in/pjazdzyk).
 
+The commercial **hvac-engine-pro** powers **[EnergyFlowX](https://energyflowx.com)**, a platform
+of professional engineering calculators. You can try the physics from this library family online:
+the [humid air psychrometric calculator](https://energyflowx.com/fluid-properties/air/humid-air),
+[air cooling with condensate](https://energyflowx.com/hvac-processes/cooling), and
+[heat recovery per EN 308](https://energyflowx.com/hvac-processes/heat-recovery) and many more.
+
 ### INSTALLATION AND TECH
 
 Copy the Maven dependency provided below to your pom.xml file, and you are ready to go. For other package managers, check maven central repository:
